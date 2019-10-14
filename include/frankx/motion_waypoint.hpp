@@ -1,33 +1,26 @@
-#include <ReflexxesAPI.h>
-#include <RMLPositionFlags.h>
-#include <RMLPositionInputParameters.h>
-#include <RMLPositionOutputParameters.h>
+#pragma once
 
-#include <franka/control_types.h>
-#include <franka/duration.h>
-#include <franka/robot.h>
-#include <franka/robot_state.h>
-
+#include <frankx/condition.hpp>
 #include <frankx/waypoint.hpp>
 
 
-class WaypointMotion {
-
-  std::vector<Waypoint>::const_iterator waypoint_iterator;
-  Waypoint current_waypoint;
-
-  double time {0.0};
-
-  std::shared_ptr<ReflexxesAPI> rml;
-  std::shared_ptr<RMLPositionInputParameters> input_parameters;
-  std::shared_ptr<RMLPositionOutputParameters> output_parameters;
-
-  RMLPositionFlags flags;
-  int result_value = 0;
-
-
-public:
+struct WaypointMotion {
   std::vector<Waypoint> waypoints;
+  std::vector<Condition> conditions;
 
   WaypointMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) {}
+
+  void add_condition(Condition condition) {
+    conditions.push_back(condition);
+  }
+};
+
+
+struct LinearMotion: public WaypointMotion {
+  LinearMotion(const Eigen::Affine3d& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow) }) { }
+};
+
+
+struct LinearRelativeMotion: public WaypointMotion {
+  LinearRelativeMotion(const Eigen::Affine3d& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::RELATIVE) }) { }
 };

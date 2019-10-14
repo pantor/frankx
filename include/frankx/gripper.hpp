@@ -1,5 +1,4 @@
-#ifndef FRANKX_GRIPPER_HPP
-#define FRANKX_GRIPPER_HPP
+#pragma once
 
 #include <franka/exception.h>
 #include <franka/gripper.h>
@@ -26,5 +25,3 @@ public:
 };
 
 } // namepace frankx
-
-#endif // FRANKX_GRIPPER_HPP

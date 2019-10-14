@@ -1,5 +1,4 @@
-#ifndef FRANKX_GEOMETRY_HPP
-#define FRANKX_GEOMETRY_HPP
+#pragma once
 
 #include <iostream>
 #include <iterator>
@@ -135,14 +134,16 @@ inline Eigen::Affine3d getAffine(RMLVector<double> *rml_vector) {
 
 inline franka::CartesianPose getCartesianPose(RMLVector<double> *rml_vector, bool offset = true) {
   auto affine = getAffine(rml_vector);
-  const auto offset_affine = Affine(0.0, 0.0, 0.0, M_PI_2, 0.0, M_PI);
+  const auto offset_affine = offset ? Affine(0.0, 0.0, 0.0, M_PI_2, 0.0, M_PI) : Eigen::Affine3d::Identity();
   return franka::CartesianPose(Array(affine * offset_affine.inverse()), {rml_vector->VecData[6], -1});
 }
 
-inline Vector7d Vector(const franka::CartesianPose& pose, const Vector7d& old_vector, bool offset = true) {
+inline Eigen::Affine3d Affine(const franka::CartesianPose& pose, bool offset = true) {
   Eigen::Affine3d affine = Affine(pose.O_T_EE);
-  const auto offset_affine = Affine(0.0, 0.0, 0.0, M_PI_2, 0.0, M_PI);
-  return Vector(affine * offset_affine, pose.elbow[0], old_vector);
+  const auto offset_affine = offset ? Affine(0.0, 0.0, 0.0, M_PI_2, 0.0, M_PI) : Eigen::Affine3d::Identity();
+  return affine * offset_affine;
 }
 
-#endif // FRANKX_GEOMETRY_HPP
+inline Vector7d Vector(const franka::CartesianPose& pose, const Vector7d& old_vector, bool offset = true) {
+  return Vector(Affine(pose, offset), pose.elbow[0], old_vector);
+}
