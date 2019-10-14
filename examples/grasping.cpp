@@ -38,6 +38,5 @@ int main() {
   });
   robot.move(waypoint_motion2);
 
-
   return 0;
 }

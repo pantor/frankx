@@ -58,6 +58,7 @@ namespace frankx {
 
 
       auto waypoint_iterator = motion.waypoints.begin();
+      Vector7d old_vector = Vector7d::Zero();
 
       double time = 0.0;
       control([&](const franka::RobotState& robot_state, franka::Duration period) -> franka::CartesianPose {
@@ -66,12 +67,14 @@ namespace frankx {
           franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
           std::array<double, 7> initial_velocity = {robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]};
 
-          setVector(input_parameters->CurrentPositionVector, Vector(initial_pose, true));
+          Vector7d initial_vector = Vector(initial_pose, old_vector);
+          old_vector = initial_vector;
+          setVector(input_parameters->CurrentPositionVector, initial_vector);
           setVector(input_parameters->CurrentVelocityVector, initial_velocity);
           setZero(input_parameters->CurrentAccelerationVector);
 
           Waypoint current_waypoint = *waypoint_iterator;
-          setVector(input_parameters->TargetPositionVector, Vector(current_waypoint.getTargetPose()));
+          setVector(input_parameters->TargetPositionVector, Vector(current_waypoint.getTargetPose(), old_vector));
           setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
         }
 
@@ -83,11 +86,11 @@ namespace frankx {
             waypoint_iterator += 1;
 
             if (waypoint_iterator == motion.waypoints.end()) {
-              return franka::MotionFinished(getCartesianPose(input_parameters->CurrentPositionVector, true));
+              return franka::MotionFinished(getCartesianPose(input_parameters->CurrentPositionVector));
             }
 
             Waypoint current_waypoint = *waypoint_iterator;
-            setVector(input_parameters->TargetPositionVector, Vector(current_waypoint.getTargetPose()));
+            setVector(input_parameters->TargetPositionVector, Vector(current_waypoint.getTargetPose(), old_vector));
             setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
           }
 
@@ -96,7 +99,7 @@ namespace frankx {
           *input_parameters->CurrentAccelerationVector = *output_parameters->NewAccelerationVector;
         }
 
-        return getCartesianPose(output_parameters->NewPositionVector, true);
+        return getCartesianPose(output_parameters->NewPositionVector);
       }, franka::ControllerMode::kCartesianImpedance);
     }
   };

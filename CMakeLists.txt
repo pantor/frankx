@@ -34,7 +34,7 @@ target_link_libraries(frankx Franka::Franka ${Reflexxes})
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS minimal_bug)
+  foreach(example IN ITEMS grasping)
     add_executable(${example} "examples/${example}.cpp")
     target_link_libraries(${example} frankx)
   endforeach()
