@@ -20,8 +20,16 @@ void Robot::setDefault() {
     setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
 }
 
+void Robot::move(const JointMotion& motion) {
+    control(motion);
+}
 
 void Robot::move(const WaypointMotion& motion) {
+    auto data = MotionData();
+    move(motion, data);
+}
+
+void Robot::move(const WaypointMotion& motion, MotionData& data) {
     constexpr int degrees_of_freedoms {7};
     constexpr double control_rate {0.001};
 
@@ -55,8 +63,6 @@ void Robot::move(const WaypointMotion& motion) {
     Eigen::Affine3d old_affine = Eigen::Affine3d::Identity();
     double old_elbow = 0.0;
 
-    bool has_fired = false;
-
     double time = 0.0;
     control([&](const franka::RobotState& robot_state, franka::Duration period) -> franka::CartesianPose {
         time += period.toSec();
@@ -84,48 +90,24 @@ void Robot::move(const WaypointMotion& motion) {
             old_elbow = old_vector(6);
         }
 
-        for (auto condition : motion.conditions) {
-            if (has_fired) {
+        for (auto& condition : data.conditions) {
+            if (condition.has_fired) {
                 continue;
             }
 
-            bool fire {false};
-            switch (condition.axis) {
-                case Condition::Axis::ForceZ: {
-                    double force = robot_state.O_F_ext_hat_K[2];
-                    if (condition.comparison == Condition::Comparison::Smaller) {
-                        fire = (force < condition.value);
-                    } else if (condition.comparison == Condition::Comparison::Greater) {
-                        fire = (force > condition.value);
-                    }
-                } break;
-                case Condition::Axis::ForceXYZNorm: {
-                    double force = std::pow(robot_state.O_F_ext_hat_K[0], 2) + std::pow(robot_state.O_F_ext_hat_K[1], 2) + std::pow(robot_state.O_F_ext_hat_K[2], 2);
-                    if (condition.comparison == Condition::Comparison::Smaller) {
-                        fire = (force < condition.value);
-                    } else if (condition.comparison == Condition::Comparison::Greater) {
-                        fire = (force > condition.value);
-                    }
-                } break;
-            }
-
-            if (fire) {
-                has_fired = true;
+            if (condition.callback(robot_state)) {
+                condition.has_fired = true;
 
                 current_motion = *condition.action;
-
                 waypoint_iterator = current_motion.waypoints.begin();
                 Waypoint current_waypoint = *waypoint_iterator;
 
                 franka::CartesianPose current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-                std::array<double, 7> current_velocity = {robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]};
-
                 Vector7d current_vector = Vector(current_pose, old_vector);
                 old_affine = Affine(current_pose);
                 old_vector = current_vector;
                 old_elbow = old_vector(6);
 
-                auto target_affine = current_waypoint.getTargetAffine(old_affine);
                 auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
                 setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());

@@ -11,6 +11,8 @@
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
+#include <frankx/motion_data.hpp>
+#include <frankx/motion_joint.hpp>
 #include <frankx/motion_waypoint.hpp>
 
 
@@ -39,6 +41,9 @@ namespace frankx {
 
     void setDefault();
 
+    void move(const JointMotion& motion);
+
     void move(const WaypointMotion& motion);
+    void move(const WaypointMotion& motion, MotionData& data);
   };
 }

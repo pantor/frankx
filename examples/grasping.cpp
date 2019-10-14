@@ -1,13 +1,11 @@
 #include <iostream>
 #include <iterator>
 
-#include <frankx/geometry.hpp>
 #include <frankx/gripper.hpp>
+#include <frankx/motion_data.hpp>
 #include <frankx/motion_joint.hpp>
 #include <frankx/motion_waypoint.hpp>
 #include <frankx/robot.hpp>
-#include <frankx/waypoint.hpp>
-
 
 
 inline Eigen::Affine3d getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
@@ -21,15 +19,12 @@ int main() {
   robot.setDefault();
 
 
-  JointMotion joint_motion(0.2, {-1.8119446041276943, 1.1791089121678338, 1.7571002245448795, -2.141621800118565, -1.1433693913722132, 1.6330460616663416, -0.4321716643888135});
-  robot.control(joint_motion);
-
-
-  auto stop_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.001, 0.0, 0.0, 0.0), 0.0);
+  JointMotion joint_motion(0.2, {-1.8119446041276, 1.1791089121678, 1.7571002245448, -2.141621800118, -1.1433693913722, 1.6330460616663, -0.4321716643888});
+  robot.move(joint_motion);
 
   auto motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.12, 0.0, 0.0, 0.0), -0.2);
-  motion.add_condition(Condition(Condition::Axis::ForceZ, Condition::Comparison::Smaller, -7.0, std::make_shared<LinearRelativeMotion>(stop_motion)));
-  robot.move(motion);
+  auto data = MotionData().withDynamics(0.5).withCondition(Condition(Condition::Axis::ForceZ, Condition::Comparison::Smaller, -7.0, std::make_shared<LinearRelativeMotion>(Affine(0.0, 0.0, 0.001, 0.0, 0.0, 0.0), 0.0)));
+  robot.move(motion, data);
 
 
   // WaypointMotion waypoint_motion({
