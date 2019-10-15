@@ -3,6 +3,8 @@
 #include <frankx/waypoint.hpp>
 
 
+namespace frankx {
+
 struct WaypointMotion {
   std::vector<Waypoint> waypoints;
 
@@ -11,10 +13,17 @@ struct WaypointMotion {
 
 
 struct LinearMotion: public WaypointMotion {
-  explicit LinearMotion(const Eigen::Affine3d& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow) }) { }
+  explicit LinearMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow) }) { }
 };
 
 
 struct LinearRelativeMotion: public WaypointMotion {
-  explicit LinearRelativeMotion(const Eigen::Affine3d& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
+  explicit LinearRelativeMotion(const Affine& affine, double elbow = 0.0): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
 };
+
+
+struct PositionHold: public WaypointMotion {
+  explicit PositionHold(double duration): WaypointMotion({ Waypoint(duration) }) { }
+};
+
+} // namespace frankx

@@ -8,8 +8,8 @@
 #include <frankx/robot.hpp>
 
 
-inline Eigen::Affine3d getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
-  return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
+inline frankx::Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
+  return frankx::Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
 }
 
 
@@ -19,11 +19,18 @@ int main() {
   robot.setDefault();
 
 
-  JointMotion joint_motion(0.2, {-1.8119446041276, 1.1791089121678, 1.7571002245448, -2.141621800118, -1.1433693913722, 1.6330460616663, -0.4321716643888});
+  frankx::JointMotion joint_motion(0.2, {-1.8119446041, 1.1791089121, 1.7571002245, -2.141621800, -1.1433693913, 1.6330460616, -0.4321716643});
   robot.move(joint_motion);
 
-  auto motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.12, 0.0, 0.0, 0.0), -0.2);
-  auto data = MotionData().withDynamics(0.5).withCondition(Condition(Condition::Axis::ForceZ, Condition::Comparison::Smaller, -7.0, std::make_shared<LinearRelativeMotion>(Affine(0.0, 0.0, 0.001, 0.0, 0.0, 0.0), 0.0)));
+  auto motion = frankx::LinearRelativeMotion(frankx::Affine(0.0, 0.0, -0.12, 0.0, 0.0, 0.0), -0.2);
+  auto data = frankx::MotionData().withDynamics(0.5).withCondition(
+    frankx::Condition(
+      frankx::Condition::Axis::ForceZ,
+      frankx::Condition::Comparison::Smaller,
+      -7.0,
+      std::make_shared<frankx::LinearRelativeMotion>(frankx::Affine(0.0, 0.0, 0.001, 0.0, 0.0, 0.0), 0.0)
+    )
+  );
   robot.move(motion, data);
 
 

@@ -20,6 +20,12 @@ void Robot::setDefault() {
     setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
 }
 
+void Robot::setDynamicRel(double dynamic_rel) {
+    velocity_rel = dynamic_rel;
+    acceleration_rel = dynamic_rel;
+    jerk_rel = dynamic_rel;
+}
+
 void Robot::move(const JointMotion& motion) {
     control(motion);
 }
@@ -70,8 +76,8 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
             franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
             std::array<double, 7> initial_velocity = {robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]};
 
-            Vector7d initial_vector = Vector(initial_pose, old_vector);
-            old_affine = Affine(initial_pose);
+            Vector7d initial_vector = Affine(initial_pose).vector(initial_pose.elbow[0], old_vector);
+            old_affine = Affine(initial_pose).data;
             old_vector = initial_vector;
             old_elbow = old_vector(6);
 
@@ -80,10 +86,14 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
             setZero(input_parameters->CurrentAccelerationVector);
 
             Waypoint current_waypoint = *waypoint_iterator;
-            auto target_affine = current_waypoint.getTargetAffine(old_affine);
+            Eigen::Affine3d target_affine = current_waypoint.getTargetAffine(old_affine).data;
             auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
             setVector(input_parameters->TargetPositionVector, target_position_vector);
             setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
+
+            if (current_waypoint.minimum_time.has_value()) {
+                input_parameters->SetMinimumSynchronizationTime(current_waypoint.minimum_time.value());
+            }
 
             old_affine = target_affine;
             old_vector = target_position_vector;
@@ -103,8 +113,8 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
                 Waypoint current_waypoint = *waypoint_iterator;
 
                 franka::CartesianPose current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-                Vector7d current_vector = Vector(current_pose, old_vector);
-                old_affine = Affine(current_pose);
+                Vector7d current_vector = Affine(current_pose).vector(current_pose.elbow[0], old_vector);
+                old_affine = Affine(current_pose).data;
                 old_vector = current_vector;
                 old_elbow = old_vector(6);
 
@@ -122,14 +132,18 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
                 waypoint_iterator += 1;
 
                 if (waypoint_iterator == current_motion.waypoints.end()) {
-                    return franka::MotionFinished(getCartesianPose(input_parameters->CurrentPositionVector));
+                    return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector));
                 }
 
                 Waypoint current_waypoint = *waypoint_iterator;
-                auto target_affine = current_waypoint.getTargetAffine(old_affine);
+                Eigen::Affine3d target_affine = current_waypoint.getTargetAffine(old_affine).data;
                 auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
                 setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
+
+                if (current_waypoint.minimum_time.has_value()) {
+                    input_parameters->SetMinimumSynchronizationTime(current_waypoint.minimum_time.value());
+                }
 
                 old_affine = target_affine;
                 old_vector = target_position_vector;
@@ -141,7 +155,7 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
             *input_parameters->CurrentAccelerationVector = *output_parameters->NewAccelerationVector;
         }
 
-        return getCartesianPose(output_parameters->NewPositionVector);
+        return CartesianPose(output_parameters->NewPositionVector);
     }, franka::ControllerMode::kCartesianImpedance);
 }
 

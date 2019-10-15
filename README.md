@@ -8,17 +8,13 @@ Frankx is a higher-level API for controlling the Franka Emika Panda robot. It is
 Include frankx as a subproject in your parent CMake with `add_subdirectory(frankx)`. Then `target_link_libraries(your_target frankx)`. Install paths are added later on, then you can install the library via
 
 ```
-git clone git@gitlab.ipr.kit.edu:berscheid/frankx.git
-cd frankx
 mkdir build
 cd build
 cmake -DReflexxes_DIR=../RMLTypeII -DReflexxes_TYPE=ReflexxesTypeII ..
 make
+make install
 ```
 Of course, you need to adapt the Reflexxes directory and type (either `ReflexxesTypeII` or `ReflexxesTypeIV`). If you want to install frankx into `/usr/local`, you can use
-```
-sudo make install
-```
 
 
 ## Tutorial
@@ -27,15 +23,16 @@ In your C++ project, just include `frankx/frankx.hpp` and link the library. As a
 
 ```c++
 #include <frankx/frankx.hpp>
+using namespace frankx;
 
 // Connect to the robot with the FCI IP address
-frankx::Robot robot("172.16.0.2");
+Robot robot("172.16.0.2");
 
 // Reduce velocity and acceleration of the robot
-robot.setVelocityRel(0.05).setAccelerationRel(0.01);
+robot.setDynamicRel(0.05);
 
 // Move the end-effector 20cm in positive x-direction
-auto motion = frankx::LinearRelativeMotion(frankx::Affine(0.2, 0.0, 0.0));
+auto motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0));
 
 // Finally move the robot
 robot.move(motion);

@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_C_COMPILER "gcc-9")
+set(CMAKE_CXX_COMPILER "g++-9")
 
-project(frankx VERSION 0.1.0 LANGUAGES C CXX)
+project(frankx VERSION 0.2.0 LANGUAGES C CXX)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
@@ -10,7 +12,6 @@ option(BUILD_TEST "Build tests" ON)
 
 
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_STANDARD 17)
 

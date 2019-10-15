@@ -11,6 +11,7 @@
 
 #include <frankx/motion_joint.hpp>
 
+namespace frankx {
 
 JointMotion::JointMotion(double speed_factor, const std::array<double, 7> q_goal)
     : q_goal_(q_goal.data()) {
@@ -122,3 +123,5 @@ franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_s
   output.motion_finished = motion_finished;
   return output;
 }
+
+} // namespace frankx

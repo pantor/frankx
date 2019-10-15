@@ -1,15 +1,18 @@
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#define CATCH_CONFIG_MAIN
 #include <random>
 
 #include <catch2/catch.hpp>
 
-#include <frankx/geometry.hpp>
+#include <frankx/affine.hpp>
 #include <frankx/motion_waypoint.hpp>
 #include <frankx/robot.hpp>
+#include <frankx/utils.hpp>
 
 
+using namespace frankx;
 
-inline Eigen::Affine3d getRelativeBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
+
+inline Affine getRelativeBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
   return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
 }
 
@@ -17,7 +20,7 @@ inline Eigen::Affine3d getRelativeBase(double x = 0.0, double y = 0.0, double z 
 TEST_CASE("Geometry") {
     SECTION("Basic transformations") {
         auto affine = getRelativeBase(0.0, 0.0, 0.02, 1.2, -0.25, -2.06);
-        auto vector_result = Vector(affine, 1.6, Vector7d::Zero());
+        auto vector_result = affine.vector();
 
         REQUIRE( vector_result[0] == Approx(0.48) );
         REQUIRE( vector_result[1] == Approx(-0.204) );
@@ -25,26 +28,25 @@ TEST_CASE("Geometry") {
         REQUIRE( vector_result[3] == Approx(1.2) );
         REQUIRE( vector_result[4] == Approx(-0.25) );
         REQUIRE( vector_result[5] == Approx(-2.06) );
-        REQUIRE( vector_result[6] == Approx(1.6) );
     }
 
     SECTION("Robot state: RML Vector") {
-        frankx::Robot robot("172.16.0.2");
+        Robot robot("172.16.0.2");
         auto state = robot.readOnce();
         franka::CartesianPose pose = franka::CartesianPose(state.O_T_EE_c, state.elbow_c);
 
-        auto vector = Vector(pose, Vector7d::Zero(), true);
-        REQUIRE( vector[3] < 0.3 );
-        REQUIRE( vector[3] > -0.3 );
-        REQUIRE( vector[4] < 0.3 );
-        REQUIRE( vector[4] > -0.3 );
-        REQUIRE( vector[5] < 0.3 );
-        REQUIRE( vector[5] > -0.3 );
+        auto vector = Affine(pose).vector(pose.elbow[0]);
+        REQUIRE( vector[3] < 0.1 );
+        REQUIRE( vector[3] > -0.1 );
+        REQUIRE( vector[4] < 0.1 );
+        REQUIRE( vector[4] > -0.1 );
+        REQUIRE( vector[5] < 0.1 );
+        REQUIRE( vector[5] > -0.1 );
 
         RMLVector<double> *rml_vector = new RMLVector<double> (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         setVector(rml_vector, vector);
 
-        auto vector_result = Vector(getAffine(rml_vector), state.elbow_c[0], vector);
+        auto vector_result = Affine(rml_vector).vector(state.elbow_c[0], vector);
 
         REQUIRE( vector[0] == Approx(vector_result[0]) );
         REQUIRE( vector[1] == Approx(vector_result[1]) );
@@ -54,7 +56,7 @@ TEST_CASE("Geometry") {
         REQUIRE( vector[5] == Approx(vector_result[5]) );
         REQUIRE( vector[6] == Approx(vector_result[6]) );
 
-        auto pose_result = getCartesianPose(rml_vector, true);
+        auto pose_result = CartesianPose(rml_vector);
 
         for (int i = 0; i < 16; i++) {
             REQUIRE( pose.O_T_EE[i] == Approx(pose_result.O_T_EE[i]) );
@@ -79,7 +81,7 @@ TEST_CASE("Geometry") {
             RMLVector<double> *rml_vector = new RMLVector<double> (x, y, z, a, b, c, e);
             auto old_vector = Vector(rml_vector);
 
-            auto vector_result = Vector(getAffine(rml_vector), rml_vector->VecData[6], old_vector);
+            auto vector_result = Affine(rml_vector).vector(rml_vector->VecData[6], old_vector);
             REQUIRE( rml_vector->VecData[0] == Approx(vector_result[0]) );
             REQUIRE( rml_vector->VecData[1] == Approx(vector_result[1]) );
             REQUIRE( rml_vector->VecData[2] == Approx(vector_result[2]) );

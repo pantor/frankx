@@ -12,6 +12,8 @@
 #include <franka/robot_state.h>
 
 
+namespace frankx {
+
 /**
  * An example showing how to generate a joint pose motion to a goal position. Adapted from:
  * Wisama Khalil and Etienne Dombre. 2002. Modeling, Identification and Control of Robots
@@ -62,3 +64,5 @@ class JointMotion {
   Vector7d ddq_max_start_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
   Vector7d ddq_max_goal_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
 };
+
+} // namespace frankx

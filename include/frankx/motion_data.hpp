@@ -1,8 +1,10 @@
 #pragma once
 
 #include <frankx/condition.hpp>
-#include <frankx/geometry.hpp>
+#include <frankx/utils.hpp>
 
+
+namespace frankx {
 
 struct MotionData {
     MotionData() { }
@@ -23,3 +25,5 @@ struct MotionData {
         return *this;
     }
 };
+
+} // namespace frankx

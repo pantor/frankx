@@ -5,6 +5,9 @@
 #include <franka/robot_state.h>
 
 
+namespace frankx {
+
+
 class WaypointMotion;
 
 
@@ -80,3 +83,5 @@ private:
     }
   }
 };
+
+} // namespace frankx
