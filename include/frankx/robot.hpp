@@ -18,8 +18,7 @@
 
 namespace frankx {
 
-class Robot: public franka::Robot {
-public:
+struct Robot: public franka::Robot {
     const double max_translation_velocity {1.7}; // [m/s]
     const double max_rotation_velocity {2.5}; // [rad/s]
     const double max_elbow_velocity {2.175}; // [rad/s]
@@ -37,15 +36,22 @@ public:
     /**
      * Connects to a robot at the given FCI IP address.
      */
-    Robot(std::string fci_ip);
+    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0);
 
-    void setDefault();
+    void setDefaultBehavior();
     void setDynamicRel(double dynamic_rel);
 
-    bool move(const JointMotion& motion);
+    bool hasErrors();
+    bool recoverFromErrors();
 
-    bool move(const WaypointMotion& motion);
-    bool move(const WaypointMotion& motion, MotionData& data);
+    Affine currentPose(const Affine& frame = Affine());
+    void stop();
+
+    bool move(JointMotion motion);
+    bool move(JointMotion motion, MotionData& data);
+
+    bool move(WaypointMotion motion);
+    bool move(WaypointMotion motion, MotionData& data);
 };
 
 } // namespace frankx

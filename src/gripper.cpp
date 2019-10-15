@@ -3,9 +3,7 @@
 
 namespace frankx {
 
-Gripper::Gripper(const std::string& fci_ip): franka::Gripper(fci_ip), fci_ip(fci_ip) { }
-
-Gripper::Gripper(const std::string& fci_ip, double gripper_speed): franka::Gripper(fci_ip), fci_ip(fci_ip), gripper_speed(gripper_speed) { }
+Gripper::Gripper(const std::string& fci_ip, double gripper_speed): franka::Gripper(fci_ip), gripper_speed(gripper_speed) { }
 
 double Gripper::width() const {
   auto state = ((franka::Gripper*) this)->readOnce();

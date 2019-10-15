@@ -3,18 +3,18 @@
 
 namespace frankx {
 
-Robot::Robot(std::string fci_ip): franka::Robot(fci_ip) {}
+Robot::Robot(std::string fci_ip, double dynamic_rel): franka::Robot(fci_ip), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
 
-void Robot::setDefault() {
+void Robot::setDefaultBehavior() {
     setCollisionBehavior(
         {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
         {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
-        {{20.0, 20.0, 20.0, 10.0, 10.0, 10.0, 10.0}},
-        {{20.0, 20.0, 20.0, 10.0, 10.0, 10.0, 10.0}},
-        {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
-        {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
-        {{20.0, 20.0, 20.0, 10.0, 10.0, 10.0}},
-        {{20.0, 20.0, 20.0, 10.0, 10.0, 10.0}}
+        {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
+        {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
+        {{30.0, 30.0, 30.0, 30.0, 30.0, 30.0}},
+        {{30.0, 30.0, 30.0, 30.0, 30.0, 30.0}},
+        {{30.0, 30.0, 30.0, 30.0, 30.0, 30.0}},
+        {{30.0, 30.0, 30.0, 30.0, 30.0, 30.0}}
     );
     setJointImpedance({{3000, 3000, 3000, 2500, 2500, 2000, 2000}});
     setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
@@ -26,17 +26,37 @@ void Robot::setDynamicRel(double dynamic_rel) {
     jerk_rel = dynamic_rel;
 }
 
-bool Robot::move(const JointMotion& motion) {
-    control(motion);
-    return true;
+bool Robot::hasErrors() {
+    return bool(readOnce().current_errors);
 }
 
-bool Robot::move(const WaypointMotion& motion) {
+bool Robot::recoverFromErrors() {
+    automaticErrorRecovery();
+    return !hasErrors();
+}
+
+Affine Robot::currentPose(const Affine& frame) {
+    auto state = readOnce();
+    return Affine(state.O_T_EE_c) * frame;
+}
+
+bool Robot::move(JointMotion motion) {
     auto data = MotionData();
     return move(motion, data);
 }
 
-bool Robot::move(const WaypointMotion& motion, MotionData& data) {
+bool Robot::move(JointMotion motion, MotionData& data) {
+    motion.setDynamicRel(data.velocity_rel);
+    control(motion);
+    return true;
+}
+
+bool Robot::move(WaypointMotion motion) {
+    auto data = MotionData();
+    return move(motion, data);
+}
+
+bool Robot::move(WaypointMotion motion, MotionData& data) {
     constexpr int degrees_of_freedoms {7};
     constexpr double control_rate {0.001};
 
@@ -49,19 +69,19 @@ bool Robot::move(const WaypointMotion& motion, MotionData& data) {
 
     setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, true));
     setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
-        velocity_rel * max_translation_velocity,
-        velocity_rel * max_rotation_velocity,
-        velocity_rel * max_elbow_velocity
+        data.velocity_rel * velocity_rel * max_translation_velocity,
+        data.velocity_rel * velocity_rel * max_rotation_velocity,
+        data.velocity_rel * velocity_rel * max_elbow_velocity
     ));
     setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
-        acceleration_rel * max_translation_acceleration,
-        acceleration_rel * max_rotation_acceleration,
-        acceleration_rel * max_elbow_acceleration
+        data.acceleration_rel * acceleration_rel * max_translation_acceleration,
+        data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
+        data.acceleration_rel * acceleration_rel * max_elbow_acceleration
     ));
     setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
-        jerk_rel * max_translation_jerk,
-        jerk_rel * max_rotation_jerk,
-        jerk_rel * max_elbow_jerk
+        data.jerk_rel * jerk_rel * max_translation_jerk,
+        data.jerk_rel * jerk_rel * max_rotation_jerk,
+        data.jerk_rel * jerk_rel * max_elbow_jerk
     ));
 
     WaypointMotion current_motion = motion;
@@ -75,7 +95,7 @@ bool Robot::move(const WaypointMotion& motion, MotionData& data) {
         time += period.toSec();
         if (time == 0.0) {
             franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-            std::array<double, 7> initial_velocity = {robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]};
+            Vector7d initial_velocity = (Vector7d() << robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]).finished();
 
             Vector7d initial_vector = Affine(initial_pose).vector(initial_pose.elbow[0], old_vector);
             old_affine = Affine(initial_pose).data;
@@ -89,6 +109,23 @@ bool Robot::move(const WaypointMotion& motion, MotionData& data) {
             Waypoint current_waypoint = *waypoint_iterator;
             Eigen::Affine3d target_affine = current_waypoint.getTargetAffine(old_affine).data;
             auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+
+            setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
+                current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
+                current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
+                current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
+            ));
+            setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
+                current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
+                current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
+                current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
+            ));
+            setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
+                current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
+                current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
+                current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
+            ));
+
             setVector(input_parameters->TargetPositionVector, target_position_vector);
             setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
 
@@ -120,6 +157,23 @@ bool Robot::move(const WaypointMotion& motion, MotionData& data) {
                 old_elbow = old_vector(6);
 
                 auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+
+                setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
+                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
+                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
+                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
+                ));
+                setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
+                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
+                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
+                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
+                ));
+                setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
+                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
+                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
+                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
+                ));
+
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
                 setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
             }

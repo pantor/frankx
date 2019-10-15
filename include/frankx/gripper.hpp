@@ -21,13 +21,13 @@ class Gripper: franka::Gripper {
     double last_clamp_width; // [m]
 
 public:
+    // const double max_width {0.08}; // [m]
+    const double max_speed {0.05}; // [m/s]
+
     /**
     * Connects to a gripper at the given FCI IP address.
     */
-    explicit Gripper(const std::string& fci_ip);
-    explicit Gripper(const std::string& fci_ip, double gripper_speed);
-
-    std::string fci_ip;
+    explicit Gripper(const std::string& fci_ip, double gripper_speed = 0.02);
 
     double gripper_force {20.0}; // [N]
     double gripper_speed {0.02}; // [m/s]

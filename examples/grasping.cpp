@@ -18,14 +18,15 @@ inline frankx::Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, do
 int main() {
   frankx::Robot robot("172.16.0.2");
   robot.automaticErrorRecovery();
-  robot.setDefault();
+  robot.setDefaultBehavior();
 
 
-  frankx::JointMotion joint_motion(0.2, {-1.8119446041, 1.1791089121, 1.7571002245, -2.141621800, -1.1433693913, 1.6330460616, -0.4321716643});
-  robot.move(joint_motion);
+  auto joint_motion = frankx::JointMotion({-1.8119446041, 1.1791089121, 1.7571002245, -2.141621800, -1.1433693913, 1.6330460616, -0.4321716643});
+  auto joint_data = frankx::MotionData().withDynamicRel(0.2);
+  robot.move(joint_motion, joint_data);
 
   auto motion = frankx::LinearRelativeMotion(frankx::Affine(0.0, 0.0, -0.12, 0.0, 0.0, 0.0), -0.2);
-  auto data = frankx::MotionData().withDynamics(0.5).withCondition(
+  auto data = frankx::MotionData().withDynamicRel(0.5).withCondition(
     frankx::Condition(
       frankx::Condition::Measure::ForceZ,
       frankx::Condition::Comparison::Smaller,

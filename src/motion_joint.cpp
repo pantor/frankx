@@ -13,11 +13,8 @@
 
 namespace frankx {
 
-JointMotion::JointMotion(double speed_factor, const std::array<double, 7> q_goal)
+JointMotion::JointMotion(const std::array<double, 7> q_goal)
     : q_goal_(q_goal.data()) {
-  dq_max_ *= speed_factor;
-  ddq_max_start_ *= speed_factor;
-  ddq_max_goal_ *= speed_factor;
   dq_max_sync_.setZero();
   q_start_.setZero();
   delta_q_.setZero();
@@ -25,6 +22,16 @@ JointMotion::JointMotion(double speed_factor, const std::array<double, 7> q_goal
   t_2_sync_.setZero();
   t_f_sync_.setZero();
   q_1_.setZero();
+}
+
+void JointMotion::setDynamicRel(double dynamic_rel) {
+  dq_max_ = (Vector7d() << 2.0, 2.0, 2.0, 2.0, 2.5, 2.5, 2.5).finished();
+  ddq_max_start_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
+  ddq_max_goal_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
+
+  dq_max_ *= dynamic_rel;
+  ddq_max_start_ *= dynamic_rel;
+  ddq_max_goal_ *= dynamic_rel;
 }
 
 bool JointMotion::calculateDesiredValues(double t, Vector7d* delta_q_d) const {

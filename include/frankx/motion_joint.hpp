@@ -27,7 +27,7 @@ class JointMotion {
    * @param[in] speed_factor General speed factor in range [0, 1].
    * @param[in] q_goal Target joint positions.
    */
-  JointMotion(double speed_factor, const std::array<double, 7> q_goal);
+  explicit JointMotion(const std::array<double, 7> q_goal);
 
   /**
    * Sends joint position calculations
@@ -38,6 +38,8 @@ class JointMotion {
    * @return Joint positions for use inside a control loop.
    */
   franka::JointPositions operator()(const franka::RobotState& robot_state, franka::Duration period);
+
+  void setDynamicRel(double dynamic_rel);
 
  private:
   using Vector7d = Eigen::Matrix<double, 7, 1, Eigen::ColMajor>;

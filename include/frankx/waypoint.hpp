@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include <frankx/affine.hpp>
 #include <frankx/utils.hpp>
 
 
@@ -11,7 +12,7 @@ class Waypoint {
     Affine affine {Affine()};
     double elbow {0.0};
 
-    std::array<double, 7> velocity {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+    Vector7d velocity {Vector7d::Zero()};
 
 public:
     enum class ReferenceType {
@@ -19,15 +20,16 @@ public:
         Relative
     } reference_type {ReferenceType::Absolute};
 
+    double velocity_rel {1.0};
+    double acceleration_rel {1.0};
+    double jerk_rel {1.0};
+
     std::optional<double> minimum_time;
 
-
-    Waypoint() {}
-    Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
-    Waypoint(const Affine& affine, double elbow): affine(affine), elbow(elbow) {}
-    Waypoint(const Affine& affine, double elbow, ReferenceType reference_type): affine(affine), elbow(elbow), reference_type(reference_type) {}
-    Waypoint(const Affine& affine, double elbow, const std::array<double, 7>& velocity): affine(affine), elbow(elbow), velocity(velocity) {}
-    Waypoint(const Affine& affine, double elbow, const std::array<double, 7>& velocity, ReferenceType reference_type): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type) {}
+    explicit Waypoint() {}
+    explicit Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
+    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
+    explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
 
     Affine getTargetAffine(const Affine& old_affine) const {
         if (reference_type == ReferenceType::Relative) {
@@ -41,7 +43,7 @@ public:
         return getTargetAffine(old_affine).vector(new_elbow, old_vector);
     }
 
-    std::array<double, 7> getTargetVelocity() const {
+    Vector7d getTargetVelocity() const {
         return velocity;
     }
 };

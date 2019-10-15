@@ -55,33 +55,31 @@ PYBIND11_MODULE(frankx, m) {
         .export_values();
 
     py::class_<MotionData>(m, "MotionData")
-        .def(py::init<>())
+        .def(py::init<double>(), "dynamic_rel"_a = 1.0)
         .def_readwrite("velocity_rel", &MotionData::velocity_rel)
         .def_readwrite("acceleration_rel", &MotionData::acceleration_rel)
         .def_readonly("conditions", &MotionData::conditions)
-        .def("with_dynamics", &MotionData::withDynamics)
+        .def("with_dynamic_rel", &MotionData::withDynamicRel)
         .def("with_condition", &MotionData::withCondition);
 
     py::class_<Waypoint> waypoint(m, "Waypoint");
+    py::enum_<Waypoint::ReferenceType>(waypoint, "Waypoint")
+        .value("Absolute", Waypoint::ReferenceType::Absolute)
+        .value("Relative", Waypoint::ReferenceType::Relative)
+        .export_values();
+
     waypoint.def(py::init<>())
-        .def(py::init<double>())
-        .def(py::init<const Affine &, double>())
-        .def(py::init<const Affine &, double, Waypoint::ReferenceType>())
-        .def(py::init<const Affine &, double, const std::array<double, 7> &>())
-        .def(py::init<const Affine &, double, const std::array<double, 7> &, Waypoint::ReferenceType>())
+        .def(py::init<double>(), "minimum_time"_a)
+        .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def_readonly("reference_type", &Waypoint::reference_type)
         .def_readonly("minimum_time", &Waypoint::minimum_time)
         .def("get_target_affine", &Waypoint::getTargetAffine)
         .def("get_target_vector", &Waypoint::getTargetVector)
         .def("get_target_velocity", &Waypoint::getTargetVelocity);
 
-    py::enum_<Waypoint::ReferenceType>(waypoint, "Waypoint")
-        .value("Absolute", Waypoint::ReferenceType::Absolute)
-        .value("Relative", Waypoint::ReferenceType::Relative)
-        .export_values();
-
     py::class_<JointMotion>(m, "JointMotion")
-        .def(py::init<double, const std::array<double, 7>>());
+        .def(py::init<const std::array<double, 7>>());
 
     py::class_<WaypointMotion>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>());
@@ -96,8 +94,44 @@ PYBIND11_MODULE(frankx, m) {
     py::class_<PositionHold, WaypointMotion>(m, "PositionHold")
         .def(py::init<double>());
 
+    py::class_<franka::Errors>(m, "Errors")
+        .def(py::init<>());
+
+    py::class_<franka::RobotState>(m, "RobotState")
+        .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
+        .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
+        .def_readonly("F_T_EE", &franka::RobotState::F_T_EE)
+        .def_readonly("EE_T_K", &franka::RobotState::EE_T_K)
+        .def_readonly("m_ee", &franka::RobotState::m_ee)
+        .def_readonly("I_ee", &franka::RobotState::I_ee)
+        .def_readonly("m_load", &franka::RobotState::m_load)
+        .def_readonly("I_load", &franka::RobotState::I_load)
+        .def_readonly("m_total", &franka::RobotState::m_total)
+        .def_readonly("I_total", &franka::RobotState::I_total)
+        .def_readonly("elbow", &franka::RobotState::elbow)
+        .def_readonly("elbow_d", &franka::RobotState::elbow_d)
+        .def_readonly("elbow_c", &franka::RobotState::elbow_c)
+        .def_readonly("delbow_c", &franka::RobotState::delbow_c)
+        .def_readonly("ddelbow_c", &franka::RobotState::ddelbow_c)
+        .def_readonly("q", &franka::RobotState::q)
+        .def_readonly("q_d", &franka::RobotState::q_d)
+        .def_readonly("dq", &franka::RobotState::dq)
+        .def_readonly("dq_d", &franka::RobotState::dq_d)
+        .def_readonly("ddq_d", &franka::RobotState::ddq_d)
+        .def_readonly("joint_contact", &franka::RobotState::m_total)
+        .def_readonly("cartesian_contact", &franka::RobotState::cartesian_contact)
+        .def_readonly("joint_collision", &franka::RobotState::joint_collision)
+        .def_readonly("cartesian_collision", &franka::RobotState::cartesian_collision)
+        .def_readonly("tau_ext_hat_filtered", &franka::RobotState::tau_ext_hat_filtered)
+        .def_readonly("O_T_EE_c", &franka::RobotState::O_T_EE_c)
+        .def_readonly("O_dP_EE_c", &franka::RobotState::O_dP_EE_c)
+        .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
+        .def_readonly("theta", &franka::RobotState::theta)
+        .def_readonly("dtheta", &franka::RobotState::dtheta)
+        .def_readonly("current_errors", &franka::RobotState::current_errors);
+
     py::class_<Robot>(m, "Robot")
-        .def(py::init<const std::string &>())
+        .def(py::init<const std::string &, double>(), "fci_ip"_a, "dynamic_rel"_a = 1.0)
         .def_readonly("max_translation_velocity", &Robot::max_translation_velocity)
         .def_readonly("max_rotation_velocity", &Robot::max_rotation_velocity)
         .def_readonly("max_elbow_velocity", &Robot::max_elbow_velocity)
@@ -110,23 +144,37 @@ PYBIND11_MODULE(frankx, m) {
         .def_readwrite("velocity_rel", &Robot::velocity_rel)
         .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
         .def_readwrite("jerk_rel", &Robot::jerk_rel)
-        .def("set_default", &Robot::setDefault)
+        .def("set_default_behavior", &Robot::setDefaultBehavior)
+        .def("set_cartesian_impedance", &Robot::setCartesianImpedance)
         .def("set_dynamic_rel", &Robot::setDynamicRel)
-        .def("move", (bool (Robot::*)(const JointMotion &)) &Robot::move)
-        .def("move", (bool (Robot::*)(const WaypointMotion &)) &Robot::move)
-        .def("move", (bool (Robot::*)(const WaypointMotion &, MotionData &)) &Robot::move);
+        .def("has_errors", &Robot::hasErrors)
+        .def("recover_from_errors", &Robot::recoverFromErrors)
+        .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
+        .def("read_once", &Robot::readOnce)
+        .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
+        .def("stop", &Robot::stop)
+        .def("move", (bool (Robot::*)(JointMotion)) &Robot::move)
+        .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move)
+        .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move)
+        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move);
+
+    py::class_<franka::GripperState>(m, "GripperState")
+        .def_readonly("width", &franka::GripperState::width)
+        .def_readonly("max_width", &franka::GripperState::max_width)
+        .def_readonly("is_grasped", &franka::GripperState::is_grasped)
+        .def_readonly("temperature", &franka::GripperState::temperature);
 
     py::class_<Gripper>(m, "Gripper")
-        .def(py::init<const std::string&>())
-        .def(py::init<const std::string&, double>())
+        .def(py::init<const std::string&, double>(), "fci_ip"_a, "gripper_speed"_a = 0.02)
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
         .def("width", &Gripper::width)
-        .def("stop", &Gripper::stop)
         .def("homing", &Gripper::homing)
-        .def("is_grasping", &Gripper::isGrasping)
         .def("move", &Gripper::move)
+        .def("stop", &Gripper::stop)
+        // .def("read_once", &Gripper::readOnce)
+        .def("is_grasping", &Gripper::isGrasping)
         .def("open", &Gripper::open)
         .def("clamp", &Gripper::clamp)
         .def("release", &Gripper::release);
