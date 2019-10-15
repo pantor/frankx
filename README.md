@@ -7,7 +7,7 @@ Frankx is a high-level motion library (both C++ and Python) for the Franka Emika
 
 Include frankx as a subproject in your parent CMake with `add_subdirectory(frankx)`. Then `target_link_libraries(your_target frankx)`. Install paths are added later on, then you can install the library via
 
-```
+```bash
 mkdir build
 cd build
 cmake -DReflexxes_DIR=../RMLTypeII -DReflexxes_TYPE=ReflexxesTypeII ..

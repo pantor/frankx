@@ -26,16 +26,17 @@ void Robot::setDynamicRel(double dynamic_rel) {
     jerk_rel = dynamic_rel;
 }
 
-void Robot::move(const JointMotion& motion) {
+bool Robot::move(const JointMotion& motion) {
     control(motion);
+    return true;
 }
 
-void Robot::move(const WaypointMotion& motion) {
+bool Robot::move(const WaypointMotion& motion) {
     auto data = MotionData();
-    move(motion, data);
+    return move(motion, data);
 }
 
-void Robot::move(const WaypointMotion& motion, MotionData& data) {
+bool Robot::move(const WaypointMotion& motion, MotionData& data) {
     constexpr int degrees_of_freedoms {7};
     constexpr double control_rate {0.001};
 
@@ -157,6 +158,8 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
 
         return CartesianPose(output_parameters->NewPositionVector);
     }, franka::ControllerMode::kCartesianImpedance);
+
+    return true;
 }
 
 } // namepace frankx

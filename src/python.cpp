@@ -86,13 +86,14 @@ PYBIND11_MODULE(frankx, m) {
     py::class_<WaypointMotion>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>());
 
-    py::class_<LinearMotion>(m, "LinearMotion")
+    py::class_<LinearMotion, WaypointMotion>(m, "LinearMotion")
         .def(py::init<const Affine&, double>());
 
-    py::class_<LinearRelativeMotion>(m, "LinearRelativeMotion")
+    py::class_<LinearRelativeMotion, WaypointMotion>(m, "LinearRelativeMotion")
+        .def(py::init<const Affine&>())
         .def(py::init<const Affine&, double>());
 
-    py::class_<PositionHold>(m, "PositionHold")
+    py::class_<PositionHold, WaypointMotion>(m, "PositionHold")
         .def(py::init<double>());
 
     py::class_<Robot>(m, "Robot")
@@ -111,9 +112,9 @@ PYBIND11_MODULE(frankx, m) {
         .def_readwrite("jerk_rel", &Robot::jerk_rel)
         .def("set_default", &Robot::setDefault)
         .def("set_dynamic_rel", &Robot::setDynamicRel)
-        .def("move", (void (Robot::*)(const JointMotion &)) &Robot::move)
-        .def("move", (void (Robot::*)(const WaypointMotion &)) &Robot::move)
-        .def("move", (void (Robot::*)(const WaypointMotion &, MotionData &)) &Robot::move);
+        .def("move", (bool (Robot::*)(const JointMotion &)) &Robot::move)
+        .def("move", (bool (Robot::*)(const WaypointMotion &)) &Robot::move)
+        .def("move", (bool (Robot::*)(const WaypointMotion &, MotionData &)) &Robot::move);
 
     py::class_<Gripper>(m, "Gripper")
         .def(py::init<const std::string&>())

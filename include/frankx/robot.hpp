@@ -42,10 +42,10 @@ public:
     void setDefault();
     void setDynamicRel(double dynamic_rel);
 
-    void move(const JointMotion& motion);
+    bool move(const JointMotion& motion);
 
-    void move(const WaypointMotion& motion);
-    void move(const WaypointMotion& motion, MotionData& data);
+    bool move(const WaypointMotion& motion);
+    bool move(const WaypointMotion& motion, MotionData& data);
 };
 
 } // namespace frankx

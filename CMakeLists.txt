@@ -30,28 +30,29 @@ set(PYTHON_LIBRARY "/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6
 find_package(Franka 0.6.0 REQUIRED)
 find_library(Reflexxes ${Reflexxes_TYPE} PATHS ${Reflexxes_LIB_DIR})
 find_package(pybind11 REQUIRED)
+find_package(Python 3.6 EXACT REQUIRED)
 
 
-add_library(frankx SHARED
+add_library(libfrankx SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_joint.cpp
   src/robot.cpp
 )
-target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${Reflexxes_INCLUDE_DIR} ${Eigen3_DIRS})
-target_link_libraries(frankx Franka::Franka ${Reflexxes})
+target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${Reflexxes_INCLUDE_DIR} ${Eigen3_DIRS})
+target_link_libraries(libfrankx Franka::Franka ${Reflexxes})
 
 
 if(BUILD_PYTHON_MODULE)
-  pybind11_add_module(cfrankx src/python.cpp)
-  target_link_libraries(cfrankx PUBLIC frankx)
+  pybind11_add_module(frankx src/python.cpp)
+  target_link_libraries(frankx PUBLIC libfrankx)
 endif()
 
 
 if(BUILD_EXAMPLES)
   foreach(example IN ITEMS grasping)
     add_executable(${example} "examples/${example}.cpp")
-    target_link_libraries(${example} frankx)
+    target_link_libraries(${example} libfrankx)
   endforeach()
 endif()
 
@@ -60,5 +61,5 @@ if(BUILD_TEST)
   find_package(Catch2 REQUIRED)
 
   add_executable(unit_test "test/unit-test.cpp")
-  target_link_libraries(unit_test frankx Catch2::Catch2)
+  target_link_libraries(unit_test libfrankx Catch2::Catch2)
 endif()
