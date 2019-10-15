@@ -19,20 +19,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 set(Eigen3_DIRS "/usr/local/include/eigen3-2/")
-
-set(Reflexxes_LIB_DIR "~/Documents/libs/ReflexxesTypeIV/Linux/x64/release/lib/shared" CACHE STRING "Path to Reflexxes library")
-set(Reflexxes_INCLUDE_DIR "~/Documents/libs/ReflexxesTypeIV/include" CACHE STRING "Path to Reflexxes headers")
-set(Reflexxes_TYPE "ReflexxesTypeIV" CACHE STRING "Type of Reflexxes library")
-
-# set(Reflexxes_LIB_DIR "~/Documents/libs/ReflexxesTypeII/Linux/x64/release/lib/shared" CACHE STRING "Path to Reflexxes library")
-# set(Reflexxes_INCLUDE_DIR "~/Documents/libs/ReflexxesTypeII/include" CACHE STRING "Path to Reflexxes headers")
-# set(Reflexxes_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library")
-
+set(Reflexxes_TYPE "ReflexxesTypeIV" CACHE STRING "Type of Reflexxes library") # or "ReflexxesTypeII"
+set(Reflexxes_LIB_DIR "~/Documents/libs/${Reflexxes_TYPE}/Linux/x64/release/lib/shared" CACHE STRING "Path to Reflexxes library")
+set(Reflexxes_INCLUDE_DIR "~/Documents/libs/${Reflexxes_TYPE}/include" CACHE STRING "Path to Reflexxes headers")
 set(PYTHON_EXECUTABLE python3.6)
 set(PYTHON_LIBRARY "/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so")
 
 
-# find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
 find_library(Reflexxes ${Reflexxes_TYPE} PATHS ${Reflexxes_LIB_DIR})
 find_package(pybind11 REQUIRED)
