@@ -1,6 +1,6 @@
 # Frankx
 
-Frankx is a higher-level API for controlling the Franka Emika Panda robot. It is based on [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and of course [libfranka](https://frankaemika.github.io/docs/libfranka.html). It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
+Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It is based on [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and of course [libfranka](https://frankaemika.github.io/docs/libfranka.html). It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
 
 
 ## Installation
@@ -36,6 +36,17 @@ auto motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0));
 
 // Finally move the robot
 robot.move(motion);
+```
+
+Or the corresponding program in python
+```python
+from frankx import Affine, LinearRelativeMotion, Robot
+
+robot = Robot("172.16.0.2")
+robot.set_dynamics_rel(0.05)
+
+motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0))
+robot.move(motion)
 ```
 
 
@@ -152,7 +163,7 @@ Multiple examples can be found in `examples`.
 
 ## Development
 
-Frankx is written in C++14, making use of the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html). It works well with ROS2.
+Frankx is written in C++17. It works well with ROS2.
 
 
 ## License

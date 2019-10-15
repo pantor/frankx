@@ -15,223 +15,65 @@ using Vector6d = Eigen::Matrix<double, 6, 1>;
 using Vector7d = Eigen::Matrix<double, 7, 1>;
 
 struct Affine {
-  using Euler = Eigen::EulerAnglesZYXd;
+    using Euler = Eigen::EulerAnglesZYXd;
 
-  Eigen::Affine3d data {};
-  Eigen::Vector3d ref_euler {Eigen::Vector3d::Zero()};
+    Eigen::Affine3d data {};
+    Eigen::Vector3d ref_euler {Eigen::Vector3d::Zero()};
 
-  Euler offset_euler {M_PI_2, 0.0, M_PI};
+    Euler offset_euler {M_PI_2, 0.0, M_PI};
 
-  Affine() {
-    this->data = Eigen::Affine3d::Identity();
-  }
+    Affine();
+    Affine(const Eigen::Affine3d& data);
+    Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0);
+    Affine(const Vector6d& v);
+    Affine(const Vector7d& v);
+    Affine(const std::array<double, 16>& array);
+    Affine(RMLVector<double> *rml_vector);
+    Affine(const franka::CartesianPose& pose, bool offset = true);
 
-  Affine(const Eigen::Affine3d& data) {
-    this->data = data;
-  }
+    Affine operator*(const Affine &a) const;
 
-  Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0) {
-    ref_euler << a, b, c;
-    data = Eigen::Translation<double, 3>(x, y, z) * Euler(a, b, c).toRotationMatrix();
-  }
+    Affine inverse() const;
 
-  Affine(const Vector6d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
+    bool isApprox(const Affine &a) const;
 
-  Affine(const Vector7d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
+    Eigen::Ref<Eigen::Affine3d::MatrixType> matrix();
+    std::array<double, 16> array() const;
 
-  Affine(const std::array<double, 16>& array) {
-    Eigen::Affine3d affine(Eigen::Matrix4d::Map(array.data()));
-    data = affine;
-  }
+    void translate(const Eigen::Vector3d &v);
+    void pretranslate(const Eigen::Vector3d &v);
+    void rotate(const Eigen::Affine3d::LinearMatrixType &r);
+    void prerotate(const Eigen::Affine3d::LinearMatrixType &r);
 
-  Affine(RMLVector<double> *rml_vector): Affine(rml_vector->VecData[0], rml_vector->VecData[1], rml_vector->VecData[2], rml_vector->VecData[3], rml_vector->VecData[4], rml_vector->VecData[5]) { }
+    Eigen::Vector3d translation() const;
+    Eigen::Vector3d angles() const;
+    Eigen::Vector3d angles(const Eigen::Vector3d& new_ref_euler);
+    Eigen::Affine3d::LinearMatrixType rotation() const;
 
-  Affine(const franka::CartesianPose& pose, bool offset = true) {
-    Eigen::Affine3d affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
-    if (offset) {
-      affine = affine.prerotate(offset_euler);
-    }
-    data = affine;
-  }
+    Vector6d vector() const;
+    Vector6d vector(const Eigen::Vector3d& new_ref_euler);
+    Vector7d vector(double elbow) const;
+    Vector7d vector(double elbow, const Eigen::Vector3d& new_ref_euler);
+    Vector7d vector(double elbow, const Vector7d& new_ref_vector);
 
-  Affine operator *(const Affine &a) const {
-    Eigen::Affine3d result;
-    result = data * a.data;
-    return Affine(result);
-  }
+    double x() const;
+    double y() const;
+    double z() const;
 
-  Affine inverse() const {
-    return Affine(data.inverse());
-  }
+    void set_x(double x);
+    void set_y(double y);
+    void set_z(double z);
 
-  bool isApprox(const Affine &a) const {
-    return data.isApprox(a.data);
-  }
+    double a() const;
+    double b() const;
+    double c() const;
 
-  Eigen::Ref<Eigen::Affine3d::MatrixType> matrix() {
-    return data.matrix();
-  }
+    void set_a(double a);
+    void set_b(double b);
+    void set_c(double c);
 
-  void translate(const Eigen::Vector3d &v) {
-    data.translate(v);
-  }
-
-  void pretranslate(const Eigen::Vector3d &v) {
-    data.pretranslate(v);
-  }
-
-  Eigen::Vector3d translation() const {
-    Eigen::Vector3d v;
-    v << data.translation();
-    return v;
-  }
-
-  Eigen::Vector3d angles() const {
-    Eigen::Vector3d euler = Euler::FromRotation<false, false, false>(data.rotation()).angles();
-    Eigen::Vector3d euler2;
-    euler2 << euler[0] - M_PI, M_PI - euler[1], -M_PI + euler[2];
-
-    if (euler2[1] > M_PI) {
-      euler2[1] -= 2 * M_PI;
-    }
-    if (euler2[2] < -M_PI) {
-      euler2[2] += 2 * M_PI;
-    }
-
-    if ((ref_euler - euler).norm() < (ref_euler - euler2).norm()) {
-      return euler;
-    }
-    return euler2;
-  }
-
-  Eigen::Vector3d angles(const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return angles();
-  }
-
-  Vector6d vector() const {
-    Vector6d result;
-    result << data.translation(), angles();
-    return result;
-  }
-
-  Vector6d vector(const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return vector();
-  }
-
-  Vector7d vector(double elbow) const {
-    Vector7d result;
-    result << data.translation(), angles(), elbow;
-    return result;
-  }
-
-  Vector7d vector(double elbow, const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return vector(elbow);
-  }
-
-  Vector7d vector(double elbow, const Vector7d& new_ref_vector) {
-    ref_euler << new_ref_vector(3), new_ref_vector(4), new_ref_vector(5);
-    return vector(elbow);
-  }
-
-  std::array<double, 16> array() {
-    std::array<double, 16> array {};
-    std::copy( data.data(), data.data() + array.size(), array.begin() );
-    return array;
-  }
-
-  double x() const {
-    return data.translation()(0);
-  }
-
-  void set_x(double x) {
-    data.translation()(0) = x;
-  }
-
-  double y() const {
-    return data.translation()(1);
-  }
-
-  void set_y(double y) {
-    data.translation()(1) = y;
-  }
-
-  double z() const {
-    return data.translation()(2);
-  }
-
-  void set_z(double z) {
-    data.translation()(2) = z;
-  }
-
-  void rotate(const Eigen::Affine3d::LinearMatrixType &r) {
-    data.rotate(r);
-  }
-
-  void prerotate(const Eigen::Affine3d::LinearMatrixType &r) {
-    data.prerotate(r);
-  }
-
-  Eigen::Affine3d::LinearMatrixType rotation() const {
-    Eigen::Affine3d::LinearMatrixType result;
-    result << data.rotation();
-    return result;
-  }
-
-  double a() const {
-    return angles()(0);
-  }
-
-  double b() const {
-    return angles()(1);
-  }
-
-  double c() const {
-    return angles()(2);
-  }
-
-  void set_a(double a) {
-    Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(a, euler(1), euler(2)).toRotationMatrix();
-
-    ref_euler(0) = a;
-  }
-
-  void set_b(double b) {
-    Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), b, euler(2)).toRotationMatrix();
-
-    ref_euler(1) = b;
-  }
-
-  void set_c(double c) {
-    Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), euler(1), c).toRotationMatrix();
-
-    ref_euler(2) = c;
-  }
-
-  Affine getInnerRandom() const {
-    std::random_device r;
-    std::default_random_engine engine(r());
-
-    Vector6d max = vector();
-    Vector6d random;
-    for (int i = 0; i < 6; i++) {
-      std::uniform_real_distribution<double> distribution(-max(i), max(i));
-      random(i) = distribution(engine);
-    }
-
-    return Affine(random);
-  }
-
-  std::string toString() const {
-    Vector6d v = vector();
-    return "[" + std::to_string(v(0)) + ", " + std::to_string(v(1)) + ", " + std::to_string(v(2))
-      + ", " + std::to_string(v(3)) + ", " + std::to_string(v(4)) + ", " + std::to_string(v(5)) + "]";
-  }
+    Affine getInnerRandom() const;
+    std::string toString() const;
 };
 
 } // namespace frankx

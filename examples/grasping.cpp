@@ -8,6 +8,8 @@
 #include <frankx/robot.hpp>
 
 
+// using namespace frankx;
+
 inline frankx::Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
   return frankx::Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
 }
@@ -25,7 +27,7 @@ int main() {
   auto motion = frankx::LinearRelativeMotion(frankx::Affine(0.0, 0.0, -0.12, 0.0, 0.0, 0.0), -0.2);
   auto data = frankx::MotionData().withDynamics(0.5).withCondition(
     frankx::Condition(
-      frankx::Condition::Axis::ForceZ,
+      frankx::Condition::Measure::ForceZ,
       frankx::Condition::Comparison::Smaller,
       -7.0,
       std::make_shared<frankx::LinearRelativeMotion>(frankx::Affine(0.0, 0.0, 0.001, 0.0, 0.0, 0.0), 0.0)

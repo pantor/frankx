@@ -105,7 +105,7 @@ void Robot::move(const WaypointMotion& motion, MotionData& data) {
                 continue;
             }
 
-            if (condition.callback(robot_state)) {
+            if (condition.callback(robot_state, time)) {
                 condition.has_fired = true;
 
                 current_motion = *condition.action;

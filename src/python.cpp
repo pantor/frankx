@@ -37,15 +37,16 @@ PYBIND11_MODULE(frankx, m) {
         .def("__repr__", &Affine::toString);
 
     py::class_<Condition> condition(m, "Condition");
-    condition.def(py::init<Condition::Axis, Condition::Comparison, double>())
-        .def(py::init<Condition::Axis, Condition::Comparison, double, std::shared_ptr<WaypointMotion>>())
+    condition.def(py::init<Condition::Measure, Condition::Comparison, double>())
+        .def(py::init<Condition::Measure, Condition::Comparison, double, std::shared_ptr<WaypointMotion>>())
         .def_readonly("has_fired", &Condition::has_fired)
         .def_readonly("has_action", &Condition::has_action);
 
-    py::enum_<Condition::Axis>(condition, "Axis")
-        .value("ForceZ", Condition::Axis::ForceZ)
-        .value("ForceXYNorm", Condition::Axis::ForceXYNorm)
-        .value("ForceXYZNorm", Condition::Axis::ForceXYZNorm)
+    py::enum_<Condition::Measure>(condition, "Measure")
+        .value("ForceZ", Condition::Measure::ForceZ)
+        .value("ForceXYNorm", Condition::Measure::ForceXYNorm)
+        .value("ForceXYZNorm", Condition::Measure::ForceXYZNorm)
+        .value("Time", Condition::Measure::Time)
         .export_values();
 
     py::enum_<Condition::Comparison>(condition, "Comparison")

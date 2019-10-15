@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+
 set(CMAKE_C_COMPILER "gcc-9")
 set(CMAKE_CXX_COMPILER "g++-9")
+
 
 project(frankx VERSION 0.2.0 LANGUAGES C CXX)
 
@@ -31,6 +33,7 @@ find_package(pybind11 REQUIRED)
 
 
 add_library(frankx SHARED
+  src/affine.cpp
   src/gripper.cpp
   src/motion_joint.cpp
   src/robot.cpp
