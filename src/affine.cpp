@@ -30,7 +30,7 @@ Affine::Affine(RMLVector<double> *rml_vector): Affine(rml_vector->VecData[0], rm
 Affine::Affine(const franka::CartesianPose& pose, bool offset) {
     Eigen::Affine3d affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
     if (offset) {
-        affine = affine.prerotate(offset_euler);
+        affine = affine.rotate(offset_euler);
     }
     data = affine;
 }

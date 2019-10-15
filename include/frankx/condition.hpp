@@ -30,10 +30,10 @@ struct Condition {
 
   explicit Condition(std::function<bool(const franka::RobotState&, double)> callback): callback(callback) { }
   explicit Condition(std::function<bool(const franka::RobotState&, double)> callback, std::shared_ptr<WaypointMotion> action): callback(callback), has_action(true), action(action) { }
-  explicit Condition(Measure measure, Comparison comparison, double value) {
+  Condition(Measure measure, Comparison comparison, double value) {
     setCallback(measure, comparison, value);
   }
-  explicit Condition(Measure measure, Comparison comparison, double value, std::shared_ptr<WaypointMotion> action): has_action(true), action(action) {
+  Condition(Measure measure, Comparison comparison, double value, std::shared_ptr<WaypointMotion> action): has_action(true), action(action) {
     setCallback(measure, comparison, value);
   }
 

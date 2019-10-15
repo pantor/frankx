@@ -22,14 +22,14 @@ struct Affine {
 
     Euler offset_euler {M_PI_2, 0.0, M_PI};
 
-    Affine();
-    Affine(const Eigen::Affine3d& data);
-    Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0);
-    Affine(const Vector6d& v);
-    Affine(const Vector7d& v);
-    Affine(const std::array<double, 16>& array);
-    Affine(RMLVector<double> *rml_vector);
-    Affine(const franka::CartesianPose& pose, bool offset = true);
+    explicit Affine();
+    explicit Affine(const Eigen::Affine3d& data);
+    explicit Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0);
+    explicit Affine(const Vector6d& v);
+    explicit Affine(const Vector7d& v);
+    explicit Affine(const std::array<double, 16>& array);
+    explicit Affine(RMLVector<double> *rml_vector);
+    explicit Affine(const franka::CartesianPose& pose, bool offset = true);
 
     Affine operator*(const Affine &a) const;
 

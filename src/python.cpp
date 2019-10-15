@@ -81,17 +81,17 @@ PYBIND11_MODULE(frankx, m) {
     py::class_<JointMotion>(m, "JointMotion")
         .def(py::init<const std::array<double, 7>>());
 
-    py::class_<WaypointMotion>(m, "WaypointMotion")
+    py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>());
 
-    py::class_<LinearMotion, WaypointMotion>(m, "LinearMotion")
+    py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
         .def(py::init<const Affine&, double>());
 
-    py::class_<LinearRelativeMotion, WaypointMotion>(m, "LinearRelativeMotion")
+    py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
         .def(py::init<const Affine&>())
         .def(py::init<const Affine&, double>());
 
-    py::class_<PositionHold, WaypointMotion>(m, "PositionHold")
+    py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());
 
     py::class_<franka::Errors>(m, "Errors")
@@ -152,7 +152,7 @@ PYBIND11_MODULE(frankx, m) {
         .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
-        .def("stop", &Robot::stop)
+        // .def("stop", &Robot::stop)
         .def("move", (bool (Robot::*)(JointMotion)) &Robot::move)
         .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move)
         .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move)

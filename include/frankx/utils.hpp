@@ -77,7 +77,7 @@ inline std::vector<T> VectorCartRotElbow(T cart, T rot, T elbow) {
 inline franka::CartesianPose CartesianPose(RMLVector<double> *rml_vector, bool offset = true) {
   auto affine = Affine(rml_vector);
   if (offset) {
-    affine.data = affine.data.prerotate(affine.offset_euler);
+    affine.data = affine.data.rotate(affine.offset_euler);
   }
   return franka::CartesianPose(affine.array(), {rml_vector->VecData[6], -1});
 }

@@ -28,8 +28,8 @@ public:
 
     explicit Waypoint() {}
     explicit Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
-    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
-    explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
+    Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
+    Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
 
     Affine getTargetAffine(const Affine& old_affine) const {
         if (reference_type == ReferenceType::Relative) {
