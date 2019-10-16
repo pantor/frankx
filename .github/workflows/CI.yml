@@ -45,6 +45,7 @@ jobs:
         cd build
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
+        sudo make install
 
     - name: configure
       run: |
