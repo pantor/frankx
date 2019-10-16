@@ -21,6 +21,7 @@ jobs:
         mkdir build && cd build
         cmake ..
         sudo make install
+        cd ../../
 
         # Reflexxes
         git clone https://github.com/pantor/RMLTypeII.git
@@ -30,6 +31,7 @@ jobs:
         mkdir build && cd build
         cmake ..
         make
+        cd ../../
 
         # Libfranka
         git clone --recursive https://github.com/frankaemika/libfranka.git
@@ -40,6 +42,7 @@ jobs:
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         sudo make install
+        cd ../../
 
         # Catch2
         git clone https://github.com/catchorg/Catch2.git
@@ -48,6 +51,7 @@ jobs:
         mkdir build && cd build
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         sudo make install
+        cd ../../
 
     - name: configure & make
       run: |
