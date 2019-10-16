@@ -14,12 +14,11 @@ option(BUILD_TESTS "Build tests" ON)
 set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
 
-# find_package(Eigen3 3.3.7 REQUIRED)
+find_package(Eigen3 3.3.7 EXACT REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
 find_package(pybind11 REQUIRED)
 find_package(Python 3.6 EXACT REQUIRED)
 find_package(Reflexxes REQUIRED)
-
 
 add_library(libfrankx SHARED
   src/affine.cpp
@@ -28,8 +27,8 @@ add_library(libfrankx SHARED
   src/motion_joint.cpp
   src/robot.cpp
 )
-target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIRS})
-target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes)
+target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
 
 
 if(BUILD_PYTHON_MODULE)
