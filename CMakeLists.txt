@@ -34,6 +34,7 @@ find_package(Python 3.6 EXACT REQUIRED)
 
 add_library(libfrankx SHARED
   src/affine.cpp
+  src/condition.cpp
   src/gripper.cpp
   src/motion_joint.cpp
   src/robot.cpp

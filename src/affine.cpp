@@ -101,20 +101,20 @@ Vector6d Affine::vector(const Eigen::Vector3d& new_ref_euler) {
     return vector();
 }
 
-Vector7d Affine::vector(double elbow) const {
+Vector7d Affine::vector_with_elbow(double elbow) const {
     Vector7d result;
     result << data.translation(), angles(), elbow;
     return result;
 }
 
-Vector7d Affine::vector(double elbow, const Eigen::Vector3d& new_ref_euler) {
+Vector7d Affine::vector_with_elbow(double elbow, const Eigen::Vector3d& new_ref_euler) {
     ref_euler = new_ref_euler;
-    return vector(elbow);
+    return vector_with_elbow(elbow);
 }
 
-Vector7d Affine::vector(double elbow, const Vector7d& new_ref_vector) {
+Vector7d Affine::vector_with_elbow(double elbow, const Vector7d& new_ref_vector) {
     ref_euler << new_ref_vector(3), new_ref_vector(4), new_ref_vector(5);
-    return vector(elbow);
+    return vector_with_elbow(elbow);
 }
 
 std::array<double, 16> Affine::array() const {

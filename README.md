@@ -52,7 +52,7 @@ robot.move(motion)
 
 ### Geometry
 
-[Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html) is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
+`frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
 ```c++
 // Initiliaze a transformation with an (x, y, z) translation
 Eigen::Affine3d z_translation = frankx::Affine(0.0, 0.0, 0.5);
@@ -127,9 +127,7 @@ robot.moveAsync(motion_hold);
 // Wait for key input from user
 std::cin.get()
 
-motion_hold.pushFrontWaypoint(const Waypoint& waypoint);
-motion_hold.pushBackWaypoint(const Waypoint& waypoint);
-motion_hold.clearAndPushWaypoint(const Waypoint& waypoint);
+motion_hold.setNextWaypoint(const Waypoint& waypoint);
 motion_hold.stop();
 ```
 

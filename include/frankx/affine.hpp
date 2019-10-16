@@ -52,9 +52,9 @@ struct Affine {
 
     Vector6d vector() const;
     Vector6d vector(const Eigen::Vector3d& new_ref_euler);
-    Vector7d vector(double elbow) const;
-    Vector7d vector(double elbow, const Eigen::Vector3d& new_ref_euler);
-    Vector7d vector(double elbow, const Vector7d& new_ref_vector);
+    Vector7d vector_with_elbow(double elbow) const;
+    Vector7d vector_with_elbow(double elbow, const Eigen::Vector3d& new_ref_euler);
+    Vector7d vector_with_elbow(double elbow, const Vector7d& new_ref_vector);
 
     double x() const;
     double y() const;

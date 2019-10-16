@@ -39,8 +39,8 @@ class Grasping:
         grasp_a = 0.6
 
         motion_down = WaypointMotion([
-            Waypoint(self.get_base(grasp_x, grasp_y, -0.04, grasp_a), 1.75, [0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0]),
-            Waypoint(self.get_base(grasp_x, grasp_y, grasp_z, grasp_a), 1.35),
+            Waypoint(self.get_base(grasp_x, grasp_y, -0.04, grasp_a), [0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0]),
+            Waypoint(self.get_base(grasp_x, grasp_y, grasp_z, grasp_a)),
         ])
         move_success = self.robot.move(motion_down, data_down)
 
@@ -50,7 +50,7 @@ class Grasping:
         self.gripper.move(0.06)
 
         motion_up = WaypointMotion([
-            Waypoint(self.get_base(grasp_x, grasp_y, -0.04, grasp_a), 1.75, [0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0]),
+            Waypoint(self.get_base(grasp_x, grasp_y, -0.04, grasp_a), [0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0]),
             Waypoint(self.get_base(0.0, 0.0, 0.0), 1.75),
         ])
         self.robot.move(motion_up, data_up)

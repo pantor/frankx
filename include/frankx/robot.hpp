@@ -19,19 +19,19 @@
 namespace frankx {
 
 struct Robot: public franka::Robot {
-    const double max_translation_velocity {1.7}; // [m/s]
-    const double max_rotation_velocity {2.5}; // [rad/s]
-    const double max_elbow_velocity {2.175}; // [rad/s]
-    const double max_translation_acceleration {13.0}; // [m/s²]
-    const double max_rotation_acceleration {25.0}; // [rad/s²]
-    const double max_elbow_acceleration {10.0}; // [rad/s²]
-    const double max_translation_jerk {6500.0}; // [m/s³]
-    const double max_rotation_jerk {12500.0}; // [rad/s³]
-    const double max_elbow_jerk {5000.0}; // [rad/s³]
+    static constexpr double max_translation_velocity {1.7}; // [m/s]
+    static constexpr double max_rotation_velocity {2.5}; // [rad/s]
+    static constexpr double max_elbow_velocity {2.175}; // [rad/s]
+    static constexpr double max_translation_acceleration {13.0}; // [m/s²]
+    static constexpr double max_rotation_acceleration {25.0}; // [rad/s²]
+    static constexpr double max_elbow_acceleration {10.0}; // [rad/s²]
+    static constexpr double max_translation_jerk {6500.0}; // [m/s³]
+    static constexpr double max_rotation_jerk {12500.0}; // [rad/s³]
+    static constexpr double max_elbow_jerk {5000.0}; // [rad/s³]
 
-    double velocity_rel {0.08};
-    double acceleration_rel {0.05};
-    double jerk_rel {0.001};
+    double velocity_rel {0.1};
+    double acceleration_rel {0.1};
+    double jerk_rel {0.01};
 
     /**
      * Connects to a robot at the given FCI IP address.
@@ -45,13 +45,15 @@ struct Robot: public franka::Robot {
     bool recoverFromErrors();
 
     Affine currentPose(const Affine& frame = Affine());
-    void stop();
 
     bool move(JointMotion motion);
     bool move(JointMotion motion, MotionData& data);
 
     bool move(WaypointMotion motion);
     bool move(WaypointMotion motion, MotionData& data);
+
+private:
+    void setInputLimits(RMLPositionInputParameters *input_parameters, const Waypoint& waypoint, const MotionData& data);
 };
 
 } // namespace frankx

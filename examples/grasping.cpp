@@ -30,13 +30,13 @@ int main() {
     });
 
     WaypointMotion waypoint_motion({
-      {getBase(0.05, 0.05, 0.0, M_PI_2), 1.75},
-      {getBase(0.05, 0.05, -0.185, M_PI_2), 1.35}
+      {getBase(0.05, 0.05, 0.0, M_PI_2)},
+      {getBase(0.05, 0.05, -0.185, M_PI_2)}
     });
     robot.move(waypoint_motion, data);
 
     WaypointMotion waypoint_motion2({
-      {getBase(0.05, 0.05, 0.0, M_PI_2), 1.75},
+      {getBase(0.05, 0.05, 0.0, M_PI_2)},
       {getBase(0.0, 0.0, 0.0), 1.75}
     });
     robot.move(waypoint_motion2);

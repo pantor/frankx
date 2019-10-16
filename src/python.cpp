@@ -1,3 +1,6 @@
+#include <array>
+#include <string>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
@@ -72,11 +75,11 @@ PYBIND11_MODULE(frankx, m) {
         .def(py::init<double>(), "minimum_time"_a)
         .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def_readonly("affine", &Waypoint::affine)
+        .def_readonly("velocity", &Waypoint::velocity)
+        .def_readonly("elbow", &Waypoint::elbow)
         .def_readonly("reference_type", &Waypoint::reference_type)
-        .def_readonly("minimum_time", &Waypoint::minimum_time)
-        .def("get_target_affine", &Waypoint::getTargetAffine)
-        .def("get_target_vector", &Waypoint::getTargetVector)
-        .def("get_target_velocity", &Waypoint::getTargetVelocity);
+        .def_readonly("minimum_time", &Waypoint::minimum_time);
 
     py::class_<JointMotion>(m, "JointMotion")
         .def(py::init<const std::array<double, 7>>());
@@ -88,14 +91,50 @@ PYBIND11_MODULE(frankx, m) {
         .def(py::init<const Affine&, double>());
 
     py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
-        .def(py::init<const Affine&>())
-        .def(py::init<const Affine&, double>());
+        .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a = 0.0);
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());
 
     py::class_<franka::Errors>(m, "Errors")
-        .def(py::init<>());
+        .def(py::init<>())
+        .def_property_readonly("joint_position_limits_violation", [](const franka::Errors& e) { return e.joint_position_limits_violation; })
+        .def_property_readonly("cartesian_position_limits_violation", [](const franka::Errors& e) { return e.cartesian_position_limits_violation; })
+        .def_property_readonly("self_collision_avoidance_violation", [](const franka::Errors& e) { return e.self_collision_avoidance_violation; })
+        .def_property_readonly("joint_velocity_violation", [](const franka::Errors& e) { return e.joint_velocity_violation; })
+        .def_property_readonly("cartesian_velocity_violation", [](const franka::Errors& e) { return e.cartesian_velocity_violation; })
+        .def_property_readonly("force_control_safety_violation", [](const franka::Errors& e) { return e.force_control_safety_violation; })
+        .def_property_readonly("joint_reflex", [](const franka::Errors& e) { return e.joint_reflex; })
+        .def_property_readonly("cartesian_reflex", [](const franka::Errors& e) { return e.cartesian_reflex; })
+        .def_property_readonly("max_goal_pose_deviation_violation", [](const franka::Errors& e) { return e.max_goal_pose_deviation_violation; })
+        .def_property_readonly("max_path_pose_deviation_violation", [](const franka::Errors& e) { return e.max_path_pose_deviation_violation; })
+        .def_property_readonly("cartesian_velocity_profile_safety_violation", [](const franka::Errors& e) { return e.cartesian_velocity_profile_safety_violation; })
+        .def_property_readonly("joint_position_motion_generator_start_pose_invalid", [](const franka::Errors& e) { return e.joint_position_motion_generator_start_pose_invalid; })
+        .def_property_readonly("joint_motion_generator_position_limits_violation", [](const franka::Errors& e) { return e.joint_motion_generator_position_limits_violation; })
+        .def_property_readonly("joint_motion_generator_velocity_limits_violation", [](const franka::Errors& e) { return e.joint_motion_generator_velocity_limits_violation; })
+        .def_property_readonly("joint_motion_generator_velocity_discontinuity", [](const franka::Errors& e) { return e.joint_motion_generator_velocity_discontinuity; })
+        .def_property_readonly("joint_motion_generator_acceleration_discontinuity", [](const franka::Errors& e) { return e.joint_motion_generator_acceleration_discontinuity; })
+        .def_property_readonly("cartesian_position_motion_generator_start_pose_invalid", [](const franka::Errors& e) { return e.cartesian_position_motion_generator_start_pose_invalid; })
+        .def_property_readonly("cartesian_motion_generator_elbow_limit_violation", [](const franka::Errors& e) { return e.cartesian_motion_generator_elbow_limit_violation; })
+        .def_property_readonly("cartesian_motion_generator_velocity_limits_violation", [](const franka::Errors& e) { return e.cartesian_motion_generator_velocity_limits_violation; })
+        .def_property_readonly("cartesian_motion_generator_velocity_discontinuity", [](const franka::Errors& e) { return e.cartesian_motion_generator_velocity_discontinuity; })
+        .def_property_readonly("cartesian_motion_generator_acceleration_discontinuity", [](const franka::Errors& e) { return e.cartesian_motion_generator_acceleration_discontinuity; })
+        .def_property_readonly("cartesian_motion_generator_elbow_sign_inconsistent", [](const franka::Errors& e) { return e.cartesian_motion_generator_elbow_sign_inconsistent; })
+        .def_property_readonly("cartesian_motion_generator_start_elbow_invalid", [](const franka::Errors& e) { return e.cartesian_motion_generator_start_elbow_invalid; })
+        .def_property_readonly("cartesian_motion_generator_joint_position_limits_violation", [](const franka::Errors& e) { return e.cartesian_motion_generator_joint_position_limits_violation; })
+        .def_property_readonly("cartesian_motion_generator_joint_velocity_limits_violation", [](const franka::Errors& e) { return e.cartesian_motion_generator_joint_velocity_limits_violation; })
+        .def_property_readonly("cartesian_motion_generator_joint_velocity_discontinuity", [](const franka::Errors& e) { return e.cartesian_motion_generator_joint_velocity_discontinuity; })
+        .def_property_readonly("cartesian_motion_generator_joint_acceleration_discontinuity", [](const franka::Errors& e) { return e.cartesian_motion_generator_joint_acceleration_discontinuity; })
+        .def_property_readonly("cartesian_position_motion_generator_invalid_frame", [](const franka::Errors& e) { return e.cartesian_position_motion_generator_invalid_frame; })
+        .def_property_readonly("force_controller_desired_force_tolerance_violation", [](const franka::Errors& e) { return e.force_controller_desired_force_tolerance_violation; })
+        .def_property_readonly("controller_torque_discontinuity", [](const franka::Errors& e) { return e.controller_torque_discontinuity; })
+        .def_property_readonly("start_elbow_sign_inconsistent", [](const franka::Errors& e) { return e.start_elbow_sign_inconsistent; })
+        .def_property_readonly("communication_constraints_violation", [](const franka::Errors& e) { return e.communication_constraints_violation; })
+        .def_property_readonly("power_limit_violation", [](const franka::Errors& e) { return e.power_limit_violation; })
+        .def_property_readonly("joint_p2p_insufficient_torque_for_planning", [](const franka::Errors& e) { return e.joint_p2p_insufficient_torque_for_planning; })
+        .def_property_readonly("tau_j_range_violation", [](const franka::Errors& e) { return e.tau_j_range_violation; })
+        .def_property_readonly("instability_detected", [](const franka::Errors& e) { return e.instability_detected; })
+        .def_property_readonly("joint_move_in_wrong_direction", [](const franka::Errors& e) { return e.joint_move_in_wrong_direction; });
 
     py::class_<franka::RobotState>(m, "RobotState")
         .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
@@ -132,27 +171,31 @@ PYBIND11_MODULE(frankx, m) {
 
     py::class_<Robot>(m, "Robot")
         .def(py::init<const std::string &, double>(), "fci_ip"_a, "dynamic_rel"_a = 1.0)
-        .def_readonly("max_translation_velocity", &Robot::max_translation_velocity)
-        .def_readonly("max_rotation_velocity", &Robot::max_rotation_velocity)
-        .def_readonly("max_elbow_velocity", &Robot::max_elbow_velocity)
-        .def_readonly("max_translation_acceleration", &Robot::max_translation_acceleration)
-        .def_readonly("max_rotation_acceleration", &Robot::max_rotation_acceleration)
-        .def_readonly("max_elbow_acceleration", &Robot::max_elbow_acceleration)
-        .def_readonly("max_translation_jerk", &Robot::max_translation_jerk)
-        .def_readonly("max_rotation_jerk", &Robot::max_rotation_jerk)
-        .def_readonly("max_elbow_jerk", &Robot::max_elbow_jerk)
+        .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
+        .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
+        .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
+        .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
+        .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
+        .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
+        .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
+        .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
+        .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
         .def_readwrite("velocity_rel", &Robot::velocity_rel)
         .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
         .def_readwrite("jerk_rel", &Robot::jerk_rel)
+        .def("server_version", &Robot::serverVersion)
         .def("set_default_behavior", &Robot::setDefaultBehavior)
         .def("set_cartesian_impedance", &Robot::setCartesianImpedance)
+        .def("set_K", &Robot::setK)
+        .def("set_EE", &Robot::setEE)
+        .def("set_load", &Robot::setLoad)
         .def("set_dynamic_rel", &Robot::setDynamicRel)
+        .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
+        .def("stop", &Robot::stop)
         .def("has_errors", &Robot::hasErrors)
         .def("recover_from_errors", &Robot::recoverFromErrors)
-        .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
-        // .def("stop", &Robot::stop)
         .def("move", (bool (Robot::*)(JointMotion)) &Robot::move)
         .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move)
         .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move)
@@ -169,6 +212,7 @@ PYBIND11_MODULE(frankx, m) {
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
+        // .def("server_version", &Gripper::serverVersion)
         .def("width", &Gripper::width)
         .def("homing", &Gripper::homing)
         .def("move", &Gripper::move)

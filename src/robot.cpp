@@ -88,6 +88,8 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
 
     WaypointMotion current_motion = motion;
     auto waypoint_iterator = current_motion.waypoints.begin();
+    bool waypoint_has_elbow = false;
+
     Vector7d old_vector = Vector7d::Zero();
     auto old_affine = Affine();
     double old_elbow = 0.0;
@@ -100,7 +102,7 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
                 franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
                 Vector7d initial_velocity = (Vector7d() << robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]).finished();
 
-                Vector7d initial_vector = Affine(initial_pose).vector(initial_pose.elbow[0], old_vector);
+                Vector7d initial_vector = Affine(initial_pose).vector_with_elbow(initial_pose.elbow[0], old_vector);
                 old_affine = Affine(initial_pose);
                 old_vector = initial_vector;
                 old_elbow = old_vector(6);
@@ -109,34 +111,15 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
                 setVector(input_parameters->CurrentVelocityVector, initial_velocity);
                 setZero(input_parameters->CurrentAccelerationVector);
 
-                Waypoint current_waypoint = *waypoint_iterator;
-                Eigen::Affine3d target_affine = current_waypoint.getTargetAffine(old_affine).data;
+                const Waypoint current_waypoint = *waypoint_iterator;
+                waypoint_has_elbow = current_waypoint.elbow.has_value();
                 auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
 
-                setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
-                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
-                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
-                    current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
-                ));
-                setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
-                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
-                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
-                    current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
-                ));
-                setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
-                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
-                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
-                    current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
-                ));
-
+                setInputLimits(input_parameters.get(), current_waypoint, data);
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
-                setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
+                setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
 
-                if (current_waypoint.minimum_time.has_value()) {
-                    input_parameters->SetMinimumSynchronizationTime(current_waypoint.minimum_time.value());
-                }
-
-                old_affine = Affine(target_affine);
+                old_affine = current_waypoint.getTargetAffine(old_affine);
                 old_vector = target_position_vector;
                 old_elbow = old_vector(6);
             }
@@ -151,34 +134,24 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
 
                     current_motion = *condition.action;
                     waypoint_iterator = current_motion.waypoints.begin();
-                    Waypoint current_waypoint = *waypoint_iterator;
 
-                    franka::CartesianPose current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-                    Vector7d current_vector = Affine(current_pose).vector(current_pose.elbow[0], old_vector);
+                    auto current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
+                    auto current_vector = Affine(current_pose).vector_with_elbow(current_pose.elbow[0], old_vector);
                     old_affine = Affine(current_pose);
                     old_vector = current_vector;
                     old_elbow = old_vector(6);
 
+                    const Waypoint current_waypoint = *waypoint_iterator;
+                    waypoint_has_elbow = current_waypoint.elbow.has_value();
                     auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
 
-                    setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
-                        current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
-                        current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
-                        current_waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
-                    ));
-                    setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
-                        current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
-                        current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
-                        current_waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
-                    ));
-                    setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
-                        current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
-                        current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
-                        current_waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
-                    ));
-
+                    setInputLimits(input_parameters.get(), current_waypoint, data);
                     setVector(input_parameters->TargetPositionVector, target_position_vector);
-                    setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
+                    setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+
+                    old_affine = current_waypoint.getTargetAffine(old_affine);
+                    old_vector = target_position_vector;
+                    old_elbow = old_vector(6);
                 }
             }
 
@@ -186,24 +159,26 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
             for (int i = 0; i < steps; i++) {
                 result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
-                if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
+                if (current_motion.reload || result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
                     waypoint_iterator += 1;
 
-                    if (waypoint_iterator == current_motion.waypoints.end()) {
-                        return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector));
+                    if (current_motion.reload) {
+                        waypoint_iterator = current_motion.waypoints.begin();
+                        current_motion.reload = false;
+
+                    } else if (waypoint_iterator == current_motion.waypoints.end()) {
+                        return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector, waypoint_has_elbow));
                     }
 
-                    Waypoint current_waypoint = *waypoint_iterator;
-                    Eigen::Affine3d target_affine = current_waypoint.getTargetAffine(old_affine).data;
+                    const Waypoint current_waypoint = *waypoint_iterator;
+                    waypoint_has_elbow = current_waypoint.elbow.has_value();
                     auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+
+                    setInputLimits(input_parameters.get(), current_waypoint, data);
                     setVector(input_parameters->TargetPositionVector, target_position_vector);
-                    setVector(input_parameters->TargetVelocityVector, current_waypoint.getTargetVelocity());
+                    setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
 
-                    if (current_waypoint.minimum_time.has_value()) {
-                        input_parameters->SetMinimumSynchronizationTime(current_waypoint.minimum_time.value());
-                    }
-
-                    old_affine = Affine(target_affine);
+                    old_affine = current_waypoint.getTargetAffine(old_affine);
                     old_vector = target_position_vector;
                     old_elbow = old_vector(6);
                 }
@@ -213,7 +188,7 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
                 *input_parameters->CurrentAccelerationVector = *output_parameters->NewAccelerationVector;
             }
 
-            return CartesianPose(output_parameters->NewPositionVector);
+            return CartesianPose(output_parameters->NewPositionVector, waypoint_has_elbow);
         }, franka::ControllerMode::kCartesianImpedance);
 
     } catch (franka::Exception exception) {
@@ -223,6 +198,28 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
     }
 
     return true;
+}
+
+void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const Waypoint& waypoint, const MotionData& data) {
+    setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
+        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
+        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
+        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
+    ));
+    setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
+        waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
+        waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
+        waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
+    ));
+    setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
+        waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
+        waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
+        waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
+    ));
+
+    if (waypoint.minimum_time.has_value()) {
+        input_parameters->SetMinimumSynchronizationTime(waypoint.minimum_time.value());
+    }
 }
 
 } // namepace frankx
