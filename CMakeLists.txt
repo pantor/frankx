@@ -5,17 +5,13 @@ project(frankx VERSION 0.2.0 LANGUAGES C CXX)
 
 
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_CXX_STANDARD 17)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
 set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
-
-
-set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_STANDARD 17)
 
 
 # find_package(Eigen3 3.3.7 REQUIRED)
