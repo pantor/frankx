@@ -30,9 +30,9 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git python-pybind11 libpoco-dev libeigen3-dev
 
-        git clone https://github.com/Reflexxes/RMLTypeII.git
-        cd RMLTypeII/Linux
-        make clean64 all64
+        # git clone https://github.com/Reflexxes/RMLTypeII.git
+        # cd RMLTypeII/Linux
+        # make clean64 all64
 
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
@@ -44,8 +44,6 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cmake --build .
 
-
-
     - name: configure
       run: |
         mkdir -p build
@@ -54,3 +52,6 @@ jobs:
 
     - name: make
       run: make
+
+    - name: test
+      run: ./unit_test
