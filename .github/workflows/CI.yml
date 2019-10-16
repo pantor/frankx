@@ -56,7 +56,7 @@ jobs:
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_ROOT_DIR=/home/runner/work/frankx/RMLTypeII -DReflexxes_LIB_DIR=/home/runner/work/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_ROOT_DIR=/home/runner/work/frankx/frankx/RMLTypeII -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
         make
 
     - name: test
