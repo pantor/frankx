@@ -9,7 +9,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
-option(BUILD_TEST "Build tests" ON)
+option(BUILD_TESTS "Build tests" ON)
 set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
 
@@ -50,9 +50,16 @@ if(BUILD_EXAMPLES)
 endif()
 
 
-if(BUILD_TEST)
+if(BUILD_TESTS)
+  enable_testing()
+
   find_package(Catch2 REQUIRED)
 
   add_executable(unit_test "test/unit-test.cpp")
   target_link_libraries(unit_test libfrankx Catch2::Catch2)
+  add_test("unit-test" COMMAND unit_test)
+
+  add_executable(robot_test "test/robot-test.cpp")
+  target_link_libraries(robot_test libfrankx Catch2::Catch2)
+  add_test("robot-test" COMMAND robot_test)
 endif()
