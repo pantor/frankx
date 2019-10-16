@@ -30,25 +30,27 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git python-pybind11 libpoco-dev libeigen3-dev
 
-        # git clone https://github.com/Reflexxes/RMLTypeII.git
-        # cd RMLTypeII/Linux
-        # make clean64 all64
+        git clone https://github.com/pantor/RMLTypeII.git
+        cd RMLTypeII
+        mkdir build
+        cd build
+        cmake ..
+        make
 
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
         git checkout 0.6.0
         git submodule update
-
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build .
+        cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        make
 
     - name: configure
       run: |
         mkdir -p build
         cd build
-        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_ROOT_DIR=ReflexxesTypeII/ -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_ROOT_DIR=RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
 
     - name: make
       run: make
