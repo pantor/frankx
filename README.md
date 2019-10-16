@@ -4,6 +4,24 @@
   <br>
 </div>
 
+<p align="center">
+  <a href="https://github.com/pantor/frankx/actions">
+    <img src="https://github.com/pantor/frankx/workflows/CI/badge.svg" alt="CI">
+  </a>
+
+  <a href="https://github.com/pantor/frankx/issues">
+    <img src="https://img.shields.io/github/issues/pantor/frankx.svg" alt="Issues">
+  </a>
+
+  <a href="https://github.com/pantor/frankx/releases">
+    <img src="https://img.shields.io/github/release/pantor/frankx.svg" alt="Releases">
+  </a>
+
+  <a href="https://github.com/pantor/frankx/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-LGPL-green.svg" alt="LGPL">
+  </a>
+</p>
+
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It is based on [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and of course [libfranka](https://frankaemika.github.io/docs/libfranka.html). It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
 
 
