@@ -1,6 +1,6 @@
 <div align="center">
-  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png?token=AAOMITFYFXKG3YXDWHRVR6C5U3KKS"></div></center>
-  <h3 align="center"><center>frankx: High-Level Motion Library for the Franka Panda Robot</center></h3>
+  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png"></div></center>
+  <h3 align="center"><center><i>frankx</i><br>High-Level Motion Library for the Franka Panda Robot</center></h3>
   <br>
 </div>
 

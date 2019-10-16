@@ -1,8 +1,17 @@
-if(NOT TARGET Eigen3::Eigen3)
-  set(EIGEN3_INCLUDE_DIRS "/usr/local/include/eigen3-2/")
+if(NOT EIGEN3_INCLUDE_DIRS)
+  find_package(Eigen3 CONFIG)
 
-  add_library(Eigen3::Eigen3 INTERFACE IMPORTED)
-  set_target_properties(Eigen3::Eigen3 PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIRS}
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(Eigen3
+    FOUND_VAR Eigen3_FOUND
+    REQUIRED_VARS EIGEN3_INCLUDE_DIRS
   )
+
+  if(NOT TARGET Eigen3::Eigen3)
+    add_library(Eigen3::Eigen3 INTERFACE IMPORTED)
+    set_target_properties(Eigen3::Eigen3 PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIRS}
+      INTERFACE_COMPILE_DEFINITIONS "${EIGEN3_DEFINITIONS}"
+    )
+  endif()
 endif()

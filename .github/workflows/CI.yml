@@ -6,15 +6,22 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v1
+
+    - name: install dependencies
+      run: |
+        apt install -Y git python-pybind11 libeigen3-dev
+        git clone https://github.com/Reflexxes/RMLTypeII.git
+        git clone https://github.com/frankaemika/libfranka.git
+
 
     - name: configure
       run: |
         mkdir -p build
         cd build
         cmake ..
-    
+
     - name: make
       run: make

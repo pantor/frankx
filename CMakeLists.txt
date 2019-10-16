@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 
-set(CMAKE_C_COMPILER "gcc-9")
-set(CMAKE_CXX_COMPILER "g++-9")
-
-
 project(frankx VERSION 0.2.0 LANGUAGES C CXX)
+
+
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TEST "Build tests" ON)
+set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
 
 set(CMAKE_BUILD_TYPE Release)
@@ -18,18 +18,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_STANDARD 17)
 
 
-set(Eigen3_DIRS "/usr/local/include/eigen3-2/")
-set(Reflexxes_TYPE "ReflexxesTypeIV" CACHE STRING "Type of Reflexxes library") # or "ReflexxesTypeII"
-set(Reflexxes_LIB_DIR "~/Documents/libs/${Reflexxes_TYPE}/Linux/x64/release/lib/shared" CACHE STRING "Path to Reflexxes library")
-set(Reflexxes_INCLUDE_DIR "~/Documents/libs/${Reflexxes_TYPE}/include" CACHE STRING "Path to Reflexxes headers")
-set(PYTHON_EXECUTABLE python3.6)
-set(PYTHON_LIBRARY "/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so")
-
-
+# find_package(Eigen3 3.3.7 REQUIRED)
 find_package(Franka 0.6.0 REQUIRED)
-find_library(Reflexxes ${Reflexxes_TYPE} PATHS ${Reflexxes_LIB_DIR})
 find_package(pybind11 REQUIRED)
 find_package(Python 3.6 EXACT REQUIRED)
+find_package(Reflexxes REQUIRED)
 
 
 add_library(libfrankx SHARED
@@ -39,8 +32,8 @@ add_library(libfrankx SHARED
   src/motion_joint.cpp
   src/robot.cpp
 )
-target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${Reflexxes_INCLUDE_DIR} ${Eigen3_DIRS})
-target_link_libraries(libfrankx Franka::Franka ${Reflexxes})
+target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIRS})
+target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes)
 
 
 if(BUILD_PYTHON_MODULE)
