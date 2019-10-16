@@ -1,5 +1,5 @@
 if(NOT TARGET Reflexxes::Reflexxes)
-  if(${Reflexxes_ROOT_DIR})
+  if(NOT ${Reflexxes_ROOT_DIR} STREQUAL "")
     set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/Linux/x64/release/lib/shared")
     set(Reflexxes_INCLUDE_DIR "${Reflexxes_ROOT_DIR}/include")
   endif()
