@@ -9,29 +9,30 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: install dependencies
+    - name: install apt dependencies
       run: |
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git libpoco-dev
 
-        # Eigen
+    - name: install Eigen3
+      run: |
         git clone https://github.com/eigenteam/eigen-git-mirror.git
         cd eigen-git-mirror
         git checkout 3.3.7
         mkdir build && cd build
         cmake ..
         sudo make install
-        cd ../../
 
-        # Reflexxes
+    - name: install Reflexxes
+      run: |
         git clone https://github.com/pantor/RMLTypeII.git
         cd RMLTypeII
         mkdir build && cd build
         cmake ..
         make
-        cd ../../
 
-        # Libfranka
+    - name: install libfranka
+      run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
         git checkout 0.6.0
@@ -40,9 +41,9 @@ jobs:
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         sudo make install
-        cd ../../
 
-        # pybind11
+    - name: install pybind11
+      run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.4.3
@@ -50,16 +51,15 @@ jobs:
         cmake -DPYBIND11_TEST=OFF ..
         make
         sudo make install
-        cd ../../
 
-        # Catch2
+    - name: install Catch2
+      run: |
         git clone https://github.com/catchorg/Catch2.git
         cd Catch2
         git checkout v2.5.0
         mkdir build && cd build
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         sudo make install
-        cd ../../
 
     - name: configure & make
       run: |
@@ -68,4 +68,4 @@ jobs:
         make
 
     - name: test
-      run: ./unit_test
+      run: ./build/unit_test
