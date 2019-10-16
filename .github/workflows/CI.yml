@@ -30,6 +30,7 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git python-pybind11 libpoco-dev libeigen3-dev
 
+        # Reflexxes
         git clone https://github.com/pantor/RMLTypeII.git
         cd RMLTypeII
         mkdir build
@@ -37,6 +38,7 @@ jobs:
         cmake ..
         make
 
+        # Libfranka
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
         git checkout 0.6.0
@@ -46,6 +48,16 @@ jobs:
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         sudo make install
+
+        # Catch2
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        mkdir build
+        cd build
+        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        make
+        sudo make install
+
 
     - name: configure
       run: |
