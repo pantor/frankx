@@ -59,14 +59,12 @@ jobs:
         sudo make install
 
 
-    - name: configure
+    - name: configure & make
       run: |
         mkdir -p build
         cd build
         cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_ROOT_DIR=RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
-
-    - name: make
-      run: make
+        make
 
     - name: test
       run: ./unit_test
