@@ -1,6 +1,8 @@
 if(NOT TARGET Reflexxes::Reflexxes)
-  set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/Linux/x64/release/lib/shared")
-  set(Reflexxes_INCLUDE_DIR "${Reflexxes_ROOT_DIR}/include")
+  if(${Reflexxes_ROOT_DIR})
+    set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/Linux/x64/release/lib/shared")
+    set(Reflexxes_INCLUDE_DIR "${Reflexxes_ROOT_DIR}/include")
+  endif()
 
   find_library(Reflexxes ${REFLEXXES_TYPE} PATHS ${Reflexxes_LIB_DIR})
 
