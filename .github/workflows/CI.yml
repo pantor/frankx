@@ -12,7 +12,7 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git python-pybind11 libpoco-dev
+        sudo apt-get -y install build-essential cmake git libpoco-dev
 
         # Eigen
         git clone https://github.com/eigenteam/eigen-git-mirror.git
@@ -38,6 +38,16 @@ jobs:
         git submodule update
         mkdir build && cd build
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        make
+        sudo make install
+        cd ../../
+
+        # pybind11
+        git clone https://github.com/pybind/pybind11.git
+        cd pybind11
+        git checkout v2.4.3
+        mkdir build && cd build
+        cmake -DPYBIND11_TEST=OFF ..
         make
         sudo make install
         cd ../../
