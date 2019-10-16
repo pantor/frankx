@@ -1,7 +1,6 @@
 <div align="center">
   <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png"></div></center>
   <h3 align="center"><center><i>frankx</i><br>High-Level Motion Library for the Franka Panda Robot</center></h3>
-  <br>
 </div>
 
 <p align="center">
@@ -42,6 +41,26 @@ Of course, you need to adapt the Reflexxes directory and type (either `Reflexxes
 ## Tutorial
 
 In your C++ project, just include `frankx/frankx.hpp` and link the library. As a very basic example, only four lines of code are needed for simple robotic motions.
+
+<div style="-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; -webkit-column-rule: 1px dotted #e0e0e0; -moz-column-rule: 1px dotted #e0e0e0; column-rule: 1px dotted #e0e0e0;">
+  <div style="display: inline-block;">
+    <h2>Good</h2>
+    <pre><code class="language-c">
+      int foo (void) {
+        int i;
+      }
+    </code></pre>
+  </div>
+  <div style="display: inline-block;">
+    <h2>Bad</h2>
+    <pre><code class="language-c">
+      int foo (void) {
+        int i;
+      }
+    </code></pre>
+  </div>
+</div>
+
 
 ```c++
 #include <frankx/frankx.hpp>
