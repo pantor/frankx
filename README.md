@@ -21,21 +21,22 @@
   </a>
 </p>
 
-Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It is based on [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and of course [libfranka](https://frankaemika.github.io/docs/libfranka.html). It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
+Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
 
 
 ## Installation
 
-Include frankx as a subproject in your parent CMake with `add_subdirectory(frankx)`. Then `target_link_libraries(your_target frankx)`. Install paths are added later on, then you can install the library via
+Frankx is based on [libfranka](https://frankaemika.github.io/docs/libfranka.html) (v.0.6.0), [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) (v3.3.7) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) (v2.4.0) for the Python bindings. Make sure to have these dependencies installed, then you can install frankx via
 
 ```bash
-mkdir build
+mkdir -p build
 cd build
-cmake -DReflexxes_DIR=../RMLTypeII -DReflexxes_TYPE=ReflexxesTypeII ..
-make
+cmake -DReflexxes_ROOT_DIR=../RMLTypeII -DREFLEXXES_TYPE=ReflexxesTypeII -DBUILD_TYPE=Release ..
+make -j4
 make install
 ```
-Of course, you need to adapt the Reflexxes directory and type (either `ReflexxesTypeII` or `ReflexxesTypeIV`). If you want to install frankx into `/usr/local`, you can use
+
+Of course, you need to adapt the Reflexxes directory and type (either `ReflexxesTypeII` or `ReflexxesTypeIV`). You can also include frankx as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(your_target frankx)`.
 
 
 ## Tutorial
@@ -76,19 +77,19 @@ robot.move(motion)
 `frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
 ```c++
 // Initiliaze a transformation with an (x, y, z) translation
-Eigen::Affine3d z_translation = frankx::Affine(0.0, 0.0, 0.5);
+Affine z_translation = Affine(0.0, 0.0, 0.5);
 
 // Define a rotation transformation using the (x, y, z, a, b, c) parameter list
-Eigen::Affine3d z_rotation = frankx::Affine(0.0, 0.0, 0.0, 0.1, 0.0, 0.0);
+Affine z_rotation = Affine(0.0, 0.0, 0.0, 0.1, 0.0, 0.0);
 
 // Make use of the wonderful Eigen library
 auto combined_transformation = z_translation * z_rotation;
 
 // Get the Euler angles (a, b, c) in a vector representation
-Eigen::Vector3d euler_angles = frankx::EulerAngles(combined_transformation);
+Eigen::Vector3d euler_angles = combined_transformation.angles();
 
 // Get the vector representation (x, y, z, a, b, c) of an affine transformation
-frankx::Vector6d pose = frankx::Vector(combined_transformation);
+frankx::Vector6d pose = combined_transformation.vector();
 ```
 In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects.
 
@@ -105,7 +106,7 @@ Apply a motion to the end effector.
 Apply a motion to a given frame.
 
 ```c++
-frankx::Affine3d camera_frame = frankx::Affine(0.1, 0.0, 0.1);
+Affine camera_frame = Affine(0.1, 0.0, 0.1);
 robot.move(camera_frame, motion);
 ```
 
@@ -116,7 +117,7 @@ robot.setJerkRel(0.1); // Only if you use the Reflexxes Type IV library
 ```
 
 
-### Break Conditions
+### Reaction Conditions
 
 - SpatialForceBreakCondition
 - NormalForceBreakCondition
@@ -125,18 +126,13 @@ robot.setJerkRel(0.1); // Only if you use the Reflexxes Type IV library
 If the robot is pushed, the program continues its execution.
 
 ```c++
-// Hold position for 5s
-auto motion_hold = frankx::PositionHold(5.0); // [s]
-
-// Break motion if force is over 8N
-motion_hold.breakWhen(std::make_shared<frankx::SpatialForceBreakCondition>(8.0)); // [N]
-
-// Set a callback lambda
-motion_hold.setBreakCallback([](const frankx::BreakCondition&, const franka::RobotState&, double) {
-  std::cout << "Break Motion" << std::endl;
+// Stop motion if force is over 10N
+auto data = MotionData().withCondition({
+  Condition::Measure::ForceXYZNorm, Condition::Comparison::Greater, 10.0  // [N]
 });
 
-robot.move(motion_hold);
+// Hold position for 5s
+robot.move(PositionHold(5.0), data); // [s]
 ```
 
 
@@ -149,16 +145,15 @@ robot.moveAsync(motion_hold);
 std::cin.get()
 
 motion_hold.setNextWaypoint(const Waypoint& waypoint);
-motion_hold.stop();
 ```
 
 
 ### Gripper
 
-In the `franx::Gripper` class, the default gripper force and gripper speed can be set. Then, the following simplified commands can be used:
+In the `frankx::Gripper` class, the default gripper force and gripper speed can be set. Then, the following simplified commands can be used:
 
 ```c++
-auto gripper = franx::Gripper("172.16.0.2");
+auto gripper = Gripper("172.16.0.2");
 
 // These are the default values
 gripper.gripper_speed = 0.1; // [m/s]
@@ -182,7 +177,7 @@ Multiple examples can be found in `examples`.
 
 ## Development
 
-Frankx is written in C++17. It works well with ROS2.
+Frankx is written in C++17 and Python3. It works well with ROS2.
 
 
 ## License

@@ -16,8 +16,6 @@ set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") #
 
 find_package(Eigen3 3.3.7 EXACT REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
-find_package(pybind11 REQUIRED)
-find_package(Python 3.6 EXACT REQUIRED)
 find_package(Reflexxes REQUIRED)
 
 add_library(libfrankx SHARED
@@ -32,6 +30,9 @@ target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes Eigen3::Eige
 
 
 if(BUILD_PYTHON_MODULE)
+  find_package(pybind11 REQUIRED)
+  find_package(Python 3.6 EXACT REQUIRED)
+
   pybind11_add_module(frankx src/python.cpp)
   target_link_libraries(frankx PUBLIC libfrankx)
 endif()
