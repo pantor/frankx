@@ -12,7 +12,7 @@ jobs:
 
     - name: install dependencies
       run: |
-        apt install -Y git python-pybind11 libeigen3-dev
+        apt-get -y install git python-pybind11 libeigen3-dev
         git clone https://github.com/Reflexxes/RMLTypeII.git
         git clone https://github.com/frankaemika/libfranka.git
 
