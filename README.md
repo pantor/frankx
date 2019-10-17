@@ -25,6 +25,11 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
+<div align="center">
+  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/example.png"></div></center>
+</div>
+
+
 ## Installation
 
 Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
@@ -175,24 +180,23 @@ gripper.release(50.0);
 
 ## Documentation
 
-We will add a more detailed documentation once frankx reaches v1.0. However, you can find multiple examples for both C++ and Python in the `examples` directory. We also try to add more examples over time.
+We will add a more detailed documentation once frankx reaches v1.0. However, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We also try to add more examples over time.
 
 
 ## Development
 
 Frankx is written in C++17 and Python3. It works well with ROS2. It is currently tested against following versions
 
-- Python 3.6
-- Eigen 3.3.7
-- Libfranka 0.6.0
-- Reflexxes 1.2.7
-- Pybind11 2.2.4
-
-Catch2 is used as a testing framework.
+- Python v3.6
+- Eigen v3.3.7
+- Libfranka v0.6.0
+- Reflexxes v1.2.7
+- Pybind11 v2.2.4
+- Catch2 v2.9 (only for testing)
 
 
 ## License
 
 For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements.
 
-Robot vector created by [freepik](https://www.freepik.com/free-photos-vectors/technology)
+Robot vector created by [freepik](https://www.freepik.com/free-photos-vectors/technology).
