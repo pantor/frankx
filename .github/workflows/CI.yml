@@ -68,4 +68,4 @@ jobs:
         make
 
     - name: test
-      run: ./build/unit_test
+      run: ./build/unit-test

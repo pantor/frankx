@@ -96,6 +96,20 @@ PYBIND11_MODULE(frankx, m) {
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());
 
+    py::class_<franka::Duration>(m, "Duration")
+        .def(py::init<>())
+        .def(py::init<uint64_t>())
+        .def("to_sec", &franka::Duration::toSec)
+        .def("to_msec", &franka::Duration::toMSec)
+        .def(py::self + py::self)
+        .def(py::self += py::self)
+        .def(py::self - py::self)
+        .def(py::self -= py::self)
+        .def(py::self * uint64_t())
+        .def(py::self *= uint64_t())
+        .def(py::self / uint64_t())
+        .def(py::self /= uint64_t());
+
     py::class_<franka::Errors>(m, "Errors")
         .def(py::init<>())
         .def_property_readonly("joint_position_limits_violation", [](const franka::Errors& e) { return e.joint_position_limits_violation; })
@@ -136,6 +150,16 @@ PYBIND11_MODULE(frankx, m) {
         .def_property_readonly("instability_detected", [](const franka::Errors& e) { return e.instability_detected; })
         .def_property_readonly("joint_move_in_wrong_direction", [](const franka::Errors& e) { return e.joint_move_in_wrong_direction; });
 
+    py::enum_<franka::RobotMode>(m, "RobotMode")
+        .value("Other", franka::RobotMode::kOther)
+        .value("Idle", franka::RobotMode::kIdle)
+        .value("Move", franka::RobotMode::kMove)
+        .value("Guiding", franka::RobotMode::kGuiding)
+        .value("Reflex", franka::RobotMode::kReflex)
+        .value("UserStopped", franka::RobotMode::kUserStopped)
+        .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery)
+        .export_values();
+
     py::class_<franka::RobotState>(m, "RobotState")
         .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
         .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
@@ -143,15 +167,21 @@ PYBIND11_MODULE(frankx, m) {
         .def_readonly("EE_T_K", &franka::RobotState::EE_T_K)
         .def_readonly("m_ee", &franka::RobotState::m_ee)
         .def_readonly("I_ee", &franka::RobotState::I_ee)
+        .def_readonly("F_x_Cee", &franka::RobotState::F_x_Cee)
         .def_readonly("m_load", &franka::RobotState::m_load)
         .def_readonly("I_load", &franka::RobotState::I_load)
+        .def_readonly("F_x_Cload", &franka::RobotState::F_x_Cload)
         .def_readonly("m_total", &franka::RobotState::m_total)
         .def_readonly("I_total", &franka::RobotState::I_total)
+        .def_readonly("F_x_Ctotal", &franka::RobotState::F_x_Ctotal)
         .def_readonly("elbow", &franka::RobotState::elbow)
         .def_readonly("elbow_d", &franka::RobotState::elbow_d)
         .def_readonly("elbow_c", &franka::RobotState::elbow_c)
         .def_readonly("delbow_c", &franka::RobotState::delbow_c)
         .def_readonly("ddelbow_c", &franka::RobotState::ddelbow_c)
+        .def_readonly("tau_J", &franka::RobotState::tau_J)
+        .def_readonly("tau_J_d", &franka::RobotState::tau_J_d)
+        .def_readonly("dtau_J", &franka::RobotState::dtau_J)
         .def_readonly("q", &franka::RobotState::q)
         .def_readonly("q_d", &franka::RobotState::q_d)
         .def_readonly("dq", &franka::RobotState::dq)
@@ -167,7 +197,11 @@ PYBIND11_MODULE(frankx, m) {
         .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
         .def_readonly("theta", &franka::RobotState::theta)
         .def_readonly("dtheta", &franka::RobotState::dtheta)
-        .def_readonly("current_errors", &franka::RobotState::current_errors);
+        .def_readonly("current_errors", &franka::RobotState::current_errors)
+        .def_readonly("last_motion_errors", &franka::RobotState::last_motion_errors)
+        .def_readonly("control_command_success_rate", &franka::RobotState::control_command_success_rate)
+        .def_readonly("robot_mode", &franka::RobotState::robot_mode)
+        .def_readonly("time", &franka::RobotState::time);
 
     py::class_<Robot>(m, "Robot")
         .def(py::init<const std::string &, double>(), "fci_ip"_a, "dynamic_rel"_a = 1.0)
@@ -205,21 +239,26 @@ PYBIND11_MODULE(frankx, m) {
         .def_readonly("width", &franka::GripperState::width)
         .def_readonly("max_width", &franka::GripperState::max_width)
         .def_readonly("is_grasped", &franka::GripperState::is_grasped)
-        .def_readonly("temperature", &franka::GripperState::temperature);
+        .def_readonly("temperature", &franka::GripperState::temperature)
+        .def_readonly("time", &franka::GripperState::time);
 
     py::class_<Gripper>(m, "Gripper")
         .def(py::init<const std::string&, double>(), "fci_ip"_a, "gripper_speed"_a = 0.02)
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
-        // .def("server_version", &Gripper::serverVersion)
-        .def("width", &Gripper::width)
         .def("homing", &Gripper::homing)
-        .def("move", &Gripper::move)
+        .def("grasp", (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp)
+        .def("move", (bool (Gripper::*)(double, double)) &Gripper::move)
         .def("stop", &Gripper::stop)
-        // .def("read_once", &Gripper::readOnce)
+        .def("read_once", &Gripper::readOnce)
+        .def("server_version", &Gripper::serverVersion)
+        .def("move", (bool (Gripper::*)(double)) &Gripper::move)
+        .def("width", &Gripper::width)
         .def("is_grasping", &Gripper::isGrasping)
         .def("open", &Gripper::open)
         .def("clamp", &Gripper::clamp)
-        .def("release", &Gripper::release);
+        .def("release", (bool (Gripper::*)()) &Gripper::release)
+        .def("release", (bool (Gripper::*)(double)) &Gripper::release)
+        .def("releaseRelative", &Gripper::releaseRelative);
 }

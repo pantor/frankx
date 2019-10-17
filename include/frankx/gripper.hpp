@@ -10,7 +10,7 @@
 
 namespace frankx {
 
-class Gripper: franka::Gripper {
+class Gripper: public franka::Gripper {
     const double width_calibration {0.004}; // [m], Difference from gripper jaws
     const double min_width {0.002}; // [m]
 
@@ -34,15 +34,16 @@ public:
     const double max_width {0.081 + width_calibration}; // [m]
 
     double width() const;
-    bool homing() const;
-    bool stop() const;
     bool isGrasping() const;
 
     bool move(double width); // [m]
     std::future<bool> moveAsync(double width); // [m]
     bool open();
     bool clamp();
+
+    bool release();
     bool release(double width); // [m]
+    bool releaseRelative(double width); // [m]
 };
 
 } // namepace frankx
