@@ -155,7 +155,7 @@ m5 = WaypointMotion([
 m6 = PositionHold(5.0)
 ```
 
-To apply a motion to the robot, just call
+The real robot can be moved by applying a motion to the robot using `move`:
 ```python
 robot.move(m1)
 robot.move(m2)
@@ -169,7 +169,7 @@ data = MotionData(0.2)  # Using a dynamic_rel of 0.2 (eventually multiplied with
 robot.move(m4, data)
 ```
 
-Using MotionData you can adapt the dynamics (velocity, acceleration and jerk) of a specific motion.
+Using MotionData, you can adapt the dynamics (velocity, acceleration and jerk) of a specific motion.
 ```python
 data.velocity_rel = 1.0
 data.jerk_rel = 0.2
@@ -180,7 +180,6 @@ data.jerk_rel = 0.2
 
 By adding reactions to the motion data, the robot can react to unforeseen events. In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. If the threshold is exceeded, the reaction fires. Following comparisons are currently implemented
 ```python
-
 reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.01))  # Move up for 1cm
 
 # Stop motion if the overall force is greater than 30N
@@ -201,7 +200,6 @@ if d2.has_fired:
 ```
 
 Once a reaction has fired, it will be neglected furthermore. In C++ you can additionally use lambdas to define more complex behaviours:
-
 ```c++
 // Stop motion if force is over 10N
 auto data = MotionData()
@@ -227,7 +225,7 @@ While the robot moves in a background thread, you can change the waypoints in re
 robot.moveAsync(motion_hold);
 
 // Wait for key input from user
-std::cin.get()
+std::cin.get();
 
 motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);
 ```
