@@ -25,9 +25,9 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
-<div align="center">
+<!-- <div align="center">
   <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/example.png"></div></center>
-</div>
+</div> -->
 
 
 ## Installation
@@ -47,7 +47,7 @@ Of course, you need to adapt the Reflexxes directory and type (either `Reflexxes
 
 ## Tutorial
 
-In your C++ project, just include `frankx/frankx.hpp` and link the library. As a very basic example, only four lines of code are needed for simple robotic motions.
+Frankx comes with both a C++ and Python API that differ only regarding real-time capability. We will introduce both languages next to each other. In your C++ project, just include `include <frankx/frankx.hpp>` and link the library. For Python, just `import frankx`. As a first example, only four lines of code are needed for simple robotic motions.
 
 ```c++
 #include <frankx/frankx.hpp>
@@ -66,7 +66,7 @@ auto motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0));
 robot.move(motion);
 ```
 
-Or the corresponding program in python
+The corresponding program in Python is
 ```python
 from frankx import Affine, LinearRelativeMotion, Robot
 
@@ -77,16 +77,18 @@ motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0))
 robot.move(motion)
 ```
 
+Furthermore, we will introduce methods for geometric calculations, for moving the robot according to different motion types, how to implement real-time reactions and changing waypoints in real time as well as controlling the gripper.
+
 
 ### Geometry
 
 `frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
 ```c++
-// Initiliaze a transformation with an (x, y, z) translation
+// Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation
 Affine z_translation = Affine(0.0, 0.0, 0.5);
 
 // Define a rotation transformation using the (x, y, z, a, b, c) parameter list
-Affine z_rotation = Affine(0.0, 0.0, 0.0, 0.1, 0.0, 0.0);
+Affine z_rotation = Affine(0.0, 0.0, 0.0, M_PI / 3, 0.0, 0.0);
 
 // Make use of the wonderful Eigen library
 auto combined_transformation = z_translation * z_rotation;
@@ -97,30 +99,74 @@ Eigen::Vector3d euler_angles = combined_transformation.angles();
 // Get the vector representation (x, y, z, a, b, c) of an affine transformation
 frankx::Vector6d pose = combined_transformation.vector();
 ```
-In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects.
+
+In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects. In python, this translates into
+```python
+z_translation = Affine(0.0, 0.0, 0.5)
+z_rotation = Affine(0.0, 0.0, 0.0, math.pi / 3, 0.0, 0.0)
+combined_transformation = z_translation * z_rotation
+
+# These two are now numpy arrays
+euler_angles = combined_transformation.angles()
+pose = combined_transformation.vector()
+```
+
+### Robot
+
+We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The `rel` name denotes that this a factor of the maximum constraints of the Panda robot.
+```python
+robot = Robot("172.16.0.2")
+robot.set_dynamic_rel(0.05)  # Set velocity, acceleration and jerk to 5% of the maximum
+
+# Alternatively, you can define each constraint individually
+robot.velocity_rel = 0.2
+robot.acceleration_rel = 0.1
+robot.jerk_rel = 0.01
+```
 
 
 ### Motion Types
 
-Apply a motion to the end effector.
+Frankx defines five different motion types. In python, you can use them as follows:
+```python
+# A point-to-point motion in the joint space
+m1 = JointMotion([-1.81194, 1.17910, 1.75710, -2.1416, -1.14336, 1.63304, -0.43217])
 
-- JointMotion
-- LinearMotion
-- LinearRelativeMotion
-- WaypointMotion
-- PositionHold
+# A linear motion in cartesian space
+m2 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0))
+m3 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0), elbow=1.7)  # With target elbow angle
 
-Apply a motion to a given frame.
+# A linear motion in cartesian space relative to the initial position
+m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))
 
-```c++
-Affine camera_frame = Affine(0.1, 0.0, 0.1);
-robot.move(camera_frame, motion);
+# A more complex motion by defining multiple waypoints
+m5 = WaypointMotion([
+  Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),
+  Waypoint(Affine(0.0, 0.1, 0.0, Waypoint.ReferenceType.Relative)),  # This makes the waypoint relative to the prior one
+])
+
+# Hold the position for [s]
+m6 = PositionHold(5.0)
 ```
 
-Change dynamic limits of a specific motion, multiplied with robot velocity_rel and acceleration_rel.
-```c++
-robot.setVelocityRel(2.0).setAccelerationRel(1.0);
-robot.setJerkRel(0.1); // Only if you use the Reflexxes Type IV library
+To apply a motion to the robot, just call
+```python
+robot.move(m1)
+robot.move(m2)
+
+# To use a given frame relative to the end effector
+camera_frame = Affine(0.1, 0.0, 0.1)
+robot.move(camera_frame, m3)
+
+# To change the dynamics of the motion, use MotionData
+data = MotionData(0.2)  # Using a dynamic_rel of 0.2 (eventually multiplied with robot.dynamic_rel)
+robot.move(m4, data)
+```
+
+Using MotionData you can adapt the dynamics (velocity, acceleration and jerk) of a specific motion.
+```python
+data.velocity_rel = 1.0
+data.jerk_rel = 0.2
 ```
 
 
@@ -144,7 +190,9 @@ robot.move(PositionHold(5.0), data); // [s]
 Reaction `has_fired` triggered. Once a reaction had fired, it will be neglected furthermore.
 
 
-### Real-time Waypoint Motion
+### Real-Time Waypoint Motion
+
+This one currently only possible from the C++ API. While the robot moves in a background thread, you can change the waypoints in real-time.
 
 ```c++
 robot.moveAsync(motion_hold);
@@ -152,7 +200,7 @@ robot.moveAsync(motion_hold);
 // Wait for key input from user
 std::cin.get()
 
-motion_hold.setNextWaypoint(const Waypoint& waypoint);
+motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);
 ```
 
 
@@ -164,18 +212,25 @@ In the `frankx::Gripper` class, the default gripper force and gripper speed can 
 auto gripper = Gripper("172.16.0.2");
 
 // These are the default values
-gripper.gripper_speed = 0.1; // [m/s]
-gripper.gripper_force = 30.0; // [N]
+gripper.gripper_speed = 0.02; // [m/s]
+gripper.gripper_force = 20.0; // [N]
 
 // Preshape gripper before grasp, use the given speed
 gripper.move(50.0); // [mm]
 
-// Grasp an object
-gripper.clamp();
+// Grasp an object of unknown width
+is_grasping = gripper.clamp();
+
+// Do something
+is_grasping &= gripper.isGrasping();
 
 // Release an object and move to a given distance
-gripper.release(50.0);
+if (is_grasping) {
+  gripper.release(50.0);
+}
 ```
+
+The Python API should be very straight-forward for the Gripper class.
 
 
 ## Documentation

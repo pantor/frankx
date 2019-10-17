@@ -250,7 +250,9 @@ PYBIND11_MODULE(frankx, m) {
         .def("move", (bool (Robot::*)(JointMotion)) &Robot::move)
         .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move)
         .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move)
-        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move);
+        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move)
+        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion)) &Robot::move)
+        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion, MotionData &)) &Robot::move);
 
     py::class_<franka::GripperState>(m, "GripperState")
         .def_readonly("width", &franka::GripperState::width)

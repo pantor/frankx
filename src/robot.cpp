@@ -55,11 +55,19 @@ bool Robot::move(JointMotion motion, MotionData& data) {
 }
 
 bool Robot::move(WaypointMotion motion) {
+    return move(Affine(), motion);
+}
+
+bool Robot::move(WaypointMotion motion, MotionData& data) {
+    return move(Affine(), motion, data);
+}
+
+bool Robot::move(const Affine& frame, WaypointMotion motion) {
     auto data = MotionData();
     return move(motion, data);
 }
 
-bool Robot::move(WaypointMotion motion, MotionData& data) {
+bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
     constexpr int degrees_of_freedoms {7};
     constexpr double control_rate {0.001};
 
