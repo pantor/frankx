@@ -116,7 +116,12 @@ pose = combined_transformation.vector()
 We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The `rel` name denotes that this a factor of the maximum constraints of the Panda robot.
 ```python
 robot = Robot("172.16.0.2")
-robot.set_dynamic_rel(0.05)  # Set velocity, acceleration and jerk to 5% of the maximum
+
+# Recover from errors
+robot.recover_from_errors()
+
+# Set velocity, acceleration and jerk to 5% of the maximum
+robot.set_dynamic_rel(0.05)
 
 # Alternatively, you can define each constraint individually
 robot.velocity_rel = 0.2
@@ -142,7 +147,8 @@ m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))
 # A more complex motion by defining multiple waypoints
 m5 = WaypointMotion([
   Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),
-  Waypoint(Affine(0.0, 0.1, 0.0, Waypoint.ReferenceType.Relative)),  # This makes the waypoint relative to the prior one
+  # The following waypoint is relative to the prior one
+  Waypoint(Affine(0.0, 0.1, 0.0, Waypoint.ReferenceType.Relative))
 ])
 
 # Hold the position for [s]
@@ -172,28 +178,51 @@ data.jerk_rel = 0.2
 
 ### Real-Time Reactions
 
-- SpatialForceBreakCondition
-- NormalForceBreakCondition
-- TimeBreakCondition
+By adding reactions to the motion data, the robot can react to unforeseen events. In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. If the threshold is exceeded, the reaction fires. Following comparisons are currently implemented
+```python
 
-If the robot is pushed, the program continues its execution.
+reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.01))  # Move up for 1cm
+
+# Stop motion if the overall force is greater than 30N
+d1 = MotionData().withReaction(Reaction(Measure.ForceXYZNorm, Comparison.Greater, 30.0))
+
+# Apply reaction motion if the force in z-direction is greater than 10N
+d2 = MotionData().withReaction(Reaction(Measure.ForceZ, Comparison.Greater, 10.0), reaction_motion)
+
+# Stop motion if its duration is above 30s
+d3 = MotionData().withReaction(Reaction(Measure.Time, Comparison.Greater, 30.0))
+
+robot.move(m2, d2)
+
+# Check if the reaction was triggered
+if d2.has_fired:
+  robot.recover_from_errors()
+  print('Force exceeded 10N!')
+```
+
+Once a reaction has fired, it will be neglected furthermore. In C++ you can additionally use lambdas to define more complex behaviours:
 
 ```c++
 // Stop motion if force is over 10N
-auto data = MotionData().withReaction({
-  Measure::ForceXYZNorm, Comparison::Greater, 10.0  // [N]
-});
+auto data = MotionData()
+  .withReaction({
+    Measure::ForceXYZNorm, Comparison::Greater, 10.0  // [N]
+  })
+  .withReaction({
+    [](const franka::RobotState& state, double time) {
+      return (state.current_errors.self_collision_avoidance_violation);
+    }
+  });
 
 // Hold position for 5s
 robot.move(PositionHold(5.0), data); // [s]
+// e.g. combined with a PositionHold, the robot continues its program after pushing the end effector.
 ```
-Reaction `has_fired` triggered. Once a reaction had fired, it will be neglected furthermore.
 
 
 ### Real-Time Waypoint Motion
 
-This one currently only possible from the C++ API. While the robot moves in a background thread, you can change the waypoints in real-time.
-
+While the robot moves in a background thread, you can change the waypoints in real-time. This is currently only possible from the C++ API.
 ```c++
 robot.moveAsync(motion_hold);
 
@@ -203,10 +232,12 @@ std::cin.get()
 motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);
 ```
 
+If you need this functionality using Python, feel free to make a pull request!
+
 
 ### Gripper
 
-In the `frankx::Gripper` class, the default gripper force and gripper speed can be set. Then, the following simplified commands can be used:
+In the `frankx::Gripper` class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:
 
 ```c++
 auto gripper = Gripper("172.16.0.2");
