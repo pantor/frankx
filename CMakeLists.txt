@@ -42,7 +42,7 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS grasping)
+  foreach(example IN ITEMS simple grasping)
     add_executable(${example} "examples/${example}.cpp")
     target_compile_features(${example} PUBLIC cxx_std_17)
     target_link_libraries(${example} libfrankx)

@@ -173,7 +173,7 @@ gripper.release(50.0);
 
 ## Examples
 
-Multiple examples can be found in `examples`.
+Multiple examples for both C++ and Python can be found in the `examples` directory.
 
 
 ## Development

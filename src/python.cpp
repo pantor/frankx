@@ -88,10 +88,12 @@ PYBIND11_MODULE(frankx, m) {
         .def(py::init<const std::vector<Waypoint> &>());
 
     py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
+        .def(py::init<const Affine&>())
         .def(py::init<const Affine&, double>());
 
     py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
-        .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a = 0.0);
+        .def(py::init<const Affine&>())
+        .def(py::init<const Affine&, double>());
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());
@@ -261,4 +263,13 @@ PYBIND11_MODULE(frankx, m) {
         .def("release", (bool (Gripper::*)()) &Gripper::release)
         .def("release", (bool (Gripper::*)(double)) &Gripper::release)
         .def("releaseRelative", &Gripper::releaseRelative);
+
+    py::register_exception<franka::CommandException>(m, "CommandException");
+    py::register_exception<franka::ControlException>(m, "ControlException");
+    py::register_exception<franka::IncompatibleVersionException>(m, "IncompatibleVersionException");
+    py::register_exception<franka::InvalidOperationException>(m, "InvalidOperationException");
+    py::register_exception<franka::ModelException>(m, "ModelException");
+    py::register_exception<franka::NetworkException>(m, "NetworkException");
+    py::register_exception<franka::ProtocolException>(m, "ProtocolException");
+    py::register_exception<franka::RealtimeException>(m, "RealtimeException");
 }

@@ -3,10 +3,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <frankx/affine.hpp>
-#include <frankx/motion_waypoint.hpp>
-#include <frankx/robot.hpp>
-#include <frankx/utils.hpp>
+#include <frankx/frankx.hpp>
 
 
 using namespace frankx;

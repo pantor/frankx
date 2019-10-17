@@ -27,12 +27,14 @@ struct WaypointMotion {
 
 
 struct LinearMotion: public WaypointMotion {
+    explicit LinearMotion(const Affine& affine): WaypointMotion({ Waypoint(affine) }) { }
     explicit LinearMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow) }) { }
 };
 
 
 struct LinearRelativeMotion: public WaypointMotion {
-    explicit LinearRelativeMotion(const Affine& affine, double elbow = 0.0): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
+    explicit LinearRelativeMotion(const Affine& affine): WaypointMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative) }) { }
+    explicit LinearRelativeMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, 0.0, Waypoint::ReferenceType::Relative) }) { }
 };
 
 

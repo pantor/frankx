@@ -32,11 +32,8 @@ struct Affine {
     explicit Affine(const franka::CartesianPose& pose, bool offset = true);
 
     Affine operator*(const Affine &a) const;
-
     Affine inverse() const;
-
     bool isApprox(const Affine &a) const;
-
     Eigen::Ref<Eigen::Affine3d::MatrixType> matrix();
     std::array<double, 16> array() const;
 

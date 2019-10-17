@@ -1,11 +1,4 @@
-#include <iostream>
-#include <iterator>
-
-#include <frankx/gripper.hpp>
-#include <frankx/motion_data.hpp>
-#include <frankx/motion_joint.hpp>
-#include <frankx/motion_waypoint.hpp>
-#include <frankx/robot.hpp>
+#include <frankx/frankx.hpp>
 
 
 using namespace frankx;
