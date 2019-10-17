@@ -1,6 +1,6 @@
 import math
 
-from frankx import Affine, Condition, Gripper, JointMotion, LinearRelativeMotion, MotionData, Robot, Waypoint, WaypointMotion
+from frankx import Affine, Comparison, Gripper, JointMotion, LinearRelativeMotion, Measure, MotionData, Reaction, Robot, Waypoint, WaypointMotion
 
 
 class Grasping:
@@ -26,8 +26,8 @@ class Grasping:
         self.gripper.move(0.08)
 
     def grasp(self):
-        data_down = MotionData(1.0).with_condition(Condition(
-            Condition.Measure.ForceZ, Condition.Comparison.Smaller, -7.0,
+        data_down = MotionData(1.0).with_condition(Reaction(
+            Measure.ForceZ, Comparison.Smaller, -7.0,
             LinearRelativeMotion(Affine(0.0, 0.0, 0.001))
         ))
 

@@ -39,31 +39,31 @@ PYBIND11_MODULE(frankx, m) {
         .def("get_inner_random", &Affine::getInnerRandom)
         .def("__repr__", &Affine::toString);
 
-    py::class_<Condition> condition(m, "Condition");
-    condition.def(py::init<Condition::Measure, Condition::Comparison, double>())
-        .def(py::init<Condition::Measure, Condition::Comparison, double, std::shared_ptr<WaypointMotion>>())
-        .def_readonly("has_fired", &Condition::has_fired)
-        .def_readonly("has_action", &Condition::has_action);
-
-    py::enum_<Condition::Measure>(condition, "Measure")
-        .value("ForceZ", Condition::Measure::ForceZ)
-        .value("ForceXYNorm", Condition::Measure::ForceXYNorm)
-        .value("ForceXYZNorm", Condition::Measure::ForceXYZNorm)
-        .value("Time", Condition::Measure::Time)
+    py::enum_<Measure>(m, "Measure")
+        .value("ForceZ", Measure::ForceZ)
+        .value("ForceXYNorm", Measure::ForceXYNorm)
+        .value("ForceXYZNorm", Measure::ForceXYZNorm)
+        .value("Time", Measure::Time)
         .export_values();
 
-    py::enum_<Condition::Comparison>(condition, "Comparison")
-        .value("Greater", Condition::Comparison::Greater)
-        .value("Smaller", Condition::Comparison::Smaller)
+    py::enum_<Comparison>(m, "Comparison")
+        .value("Greater", Comparison::Greater)
+        .value("Smaller", Comparison::Smaller)
         .export_values();
+
+    py::class_<Reaction>(m, "Reaction")
+        .def(py::init<Measure, Comparison, double>())
+        .def(py::init<Measure, Comparison, double, std::shared_ptr<WaypointMotion>>())
+        .def_readonly("has_fired", &Reaction::has_fired);
+        // .def_readonly("motion", &Reaction::motion);
 
     py::class_<MotionData>(m, "MotionData")
         .def(py::init<double>(), "dynamic_rel"_a = 1.0)
         .def_readwrite("velocity_rel", &MotionData::velocity_rel)
         .def_readwrite("acceleration_rel", &MotionData::acceleration_rel)
-        .def_readonly("conditions", &MotionData::conditions)
+        .def_readonly("reactions", &MotionData::reactions)
         .def("with_dynamic_rel", &MotionData::withDynamicRel)
-        .def("with_condition", &MotionData::withCondition);
+        .def("with_reaction", &MotionData::withReaction);
 
     py::class_<Waypoint> waypoint(m, "Waypoint");
     py::enum_<Waypoint::ReferenceType>(waypoint, "Waypoint")

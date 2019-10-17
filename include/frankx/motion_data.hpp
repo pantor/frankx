@@ -1,6 +1,6 @@
 #pragma once
 
-#include <frankx/condition.hpp>
+#include <frankx/reaction.hpp>
 #include <frankx/utils.hpp>
 
 
@@ -13,7 +13,7 @@ struct MotionData {
     double acceleration_rel;
     double jerk_rel;
 
-    std::vector<Condition> conditions {};
+    std::vector<Reaction> reactions {};
 
     MotionData& withDynamicRel(double dynamic_rel) {
         this->velocity_rel = dynamic_rel;
@@ -22,8 +22,8 @@ struct MotionData {
         return *this;
     }
 
-    MotionData& withCondition(Condition condition) {
-        this->conditions.push_back(condition);
+    MotionData& withReaction(const Reaction& reaction) {
+        this->reactions.push_back(reaction);
         return *this;
     }
 };

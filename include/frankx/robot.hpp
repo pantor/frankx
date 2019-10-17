@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Python.h>
+
 #include <ReflexxesAPI.h>
 #include <RMLPositionFlags.h>
 #include <RMLPositionInputParameters.h>

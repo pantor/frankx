@@ -1,3 +1,4 @@
+#include <Python.h>
 #include <frankx/robot.hpp>
 
 
@@ -124,35 +125,53 @@ bool Robot::move(WaypointMotion motion, MotionData& data) {
                 old_elbow = old_vector(6);
             }
 
-            for (auto& condition : data.conditions) {
-                if (condition.has_fired) {
+            for (auto& reaction : data.reactions) {
+                if (reaction.has_fired) {
                     continue;
                 }
 
-                if (condition.callback(robot_state, time)) {
-                    condition.has_fired = true;
+                if (reaction.condition_callback(robot_state, time)) {
+                    reaction.has_fired = true;
 
-                    current_motion = *condition.action;
-                    waypoint_iterator = current_motion.waypoints.begin();
+                    bool new_motion = false;
 
-                    auto current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-                    auto current_vector = Affine(current_pose).vector_with_elbow(current_pose.elbow[0], old_vector);
-                    old_affine = Affine(current_pose);
-                    old_vector = current_vector;
-                    old_elbow = old_vector(6);
+                    if (reaction.action.has_value()) {
+                        new_motion = true;
+                        current_motion = reaction.action.value()(robot_state, time);
+                    } else if (reaction.motion.has_value()) {
+                        new_motion = true;
+                        current_motion = *(reaction.motion.value());
+                    }
 
-                    const Waypoint current_waypoint = *waypoint_iterator;
-                    waypoint_has_elbow = current_waypoint.elbow.has_value();
-                    auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+                    if (new_motion) {
+                        waypoint_iterator = current_motion.waypoints.begin();
 
-                    setInputLimits(input_parameters.get(), current_waypoint, data);
-                    setVector(input_parameters->TargetPositionVector, target_position_vector);
-                    setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+                        auto current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
+                        auto current_vector = Affine(current_pose).vector_with_elbow(current_pose.elbow[0], old_vector);
+                        old_affine = Affine(current_pose);
+                        old_vector = current_vector;
+                        old_elbow = old_vector(6);
 
-                    old_affine = current_waypoint.getTargetAffine(old_affine);
-                    old_vector = target_position_vector;
-                    old_elbow = old_vector(6);
+                        const Waypoint current_waypoint = *waypoint_iterator;
+                        waypoint_has_elbow = current_waypoint.elbow.has_value();
+                        auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+
+                        setInputLimits(input_parameters.get(), current_waypoint, data);
+                        setVector(input_parameters->TargetPositionVector, target_position_vector);
+                        setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+
+                        old_affine = current_waypoint.getTargetAffine(old_affine);
+                        old_vector = target_position_vector;
+                        old_elbow = old_vector(6);
+                    } else {
+                        return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector, waypoint_has_elbow));
+                    }
                 }
+            }
+
+            if (PyErr_CheckSignals() == -1) {
+                std::cout << "Stop motion" << std::endl;
+                stop();
             }
 
             const int steps = std::max<int>(period.toMSec(), 1);

@@ -24,10 +24,10 @@ int main() {
     auto joint_data = MotionData().withDynamicRel(0.2);
     robot.move(joint_motion, joint_data);
 
-    auto data = MotionData().withDynamicRel(0.5).withCondition({
-        Condition::Measure::ForceZ, Condition::Comparison::Smaller, -7.0,
+    auto data = MotionData().withDynamicRel(0.5).withReaction(Reaction(
+        Measure::ForceZ, Comparison::Smaller, -7.0,
         std::make_shared<LinearRelativeMotion>(Affine(0.0, 0.0, 0.001))
-    });
+    ));
 
     WaypointMotion waypoint_motion({
       {getBase(0.05, 0.05, 0.0, M_PI_2)},

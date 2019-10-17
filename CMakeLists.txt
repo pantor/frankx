@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
 
-project(frankx VERSION 0.2.0 LANGUAGES C CXX)
-
-
+project(frankx VERSION 0.2.0 LANGUAGES CXX)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-set(CMAKE_CXX_STANDARD 17)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
@@ -18,13 +15,15 @@ find_package(Eigen3 3.3.7 EXACT REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
 find_package(Reflexxes REQUIRED)
 
+
 add_library(libfrankx SHARED
   src/affine.cpp
-  src/condition.cpp
   src/gripper.cpp
   src/motion_joint.cpp
+  src/reaction.cpp
   src/robot.cpp
 )
+target_compile_features(libfrankx PUBLIC cxx_std_17)
 target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
 
@@ -33,7 +32,11 @@ if(BUILD_PYTHON_MODULE)
   find_package(pybind11 REQUIRED)
   find_package(Python 3.6 EXACT REQUIRED)
 
+  target_include_directories(libfrankx PUBLIC ${PYTHON_INCLUDE_DIRS})
+  target_link_libraries(libfrankx ${PYTHON_LIBRARIES})
+
   pybind11_add_module(frankx src/python.cpp)
+  target_compile_features(frankx PUBLIC cxx_std_17)
   target_link_libraries(frankx PUBLIC libfrankx)
 endif()
 
@@ -41,6 +44,7 @@ endif()
 if(BUILD_EXAMPLES)
   foreach(example IN ITEMS grasping)
     add_executable(${example} "examples/${example}.cpp")
+    target_compile_features(${example} PUBLIC cxx_std_17)
     target_link_libraries(${example} libfrankx)
   endforeach()
 endif()
@@ -51,11 +55,13 @@ if(BUILD_TESTS)
 
   find_package(Catch2 REQUIRED)
 
-  add_executable(unit_test "test/unit-test.cpp")
-  target_link_libraries(unit_test libfrankx Catch2::Catch2)
-  add_test("unit-test" COMMAND unit_test)
-
-  add_executable(robot_test "test/robot-test.cpp")
-  target_link_libraries(robot_test libfrankx Catch2::Catch2)
-  add_test("robot-test" COMMAND robot_test)
+  foreach(test IN ITEMS unit-test robot-test)
+    add_executable(${test} "test/${test}.cpp")
+    target_compile_features(${test} PUBLIC cxx_std_17)
+    target_link_libraries(${test} libfrankx Catch2::Catch2)
+    add_test(${test} COMMAND ${test})
+  endforeach()
 endif()
+
+
+install(TARGETS libfrankx LIBRARY DESTINATION lib INCLUDES DESTINATION include)

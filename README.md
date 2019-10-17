@@ -21,12 +21,12 @@
   </a>
 </p>
 
-Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It is loosely based on the KUKA Sunrise.OS API for the LBR iiwa.
+Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper for the [libfranka](https://frankaemika.github.io/docs/libfranka.html) library, replacing of course the real-time parts with higher-level motion commands.
 
 
 ## Installation
 
-Frankx is based on [libfranka](https://frankaemika.github.io/docs/libfranka.html) (v.0.6.0), [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) (v3.3.7) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) (v2.4.0) for the Python bindings. Make sure to have these dependencies installed, then you can install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka) (v.0.6.0), [Reflexxes](http://reflexxes.ws) as a real-time trajectory-generator, [Eigen](https://eigen.tuxfamily.org) (v3.3.7) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) (v2.4.0) for the Python bindings. Make sure to have these dependencies installed, then you can install frankx via
 
 ```bash
 mkdir -p build
@@ -117,7 +117,7 @@ robot.setJerkRel(0.1); // Only if you use the Reflexxes Type IV library
 ```
 
 
-### Reaction Conditions
+### Real-Time Reactions
 
 - SpatialForceBreakCondition
 - NormalForceBreakCondition
@@ -127,13 +127,14 @@ If the robot is pushed, the program continues its execution.
 
 ```c++
 // Stop motion if force is over 10N
-auto data = MotionData().withCondition({
-  Condition::Measure::ForceXYZNorm, Condition::Comparison::Greater, 10.0  // [N]
+auto data = MotionData().withReaction({
+  Measure::ForceXYZNorm, Comparison::Greater, 10.0  // [N]
 });
 
 // Hold position for 5s
 robot.move(PositionHold(5.0), data); // [s]
 ```
+Reaction `has_fired` triggered. Once a reaction had fired, it will be neglected furthermore.
 
 
 ### Real-time Waypoint Motion
@@ -183,3 +184,5 @@ Frankx is written in C++17 and Python3. It works well with ROS2.
 ## License
 
 For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements.
+
+Robot vector created by [freepik](https://www.freepik.com/free-photos-vectors/technology)
