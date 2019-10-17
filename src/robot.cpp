@@ -178,7 +178,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
             }
 
             if (PyErr_CheckSignals() == -1) {
-                std::cout << "Stop motion" << std::endl;
                 stop();
             }
 

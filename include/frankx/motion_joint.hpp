@@ -5,6 +5,7 @@
 #include <array>
 
 #include <Eigen/Core>
+#include <Python.h>
 
 #include <franka/control_types.h>
 #include <franka/duration.h>
