@@ -152,6 +152,21 @@ PYBIND11_MODULE(frankx, m) {
         .def_property_readonly("instability_detected", [](const franka::Errors& e) { return e.instability_detected; })
         .def_property_readonly("joint_move_in_wrong_direction", [](const franka::Errors& e) { return e.joint_move_in_wrong_direction; });
 
+    // py::enum_<franka::Frame>(m, "Frame")
+    //     .value("Joint1", franka::Frame::kJoint1)
+    //     .value("Joint2", franka::Frame::kJoint2)
+    //     .value("Joint3", franka::Frame::kJoint3)
+    //     .value("Joint4", franka::Frame::kJoint4)
+    //     .value("Joint5", franka::Frame::kJoint5)
+    //     .value("Joint6", franka::Frame::kJoint6)
+    //     .value("Joint7", franka::Frame::kJoint7)
+    //     .value("Flange", franka::Frame::kFlange)
+    //     .value("EndEffector", franka::Frame::kEndEffector)
+    //     .value("Stiffness", franka::Frame::kStiffness)
+    //     .export_values();
+
+    // py::class_<franka::Model>(m, "Model");
+
     py::enum_<franka::RobotMode>(m, "RobotMode")
         .value("Other", franka::RobotMode::kOther)
         .value("Idle", franka::RobotMode::kIdle)
