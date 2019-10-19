@@ -38,13 +38,20 @@ class CMakeBuild(build_ext):
         build_type = os.environ.get("BUILD_TYPE", "Release")
         build_args = ['--config', build_type]
 
-        cmake_args += ["-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/"]
-        cmake_args += ["-DCMAKE_CXX_COMPILER=g++-9"]
-        cmake_args += ["-DCMAKE_BUILD_TYPE=Release"]
-        cmake_args += ["-DCMAKE_CXX_FLAGS_RELEASE=-O3"]
-        cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeIV"]
-        cmake_args += ["-DReflexxes_ROOT_DIR=/home/berscheid/Documents/libs/ReflexxesTypeIV"]
+        # CI
+        cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeII"]
+        cmake_args += ["-DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/"]
+        cmake_args += ["-DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build"]
         cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
+
+        # Local
+        # cmake_args += ["-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/"]
+        # cmake_args += ["-DCMAKE_CXX_COMPILER=g++-9"]
+        # cmake_args += ["-DCMAKE_BUILD_TYPE=Release"]
+        # cmake_args += ["-DCMAKE_CXX_FLAGS_RELEASE=-O3"]
+        # cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeIV"]
+        # cmake_args += ["-DReflexxes_ROOT_DIR=/home/berscheid/Documents/libs/ReflexxesTypeIV"]
+        # cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
 
         # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]

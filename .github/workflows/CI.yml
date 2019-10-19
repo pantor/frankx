@@ -71,7 +71,9 @@ jobs:
       run: ./build/unit-test
 
     - name: python package
-      run: python3 setup.py sdist bdist_wheel
+      run: |
+        python3 -m pip install setuptools wheel --user
+        python3 setup.py sdist bdist_wheel
 
     - name: publish python package
       uses: pypa/gh-action-pypi-publish@master
