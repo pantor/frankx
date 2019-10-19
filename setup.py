@@ -9,6 +9,10 @@ from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -72,23 +76,25 @@ class CMakeBuild(build_ext):
                                ] + build_args,
                               cwd=self.build_temp)
 setup(
-  name = 'frankx',
-  packages = find_packages(),
-  version = '0.0.1',
-  license='LGPL',
-  description = 'High-Level Motion Library for the Franka Panda Robot',
-  author = 'Lars Berscheid',
-  author_email = 'lars.berscheid@kit.edu',
-  url = 'https://github.com/pantor/frankx',
-  ext_modules=[CMakeExtension('frankx')],
-  cmdclass=dict(build_ext=CMakeBuild),
-  keywords = ['robotics', 'trajectory-generation', 'motion-control'],
-  classifiers=[
-    'Development Status :: 3 - Alpha',
-    'Intended Audience :: Developers',
-    'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: LGPG License',
-    'Programming Language :: Python :: 3.6',
-    'Operating System :: OS Independent',
-  ],
+    name='frankx',
+    packages=find_packages(),
+    version='0.0.1',
+    license='LGPL',
+    description='High-Level Motion Library for the Franka Panda Robot',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author='Lars Berscheid',
+    author_email='lars.berscheid@kit.edu',
+    url='https://github.com/pantor/frankx',
+    ext_modules=[CMakeExtension('frankx')],
+    cmdclass=dict(build_ext=CMakeBuild),
+    keywords=['robotics', 'trajectory-generation', 'motion-control'],
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Science/Research',
+        'Topic :: Software Development :: Build Tools',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+        'Programming Language :: C++',
+    ],
+    python_requires='>=3.6',
 )
