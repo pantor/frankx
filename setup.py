@@ -78,7 +78,7 @@ class CMakeBuild(build_ext):
 setup(
     name='frankx',
     packages=find_packages(),
-    version='0.0.1',
+    version='0.2.0',
     license='LGPL',
     description='High-Level Motion Library for the Franka Panda Robot',
     long_description=long_description,
