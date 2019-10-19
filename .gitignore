@@ -2,3 +2,5 @@ build
 .vscode
 .mypy_cache
 cmake-local.sh
+dist
+*.egg-info
