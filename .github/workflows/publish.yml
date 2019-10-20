@@ -56,7 +56,7 @@ jobs:
         git checkout 0.6.0
         git submodule update
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=g++-8 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         make install
 
@@ -66,7 +66,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=g++-8 -DPYBIND11_TEST=OFF ..
+        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
         make
         make install
 
@@ -82,7 +82,7 @@ jobs:
     - name: configure & make
       run: |
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
         make
 
     - name: test
