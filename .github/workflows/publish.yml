@@ -17,7 +17,8 @@ jobs:
 
     - name: install cmake
       run: |
-        export PATH=$HOME/.local/bin:$PATH
+        PATH=$HOME/.local/bin:$PATH
+        export PATH
         /opt/python/cp36-cp36m/bin/pip install cmake --user
 
     # - name: install apt dependencies
