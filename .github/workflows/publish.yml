@@ -1,0 +1,88 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    container:
+      image: 'quay.io/pypa/manylinux1_x86_64'
+
+    steps:
+    - uses: actions/checkout@v1
+
+    # - name: install apt dependencies
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get -y install build-essential cmake git libpoco-dev
+
+    - name: install Eigen3
+      run: |
+        git clone https://github.com/eigenteam/eigen-git-mirror.git
+        cd eigen-git-mirror
+        git checkout 3.3.7
+        mkdir build && cd build
+        cmake ..
+        sudo make install
+
+    - name: install Reflexxes
+      run: |
+        git clone https://github.com/pantor/RMLTypeII.git
+        cd RMLTypeII
+        mkdir build && cd build
+        cmake ..
+        make
+
+    - name: install libfranka
+      run: |
+        git clone --recursive https://github.com/frankaemika/libfranka.git
+        cd libfranka
+        git checkout 0.6.0
+        git submodule update
+        mkdir build && cd build
+        cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        make
+        sudo make install
+
+    - name: install pybind11
+      run: |
+        git clone https://github.com/pybind/pybind11.git
+        cd pybind11
+        git checkout v2.4.3
+        mkdir build && cd build
+        cmake -DPYBIND11_TEST=OFF ..
+        make
+        sudo make install
+
+    - name: install Catch2
+      run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        git checkout v2.5.0
+        mkdir build && cd build
+        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        sudo make install
+
+    - name: configure & make
+      run: |
+        mkdir build && cd build
+        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        make
+
+    - name: test
+      run: ./build/unit-test
+
+    # - name: python package
+    #   run: |
+    #     python3 -m pip install setuptools wheel --user
+    #     python3 setup.py sdist bdist_wheel
+
+    # - name: publish python package
+    #   uses: pypa/gh-action-pypi-publish@master
+    #   with:
+    #     user: keNB2
+    #     password: ${{ secrets.pypi_password }}

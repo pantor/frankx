@@ -122,13 +122,13 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
 
                 const Waypoint current_waypoint = *waypoint_iterator;
                 waypoint_has_elbow = current_waypoint.elbow.has_value();
-                auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+                auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow, old_vector);
 
                 setInputLimits(input_parameters.get(), current_waypoint, data);
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
                 setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
 
-                old_affine = current_waypoint.getTargetAffine(old_affine);
+                old_affine = current_waypoint.getTargetAffine(frame, old_affine);
                 old_vector = target_position_vector;
                 old_elbow = old_vector(6);
             }
@@ -162,13 +162,13 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
 
                         const Waypoint current_waypoint = *waypoint_iterator;
                         waypoint_has_elbow = current_waypoint.elbow.has_value();
-                        auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+                        auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow, old_vector);
 
                         setInputLimits(input_parameters.get(), current_waypoint, data);
                         setVector(input_parameters->TargetPositionVector, target_position_vector);
                         setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
 
-                        old_affine = current_waypoint.getTargetAffine(old_affine);
+                        old_affine = current_waypoint.getTargetAffine(frame, old_affine);
                         old_vector = target_position_vector;
                         old_elbow = old_vector(6);
                     } else {
@@ -198,13 +198,13 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
 
                     const Waypoint current_waypoint = *waypoint_iterator;
                     waypoint_has_elbow = current_waypoint.elbow.has_value();
-                    auto target_position_vector = current_waypoint.getTargetVector(old_affine, old_elbow, old_vector);
+                    auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow, old_vector);
 
                     setInputLimits(input_parameters.get(), current_waypoint, data);
                     setVector(input_parameters->TargetPositionVector, target_position_vector);
                     setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
 
-                    old_affine = current_waypoint.getTargetAffine(old_affine);
+                    old_affine = current_waypoint.getTargetAffine(frame, old_affine);
                     old_vector = target_position_vector;
                     old_elbow = old_vector(6);
                 }

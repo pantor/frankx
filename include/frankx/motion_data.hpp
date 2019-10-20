@@ -1,7 +1,6 @@
 #pragma once
 
 #include <frankx/reaction.hpp>
-#include <frankx/utils.hpp>
 
 
 namespace frankx {

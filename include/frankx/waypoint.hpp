@@ -32,19 +32,19 @@ struct Waypoint {
     explicit Waypoint(const Affine& affine, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
     explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
 
-    Affine getTargetAffine(const Affine& old_affine) const {
+    Affine getTargetAffine(const Affine& frame, const Affine& old_affine) const {
         if (reference_type == ReferenceType::Relative) {
-          return old_affine * affine;
+          return old_affine * affine * frame.inverse();
         }
-        return affine;
+        return affine * frame.inverse();
     }
 
-    Vector7d getTargetVector(const Affine& old_affine, double old_elbow, const Vector7d& old_vector) const {
+    Vector7d getTargetVector(const Affine& frame, const Affine& old_affine, double old_elbow, const Vector7d& old_vector) const {
         double new_elbow = elbow.has_value() ? elbow.value() : 0.0;
         if (reference_type == ReferenceType::Relative) {
             new_elbow += old_elbow;
         }
-        return getTargetAffine(old_affine).vector_with_elbow(new_elbow, old_vector);
+        return getTargetAffine(frame, old_affine).vector_with_elbow(new_elbow, old_vector);
     }
 };
 
