@@ -17,8 +17,8 @@ jobs:
 
     - name: install build essentials
       run: |
-        ls /opt/python/cp36-cp36m
-        ls /opt/python/cp36-cp36m/lib
+        # ls /opt/python/cp36-cp36m
+        ls /opt/python/cp36-cp36m/lib/python3.6
         
         yum -y install poco-devel*
         
