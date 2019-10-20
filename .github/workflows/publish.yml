@@ -18,11 +18,7 @@ jobs:
     - name: install cmake
       run: |
         /opt/python/cp36-cp36m/bin/pip install cmake --user
-
-    # - name: install apt dependencies
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get -y install build-essential libpoco-dev
+        # cmake: $HOME/.local/bin/cmake
 
     - name: install Eigen3
       run: |
@@ -44,7 +40,7 @@ jobs:
 
     - name: install poco
       run: |
-        yum install poco
+        yum install poco-devel*
         # git clone https://github.com/pocoproject/poco.git
         # cd poco
         # mkdir build && cd build
@@ -60,7 +56,7 @@ jobs:
         mkdir build && cd build
         $HOME/.local/bin/cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
-        sudo make install
+        make install
 
     - name: install pybind11
       run: |
@@ -70,7 +66,7 @@ jobs:
         mkdir build && cd build
         $HOME/.local/bin/cmake -DPYBIND11_TEST=OFF ..
         make
-        sudo make install
+        make install
 
     - name: install Catch2
       run: |
@@ -79,7 +75,7 @@ jobs:
         git checkout v2.5.0
         mkdir build && cd build
         $HOME/.local/bin/cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
-        sudo make install
+        make install
 
     - name: configure & make
       run: |
@@ -90,10 +86,10 @@ jobs:
     - name: test
       run: ./build/unit-test
 
-    # - name: python package
-    #   run: |
-    #     python3 -m pip install setuptools wheel --user
-    #     python3 setup.py sdist bdist_wheel
+    - name: python package
+      run: |
+        /opt/python/cp36-cp36m/bin/pip install setuptools wheel --user
+        /opt/python/cp36-cp36m/bin/python setup.py sdist bdist_wheel
 
     # - name: publish python package
     #   uses: pypa/gh-action-pypi-publish@master
