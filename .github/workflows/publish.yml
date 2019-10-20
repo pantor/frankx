@@ -17,8 +17,6 @@ jobs:
 
     - name: install cmake
       run: |
-        PATH=$HOME/.local/bin:$PATH
-        export PATH
         /opt/python/cp36-cp36m/bin/pip install cmake --user
 
     # - name: install apt dependencies
@@ -34,14 +32,14 @@ jobs:
         git checkout 3.3.7
         mkdir build && cd build
         $HOME/.local/bin/cmake ..
-        sudo make install
+        make install
 
     - name: install Reflexxes
       run: |
         git clone https://github.com/pantor/RMLTypeII.git
         cd RMLTypeII
         mkdir build && cd build
-        cmake ..
+        $HOME/.local/bin/cmake ..
         make
 
     - name: install poco
@@ -60,7 +58,7 @@ jobs:
         git checkout 0.6.0
         git submodule update
         mkdir build && cd build
-        cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        $HOME/.local/bin/cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         sudo make install
 
@@ -70,7 +68,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        cmake -DPYBIND11_TEST=OFF ..
+        $HOME/.local/bin/cmake -DPYBIND11_TEST=OFF ..
         make
         sudo make install
 
@@ -80,13 +78,13 @@ jobs:
         cd Catch2
         git checkout v2.5.0
         mkdir build && cd build
-        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        $HOME/.local/bin/cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         sudo make install
 
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        $HOME/.local/bin/cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
         make
 
     - name: test
