@@ -16,7 +16,9 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: install cmake
-      run: /opt/python/py36-none -m pip install cmake --user
+      run: |
+        ls /opt/python
+        /opt/python/py36-none -m pip install cmake --user
 
     # - name: install apt dependencies
     #   run: |
