@@ -18,7 +18,7 @@ jobs:
     - name: install build essentials
       run: |
         ls /usr/local/bin
-        ls /usr/local/gcc-8.3.0
+        ls /usr/local/gcc-8.3.0/bin
         /opt/python/cp36-cp36m/bin/pip install cmake --user
         # cmake: $HOME/.local/bin/cmake
 
