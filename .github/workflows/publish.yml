@@ -40,7 +40,7 @@ jobs:
 
     - name: install poco
       run: |
-        yum install poco-devel*
+        yum -y install poco-devel*
         # git clone https://github.com/pocoproject/poco.git
         # cd poco
         # mkdir build && cd build
