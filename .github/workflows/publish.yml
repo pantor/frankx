@@ -19,7 +19,10 @@ jobs:
       run: |
         # ls /opt/python/cp36-cp36m
         ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
+        
         python3.6 -m pip install cmake --user
+        
+        ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
         # /opt/python/cp36-cp36m/bin/pip install cmake --user
         # cmake: $HOME/.local/bin/cmake
 
@@ -30,7 +33,7 @@ jobs:
         cd eigen-git-mirror
         git checkout 3.3.7
         mkdir build && cd build
-        $HOME/.local/bin/cmake ..
+        cmake ..
         make install
 
     - name: install Reflexxes
@@ -38,7 +41,7 @@ jobs:
         git clone https://github.com/pantor/RMLTypeII.git
         cd RMLTypeII
         mkdir build && cd build
-        $HOME/.local/bin/cmake ..
+        cmake ..
         make
 
     - name: install poco
@@ -57,7 +60,7 @@ jobs:
         git checkout 0.6.0
         git submodule update
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         make install
 
@@ -67,7 +70,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DPYBIND11_PYTHON_VERSION=3.6 -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
+        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
         make
         make install
 
@@ -77,13 +80,14 @@ jobs:
         cd Catch2
         git checkout v2.5.0
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         make install
 
     - name: configure & make
       run: |
+        ls $HOME
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=$HOME/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
         make
 
     - name: test
@@ -91,8 +95,8 @@ jobs:
 
     - name: python package
       run: |
-        /opt/python/cp36-cp36m/bin/pip install setuptools wheel --user
-        /opt/python/cp36-cp36m/bin/python setup.py sdist bdist_wheel
+        python3.6 -m pip install setuptools wheel --user
+        python3.6 setup.py sdist bdist_wheel
 
     # - name: publish python package
     #   uses: pypa/gh-action-pypi-publish@master
