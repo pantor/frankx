@@ -17,9 +17,6 @@ jobs:
 
     - name: install build essentials
       run: |
-        # ls /opt/python/cp36-cp36m
-        ls /opt/python/cp36-cp36m/lib/python3.6
-        
         yum -y install poco-devel*
         
         ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
@@ -78,7 +75,7 @@ jobs:
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=python3.6 -DPYTHON_LIBRARY=/opt/python/cp36-cp36m/lib/libpython3.6m.so ..
+        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=python3.6 ..
         make
 
     - name: test
