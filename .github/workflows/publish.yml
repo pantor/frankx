@@ -75,7 +75,7 @@ jobs:
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=python3.6 ..
+        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYBIND11_PYTHON_VERSION=3.6 ..
         make
 
     - name: test
