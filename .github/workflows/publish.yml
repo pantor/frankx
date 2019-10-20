@@ -17,7 +17,7 @@ jobs:
 
     - name: install cmake
       run: |
-        ls /opt/python/cp36-cp36m/bin
+        export PATH=$HOME/.local/bin:$PATH
         /opt/python/cp36-cp36m/bin/pip install cmake --user
 
     # - name: install apt dependencies
@@ -47,7 +47,7 @@ jobs:
         git clone https://github.com/pocoproject/poco.git
         cd poco
         mkdir build && cd build
-        cmake ..
+        cmake -DENABLE_MONGODB=OFF -DENABLE_PDF=OFF -DENABLE_DATA=OFF -DENABLE_ZIP=OFF ..
         make
 
     - name: install libfranka
