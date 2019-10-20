@@ -17,8 +17,8 @@ jobs:
 
     - name: install cmake
       run: |
-        ls /opt/python/cp36-cp36m
-        /opt/python/cp36-cp36m/bin -m pip install cmake --user
+        ls /opt/python/cp36-cp36m/bin
+        /opt/python/cp36-cp36m/bin/pip install cmake --user
 
     # - name: install apt dependencies
     #   run: |
@@ -38,6 +38,14 @@ jobs:
       run: |
         git clone https://github.com/pantor/RMLTypeII.git
         cd RMLTypeII
+        mkdir build && cd build
+        cmake ..
+        make
+
+    - name: install poco
+      run: |
+        git clone https://github.com/pocoproject/poco.git
+        cd poco
         mkdir build && cd build
         cmake ..
         make
