@@ -17,8 +17,8 @@ jobs:
 
     - name: install cmake
       run: |
-        ls /opt/python
-        /opt/python/py36-none -m pip install cmake --user
+        ls /opt/python/cp36-cp36m
+        /opt/python/cp36-cp36m/bin -m pip install cmake --user
 
     # - name: install apt dependencies
     #   run: |
