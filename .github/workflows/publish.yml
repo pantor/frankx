@@ -82,7 +82,7 @@ jobs:
         pwd
         ls .
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPYTHON_EXECUTABLE=python3.6 -DPYTHON_LIBRARY=/opt/python/cp36-cp36m/lib/libpython3.6m.so ..
         make
 
     - name: test
