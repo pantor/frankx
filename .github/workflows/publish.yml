@@ -17,8 +17,7 @@ jobs:
 
     - name: install build essentials
       run: |
-        ls /usr/local/bin
-        ls /usr/local/gcc-8.3.0/bin
+        ls /opt/python/cp36-cp36m
         /opt/python/cp36-cp36m/bin/pip install cmake --user
         # cmake: $HOME/.local/bin/cmake
 
@@ -66,7 +65,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF -DPYTHON_VERSION_MAJOR=3 -DPYTHON_VERSION_MINOR=6  ..
+        $HOME/.local/bin/cmake -DPYTHON_INCLUDE_DIRS=/opt/python/cp36-cp36m/include -DPYTHON_LIBRARIES=/opt/python/cp36-cp36m/lob -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
         make
         make install
 
