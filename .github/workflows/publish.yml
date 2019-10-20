@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: 'quay.io/pypa/manylinux1_x86_64'
+      image: tktechdocker/manylinux
 
     steps:
     - uses: actions/checkout@v1
@@ -19,9 +19,6 @@ jobs:
       run: |
         /opt/python/cp36-cp36m/bin/pip install cmake --user
         # cmake: $HOME/.local/bin/cmake
-        yum install centos-release-scl
-        yum install devtoolset-8-gcc devtoolset-8-gcc-c++
-        scl enable devtoolset-8 -- bash
 
     - name: install Eigen3
       run: |
