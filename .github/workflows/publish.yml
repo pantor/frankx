@@ -28,11 +28,12 @@ jobs:
 
     - name: install Eigen3
       run: |
+        echo $PATH
         git clone https://github.com/eigenteam/eigen-git-mirror.git
         cd eigen-git-mirror
         git checkout 3.3.7
         mkdir build && cd build
-        cmake ..
+        $HOME/.local/bin/cmake ..
         sudo make install
 
     - name: install Reflexxes
@@ -45,11 +46,12 @@ jobs:
 
     - name: install poco
       run: |
-        git clone https://github.com/pocoproject/poco.git
-        cd poco
-        mkdir build && cd build
-        cmake -DENABLE_MONGODB=OFF -DENABLE_PDF=OFF -DENABLE_DATA=OFF -DENABLE_ZIP=OFF ..
-        make
+        yum install poco
+        # git clone https://github.com/pocoproject/poco.git
+        # cd poco
+        # mkdir build && cd build
+        # cmake -DENABLE_MONGODB=OFF -DENABLE_PDF=OFF -DENABLE_DATA=OFF -DENABLE_ZIP=OFF ..
+        # make
 
     - name: install libfranka
       run: |
