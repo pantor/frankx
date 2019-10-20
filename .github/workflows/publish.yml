@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: tktechdocker/manylinux
+      image: tktechdocker/manylinux:gcc8.3.0
 
     steps:
     - uses: actions/checkout@v1
