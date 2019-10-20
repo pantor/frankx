@@ -17,7 +17,10 @@ jobs:
 
     - name: install build essentials
       run: |
+        yum -y install poco-devel*
+        
         # ls /opt/python/cp36-cp36m
+        ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
         ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
         
         python3.6 -m pip install cmake --user
@@ -44,15 +47,6 @@ jobs:
         cmake ..
         make
 
-    - name: install poco
-      run: |
-        yum -y install poco-devel*
-        # git clone https://github.com/pocoproject/poco.git
-        # cd poco
-        # mkdir build && cd build
-        # cmake -DENABLE_MONGODB=OFF -DENABLE_PDF=OFF -DENABLE_DATA=OFF -DENABLE_ZIP=OFF ..
-        # make
-
     - name: install libfranka
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
@@ -60,7 +54,7 @@ jobs:
         git checkout 0.6.0
         git submodule update
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        cmake -DCMAKE_CXX_COMPILER=g++-8 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         make install
 
@@ -70,7 +64,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
+        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DCMAKE_CXX_COMPILER=g++-8 -DPYBIND11_TEST=OFF ..
         make
         make install
 
@@ -85,9 +79,10 @@ jobs:
 
     - name: configure & make
       run: |
-        ls $HOME
+        pwd
+        ls .
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=$HOME/RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
+        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=../RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=.. /RMLTypeII/build -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so ..
         make
 
     - name: test
