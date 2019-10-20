@@ -13,7 +13,7 @@
   </a>
 
   <a href="https://github.com/pantor/frankx/releases">
-    <img src="https://img.shields.io/github/release/pantor/frankx.svg" alt="Releases">
+    <img src="https://img.shields.io/github/v/release/pantor/frankx.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
 
   <a href="https://github.com/pantor/frankx/blob/master/LICENSE">
