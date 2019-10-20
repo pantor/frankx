@@ -15,6 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: install cmake
+      run: python3.6 -m pip install cmake --user
+
     # - name: install apt dependencies
     #   run: |
     #     sudo apt-get update
