@@ -65,7 +65,7 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        $HOME/.local/bin/cmake -DPYTHON_INCLUDE_DIRS=/opt/python/cp36-cp36m/include -DPYTHON_LIBRARIES=/opt/python/cp36-cp36m/lob -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
+        $HOME/.local/bin/cmake -DPYBIND11_PYTHON_VERSION=3.6 -DCMAKE_CXX_COMPILER=/usr/local/gcc-8.3.0/bin/g++-8.3.0 -DPYBIND11_TEST=OFF ..
         make
         make install
 
