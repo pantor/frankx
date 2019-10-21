@@ -74,6 +74,8 @@ jobs:
 
     - name: python package
       run: |
+        python3.6 -m pip install setuptools wheel --user
+
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
           "${PYBIN}/pip" wheel / -w wheelhouse/
@@ -90,7 +92,6 @@ jobs:
           # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
         done
 
-        # python3.6 -m pip install setuptools wheel --user
         # python3.6 setup.py sdist bdist_wheel
 
     # - name: publish python package
