@@ -8,6 +8,10 @@
     <img src="https://github.com/pantor/frankx/workflows/CI/badge.svg" alt="CI">
   </a>
 
+  <a href="https://github.com/pantor/frankx/actions">
+    <img src="https://github.com/pantor/frankx/workflows/Publish/badge.svg" alt="Publish">
+  </a>
+
   <a href="https://github.com/pantor/frankx/issues">
     <img src="https://img.shields.io/github/issues/pantor/frankx.svg" alt="Issues">
   </a>

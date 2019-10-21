@@ -42,6 +42,7 @@ jobs:
         mkdir build && cd build
         cmake ..
         make
+        make install
 
     - name: install libfranka
       run: |
