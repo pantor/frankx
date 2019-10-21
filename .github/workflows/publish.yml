@@ -19,8 +19,6 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
-        ln -f -s /opt/python/cp37-cp37m/bin/python /usr/bin/python3.7
         /opt/python/cp36-cp36m/bin/pip install cmake --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
@@ -82,7 +80,9 @@ jobs:
         for PYBIN in /opt/python/*/bin; do
           if [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             ls ${PYBIN}/../lib
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.6
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.7
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.8
             "${PYBIN}/pip" install setuptools wheel --user
             "${PYBIN}/pip" wheel . -w wheels/
           fi
