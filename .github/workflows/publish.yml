@@ -72,15 +72,6 @@ jobs:
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         make install
 
-    - name: configure & make
-      run: |
-        mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=g++-8 -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build -DPython_USE_STATIC_LIBS=TRUE -DPYBIND11_PYTHON_VERSION=3.6 ..
-        make
-
-    - name: test
-      run: ./build/unit-test
-
     - name: python package
       run: |
         # Compile wheels
