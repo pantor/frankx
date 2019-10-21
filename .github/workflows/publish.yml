@@ -19,8 +19,7 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
-        python3.6 -m pip install cmake setuptools wheel --user
+        /opt/python/cp36-cp36m/bin/pip install cmake --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
     - name: install Eigen3
@@ -80,6 +79,7 @@ jobs:
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
           if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+            "${PYBIN}/pip" install setuptools wheel --user
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
