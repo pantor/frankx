@@ -183,13 +183,13 @@ By adding reactions to the motion data, the robot can react to unforeseen events
 reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.01))  # Move up for 1cm
 
 # Stop motion if the overall force is greater than 30N
-d1 = MotionData().withReaction(Reaction(Measure.ForceXYZNorm, Comparison.Greater, 30.0))
+d1 = MotionData().with_reaction(Reaction(Measure.ForceXYZNorm, Comparison.Greater, 30.0))
 
 # Apply reaction motion if the force in z-direction is greater than 10N
-d2 = MotionData().withReaction(Reaction(Measure.ForceZ, Comparison.Greater, 10.0), reaction_motion)
+d2 = MotionData().with_reaction(Reaction(Measure.ForceZ, Comparison.Greater, 10.0), reaction_motion)
 
 # Stop motion if its duration is above 30s
-d3 = MotionData().withReaction(Reaction(Measure.Time, Comparison.Greater, 30.0))
+d3 = MotionData().with_reaction(Reaction(Measure.Time, Comparison.Greater, 30.0))
 
 robot.move(m2, d2)
 
