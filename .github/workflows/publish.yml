@@ -18,7 +18,7 @@ jobs:
     - name: install build essentials
       run: |
         yum -y install poco-devel*
-        
+
         ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
         ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
         python3.6 -m pip install cmake --user
@@ -83,8 +83,24 @@ jobs:
 
     - name: python package
       run: |
-        python3.6 -m pip install setuptools wheel --user
-        python3.6 setup.py sdist bdist_wheel
+        # Compile wheels
+        for PYBIN in /opt/python/*/bin; do
+          "${PYBIN}/pip" wheel /io/ -w wheelhouse/
+        done
+
+        # Bundle external shared libraries into the wheels
+        for whl in wheelhouse/*.whl; do
+          auditwheel repair "$whl" -w /io/wheelhouse/
+        done
+
+        # Install packages and test
+        for PYBIN in /opt/python/*/bin/; do
+          "${PYBIN}/pip" install nestpy --no-index -f /io/wheelhouse
+          # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
+        done
+
+        # python3.6 -m pip install setuptools wheel --user
+        # python3.6 setup.py sdist bdist_wheel
 
     # - name: publish python package
     #   uses: pypa/gh-action-pypi-publish@master
