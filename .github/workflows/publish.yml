@@ -78,7 +78,7 @@ jobs:
         mkdir -p dist
 
         # Compile wheels
-        for PYBIN in /opt/python/*36-cp36m/bin; do
+        for PYBIN in /opt/python/*/bin; do
           if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
@@ -90,7 +90,7 @@ jobs:
         done
 
         # Install packages and test
-        for PYBIN in /opt/python/*36-cp36m/bin/; do
+        for PYBIN in /opt/python/*/bin/; do
           if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)

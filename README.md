@@ -37,17 +37,17 @@ Frankx is a high-level motion library (both C++ and Python) for the Franka Emika
 
 ## Installation
 
-For using frankx with Python, you can start by 
+For using frankx with Python, you can get started just by 
 ```bash
 pip install -U frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
+If you want to build from source, frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
 
 ```bash
 mkdir -p build
 cd build
-cmake -DReflexxes_ROOT_DIR=../RMLTypeII -DREFLEXXES_TYPE=ReflexxesTypeII -DBUILD_TYPE=Release ..
+cmake -DReflexxes_ROOT_DIR=../RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV -DBUILD_TYPE=Release ..
 make -j4
 make install
 ```

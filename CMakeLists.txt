@@ -31,7 +31,7 @@ target_link_libraries(libfrankx PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen
 if(BUILD_PYTHON_MODULE)
   find_package(pybind11 REQUIRED)
 
-  # target_link_libraries(libfrankx PUBLIC pybind11::embed)
+  target_link_libraries(libfrankx PUBLIC pybind11::embed)
 
   pybind11_add_module(frankx src/python.cpp)
   target_link_libraries(frankx PUBLIC libfrankx)

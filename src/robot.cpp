@@ -176,9 +176,9 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
                 }
             }
 
-            /*if (PyErr_CheckSignals() == -1) {
+            if (PyErr_CheckSignals() == -1) {
                 stop();
-            }*/
+            }
 
             const int steps = std::max<int>(period.toMSec(), 1);
             for (int i = 0; i < steps; i++) {
