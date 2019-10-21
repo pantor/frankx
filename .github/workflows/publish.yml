@@ -19,6 +19,8 @@ jobs:
       run: |
         yum -y install poco-devel*
 
+        ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
+        ln -f -s /opt/python/cp37-cp37m/bin/python /usr/bin/python3.7
         /opt/python/cp36-cp36m/bin/pip install cmake --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
