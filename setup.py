@@ -44,9 +44,9 @@ class CMakeBuild(build_ext):
 
         # CI
         cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeII"]
-        cmake_args += ["-DReflexxes_INCLUDE_DIR=/home/runner/work/frankx/frankx/RMLTypeII/include/RMLTypeII/"]
-        cmake_args += ["-DReflexxes_LIB_DIR=/home/runner/work/frankx/frankx/RMLTypeII/build"]
-        cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
+        cmake_args += ["-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/"]
+        cmake_args += ["-DReflexxes_LIB_DIR=RMLTypeII/build"]
+        # cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
 
         # Local
         # cmake_args += ["-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/"]

@@ -30,7 +30,7 @@ target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes Eigen3::Eige
 
 if(BUILD_PYTHON_MODULE)
   find_package(pybind11 REQUIRED)
-  find_package(Python 3.6 EXACT REQUIRED)
+  # find_package(Python 3.6 EXACT REQUIRED)
 
   target_include_directories(libfrankx PUBLIC ${PYTHON_INCLUDE_DIRS})
   target_link_libraries(libfrankx ${PYTHON_LIBRARIES})
