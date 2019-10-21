@@ -86,5 +86,5 @@ setup(
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Programming Language :: C++',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.5',
 )

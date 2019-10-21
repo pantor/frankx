@@ -279,9 +279,9 @@ We will add a more detailed documentation once frankx reaches v1.0. However, you
 
 ## Development
 
-Frankx is written in C++17 and Python3. It works well with ROS2. It is currently tested against following versions
+Frankx is written in C++11 and Python3. It works well with ROS2. It is currently tested against following versions
 
-- Python v3.6
+- Python v3.5 to 3.8
 - Eigen v3.3.7
 - Libfranka v0.6.0
 - Reflexxes v1.2.7
