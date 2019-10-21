@@ -39,18 +39,17 @@ class CMakeBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
-        build_type = os.environ.get("BUILD_TYPE", "Release")
+        build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
         # CI
-        cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeII"]
-        cmake_args += ["-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/"]
-        cmake_args += ["-DReflexxes_LIB_DIR=RMLTypeII/build"]
-        # cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
+        cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+        cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
+        cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
+        cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
 
         # Local
         # cmake_args += ["-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/"]
-        # cmake_args += ["-DCMAKE_CXX_COMPILER=g++-9"]
         # cmake_args += ["-DCMAKE_BUILD_TYPE=Release"]
         # cmake_args += ["-DCMAKE_CXX_FLAGS_RELEASE=-O3"]
         # cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeIV"]
@@ -78,11 +77,11 @@ class CMakeBuild(build_ext):
 setup(
     name='frankx',
     packages=find_packages(),
-    version='0.2.0',
+    version='0.0.1',
     license='LGPL',
     description='High-Level Motion Library for the Franka Panda Robot',
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     author='Lars Berscheid',
     author_email='lars.berscheid@kit.edu',
     url='https://github.com/pantor/frankx',

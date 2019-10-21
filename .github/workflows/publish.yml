@@ -77,15 +77,17 @@ jobs:
     - name: python package
       run: |
         python3.6 -m pip install setuptools wheel --user
+        mkdir -p wheels
+        mkdir -p dist
 
         # Compile wheels
         for PYBIN in /opt/python/*36-cp36m/bin; do
-          "${PYBIN}/pip" wheel . -w dist/
+          "${PYBIN}/pip" wheel . -w wheels/
         done
 
         # Bundle external shared libraries into the wheels
-        for whl in dist/*.whl; do
-          auditwheel repair "$whl"
+        for whl in wheels/*.whl; do
+          auditwheel repair "$whl" -w dist/
         done
         # for whl in dist/*.whl; do
         #   auditwheel repair "$whl" -w /dist/
@@ -97,6 +99,7 @@ jobs:
           # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
         done
 
+        ls wheels
         ls dist
 
     - name: publish python package
