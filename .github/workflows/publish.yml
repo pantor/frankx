@@ -78,7 +78,7 @@ jobs:
 
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+          if [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" install setuptools wheel --user
             "${PYBIN}/pip" wheel . -w wheels/
           fi
