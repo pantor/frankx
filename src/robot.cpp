@@ -1,4 +1,3 @@
-#include <Python.h>
 #include <frankx/robot.hpp>
 
 
