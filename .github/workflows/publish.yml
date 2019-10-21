@@ -57,10 +57,10 @@ jobs:
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.4.3
-        mkdir build && cd build
-        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
-        make
-        make install
+        # mkdir build && cd build
+        # cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
+        # make
+        # make install
 
     - name: install Catch2
       run: |

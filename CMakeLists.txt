@@ -8,6 +8,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_PYBIND11 "Build pybind11" OFF)
 set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
 
@@ -29,7 +30,11 @@ target_link_libraries(libfrankx PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen
 
 
 if(BUILD_PYTHON_MODULE)
-  find_package(pybind11 REQUIRED)
+  if(BUILD_PYBIND11)
+    add_subdirectory(pybind11)
+  else()
+    find_package(pybind11 REQUIRED)
+  endif()
 
   target_link_libraries(libfrankx PUBLIC pybind11::embed)
 

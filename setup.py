@@ -43,6 +43,7 @@ class CMakeBuild(build_ext):
         build_args = ['--config', build_type]
 
         cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+        cmake_args += ['-DBUILD_PYBIND11=ON']
         cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
         cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
         cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
