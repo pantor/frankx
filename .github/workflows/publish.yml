@@ -77,7 +77,7 @@ jobs:
         python3.6 -m pip install setuptools wheel --user
 
         # Compile wheels
-        for PYBIN in /opt/python/*/bin; do
+        for PYBIN in /opt/python/*36-cp36m/bin; do
           "${PYBIN}/pip" wheel . -w wheelhouse/
         done
 
@@ -87,7 +87,7 @@ jobs:
         done
 
         # Install packages and test
-        for PYBIN in /opt/python/*/bin/; do
+        for PYBIN in /opt/python/*36-cp36m/bin/; do
           "${PYBIN}/pip" install frankx --no-index -f /wheelhouse
           # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
         done
