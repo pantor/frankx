@@ -73,9 +73,9 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
     RMLPositionFlags flags;
     int result_value = 0;
 
-    const auto rml = std::make_unique<ReflexxesAPI>(degrees_of_freedoms, control_rate);
-    auto input_parameters = std::make_unique<RMLPositionInputParameters>(degrees_of_freedoms);
-    auto output_parameters = std::make_unique<RMLPositionOutputParameters>(degrees_of_freedoms);
+    const auto rml = std::make_shared<ReflexxesAPI>(degrees_of_freedoms, control_rate);
+    auto input_parameters = std::make_shared<RMLPositionInputParameters>(degrees_of_freedoms);
+    auto output_parameters = std::make_shared<RMLPositionOutputParameters>(degrees_of_freedoms);
 
     setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, true));
     setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
