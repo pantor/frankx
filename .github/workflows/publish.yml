@@ -72,25 +72,25 @@ jobs:
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         make install
 
-    # - name: python package
-    #   run: |
-    #     python3.6 -m pip install setuptools wheel --user
+    - name: python package
+      run: |
+        python3.6 -m pip install setuptools wheel --user
 
-    #     # Compile wheels
-    #     for PYBIN in /opt/python/*36-cp36m/bin; do
-    #       "${PYBIN}/pip" wheel . -w wheelhouse/
-    #     done
+        # Compile wheels
+        for PYBIN in /opt/python/*36-cp36m/bin; do
+          "${PYBIN}/pip" wheel . -w wheelhouse/
+        done
 
-    #     # Bundle external shared libraries into the wheels
-    #     for whl in wheelhouse/*.whl; do
-    #       auditwheel repair "$whl" -w /wheelhouse/
-    #     done
+        # Bundle external shared libraries into the wheels
+        for whl in wheelhouse/*.whl; do
+          auditwheel repair "$whl" -w /wheelhouse/
+        done
 
-    #     # Install packages and test
-    #     for PYBIN in /opt/python/*36-cp36m/bin/; do
-    #       "${PYBIN}/pip" install frankx --no-index -f /wheelhouse
-    #       # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
-    #     done
+        # Install packages and test
+        for PYBIN in /opt/python/*36-cp36m/bin/; do
+          "${PYBIN}/pip" install frankx --no-index -f /wheelhouse
+          # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
+        done
 
         # python3.6 setup.py sdist bdist_wheel
 
