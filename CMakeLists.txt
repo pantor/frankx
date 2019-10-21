@@ -23,20 +23,18 @@ add_library(libfrankx SHARED
   src/reaction.cpp
   src/robot.cpp
 )
-target_compile_features(libfrankx PUBLIC cxx_std_17)
+target_compile_features(libfrankx PUBLIC cxx_std_11)
 target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(libfrankx Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
+target_link_libraries(libfrankx PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
 
 
 if(BUILD_PYTHON_MODULE)
   find_package(pybind11 REQUIRED)
-  # find_package(Python 3.6 EXACT REQUIRED)
 
   # target_include_directories(libfrankx PUBLIC ${PYTHON_INCLUDE_DIRS})
-  # target_link_libraries(libfrankx ${PYTHON_LIBRARIES})
+  target_link_libraries(libfrankx PRIVATE pybind11::embed)
 
   pybind11_add_module(frankx src/python.cpp)
-  target_compile_features(frankx PUBLIC cxx_std_17)
   target_link_libraries(frankx PUBLIC libfrankx)
 endif()
 
@@ -44,8 +42,7 @@ endif()
 if(BUILD_EXAMPLES)
   foreach(example IN ITEMS simple grasping)
     add_executable(${example} "examples/${example}.cpp")
-    target_compile_features(${example} PUBLIC cxx_std_17)
-    target_link_libraries(${example} libfrankx)
+    target_link_libraries(${example} PRIVATE libfrankx)
   endforeach()
 endif()
 
@@ -57,8 +54,7 @@ if(BUILD_TESTS)
 
   foreach(test IN ITEMS unit-test robot-test)
     add_executable(${test} "test/${test}.cpp")
-    target_compile_features(${test} PUBLIC cxx_std_17)
-    target_link_libraries(${test} libfrankx Catch2::Catch2)
+    target_link_libraries(${test} PRIVATE libfrankx Catch2::Catch2)
     add_test(${test} COMMAND ${test})
   endforeach()
 endif()

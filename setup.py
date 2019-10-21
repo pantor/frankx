@@ -43,7 +43,6 @@ class CMakeBuild(build_ext):
         build_args = ['--config', build_type]
 
         # CI
-        cmake_args += ["-DCMAKE_CXX_COMPILER=g++-8"]
         cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeII"]
         cmake_args += ["-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/"]
         cmake_args += ["-DReflexxes_LIB_DIR=RMLTypeII/build"]

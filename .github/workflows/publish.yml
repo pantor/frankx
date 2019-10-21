@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: tktechdocker/manylinux:gcc8.3.0
+      image: quay.io/pypa/manylinux2010_x86_64
+      # tktechdocker/manylinux:gcc8.3.0
 
     steps:
     - uses: actions/checkout@v1
@@ -19,7 +20,7 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
+        # ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
         ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
         python3.6 -m pip install cmake --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
@@ -49,7 +50,7 @@ jobs:
         git checkout 0.6.0
         git submodule update
         mkdir build && cd build
-        cmake -DCMAKE_CXX_COMPILER=g++-8 -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+        cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
         make
         make install
 
@@ -59,7 +60,8 @@ jobs:
         cd pybind11
         git checkout v2.4.3
         mkdir build && cd build
-        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPython_USE_STATIC_LIBS=TRUE -DCMAKE_CXX_COMPILER=g++-8 -DPYBIND11_TEST=OFF ..
+        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
+        # -DPython_USE_STATIC_LIBS=TRUE 
         make
         make install
 

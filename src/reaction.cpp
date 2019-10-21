@@ -5,19 +5,19 @@ namespace frankx {
 
 Reaction::Reaction(std::function<bool(const franka::RobotState&, double)> callback): condition_callback(callback) { }
 
-Reaction::Reaction(std::function<bool(const franka::RobotState&, double)> callback, std::optional<std::shared_ptr<WaypointMotion>> motion): condition_callback(callback), motion(motion) { }
+Reaction::Reaction(std::function<bool(const franka::RobotState&, double)> callback, tl::optional<std::shared_ptr<WaypointMotion>> motion): condition_callback(callback), motion(motion) { }
 
-Reaction::Reaction(std::function<bool(const franka::RobotState&, double)> callback, std::optional<std::function<WaypointMotion(const franka::RobotState&, double)>> action): condition_callback(callback), action(action) { }
+Reaction::Reaction(std::function<bool(const franka::RobotState&, double)> callback, tl::optional<std::function<WaypointMotion(const franka::RobotState&, double)>> action): condition_callback(callback), action(action) { }
 
 Reaction::Reaction(Measure measure, Comparison comparison, double value) {
     setConditionCallback(measure, comparison, value);
 }
 
-Reaction::Reaction(Measure measure, Comparison comparison, double value, std::optional<std::shared_ptr<WaypointMotion>> motion): motion(motion) {
+Reaction::Reaction(Measure measure, Comparison comparison, double value, tl::optional<std::shared_ptr<WaypointMotion>> motion): motion(motion) {
     setConditionCallback(measure, comparison, value);
 }
 
-Reaction::Reaction(Measure measure, Comparison comparison, double value, std::optional<std::function<WaypointMotion(const franka::RobotState&, double)>> action): action(action) {
+Reaction::Reaction(Measure measure, Comparison comparison, double value, tl::optional<std::function<WaypointMotion(const franka::RobotState&, double)>> action): action(action) {
     setConditionCallback(measure, comparison, value);
 }
 

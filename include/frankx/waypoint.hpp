@@ -1,9 +1,9 @@
 #pragma once
 
-#include <optional>
 
 #include <frankx/affine.hpp>
 #include <frankx/utils.hpp>
+#include <tl/optional.hpp>
 
 
 namespace frankx {
@@ -16,14 +16,14 @@ struct Waypoint {
 
     Affine affine {Affine()};
     Vector7d velocity {Vector7d::Zero()};
-    std::optional<double> elbow;
+    tl::optional<double> elbow;
     ReferenceType reference_type {ReferenceType::Absolute};
 
     double velocity_rel {1.0};
     double acceleration_rel {1.0};
     double jerk_rel {1.0};
 
-    std::optional<double> minimum_time;
+    tl::optional<double> minimum_time;
 
     explicit Waypoint() {}
     explicit Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
