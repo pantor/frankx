@@ -97,7 +97,10 @@ jobs:
           fi
         done
 
+        ls dist
+
     - name: publish python package
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: keNB2

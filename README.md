@@ -1,8 +1,9 @@
 <div align="center">
-  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png"></div></center>
-  <h3 align="center"><center><i>frankx</i><br>High-Level Motion Library for the Franka Panda Robot</center></h3>
+  <img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png">
+  <h3 align="center">
+    <i>frankx</i><br>High-Level Motion Library for the Franka Panda Robot
+  </h3>
 </div>
-
 <p align="center">
   <a href="https://github.com/pantor/frankx/actions">
     <img src="https://github.com/pantor/frankx/workflows/CI/badge.svg" alt="CI">
