@@ -76,17 +76,17 @@ jobs:
       run: |
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          "${PYBIN}/pip" wheel /io/ -w wheelhouse/
+          "${PYBIN}/pip" wheel / -w wheelhouse/
         done
 
         # Bundle external shared libraries into the wheels
         for whl in wheelhouse/*.whl; do
-          auditwheel repair "$whl" -w /io/wheelhouse/
+          auditwheel repair "$whl" -w /wheelhouse/
         done
 
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
-          "${PYBIN}/pip" install nestpy --no-index -f /io/wheelhouse
+          "${PYBIN}/pip" install frankx --no-index -f /wheelhouse
           # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
         done
 
