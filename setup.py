@@ -9,7 +9,7 @@ from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
 
-with open("README.md", "r") as fh:
+with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 
@@ -24,12 +24,12 @@ class CMakeBuild(build_ext):
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
-            raise RuntimeError("CMake must be installed to build the following extensions: " +
-                               ", ".join(e.name for e in self.extensions))
+            raise RuntimeError('CMake must be installed to build the following extensions: ' +
+                               ', '.join(e.name for e in self.extensions))
 
         cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
         if cmake_version < LooseVersion('3.5.0'):
-            raise RuntimeError("CMake >= 3.5.0 is required")
+            raise RuntimeError('CMake >= 3.5.0 is required')
 
         for ext in self.extensions:
             self.build_extension(ext)
@@ -49,16 +49,14 @@ class CMakeBuild(build_ext):
         cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
 
         # Local
-        # cmake_args += ["-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/"]
-        # cmake_args += ["-DCMAKE_BUILD_TYPE=Release"]
-        # cmake_args += ["-DCMAKE_CXX_FLAGS_RELEASE=-O3"]
-        # cmake_args += ["-DREFLEXXES_TYPE=ReflexxesTypeIV"]
-        # cmake_args += ["-DReflexxes_ROOT_DIR=/home/berscheid/Documents/libs/ReflexxesTypeIV"]
-        # cmake_args += ["-DPYTHON_LIBRARY=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.so"]
+        # cmake_args += ['-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/']
+        # cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+        # cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeIV']
+        # cmake_args += ['-DReflexxes_ROOT_DIR=$HOME/Documents/libs/ReflexxesTypeIV']
 
         # Pile all .so in one place and use $ORIGIN as RPATH
-        cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
-        cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
+        cmake_args += ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE']
+        cmake_args += ['-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN')]
 
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + build_type]
         build_args += ['--', '-j4']

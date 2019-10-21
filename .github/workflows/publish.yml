@@ -19,9 +19,8 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        # ln -f -s /usr/local/gcc-8.3.0/bin/g++-8.3.0 /usr/bin/g++-8
         ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
-        python3.6 -m pip install cmake --user
+        python3.6 -m pip install cmake setuptools wheel --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
     - name: install Eigen3
@@ -61,7 +60,6 @@ jobs:
         git checkout v2.4.3
         mkdir build && cd build
         cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
-        # -DPython_USE_STATIC_LIBS=TRUE 
         make
         make install
 
@@ -76,31 +74,28 @@ jobs:
 
     - name: python package
       run: |
-        python3.6 -m pip install setuptools wheel --user
         mkdir -p wheels
         mkdir -p dist
 
         # Compile wheels
         for PYBIN in /opt/python/*36-cp36m/bin; do
-          "${PYBIN}/pip" wheel . -w wheels/
+          if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+            "${PYBIN}/pip" wheel . -w wheels/
+          fi
         done
 
         # Bundle external shared libraries into the wheels
         for whl in wheels/*.whl; do
           auditwheel repair "$whl" -w dist/
         done
-        # for whl in dist/*.whl; do
-        #   auditwheel repair "$whl" -w /dist/
-        # done
 
         # Install packages and test
         for PYBIN in /opt/python/*36-cp36m/bin/; do
-          "${PYBIN}/pip" install frankx --no-index -f dist
-          # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
+          if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+            "${PYBIN}/pip" install frankx --no-index -f dist
+            # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
+          fi
         done
-
-        ls wheels
-        ls dist
 
     - name: publish python package
       uses: pypa/gh-action-pypi-publish@master
