@@ -11,7 +11,6 @@ jobs:
 
     container:
       image: quay.io/pypa/manylinux2010_x86_64
-      # tktechdocker/manylinux:gcc8.3.0
 
     steps:
     - uses: actions/checkout@v1
@@ -81,24 +80,27 @@ jobs:
 
         # Compile wheels
         for PYBIN in /opt/python/*36-cp36m/bin; do
-          "${PYBIN}/pip" wheel . -w wheelhouse/
+          "${PYBIN}/pip" wheel . -w dist/
         done
 
         # Bundle external shared libraries into the wheels
-        for whl in wheelhouse/*.whl; do
-          auditwheel repair "$whl" -w /wheelhouse/
+        for whl in dist/*.whl; do
+          auditwheel repair "$whl"
         done
+        # for whl in dist/*.whl; do
+        #   auditwheel repair "$whl" -w /dist/
+        # done
 
         # Install packages and test
         for PYBIN in /opt/python/*36-cp36m/bin/; do
-          "${PYBIN}/pip" install frankx --no-index -f /wheelhouse
+          "${PYBIN}/pip" install frankx --no-index -f dist
           # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
         done
 
-        # python3.6 setup.py sdist bdist_wheel
+        ls dist
 
-    # - name: publish python package
-    #   uses: pypa/gh-action-pypi-publish@master
-    #   with:
-    #     user: keNB2
-    #     password: ${{ secrets.pypi_password }}
+    - name: publish python package
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: keNB2
+        password: ${{ secrets.pypi_password }}
