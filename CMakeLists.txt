@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 
 
-project(frankx VERSION 0.2.0 LANGUAGES CXX)
+project(frankx VERSION 0.0.2 LANGUAGES CXX)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 
