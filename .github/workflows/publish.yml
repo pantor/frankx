@@ -19,7 +19,8 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        /opt/python/cp36-cp36m/bin/pip install cmake --user
+        ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
+        python3.6 -m pip install cmake setuptools wheel --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
     - name: install Eigen3
@@ -57,10 +58,10 @@ jobs:
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.4.3
-        # mkdir build && cd build
-        # cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
-        # make
-        # make install
+        mkdir build && cd build
+        cmake -DPYBIND11_PYTHON_VERSION=3.6 -DPYBIND11_TEST=OFF ..
+        make
+        make install
 
     - name: install Catch2
       run: |
@@ -77,12 +78,8 @@ jobs:
         mkdir -p dist
 
         # Compile wheels
-        for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
-            ls ${PYBIN}
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}
-            echo $LD_LIBRARY_PATH
-            "${PYBIN}/pip" install setuptools wheel --user
+        for PYBIN in /opt/python/*36-cp36m/bin; do
+          if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
@@ -93,8 +90,8 @@ jobs:
         done
 
         # Install packages and test
-        for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+        for PYBIN in /opt/python/*36-cp36m/bin/; do
+          if [[ "${PYBIN}" == *"cp35"* ]] || [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi

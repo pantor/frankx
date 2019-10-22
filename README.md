@@ -37,17 +37,17 @@ Frankx is a high-level motion library (both C++ and Python) for the Franka Emika
 
 ## Installation
 
-For using frankx with Python, you can get started just by 
+For using frankx with Python, you can start by 
 ```bash
 pip install -U frankx
 ```
 
-If you want to build from source, frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
 
 ```bash
 mkdir -p build
 cd build
-cmake -DReflexxes_ROOT_DIR=../RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV -DBUILD_TYPE=Release ..
+cmake -DReflexxes_ROOT_DIR=../RMLTypeII -DREFLEXXES_TYPE=ReflexxesTypeII -DBUILD_TYPE=Release ..
 make -j4
 make install
 ```
@@ -279,9 +279,9 @@ We will add a more detailed documentation once frankx reaches v1.0. However, you
 
 ## Development
 
-Frankx is written in C++11 and Python3. It works well with ROS2. It is currently tested against following versions
+Frankx is written in C++17 and Python3. It works well with ROS2. It is currently tested against following versions
 
-- Python v3.5 to 3.8
+- Python v3.6
 - Eigen v3.3.7
 - Libfranka v0.6.0
 - Reflexxes v1.2.7

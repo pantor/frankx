@@ -42,12 +42,17 @@ class CMakeBuild(build_ext):
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
+        # CI
         cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
-        cmake_args += ['-DBUILD_PYBIND11=ON']
-        cmake_args += ['-DBUILD_PYBIND11=ON']
         cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
         cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
         cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
+
+        # Local
+        # cmake_args += ['-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/']
+        # cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+        # cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeIV']
+        # cmake_args += ['-DReflexxes_ROOT_DIR=$HOME/Documents/libs/ReflexxesTypeIV']
 
         # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args += ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE']
@@ -88,5 +93,5 @@ setup(
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Programming Language :: C++',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.5',
 )

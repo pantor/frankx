@@ -1,8 +1,6 @@
 #pragma once
 
-#ifdef WITH_PYTHON
-    #include <Python.h>
-#endif
+// #include <Python.h>
 
 #include <ReflexxesAPI.h>
 #include <RMLPositionFlags.h>
