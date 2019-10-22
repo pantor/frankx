@@ -79,10 +79,9 @@ jobs:
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
           if [[ "${PYBIN}" == *"cp36"* ]] || [[ "${PYBIN}" == *"cp37"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
-            ls ${PYBIN}/../lib/python3.6
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.6
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.7
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}/../lib/python3.8
+            ls ${PYBIN}
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PYBIN}
+            echo $LD_LIBRARY_PATH
             "${PYBIN}/pip" install setuptools wheel --user
             "${PYBIN}/pip" wheel . -w wheels/
           fi
