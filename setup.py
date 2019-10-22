@@ -86,7 +86,7 @@ setup(
     author='Lars Berscheid',
     author_email='lars.berscheid@kit.edu',
     url='https://github.com/pantor/frankx',
-    ext_modules=[CMakeExtension('frankx')],
+    ext_modules=[CMakeExtension('_frankx')],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robotics', 'trajectory-generation', 'motion-control'],
     classifiers=[

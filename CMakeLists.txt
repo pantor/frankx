@@ -43,8 +43,8 @@ if(BUILD_PYTHON_MODULE)
     target_link_libraries(libfrankx PUBLIC pybind11::embed)
   endif()
 
-  pybind11_add_module(frankx src/python.cpp)
-  target_link_libraries(frankx PUBLIC libfrankx)
+  pybind11_add_module(_frankx src/python.cpp)
+  target_link_libraries(_frankx PUBLIC libfrankx)
 endif()
 
 

@@ -14,7 +14,9 @@ using namespace pybind11::literals; // to bring in the `_a` literal
 using namespace frankx;
 
 
-PYBIND11_MODULE(frankx, m) {
+PYBIND11_MODULE(_frankx, m) {
+    m.doc() = "High-Level Motion Library for the Franka Panda Robot";
+
     py::class_<Affine>(m, "Affine")
         .def(py::init<>())
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
@@ -55,7 +57,6 @@ PYBIND11_MODULE(frankx, m) {
         .def(py::init<Measure, Comparison, double>())
         .def(py::init<Measure, Comparison, double, std::shared_ptr<WaypointMotion>>())
         .def_readonly("has_fired", &Reaction::has_fired);
-        // .def_readonly("motion", &Reaction::motion);
 
     py::class_<MotionData>(m, "MotionData")
         .def(py::init<double>(), "dynamic_rel"_a = 1.0)
@@ -222,15 +223,15 @@ PYBIND11_MODULE(frankx, m) {
 
     py::class_<Robot>(m, "Robot")
         .def(py::init<const std::string &, double>(), "fci_ip"_a, "dynamic_rel"_a = 1.0)
-        .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
-        .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
-        .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
-        .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
-        .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
-        .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
-        .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
-        .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
-        .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
+        // .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
+        // .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
+        // .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
+        // .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
+        // .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
+        // .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
+        // .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
+        // .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
+        // .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
         .def_readwrite("velocity_rel", &Robot::velocity_rel)
         .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
         .def_readwrite("jerk_rel", &Robot::jerk_rel)
