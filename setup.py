@@ -24,8 +24,10 @@ class CMakeBuild(build_ext):
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
-            raise RuntimeError('CMake must be installed to build the following extensions: ' +
-                               ', '.join(e.name for e in self.extensions))
+            raise RuntimeError(
+                'CMake must be installed to build the following extensions: ' +
+                ', '.join(e.name for e in self.extensions)
+            )
 
         cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
         if cmake_version < LooseVersion('3.5.0'):
@@ -70,11 +72,9 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        subprocess.check_call(['cmake',
-                               '--build', '.',
-                               '--target', ext.name
-                               ] + build_args,
-                              cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.', '--target', ext.name] + build_args, cwd=self.build_temp)
+
+
 setup(
     name='frankx',
     packages=find_packages(),

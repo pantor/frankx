@@ -1,5 +1,10 @@
-from build._frankx import Gripper as OldGripper
+from threading import Thread
 
-class Gripper(OldGripper):
-    def move_async() -> bool:
-        return True
+from build._frankx import Gripper as _Gripper
+
+
+class Gripper(_Gripper):
+    def move_async(self, width) -> Thread:
+        p = Thread(target=self.move, args=(width, ))
+        p.start()
+        return p

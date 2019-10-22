@@ -5,8 +5,10 @@
 #include <Eigen/Geometry>
 #include <unsupported/Eigen/EulerAngles>
 
-#include <franka/robot.h>
-#include <ReflexxesAPI.h>
+#ifdef AFFINE_WITH_ROBOT_CONTROL
+    #include <franka/robot.h>
+    #include <ReflexxesAPI.h>
+#endif
 
 
 namespace frankx {
@@ -25,11 +27,14 @@ struct Affine {
     explicit Affine();
     explicit Affine(const Eigen::Affine3d& data);
     explicit Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0);
-    explicit Affine(const Vector6d& v);
+    Affine(const Vector6d& v);
     explicit Affine(const Vector7d& v);
     explicit Affine(const std::array<double, 16>& array);
-    explicit Affine(RMLVector<double> *rml_vector);
-    explicit Affine(const franka::CartesianPose& pose, bool offset = true);
+
+    #ifdef AFFINE_WITH_ROBOT_CONTROL
+        explicit Affine(RMLVector<double> *rml_vector);
+        explicit Affine(const franka::CartesianPose& pose, bool offset = true);
+    #endif
 
     Affine operator*(const Affine &a) const;
     Affine inverse() const;

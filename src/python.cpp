@@ -248,12 +248,12 @@ PYBIND11_MODULE(_frankx, m) {
         .def("recover_from_errors", &Robot::recoverFromErrors)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
-        .def("move", (bool (Robot::*)(JointMotion)) &Robot::move)
-        .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move)
-        .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move)
-        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move)
-        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion)) &Robot::move)
-        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion, MotionData &)) &Robot::move);
+        .def("move", (bool (Robot::*)(JointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>());
 
     py::class_<franka::GripperState>(m, "GripperState")
         .def_readonly("width", &franka::GripperState::width)
@@ -267,20 +267,20 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
-        .def("homing", &Gripper::homing)
-        .def("grasp", (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp)
-        .def("move", (bool (Gripper::*)(double, double)) &Gripper::move)
+        .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
+        .def("grasp", (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
         .def("stop", &Gripper::stop)
         .def("read_once", &Gripper::readOnce)
         .def("server_version", &Gripper::serverVersion)
-        .def("move", (bool (Gripper::*)(double)) &Gripper::move)
+        .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
         .def("width", &Gripper::width)
         .def("is_grasping", &Gripper::isGrasping)
         .def("open", &Gripper::open)
-        .def("clamp", &Gripper::clamp)
-        .def("release", (bool (Gripper::*)()) &Gripper::release)
-        .def("release", (bool (Gripper::*)(double)) &Gripper::release)
-        .def("releaseRelative", &Gripper::releaseRelative);
+        .def("clamp", &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
+        .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
+        .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
+        .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>());
 
     py::register_exception<franka::CommandException>(m, "CommandException");
     py::register_exception<franka::ControlException>(m, "ControlException");

@@ -1,6 +1,10 @@
-from build._frankx import Robot as OldRobot
+from threading import Thread
 
-class Robot(OldRobot):
-    def move_async() -> bool:
-        print('a')
-        return True
+from build._frankx import Robot as _Robot
+
+
+class Robot(_Robot):
+    def move_async(self, width) -> Thread:
+        p = Thread(target=self.move, args=(width, ))
+        p.start()
+        return p

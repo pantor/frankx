@@ -128,9 +128,11 @@ franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_s
   Eigen::VectorXd::Map(&joint_positions[0], 7) = (q_start_ + delta_q_d);
   franka::JointPositions output(joint_positions);
   output.motion_finished = motion_finished;
-  /* if (PyErr_CheckSignals() == -1) {
+#ifdef WITH_PYTHON
+  if (PyErr_CheckSignals() == -1) {
     output.motion_finished = true;
-  } */
+  }
+#endif
   return output;
 }
 

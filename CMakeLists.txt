@@ -27,6 +27,7 @@ add_library(libfrankx SHARED
   src/robot.cpp
 )
 target_compile_features(libfrankx PUBLIC cxx_std_11)
+target_compile_definitions(libfrankx PUBLIC AFFINE_WITH_ROBOT_CONTROL)
 target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(libfrankx PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
 
