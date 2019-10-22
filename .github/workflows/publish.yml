@@ -19,12 +19,7 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        ln -f -s /opt/python/cp35-cp35m/bin/python /usr/bin/python3.5
-        ln -f -s /opt/python/cp36-cp36m/bin/python /usr/bin/python3.6
-        ln -f -s /opt/python/cp37-cp37m/bin/python /usr/bin/python3.7
-        ln -f -s /opt/python/cp38-cp38/bin/python /usr/bin/python3.8
-
-        python3.6 -m pip install cmake setuptools wheel --user
+        /opt/python/cp36-cp36m/bin/pip install cmake setuptools wheel --user
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
     - name: install Eigen3
