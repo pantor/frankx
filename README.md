@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="320" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
+  <img width="340" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
     High-Level Motion Library for the Franka Panda Robot
   </h3>
