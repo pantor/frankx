@@ -8,8 +8,8 @@ inline Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a =
 }
 
 
-int main() {
-    Robot robot("172.16.0.2");
+int main(int argc, char *argv[]) {
+    Robot robot(argv[1]);
     robot.automaticErrorRecovery();
     robot.setDefaultBehavior();
 

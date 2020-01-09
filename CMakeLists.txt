@@ -22,17 +22,17 @@ message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 
 
-add_library(libfrankx SHARED
+add_library(${PROJECT_NAME} SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_joint.cpp
   src/reaction.cpp
   src/robot.cpp
 )
-target_compile_features(libfrankx PUBLIC cxx_std_11)
-target_compile_definitions(libfrankx PUBLIC AFFINE_WITH_ROBOT_CONTROL)
-target_include_directories(libfrankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(libfrankx PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_definitions(${PROJECT_NAME} PUBLIC AFFINE_WITH_ROBOT_CONTROL)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(${PROJECT_NAME} PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
 
 
 if(BUILD_PYTHON_MODULE)
@@ -43,19 +43,19 @@ if(BUILD_PYTHON_MODULE)
   endif()
 
   if(USE_PYTHON_EXTENSION)
-    target_compile_definitions(libfrankx PUBLIC WITH_PYTHON)
-    target_link_libraries(libfrankx PUBLIC pybind11::embed)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC WITH_PYTHON)
+    target_link_libraries(${PROJECT_NAME} PUBLIC pybind11::embed)
   endif()
 
   pybind11_add_module(_frankx src/python.cpp)
-  target_link_libraries(_frankx PUBLIC libfrankx)
+  target_link_libraries(_frankx PUBLIC ${PROJECT_NAME})
 endif()
 
 
 if(BUILD_EXAMPLES)
   foreach(example IN ITEMS simple grasping)
     add_executable(${example} "examples/${example}.cpp")
-    target_link_libraries(${example} PRIVATE libfrankx)
+    target_link_libraries(${example} PRIVATE ${PROJECT_NAME})
   endforeach()
 endif()
 
@@ -67,10 +67,10 @@ if(BUILD_TESTS)
 
   foreach(test IN ITEMS unit-test robot-test)
     add_executable(${test} "test/${test}.cpp")
-    target_link_libraries(${test} PRIVATE libfrankx Catch2::Catch2)
+    target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
     add_test(${test} COMMAND ${test})
   endforeach()
 endif()
 
 
-install(TARGETS libfrankx LIBRARY DESTINATION lib INCLUDES DESTINATION include)
+install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib INCLUDES DESTINATION include)

@@ -4,9 +4,9 @@
 using namespace frankx;
 
 
-int main() {
+int main(int argc, char *argv[]) {
     // Connect to the robot
-    Robot robot("172.16.0.2");
+    Robot robot(argv[1]);
     robot.automaticErrorRecovery();
 
     // Reduce the acceleration and velocity dynamic
