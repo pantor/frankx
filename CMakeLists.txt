@@ -14,9 +14,12 @@ option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
 set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
 
-find_package(Eigen3 3.3.7 EXACT REQUIRED NO_MODULE)
+find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
 find_package(Reflexxes REQUIRED)
+
+message("Found Eigen Version: ${Eigen3_VERSION}")
+message("Found Franka Version: ${Franka_VERSION}")
 
 
 add_library(libfrankx SHARED

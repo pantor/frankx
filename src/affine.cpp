@@ -74,7 +74,7 @@ Eigen::Vector3d Affine::translation() const {
 Eigen::Vector3d Affine::angles() const {
     Eigen::Vector3d euler = Euler::FromRotation<false, false, false>(data.rotation()).angles();
     Eigen::Vector3d euler2;
-    euler2 << euler[0] - M_PI, M_PI - euler[1], -M_PI + euler[2];
+    euler2 << euler[0] - M_PI, M_PI - euler[1], euler[2] - M_PI;
 
     if (euler2[1] > M_PI) {
         euler2[1] -= 2 * M_PI;
