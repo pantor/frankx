@@ -9,8 +9,8 @@ from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
+with open('README.md', 'r') as readme_file:
+    long_description = readme_file.read()
 
 
 class CMakeExtension(Extension):
@@ -77,18 +77,18 @@ class CMakeBuild(build_ext):
 
 setup(
     name='frankx',
-    packages=find_packages(),
     version='0.0.2',
-    license='LGPL',
     description='High-Level Motion Library for the Franka Panda Robot',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
     author_email='lars.berscheid@kit.edu',
     url='https://github.com/pantor/frankx',
+    packages=find_packages(),
+    license='LGPL',
     ext_modules=[CMakeExtension('_frankx')],
     cmdclass=dict(build_ext=CMakeBuild),
-    keywords=['robotics', 'trajectory-generation', 'motion-control'],
+    keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control', 'interface'],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Science/Research',
