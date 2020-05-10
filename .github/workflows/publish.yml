@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: quay.io/pypa/manylinux2010_x86_64
+      image: quay.io/pypa/manylinux2014_x86_64
 
     steps:
     - uses: actions/checkout@v1
@@ -19,7 +19,10 @@ jobs:
       run: |
         yum -y install poco-devel*
 
+        /opt/python/cp35-cp35m/bin/pip install cmake setuptools wheel --user
         /opt/python/cp36-cp36m/bin/pip install cmake setuptools wheel --user
+        /opt/python/cp37-cp37m/bin/pip install cmake setuptools wheel --user
+
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
     - name: install Eigen3
@@ -85,7 +88,7 @@ jobs:
         done
 
         # Install packages and test
-        for PYBIN in /opt/python/*36-cp36m/bin/; do
+        for PYBIN in /opt/python/*/bin/; do
           if [[ "${PYBIN}" == *"cp35m"* ]] || [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
