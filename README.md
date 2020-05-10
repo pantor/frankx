@@ -1,7 +1,7 @@
 <div align="center">
-  <img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.png">
+  <img width="340" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
-    <i>frankx</i><br>High-Level Motion Library for the Franka Panda Robot
+    High-Level Motion Library for the Franka Panda Robot
   </h3>
 </div>
 <p align="center">
@@ -292,5 +292,3 @@ Frankx is written in C++17 and Python3. It works well with ROS2. It is currently
 ## License
 
 For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements.
-
-Robot vector created by [freepik](https://www.freepik.com/free-photos-vectors/technology).
