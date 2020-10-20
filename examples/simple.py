@@ -5,10 +5,10 @@ robot = Robot("172.16.0.2")
 robot.recover_from_errors()
 
 # Reduce the acceleration and velocity dynamic
-robot.set_dynamic_rel(0.05)
+robot.set_dynamic_rel(0.1)
 
 # Define and move forwards
-way = Affine(0.0, 0.2, 0.0)
+way = Affine(0.0, 0.4, 0.0)
 motion_forward = LinearRelativeMotion(way)
 robot.move(motion_forward)
 

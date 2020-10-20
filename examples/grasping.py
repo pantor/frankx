@@ -8,7 +8,7 @@ class Grasping:
         self.robot = Robot("172.16.0.2")
         self.gripper = Gripper("172.16.0.2")
 
-        self.robot.velocity_rel = 1.0
+        self.robot.velocity_rel = 0.5
         self.robot.acceleration_rel = 0.15
         self.robot.jerk_rel = 0.004
 
@@ -26,7 +26,7 @@ class Grasping:
         self.gripper.move(0.08)
 
     def grasp(self):
-        data_down = MotionData(1.0).with_condition(Reaction(
+        data_down = MotionData(1.0).with_reaction(Reaction(
             Measure.ForceZ, Comparison.Smaller, -7.0,
             LinearRelativeMotion(Affine(0.0, 0.0, 0.001))
         ))
