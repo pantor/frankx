@@ -49,8 +49,12 @@ PYBIND11_MODULE(_frankx, m) {
         .export_values();
 
     py::enum_<Comparison>(m, "Comparison")
+        .value("Equal", Comparison::Equal)
+        .value("NotEqual", Comparison::NotEqual)
         .value("Greater", Comparison::Greater)
-        .value("Smaller", Comparison::Smaller)
+        .value("Less", Comparison::Less)
+        .value("GreaterEqual", Comparison::GreaterEqual)
+        .value("LessEqual", Comparison::LessEqual)
         .export_values();
 
     py::class_<Reaction>(m, "Reaction")

@@ -36,7 +36,7 @@ class Grasping:
     def grasp(self, grasp: Grasp):
         data_down = MotionData(0.5)
         # .with_reaction(Reaction(
-        #     Measure.ForceZ, Comparison.Smaller, -7.0,
+        #     Measure.ForceZ, Comparison.Less, -7.0,
         #     LinearRelativeMotion(Affine(0.0, 0.0, 0.01))
         # ))
         data_up = MotionData(0.8)

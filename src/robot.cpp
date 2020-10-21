@@ -177,23 +177,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
             for (int i = 0; i < steps; i++) {
                 result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
-                // std::cout << "---" << std::endl;
-
-                // std::cout << input_parameters->TargetPositionVector << std::endl;
-                // std::cout << input_parameters->TargetVelocityVector << std::endl;
-
-                // std::cout << input_parameters->CurrentPositionVector << std::endl;
-                // std::cout << input_parameters->CurrentVelocityVector << std::endl;
-                // std::cout << input_parameters->CurrentAccelerationVector << std::endl;
-
-                // std::cout << input_parameters->MaxVelocityVector << std::endl;
-                // std::cout << input_parameters->MaxAccelerationVector << std::endl;
-                // std::cout << input_parameters->MaxJerkVector << std::endl;
-
-                // std::cout << output_parameters->NewPositionVector << std::endl;
-                // std::cout << output_parameters->NewVelocityVector << std::endl;
-                // std::cout << output_parameters->NewAccelerationVector << std::endl;
-
                 if (current_motion.reload || result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
                     waypoint_iterator += 1;
 
@@ -219,17 +202,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
 
                 } else if (result_value == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
                     std::cout << "Invalid inputs:" << std::endl;
-                    // std::cout << input_parameters->TargetPositionVector << std::endl;
-                    // std::cout << input_parameters->TargetVelocityVector << std::endl;
-
-                    // std::cout << input_parameters->CurrentPositionVector << std::endl;
-                    // std::cout << input_parameters->CurrentVelocityVector << std::endl;
-                    // std::cout << input_parameters->CurrentAccelerationVector << std::endl;
-
-                    // std::cout << input_parameters->MaxVelocityVector << std::endl;
-                    // std::cout << input_parameters->MaxAccelerationVector << std::endl;
-                    // std::cout << input_parameters->MaxJerkVector << std::endl;
-
                     return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector, waypoint_has_elbow));
                 }
 
@@ -242,7 +214,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
         }, controller_mode);
 
     } catch (franka::Exception exception) {
-        // automaticErrorRecovery();
         std::cout << exception.what() << std::endl;
         return false;
     }

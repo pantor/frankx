@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <frankx/affine.hpp>
 #include <frankx/utils.hpp>
 #include <tl/optional.hpp>

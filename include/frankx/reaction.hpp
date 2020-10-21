@@ -19,8 +19,12 @@ enum class Measure {
 };
 
 enum class Comparison {
+  Equal,
+  NotEqual,
   Greater,
-  Smaller,
+  Less,
+  GreaterEqual,
+  LessEqual,
 };
 
 
@@ -41,6 +45,25 @@ struct Reaction {
   explicit Reaction(Measure measure, Comparison comparison, double value, tl::optional<std::function<WaypointMotion(const franka::RobotState&, double)>> action);
 
 private:
+  template<class T>
+  static inline bool compare(Comparison comparison, T a, T b) {
+    switch (comparison) {
+      default:
+      case Comparison::Equal:
+        return a == b;
+      case Comparison::NotEqual:
+        return a != b;
+      case Comparison::Greater:
+        return a > b;
+      case Comparison::Less:
+        return a < b;
+      case Comparison::GreaterEqual:
+        return a >= b;
+      case Comparison::LessEqual:
+        return a <= b;
+    }
+  }
+
   void setConditionCallback(Measure measure, Comparison comparison, double value);
 };
 
