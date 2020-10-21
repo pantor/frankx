@@ -18,6 +18,7 @@
 #include <frankx/motion_data.hpp>
 #include <frankx/motion_joint.hpp>
 #include <frankx/motion_waypoint.hpp>
+#include <frankx/quintic_generator.hpp>
 
 
 namespace frankx {

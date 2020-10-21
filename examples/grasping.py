@@ -41,6 +41,8 @@ class Grasping:
         # ))
         data_up = MotionData(0.8)
 
+        self.gripper.move_async(grasp.d)
+
         motion_down = WaypointMotion([
             Waypoint(self.get_base(grasp.x, grasp.y, -0.04, grasp.a), 1.6),
             Waypoint(self.get_base(grasp.x, grasp.y, grasp.z, grasp.a), 1.3),
@@ -51,7 +53,7 @@ class Grasping:
         if not move_success:
             self.robot.recover_from_errors()
 
-        self.gripper.move(grasp.d)
+        self.gripper.clamp()
 
         motion_up = WaypointMotion([
             Waypoint(self.get_base(grasp.x, grasp.y, -0.04, grasp.a), 1.6),
@@ -59,11 +61,9 @@ class Grasping:
         ])
         self.robot.move(motion_up, data_up)
 
-        self.gripper.move(grasp.d + 0.01)
+        self.gripper.release()
 
 
 if __name__ == '__main__':
     grasping = Grasping()
-
-    for i in range(2):
-        grasping.grasp(Grasp(x=0.05, y=0.03, z=-0.185, a=0.6, d=0.06))  # [m]
+    grasping.grasp(Grasp(x=0.05, y=0.03, z=-0.185, a=0.6, d=0.06))  # [m]

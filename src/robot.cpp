@@ -256,22 +256,23 @@ void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const M
 
 void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const Waypoint& waypoint, const MotionData& data) {
     constexpr double translation_factor {0.3};
-    constexpr double derivative_factor {0.4};
+    constexpr double elbow_factor {0.8};
+    constexpr double derivative_factor {0.36};
 
     setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
         translation_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
         waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
-        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
+        elbow_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
     ));
     setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
         translation_factor * derivative_factor * waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
         derivative_factor * waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
-        derivative_factor * waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
+        elbow_factor * derivative_factor * waypoint.acceleration_rel * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
     ));
     setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
         translation_factor * std::pow(derivative_factor, 2) * waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_translation_jerk,
         std::pow(derivative_factor, 2) * waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_rotation_jerk,
-        std::pow(derivative_factor, 2) * waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
+        elbow_factor * std::pow(derivative_factor, 2) * waypoint.jerk_rel * data.jerk_rel * jerk_rel * max_elbow_jerk
     ));
 
     if (waypoint.minimum_time.has_value()) {

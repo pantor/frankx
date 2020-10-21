@@ -1,6 +1,6 @@
 from threading import Thread
 
-from build._frankx import Gripper as _Gripper
+from _frankx import Gripper as _Gripper
 
 
 class Gripper(_Gripper):

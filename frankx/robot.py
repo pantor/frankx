@@ -1,7 +1,7 @@
 from threading import Thread
 
-from build._frankx import Robot as _Robot
-from build._frankx import Gripper as _Gripper
+from _frankx import Robot as _Robot
+from .gripper import Gripper as _Gripper
 
 
 class Robot(_Robot):
