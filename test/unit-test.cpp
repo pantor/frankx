@@ -30,15 +30,16 @@ TEST_CASE("Geometry") {
     SECTION("Random RML Vector") {
         std::default_random_engine generator;
         std::uniform_real_distribution<double> distribution(-3.14, 3.14);
+        std::uniform_real_distribution<double> half_distribution(-3.14/4, 3.14/4);
 
         for (int i = 0; i < 500; i++) {
             double x = distribution(generator);
             double y = distribution(generator);
             double z = distribution(generator);
             double a = distribution(generator);
-            double b = distribution(generator);
-            double c = distribution(generator);
-            double e = distribution(generator);
+            double b = half_distribution(generator);
+            double c = half_distribution(generator);
+            double e = half_distribution(generator);
 
             RMLVector<double> *rml_vector = new RMLVector<double> (x, y, z, a, b, c, e);
             auto old_vector = Vector(rml_vector);
