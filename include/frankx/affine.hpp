@@ -20,14 +20,11 @@ struct Affine {
     using Euler = Eigen::EulerAnglesZYXd;
 
     Eigen::Affine3d data {};
-    Eigen::Vector3d ref_euler {Eigen::Vector3d::Zero()};
-
-    Euler offset_euler {M_PI_2, 0.0, M_PI};
 
     explicit Affine();
     explicit Affine(const Eigen::Affine3d& data);
     explicit Affine(double x, double y, double z, double a = 0.0, double b = 0.0, double c = 0.0);
-    Affine(const Vector6d& v);
+    explicit Affine(const Vector6d& v);
     explicit Affine(const Vector7d& v);
     explicit Affine(const std::array<double, 16>& array);
 
@@ -49,14 +46,10 @@ struct Affine {
 
     Eigen::Vector3d translation() const;
     Eigen::Vector3d angles() const;
-    Eigen::Vector3d angles(const Eigen::Vector3d& new_ref_euler);
     Eigen::Affine3d::LinearMatrixType rotation() const;
 
     Vector6d vector() const;
-    Vector6d vector(const Eigen::Vector3d& new_ref_euler);
     Vector7d vector_with_elbow(double elbow) const;
-    Vector7d vector_with_elbow(double elbow, const Eigen::Vector3d& new_ref_euler);
-    Vector7d vector_with_elbow(double elbow, const Vector7d& new_ref_vector);
 
     double x() const;
     double y() const;

@@ -23,14 +23,14 @@ int main(int argc, char *argv[]) {
     ));
 
     WaypointMotion waypoint_motion({
-      {getBase(0.05, 0.05, 0.0, M_PI_2)},
-      {getBase(0.05, 0.05, -0.185, M_PI_2)}
+      Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
+      Waypoint {getBase(0.05, 0.05, -0.185, M_PI_2)}
     });
     robot.move(waypoint_motion, data);
 
     WaypointMotion waypoint_motion2({
-      {getBase(0.05, 0.05, 0.0, M_PI_2)},
-      {getBase(0.0, 0.0, 0.0), 1.75}
+      Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
+      Waypoint {getBase(0.0, 0.0, 0.0), 1.75}
     });
     robot.move(waypoint_motion2);
 

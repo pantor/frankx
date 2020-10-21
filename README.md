@@ -37,7 +37,7 @@ Frankx is a high-level motion library (both C++ and Python) for the Franka Emika
 
 ## Installation
 
-For using frankx with Python, you can start by 
+For using frankx with Python, you can start by
 ```bash
 pip install -U frankx
 ```
@@ -120,6 +120,9 @@ combined_transformation = z_translation * z_rotation
 euler_angles = combined_transformation.angles()
 pose = combined_transformation.vector()
 ```
+
+As the trajectory generation works in the Euler space, please make sure to have continuous Euler angles around your working point. You can adapt this by setting the flange to end-effector transformation via `setEE(...)`.
+
 
 ### Robot
 

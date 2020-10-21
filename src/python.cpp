@@ -74,7 +74,9 @@ PYBIND11_MODULE(_frankx, m) {
 
     waypoint.def(py::init<>())
         .def(py::init<double>(), "minimum_time"_a)
+        .def(py::init<const Affine &, Waypoint::ReferenceType, double>(), "affine"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def_readonly("affine", &Waypoint::affine)
         .def_readonly("velocity", &Waypoint::velocity)
@@ -178,6 +180,11 @@ PYBIND11_MODULE(_frankx, m) {
         .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery)
         .export_values();
 
+    py::enum_<franka::ControllerMode>(m, "ControllerMode")
+        .value("JointImpedance", franka::ControllerMode::kJointImpedance)
+        .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance)
+        .export_values();
+
     py::class_<franka::RobotState>(m, "RobotState")
         .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
         .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
@@ -232,6 +239,8 @@ PYBIND11_MODULE(_frankx, m) {
         // .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
         // .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
         // .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
+        .def_readonly("fci_ip", &Robot::fci_ip)
+        .def_readwrite("controller_mode", &Robot::controller_mode)
         .def_readwrite("velocity_rel", &Robot::velocity_rel)
         .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
         .def_readwrite("jerk_rel", &Robot::jerk_rel)

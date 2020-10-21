@@ -43,7 +43,7 @@ TEST_CASE("Geometry") {
             RMLVector<double> *rml_vector = new RMLVector<double> (x, y, z, a, b, c, e);
             auto old_vector = Vector(rml_vector);
 
-            auto vector_result = Affine(rml_vector).vector_with_elbow(rml_vector->VecData[6], old_vector);
+            auto vector_result = Affine(rml_vector).vector_with_elbow(rml_vector->VecData[6]);
             REQUIRE( rml_vector->VecData[0] == Approx(vector_result[0]) );
             REQUIRE( rml_vector->VecData[1] == Approx(vector_result[1]) );
             REQUIRE( rml_vector->VecData[2] == Approx(vector_result[2]) );

@@ -26,7 +26,7 @@ TEST_CASE("Geometry") {
         RMLVector<double> *rml_vector = new RMLVector<double> (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         setVector(rml_vector, vector);
 
-        auto vector_result = Affine(rml_vector).vector_with_elbow(state.elbow_c[0], vector);
+        auto vector_result = Affine(rml_vector).vector_with_elbow(state.elbow_c[0]);
 
         REQUIRE( vector[0] == Approx(vector_result[0]) );
         REQUIRE( vector[1] == Approx(vector_result[1]) );

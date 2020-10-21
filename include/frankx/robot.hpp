@@ -23,6 +23,8 @@
 namespace frankx {
 
 struct Robot: public franka::Robot {
+    std::string fci_ip;
+
     static constexpr double max_translation_velocity {1.7}; // [m/s]
     static constexpr double max_rotation_velocity {2.5}; // [rad/s]
     static constexpr double max_elbow_velocity {2.175}; // [rad/s]
@@ -36,6 +38,8 @@ struct Robot: public franka::Robot {
     double velocity_rel {0.1};
     double acceleration_rel {0.1};
     double jerk_rel {0.01};
+
+    franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
 
     /**
      * Connects to a robot at the given FCI IP address.
@@ -59,6 +63,7 @@ struct Robot: public franka::Robot {
     bool move(const Affine& frame, WaypointMotion motion, MotionData& data);
 
 private:
+    void setInputLimits(RMLPositionInputParameters *input_parameters, const MotionData& data);
     void setInputLimits(RMLPositionInputParameters *input_parameters, const Waypoint& waypoint, const MotionData& data);
 };
 

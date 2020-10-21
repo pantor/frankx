@@ -12,7 +12,6 @@ Affine::Affine(const Eigen::Affine3d& data) {
 }
 
 Affine::Affine(double x, double y, double z, double a, double b, double c) {
-    ref_euler << a, b, c;
     data = Eigen::Translation<double, 3>(x, y, z) * Euler(a, b, c).toRotationMatrix();
 }
 
@@ -31,9 +30,6 @@ Affine::Affine(RMLVector<double> *rml_vector): Affine(rml_vector->VecData[0], rm
 
 Affine::Affine(const franka::CartesianPose& pose, bool offset) {
     Eigen::Affine3d affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
-    if (offset) {
-        affine = affine.rotate(offset_euler);
-    }
     data = affine;
 }
 
@@ -83,15 +79,7 @@ Eigen::Vector3d Affine::angles() const {
         euler2[2] += 2 * M_PI;
     }
 
-    if ((ref_euler - euler).norm() < (ref_euler - euler2).norm()) {
-        return euler;
-    }
-    return euler2;
-}
-
-Eigen::Vector3d Affine::angles(const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return angles();
+    return (euler.norm() < euler2.norm()) ? euler : euler2;
 }
 
 Vector6d Affine::vector() const {
@@ -100,25 +88,10 @@ Vector6d Affine::vector() const {
     return result;
 }
 
-Vector6d Affine::vector(const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return vector();
-}
-
 Vector7d Affine::vector_with_elbow(double elbow) const {
     Vector7d result;
     result << data.translation(), angles(), elbow;
     return result;
-}
-
-Vector7d Affine::vector_with_elbow(double elbow, const Eigen::Vector3d& new_ref_euler) {
-    ref_euler = new_ref_euler;
-    return vector_with_elbow(elbow);
-}
-
-Vector7d Affine::vector_with_elbow(double elbow, const Vector7d& new_ref_vector) {
-    ref_euler << new_ref_vector(3), new_ref_vector(4), new_ref_vector(5);
-    return vector_with_elbow(elbow);
 }
 
 std::array<double, 16> Affine::array() const {
@@ -180,22 +153,16 @@ double Affine::c() const {
 void Affine::set_a(double a) {
     Eigen::Vector3d euler = angles();
     data = Eigen::Translation<double, 3>(data.translation()) * Euler(a, euler(1), euler(2)).toRotationMatrix();
-
-    ref_euler(0) = a;
 }
 
 void Affine::set_b(double b) {
     Eigen::Vector3d euler = angles();
     data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), b, euler(2)).toRotationMatrix();
-
-    ref_euler(1) = b;
 }
 
 void Affine::set_c(double c) {
     Eigen::Vector3d euler = angles();
     data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), euler(1), c).toRotationMatrix();
-
-    ref_euler(2) = c;
 }
 
 Affine Affine::getInnerRandom() const {
