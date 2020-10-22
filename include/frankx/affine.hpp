@@ -30,7 +30,7 @@ struct Affine {
 
     #ifdef AFFINE_WITH_ROBOT_CONTROL
         explicit Affine(RMLVector<double> *rml_vector);
-        explicit Affine(const franka::CartesianPose& pose, bool offset = true);
+        explicit Affine(const franka::CartesianPose& pose);
     #endif
 
     Affine operator*(const Affine &a) const;

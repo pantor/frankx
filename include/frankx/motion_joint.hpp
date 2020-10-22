@@ -8,17 +8,13 @@
     #include <Python.h>
 #endif
 
-#include <ReflexxesAPI.h>
-#include <RMLPositionFlags.h>
-#include <RMLPositionInputParameters.h>
-#include <RMLPositionOutputParameters.h>
-
 #include <franka/duration.h>
 #include <franka/exception.h>
 #include <franka/robot_state.h>
 
 #include <frankx/motion_data.hpp>
 #include <frankx/utils.hpp>
+#include <otgx/reflexxes.hpp>
 
 
 namespace frankx {

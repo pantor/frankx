@@ -28,7 +28,7 @@ Affine::Affine(const std::array<double, 16>& array) {
 
 Affine::Affine(RMLVector<double> *rml_vector): Affine(rml_vector->VecData[0], rml_vector->VecData[1], rml_vector->VecData[2], rml_vector->VecData[3], rml_vector->VecData[4], rml_vector->VecData[5]) { }
 
-Affine::Affine(const franka::CartesianPose& pose, bool offset) {
+Affine::Affine(const franka::CartesianPose& pose) {
     Eigen::Affine3d affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
     data = affine;
 }

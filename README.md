@@ -288,7 +288,7 @@ Frankx is written in C++17 and Python3. It is currently tested against following
 - Eigen v3.3.7
 - Libfranka v0.6.0
 - Reflexxes v1.2.7
-- Pybind11 v2.2.4
+- Pybind11 v2.4.3
 - Catch2 v2.9 (only for testing)
 
 

@@ -4,11 +4,6 @@
     #include <Python.h>
 #endif
 
-#include <ReflexxesAPI.h>
-#include <RMLPositionFlags.h>
-#include <RMLPositionInputParameters.h>
-#include <RMLPositionOutputParameters.h>
-
 #include <franka/control_types.h>
 #include <franka/duration.h>
 #include <franka/exception.h>
@@ -19,7 +14,7 @@
 #include <frankx/motion_impedance.hpp>
 #include <frankx/motion_joint.hpp>
 #include <frankx/motion_waypoint.hpp>
-#include <frankx/quintic_generator.hpp>
+#include <otgx/reflexxes.hpp>
 
 
 namespace frankx {
