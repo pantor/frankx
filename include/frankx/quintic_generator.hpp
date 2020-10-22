@@ -13,7 +13,7 @@ class TrajectoryGenerator {
         Error
     };
 
-    typedef Eigen::Matrix<double, DOFs, 1> Vector;
+    using Vector = Eigen::Matrix<double, DOFs, 1>;
 
     // Current trajectory
     Vector x0, v0, a0;

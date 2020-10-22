@@ -89,7 +89,10 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("minimum_time", &Waypoint::minimum_time);
 
     py::class_<JointMotion>(m, "JointMotion")
-        .def(py::init<const std::array<double, 7>>());
+        .def(py::init<const std::array<double, 7>>())
+        .def(py::init<const std::array<double, 7>, const std::array<double, 7>>())
+        .def_readonly("q_goal", &JointMotion::q_goal)
+        .def_readonly("dq_goal", &JointMotion::dq_goal);
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>());
@@ -104,6 +107,10 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());
+
+    py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
+        .def(py::init<>())
+        .def_property_readonly("is_active", &ImpedanceMotion::isActive);
 
     py::class_<franka::Duration>(m, "Duration")
         .def(py::init<>())
@@ -234,15 +241,15 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<Robot>(m, "Robot")
         .def(py::init<const std::string &, double>(), "fci_ip"_a, "dynamic_rel"_a = 1.0)
-        // .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
-        // .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
-        // .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
-        // .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
-        // .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
-        // .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
-        // .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
-        // .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
-        // .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
+        .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
+        .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
+        .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
+        .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
+        .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
+        .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
+        .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
+        .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
+        .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
         .def_readonly("fci_ip", &Robot::fci_ip)
         .def_readwrite("controller_mode", &Robot::controller_mode)
         .def_readwrite("velocity_rel", &Robot::velocity_rel)
@@ -289,7 +296,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
         .def("width", &Gripper::width)
         .def("is_grasping", &Gripper::isGrasping)
-        .def("open", &Gripper::open)
+        .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())
         .def("clamp", &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())

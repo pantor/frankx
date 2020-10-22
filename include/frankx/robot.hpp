@@ -16,6 +16,7 @@
 #include <franka/robot_state.h>
 
 #include <frankx/motion_data.hpp>
+#include <frankx/motion_impedance.hpp>
 #include <frankx/motion_joint.hpp>
 #include <frankx/motion_waypoint.hpp>
 #include <frankx/quintic_generator.hpp>
@@ -36,9 +37,12 @@ struct Robot: public franka::Robot {
     static constexpr double max_rotation_jerk {12500.0}; // [rad/s³]
     static constexpr double max_elbow_jerk {5000.0}; // [rad/s³]
 
+    const int degrees_of_freedoms {7};
+    const double control_rate {0.001};
+
     double velocity_rel {0.1};
     double acceleration_rel {0.1};
-    double jerk_rel {0.01};
+    double jerk_rel {0.1};
 
     franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
 
@@ -57,6 +61,8 @@ struct Robot: public franka::Robot {
 
     bool move(JointMotion motion);
     bool move(JointMotion motion, MotionData& data);
+    bool move(const Affine& frame, JointMotion motion);
+    bool move(const Affine& frame, JointMotion motion, MotionData& data);
 
     bool move(WaypointMotion motion);
     bool move(WaypointMotion motion, MotionData& data);

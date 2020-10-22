@@ -1,73 +1,51 @@
-// Copyright (c) 2017 Franka Emika GmbH
-// Use of this source code is governed by the Apache-2.0 license, see LICENSE
 #pragma once
 
 #include <array>
+#include <iostream>
 
 #include <Eigen/Core>
 #ifdef WITH_PYTHON
-  #include <Python.h>
+    #include <Python.h>
 #endif
 
-#include <franka/control_types.h>
+#include <ReflexxesAPI.h>
+#include <RMLPositionFlags.h>
+#include <RMLPositionInputParameters.h>
+#include <RMLPositionOutputParameters.h>
+
 #include <franka/duration.h>
-#include <franka/robot.h>
+#include <franka/exception.h>
 #include <franka/robot_state.h>
+
+#include <frankx/motion_data.hpp>
+#include <frankx/utils.hpp>
 
 
 namespace frankx {
 
-/**
- * An example showing how to generate a joint pose motion to a goal position. Adapted from:
- * Wisama Khalil and Etienne Dombre. 2002. Modeling, Identification and Control of Robots
- * (Kogan Page Science Paper edition).
- */
 class JointMotion {
- public:
-  /**
-   * Creates a new JointMotion instance for a target q.
-   *
-   * @param[in] speed_factor General speed factor in range [0, 1].
-   * @param[in] q_goal Target joint positions.
-   */
-  explicit JointMotion(const std::array<double, 7> q_goal);
+    using Vector7d = Eigen::Matrix<double, 7, 1, Eigen::ColMajor>;
+    double time {0.0};
 
-  /**
-   * Sends joint position calculations
-   *
-   * @param[in] robot_state Current state of the robot.
-   * @param[in] period Duration of execution.
-   *
-   * @return Joint positions for use inside a control loop.
-   */
-  franka::JointPositions operator()(const franka::RobotState& robot_state, franka::Duration period);
+    Vector7d dq_max, ddq_max, dddq_max;
 
-  void setDynamicRel(double dynamic_rel);
+    RMLPositionFlags flags;
+    int result_value = 0;
 
- private:
-  using Vector7d = Eigen::Matrix<double, 7, 1, Eigen::ColMajor>;
-  using Vector7i = Eigen::Matrix<int, 7, 1, Eigen::ColMajor>;
+    const std::shared_ptr<ReflexxesAPI> rml;
+    std::shared_ptr<RMLPositionInputParameters> input_parameters;
+    std::shared_ptr<RMLPositionOutputParameters> output_parameters;
 
-  bool calculateDesiredValues(double t, Vector7d* delta_q_d) const;
-  void calculateSynchronizedValues();
+public:
+    std::array<double, 7> q_goal;
+    std::array<double, 7> dq_goal {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    
+    explicit JointMotion(const std::array<double, 7> q_goal);
+    explicit JointMotion(const std::array<double, 7> q_goal, const std::array<double, 7> dq_goal);
 
-  static constexpr double kDeltaQMotionFinished = 1e-6;
-  const Vector7d q_goal_;
+    franka::JointPositions operator()(const franka::RobotState& robot_state, franka::Duration period);
 
-  Vector7d q_start_;
-  Vector7d delta_q_;
-
-  Vector7d dq_max_sync_;
-  Vector7d t_1_sync_;
-  Vector7d t_2_sync_;
-  Vector7d t_f_sync_;
-  Vector7d q_1_;
-
-  double time_ = 0.0;
-
-  Vector7d dq_max_ = (Vector7d() << 2.0, 2.0, 2.0, 2.0, 2.5, 2.5, 2.5).finished();
-  Vector7d ddq_max_start_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
-  Vector7d ddq_max_goal_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
+    void setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel);
 };
 
 } // namespace frankx

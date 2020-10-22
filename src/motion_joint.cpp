@@ -1,139 +1,62 @@
-// Copyright (c) 2017 Franka Emika GmbH
-// Use of this source code is governed by the Apache-2.0 license, see LICENSE
-// #include <franka/examples_common.h>
-
-#include <algorithm>
-#include <array>
-#include <cmath>
-
-#include <franka/exception.h>
-#include <franka/robot.h>
-
 #include <frankx/motion_joint.hpp>
+
 
 namespace frankx {
 
-JointMotion::JointMotion(const std::array<double, 7> q_goal)
-    : q_goal_(q_goal.data()) {
-  dq_max_sync_.setZero();
-  q_start_.setZero();
-  delta_q_.setZero();
-  t_1_sync_.setZero();
-  t_2_sync_.setZero();
-  t_f_sync_.setZero();
-  q_1_.setZero();
-}
+JointMotion::JointMotion(const std::array<double, 7> q_goal): q_goal(q_goal) { }
+JointMotion::JointMotion(const std::array<double, 7> q_goal, const std::array<double, 7> dq_goal): q_goal(q_goal), dq_goal(dq_goal) { }
 
-void JointMotion::setDynamicRel(double dynamic_rel) {
-  dq_max_ = (Vector7d() << 2.0, 2.0, 2.0, 2.0, 2.5, 2.5, 2.5).finished();
-  ddq_max_start_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
-  ddq_max_goal_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
+void JointMotion::setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel) {
+    dq_max = (Vector7d() << 2.0, 2.0, 2.0, 2.0, 2.5, 2.5, 2.5).finished();
+    ddq_max = (Vector7d() << 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0).finished();
+    dddq_max = (Vector7d() << 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0).finished();
 
-  dq_max_ *= dynamic_rel;
-  ddq_max_start_ *= dynamic_rel;
-  ddq_max_goal_ *= dynamic_rel;
-}
-
-bool JointMotion::calculateDesiredValues(double t, Vector7d* delta_q_d) const {
-  Vector7i sign_delta_q;
-  sign_delta_q << delta_q_.cwiseSign().cast<int>();
-  Vector7d t_d = t_2_sync_ - t_1_sync_;
-  Vector7d delta_t_2_sync = t_f_sync_ - t_2_sync_;
-  std::array<bool, 7> joint_motion_finished{};
-
-  for (size_t i = 0; i < 7; i++) {
-    if (std::abs(delta_q_[i]) < kDeltaQMotionFinished) {
-      (*delta_q_d)[i] = 0;
-      joint_motion_finished[i] = true;
-    } else {
-      if (t < t_1_sync_[i]) {
-        (*delta_q_d)[i] = -1.0 / std::pow(t_1_sync_[i], 3.0) * dq_max_sync_[i] * sign_delta_q[i] *
-                          (0.5 * t - t_1_sync_[i]) * std::pow(t, 3.0);
-      } else if (t >= t_1_sync_[i] && t < t_2_sync_[i]) {
-        (*delta_q_d)[i] = q_1_[i] + (t - t_1_sync_[i]) * dq_max_sync_[i] * sign_delta_q[i];
-      } else if (t >= t_2_sync_[i] && t < t_f_sync_[i]) {
-        (*delta_q_d)[i] =
-            delta_q_[i] + 0.5 *
-                              (1.0 / std::pow(delta_t_2_sync[i], 3.0) *
-                                   (t - t_1_sync_[i] - 2.0 * delta_t_2_sync[i] - t_d[i]) *
-                                   std::pow((t - t_1_sync_[i] - t_d[i]), 3.0) +
-                               (2.0 * t - 2.0 * t_1_sync_[i] - delta_t_2_sync[i] - 2.0 * t_d[i])) *
-                              dq_max_sync_[i] * sign_delta_q[i];
-      } else {
-        (*delta_q_d)[i] = delta_q_[i];
-        joint_motion_finished[i] = true;
-      }
-    }
-  }
-  return std::all_of(joint_motion_finished.cbegin(), joint_motion_finished.cend(), [](bool x) { return x; });
-}
-
-void JointMotion::calculateSynchronizedValues() {
-  Vector7d dq_max_reach(dq_max_);
-  Vector7d t_f = Vector7d::Zero();
-  Vector7d delta_t_2 = Vector7d::Zero();
-  Vector7d t_1 = Vector7d::Zero();
-  Vector7d delta_t_2_sync = Vector7d::Zero();
-  Vector7i sign_delta_q;
-  sign_delta_q << delta_q_.cwiseSign().cast<int>();
-
-  for (size_t i = 0; i < 7; i++) {
-    if (std::abs(delta_q_[i]) > kDeltaQMotionFinished) {
-      if (std::abs(delta_q_[i]) < (3.0 / 4.0 * (std::pow(dq_max_[i], 2.0) / ddq_max_start_[i]) +
-                                   3.0 / 4.0 * (std::pow(dq_max_[i], 2.0) / ddq_max_goal_[i]))) {
-        dq_max_reach[i] = std::sqrt(4.0 / 3.0 * delta_q_[i] * sign_delta_q[i] *
-                                    (ddq_max_start_[i] * ddq_max_goal_[i]) /
-                                    (ddq_max_start_[i] + ddq_max_goal_[i]));
-      }
-      t_1[i] = 1.5 * dq_max_reach[i] / ddq_max_start_[i];
-      delta_t_2[i] = 1.5 * dq_max_reach[i] / ddq_max_goal_[i];
-      t_f[i] = t_1[i] / 2.0 + delta_t_2[i] / 2.0 + std::abs(delta_q_[i]) / dq_max_reach[i];
-    }
-  }
-
-  double max_t_f = t_f.maxCoeff();
-  for (size_t i = 0; i < 7; i++) {
-    if (std::abs(delta_q_[i]) > kDeltaQMotionFinished) {
-      double a = 1.5 / 2.0 * (ddq_max_goal_[i] + ddq_max_start_[i]);
-      double b = -1.0 * max_t_f * ddq_max_goal_[i] * ddq_max_start_[i];
-      double c = std::abs(delta_q_[i]) * ddq_max_goal_[i] * ddq_max_start_[i];
-      double delta = b * b - 4.0 * a * c;
-      if (delta < 0.0) {
-        delta = 0.0;
-      }
-      dq_max_sync_[i] = (-1.0 * b - std::sqrt(delta)) / (2.0 * a);
-      t_1_sync_[i] = 1.5 * dq_max_sync_[i] / ddq_max_start_[i];
-      delta_t_2_sync[i] = 1.5 * dq_max_sync_[i] / ddq_max_goal_[i];
-      t_f_sync_[i] =
-          (t_1_sync_)[i] / 2.0 + delta_t_2_sync[i] / 2.0 + std::abs(delta_q_[i] / dq_max_sync_[i]);
-      t_2_sync_[i] = (t_f_sync_)[i] - delta_t_2_sync[i];
-      q_1_[i] = (dq_max_sync_)[i] * sign_delta_q[i] * (0.5 * (t_1_sync_)[i]);
-    }
-  }
+    dq_max *= velocity_rel;
+    ddq_max *= acceleration_rel;
+    dddq_max *= jerk_rel;
 }
 
 franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_state, franka::Duration period) {
-  time_ += period.toSec();
+    time += period.toSec();
+    if (time == 0.0) {
+        setVector(input_parameters->CurrentPositionVector, robot_state.q);
+        setVector(input_parameters->CurrentVelocityVector, robot_state.dq);
+        setVector(input_parameters->CurrentAccelerationVector, robot_state.ddq_d);
 
-  if (time_ == 0.0) {
-    q_start_ = Vector7d(robot_state.q_d.data());
-    delta_q_ = q_goal_ - q_start_;
-    calculateSynchronizedValues();
-  }
+        setVector(input_parameters->MaxVelocityVector, dq_max);
+        setVector(input_parameters->MaxAccelerationVector, ddq_max);
+        setVector(input_parameters->MaxJerkVector, dddq_max);
 
-  Vector7d delta_q_d;
-  bool motion_finished = calculateDesiredValues(time_, &delta_q_d);
+        setVector(input_parameters->TargetPositionVector, q_goal);
+        setVector(input_parameters->TargetVelocityVector, dq_goal);
+    }
 
-  std::array<double, 7> joint_positions;
-  Eigen::VectorXd::Map(&joint_positions[0], 7) = (q_start_ + delta_q_d);
-  franka::JointPositions output(joint_positions);
-  output.motion_finished = motion_finished;
 #ifdef WITH_PYTHON
-  if (PyErr_CheckSignals() == -1) {
-    output.motion_finished = true;
-  }
+    if (PyErr_CheckSignals() == -1) {
+        // stop();
+    }
 #endif
-  return output;
+
+    const int steps = std::max<int>(period.toMSec(), 1);
+    for (int i = 0; i < steps; i++) {
+        result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
+
+        if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
+            return franka::MotionFinished(franka::JointPositions(q_goal));
+
+        } else if (result_value == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
+            std::cout << "Invalid inputs:" << std::endl;
+            return franka::MotionFinished(franka::JointPositions(robot_state.q));
+        }
+
+        *input_parameters->CurrentPositionVector = *output_parameters->NewPositionVector;
+        *input_parameters->CurrentVelocityVector = *output_parameters->NewVelocityVector;
+        *input_parameters->CurrentAccelerationVector = *output_parameters->NewAccelerationVector;
+    }
+
+    std::array<double, 7> result;
+    setVector(output_parameters->NewPositionVector, result);
+    return franka::JointPositions(result);
 }
 
 } // namespace frankx

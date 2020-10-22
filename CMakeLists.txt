@@ -26,10 +26,9 @@ add_library(${PROJECT_NAME} SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_joint.cpp
-  src/reaction.cpp
   src/robot.cpp
 )
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} PUBLIC AFFINE_WITH_ROBOT_CONTROL)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
