@@ -6,30 +6,45 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <Eigen/Core>
+#ifdef WITH_PYTHON
+    #include <Python.h>
+#endif
+
+#include <franka/duration.h>
+#include <franka/exception.h>
+#include <franka/robot_state.h>
+
 #include <frankx/affine.hpp>
+#include <frankx/motion_data.hpp>
 #include <frankx/utils.hpp>
+#include <frankx/robot.hpp>
 
 
 namespace frankx {
 
+class Robot;
+
 class ImpedanceMotion {
     bool is_active {false};
+
+    Affine frame;
+    MotionData motion_data;
+    Robot* robot;
 
 public:
     const double translational_stiffness {150.0};
     const double rotational_stiffness {10.0};
 
-    Affine equilibrium;
+    Affine target;
 
-    ImpedanceMotion() { }
+    explicit ImpedanceMotion() { }
 
-    void setEquilibrium(Affine new_equilibrium) {
-        equilibrium = new_equilibrium;
-    }
+    void setTarget(Affine new_target);
+    bool isActive() const;
 
-    bool isActive() {
-        return is_active;
-    }
+    franka::CartesianPose operator()(const franka::RobotState& robot_state, franka::Duration period);
+    void update(Robot* robot, const Affine& frame, const MotionData& motion_data);
 };
 
 } // namespace frankx

@@ -19,6 +19,10 @@
 
 namespace frankx {
 
+class JointMotion;
+class ImpedanceMotion;
+class WaypointMotion;
+
 struct Robot: public franka::Robot {
     std::string fci_ip;
 
@@ -53,6 +57,11 @@ struct Robot: public franka::Robot {
     bool recoverFromErrors();
 
     Affine currentPose(const Affine& frame = Affine());
+
+    bool move(ImpedanceMotion motion);
+    bool move(ImpedanceMotion motion, MotionData& data);
+    bool move(const Affine& frame, ImpedanceMotion motion);
+    bool move(const Affine& frame, ImpedanceMotion motion, MotionData& data);
 
     bool move(JointMotion motion);
     bool move(JointMotion motion, MotionData& data);

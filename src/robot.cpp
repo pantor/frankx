@@ -43,6 +43,31 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
+bool Robot::move(ImpedanceMotion motion) {
+    return move(Affine(), motion);
+}
+
+bool Robot::move(ImpedanceMotion motion, MotionData& data) {
+    return move(Affine(), motion, data);
+}
+
+bool Robot::move(const Affine& frame, ImpedanceMotion motion) {
+    auto data = MotionData();
+    return move(motion, data);
+}
+
+bool Robot::move(const Affine& frame, ImpedanceMotion motion, MotionData& data) {
+    // motion.setDynamicRel(data.velocity_rel * velocity_rel, data.acceleration_rel * acceleration_rel, data.jerk_rel * jerk_rel);
+    // try {
+    //     control(motion);
+
+    // } catch (franka::Exception exception) {
+    //     std::cout << exception.what() << std::endl;
+    //     return false;
+    // }
+    return true;
+}
+
 bool Robot::move(JointMotion motion) {
     return move(Affine(), motion);
 }
@@ -57,7 +82,7 @@ bool Robot::move(const Affine& frame, JointMotion motion) {
 }
 
 bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
-    motion.setDynamicRel(data.velocity_rel * velocity_rel, data.acceleration_rel * acceleration_rel, data.jerk_rel * jerk_rel);
+    motion.update(this, frame, data);
     try {
         control(motion);
 
@@ -82,12 +107,12 @@ bool Robot::move(const Affine& frame, WaypointMotion motion) {
 }
 
 bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
-    RMLPositionFlags flags;
-    int result_value = 0;
-
     const auto rml = std::make_shared<ReflexxesAPI>(degrees_of_freedoms, control_rate);
     auto input_parameters = std::make_shared<RMLPositionInputParameters>(degrees_of_freedoms);
     auto output_parameters = std::make_shared<RMLPositionOutputParameters>(degrees_of_freedoms);
+
+    int result_value = 0;
+    RMLPositionFlags flags;
     flags.SynchronizationBehavior = RMLPositionFlags::PHASE_SYNCHRONIZATION_IF_POSSIBLE;
 
     setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, true));

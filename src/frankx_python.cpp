@@ -110,7 +110,8 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
         .def(py::init<>())
-        .def_property_readonly("is_active", &ImpedanceMotion::isActive);
+        .def_property_readonly("is_active", &ImpedanceMotion::isActive)
+        .def("set_target", &ImpedanceMotion::setTarget);
 
     py::class_<franka::Duration>(m, "Duration")
         .def(py::init<>())

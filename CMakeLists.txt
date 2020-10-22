@@ -25,6 +25,7 @@ message("Found Franka Version: ${Franka_VERSION}")
 add_library(${PROJECT_NAME} SHARED
   src/affine.cpp
   src/gripper.cpp
+  src/motion_impedance.cpp
   src/motion_joint.cpp
   src/robot.cpp
 )
@@ -46,8 +47,12 @@ if(BUILD_PYTHON_MODULE)
     target_link_libraries(${PROJECT_NAME} PUBLIC pybind11::embed)
   endif()
 
-  pybind11_add_module(_frankx src/python.cpp)
+  pybind11_add_module(_frankx src/frankx_python.cpp)
   target_link_libraries(_frankx PUBLIC ${PROJECT_NAME})
+
+  pybind11_add_module(otgx src/otgx_python.cpp)
+  target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  target_link_libraries(otgx PUBLIC Eigen3::Eigen)
 endif()
 
 

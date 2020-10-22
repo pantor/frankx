@@ -6,14 +6,17 @@ namespace frankx {
 JointMotion::JointMotion(const std::array<double, 7> q_goal): q_goal(q_goal) { }
 JointMotion::JointMotion(const std::array<double, 7> q_goal, const std::array<double, 7> dq_goal): q_goal(q_goal), dq_goal(dq_goal) { }
 
-void JointMotion::setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel) {
+void JointMotion::update(Robot* robot, const Affine& frame, const MotionData& motion_data) {
+    this->robot = robot;
+    this->motion_data = motion_data;
+
     dq_max = (Vector7d() << 2.0, 2.0, 2.0, 2.0, 2.5, 2.5, 2.5).finished();
     ddq_max = (Vector7d() << 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0).finished();
     dddq_max = (Vector7d() << 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0).finished();
 
-    dq_max *= velocity_rel;
-    ddq_max *= acceleration_rel;
-    dddq_max *= jerk_rel;
+    dq_max *= motion_data.velocity_rel * robot->velocity_rel;
+    ddq_max *= motion_data.acceleration_rel * robot->acceleration_rel;
+    dddq_max *= motion_data.jerk_rel * robot->jerk_rel;
 }
 
 franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_state, franka::Duration period) {
@@ -33,7 +36,7 @@ franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_s
 
 #ifdef WITH_PYTHON
     if (PyErr_CheckSignals() == -1) {
-        // stop();
+        robot->stop();
     }
 #endif
 
