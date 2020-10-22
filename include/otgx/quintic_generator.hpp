@@ -18,6 +18,7 @@ class TrajectoryGenerator {
     // Current trajectory
     Vector x0, v0, a0;
     Vector xf, vf, af;
+    Vector v_max, a_max, j_max;
 
     Vector a, b, c, d, e, f;
     double t, tf;
@@ -27,7 +28,7 @@ public:
 
     TrajectoryGenerator(double delta_time): delta_time(delta_time) { }
 
-    bool calculate(Vector x0, Vector v0, Vector a0, Vector xf, Vector vf, Vector af, Vector v_max) {
+    bool calculate(Vector x0, Vector v0, Vector a0, Vector xf, Vector vf, Vector af, Vector v_max, Vector a_max, Vector j_max) {
         this->x0 = x0;
         this->v0 = v0;
         this->a0 = a0;
@@ -35,8 +36,12 @@ public:
         this->vf = vf;
         this->af = af;
 
-        auto tfs = (15 * std::abs(x0 - xf)) / (8 * v_max);  // Approximation for v0 == 0, vf == 0, a0 == 0, af == 0
-        tf = tfs.maxCoeff();
+        // Approximations for v0 == 0, vf == 0, a0 == 0, af == 0
+        auto v_max_tfs = (15 * std::abs(x0 - xf)) / (8 * v_max);
+        auto a_max_tfs = (std::sqrt(10) * std::pow(std::pow(x0, 2) - 2 * x0 * xf + std::pow(xf, 2), 1/4)) / (std::pow(3, 1/4) * std::sqrt(a_max));
+        auto j_max_tfs = std::pow((30 * std::abs(x0 - xf)) / j_max, 1/3);
+
+        tf = std::max({v_max_tfs.maxCoeff(), a_max_tfs.maxCoeff(), j_max_tfs.maxCoeff()});
         t = 0.0;
 
         a = -((a0 - af) * std::pow(tf, 2) + 6 * tf * v0 + 6 * tf * vf + 12 * x0 - 12 * xf) / (2 * std::pow(tf, 5));
