@@ -1,4 +1,4 @@
-from frankx import Affine, LinearRelativeMotion, JointMotion, Robot
+from frankx import Affine, LinearRelativeMotion, Robot
 
 
 if __name__ == '__main__':
@@ -8,10 +8,7 @@ if __name__ == '__main__':
     robot.recover_from_errors()
 
     # Reduce the acceleration and velocity dynamic
-    robot.set_dynamic_rel(0.3)
-
-    joint_motion = JointMotion([-1.811944, 1.179108, 1.757100, -2.14162, -1.143369, 1.633046, -0.432171])
-    robot.move(joint_motion)
+    robot.set_dynamic_rel(0.2)
 
     # Define and move forwards
     way = Affine(0.0, 0.2, 0.0)
@@ -19,5 +16,5 @@ if __name__ == '__main__':
     robot.move(motion_forward)
 
     # And move backwards using the inverse motion
-    # motion_backward = LinearRelativeMotion(way.inverse())
-    # robot.move(motion_backward)
+    motion_backward = LinearRelativeMotion(way.inverse())
+    robot.move(motion_backward)

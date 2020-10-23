@@ -21,7 +21,7 @@ class Gripper: public franka::Gripper {
     double last_clamp_width; // [m]
 
 public:
-    static constexpr double max_speed {0.1}; // [m/s]
+    static constexpr double max_speed {0.02}; // [m/s]
 
     /**
     * Connects to a gripper at the given FCI IP address.

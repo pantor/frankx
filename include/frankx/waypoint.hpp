@@ -20,17 +20,15 @@ struct Waypoint {
     ReferenceType reference_type {ReferenceType::Absolute};
 
     double velocity_rel {1.0};
-    double acceleration_rel {1.0};
-    double jerk_rel {1.0};
 
     std::optional<double> minimum_time;
 
     explicit Waypoint() {}
     explicit Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
-    explicit Waypoint(const Affine& affine, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
-    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
-    explicit Waypoint(const Affine& affine, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
-    explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double dynamic_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) {}
+    explicit Waypoint(const Affine& affine, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), reference_type(reference_type), velocity_rel(velocity_rel) {}
+    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(velocity_rel) {}
+    explicit Waypoint(const Affine& affine, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), velocity(velocity), reference_type(reference_type), velocity_rel(velocity_rel) {}
+    explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(velocity_rel) {}
 
     Affine getTargetAffine(const Affine& frame, const Affine& old_affine) const {
         if (reference_type == ReferenceType::Relative) {

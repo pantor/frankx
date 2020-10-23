@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <iostream>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -111,7 +112,7 @@ struct Reaction {
     explicit Reaction(Condition::CallbackType callback): condition(callback) { }
     explicit Reaction(Condition::CallbackType callback, std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion): condition(callback), waypoint_motion(waypoint_motion) { }
     explicit Reaction(Condition::CallbackType callback, std::optional<WaypointAction> waypoint_action): condition(callback), waypoint_action(waypoint_action) { }
-    
+
     explicit Reaction(Measure measure, Comparison comparison, double value): condition(measure, comparison, value) { }
     explicit Reaction(Measure measure, Comparison comparison, double value, std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion): condition(measure, comparison, value), waypoint_motion(waypoint_motion) { }
     explicit Reaction(Measure measure, Comparison comparison, double value, std::optional<WaypointAction> waypoint_action): condition(measure, comparison, value), waypoint_action(waypoint_action) { }

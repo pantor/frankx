@@ -22,6 +22,13 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
+        .def(py::init<const Affine &>()) // Copy constructor
+        // .def(py::init([](py::dict d) {
+        //     if (d.contains("q_x")) { // Prefer quaternion construction
+        //         return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
+        //     }
+        //     return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
+        // }))
         .def(py::self * py::self)
         .def("matrix", &Affine::matrix)
         .def("inverse", &Affine::inverse)
@@ -82,6 +89,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
         .def_readonly("affine", &Waypoint::affine)
         .def_readonly("velocity", &Waypoint::velocity)
         .def_readonly("elbow", &Waypoint::elbow)
@@ -103,7 +111,8 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
         .def(py::init<const Affine&>())
-        .def(py::init<const Affine&, double>());
+        .def(py::init<const Affine&, double>())
+        .def(py::init<const Affine&, double, double>());
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());

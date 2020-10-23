@@ -57,9 +57,9 @@ struct Robot: public franka::Robot {
     const int degrees_of_freedoms {7};
     const double control_rate {0.001};
 
-    double velocity_rel {0.1};
-    double acceleration_rel {0.1};
-    double jerk_rel {0.1};
+    double velocity_rel {1.0};
+    double acceleration_rel {1.0};
+    double jerk_rel {1.0};
 
     franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
 
