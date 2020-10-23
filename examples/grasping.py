@@ -19,7 +19,7 @@ class Grasping:
         self.gripper = self.robot.get_gripper()
 
         self.robot.set_default_behavior()
-        self.robot.set_dynamic_rel(0.3)
+        self.robot.set_dynamic_rel(0.03)
         self.robot.recover_from_errors()
 
         joint_motion = JointMotion([-1.811944, 1.179108, 1.757100, -2.14162, -1.143369, 1.633046, -0.432171])

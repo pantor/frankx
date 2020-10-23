@@ -13,8 +13,8 @@ if __name__ == '__main__':
     inp.target_position = [1.0]
     inp.target_velocity = [0.0]
     inp.target_acceleration = [0.0]
-    inp.max_velocity = [1.0]
-    inp.max_acceleration = [100.0]
+    inp.max_velocity = [100.0]
+    inp.max_acceleration = [1.0]
     inp.max_jerk = [100.0]
 
     out = OutputParameter()
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         inp.current_position = out.new_position
         inp.current_velocity = out.new_velocity
         inp.current_acceleration = out.new_acceleration
-        
+
         t_list.append(t)
         out_list.append(copy.copy(out))
         t += qui.delta_time
@@ -50,10 +50,10 @@ if __name__ == '__main__':
     plt.plot(xaxis, ddqaxis, label=f'a_{dof+1} (ddq)')
     plt.plot(xaxis, dddqaxis, label=f'j_{dof+1} (ddq)')
 
-    plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
-    plt.axhline(y=-inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
-    # plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
-    # plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+    # plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
+    # plt.axhline(y=-inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
+    plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+    plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
     # plt.axhline(y=inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
     # plt.axhline(y=-inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
 

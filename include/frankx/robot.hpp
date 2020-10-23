@@ -26,6 +26,7 @@ class WaypointMotion;
 struct Robot: public franka::Robot {
     std::string fci_ip;
 
+    // Cartesian
     static constexpr double max_translation_velocity {1.7}; // [m/s]
     static constexpr double max_rotation_velocity {2.5}; // [rad/s]
     static constexpr double max_elbow_velocity {2.175}; // [rad/s]
@@ -35,6 +36,23 @@ struct Robot: public franka::Robot {
     static constexpr double max_translation_jerk {6500.0}; // [m/s³]
     static constexpr double max_rotation_jerk {12500.0}; // [rad/s³]
     static constexpr double max_elbow_jerk {5000.0}; // [rad/s³]
+
+    // Joint
+    static constexpr double max_joint_1_velocity {2.175}; // [rad/s]
+    static constexpr double max_joint_2_velocity {2.175}; // [rad/s]
+    static constexpr double max_joint_3_velocity {2.175}; // [rad/s]
+    static constexpr double max_joint_4_velocity {2.175}; // [rad/s]
+    static constexpr double max_joint_5_velocity {2.610}; // [rad/s]
+    static constexpr double max_joint_6_velocity {2.610}; // [rad/s]
+    static constexpr double max_joint_7_velocity {2.610}; // [rad/s]
+
+    static constexpr double max_joint_1_acceleration {15.0}; // [rad/s²]
+    static constexpr double max_joint_2_acceleration {7.5}; // [rad/s²]
+    static constexpr double max_joint_3_acceleration {10.0}; // [rad/s²]
+    static constexpr double max_joint_4_acceleration {12.5}; // [rad/s²]
+    static constexpr double max_joint_5_acceleration {15.0}; // [rad/s²]
+    static constexpr double max_joint_6_acceleration {20.0}; // [rad/s²]
+    static constexpr double max_joint_7_acceleration {20.0}; // [rad/s²]
 
     const int degrees_of_freedoms {7};
     const double control_rate {0.001};
