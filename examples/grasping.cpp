@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     robot.move(joint_motion, joint_data);
 
     auto data = MotionData().withDynamicRel(0.5).withReaction(Reaction(
-        Measure::ForceZ, Comparison::Less, -7.0,
+        Measure::ForceZ() < -7.0,
         std::make_shared<LinearRelativeMotion>(Affine(0.0, 0.0, 0.001))
     ));
 

@@ -48,25 +48,23 @@ PYBIND11_MODULE(_frankx, m) {
         .def("get_inner_random", &Affine::getInnerRandom)
         .def("__repr__", &Affine::toString);
 
-    py::enum_<Measure>(m, "Measure")
-        .value("ForceZ", Measure::ForceZ)
-        .value("ForceXYNorm", Measure::ForceXYNorm)
-        .value("ForceXYZNorm", Measure::ForceXYZNorm)
-        .value("Time", Measure::Time)
-        .export_values();
+    py::class_<Condition>(m, "Condition");
 
-    py::enum_<Comparison>(m, "Comparison")
-        .value("Equal", Comparison::Equal)
-        .value("NotEqual", Comparison::NotEqual)
-        .value("Greater", Comparison::Greater)
-        .value("Less", Comparison::Less)
-        .value("GreaterEqual", Comparison::GreaterEqual)
-        .value("LessEqual", Comparison::LessEqual)
-        .export_values();
+    py::class_<Measure>(m, "Measure")
+        .def_property_readonly_static("ForceZ", [](py::object) { return Measure::ForceZ(); })
+        .def_property_readonly_static("ForceXYNorm", [](py::object) { return Measure::ForceXYNorm(); })
+        .def_property_readonly_static("ForceXYZNorm", [](py::object) { return Measure::ForceXYZNorm(); })
+        .def_property_readonly_static("Time", [](py::object) { return Measure::Time(); })
+        .def("__eq__", &Measure::operator==, py::is_operator())
+        .def("__ne__", &Measure::operator!=, py::is_operator())
+        .def("__gt__", &Measure::operator>, py::is_operator())
+        .def("__ge__", &Measure::operator>=, py::is_operator())
+        .def("__lt__", &Measure::operator<, py::is_operator())
+        .def("__le__", &Measure::operator<=, py::is_operator());
 
     py::class_<Reaction>(m, "Reaction")
-        .def(py::init<Measure, Comparison, double>())
-        .def(py::init<Measure, Comparison, double, std::shared_ptr<WaypointMotion>>())
+        .def(py::init<Condition>())
+        .def(py::init<Condition, std::shared_ptr<WaypointMotion>>())
         .def_readonly("has_fired", &Reaction::has_fired);
 
     py::class_<MotionData>(m, "MotionData")
