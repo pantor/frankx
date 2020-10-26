@@ -274,21 +274,40 @@ void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const W
     constexpr double elbow_factor {0.38};
     constexpr double derivative_factor {0.4};
 
-    setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
-        translation_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
-        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
-        elbow_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
-    ));
-    setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
-        translation_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
-        derivative_factor * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
-        elbow_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
-    ));
-    setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
-        translation_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_translation_jerk,
-        std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_rotation_jerk,
-        elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_elbow_jerk
-    ));
+    if (data.max_dynamics) {
+        setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
+            translation_factor * max_translation_velocity,
+            max_rotation_velocity,
+            elbow_factor * max_elbow_velocity
+        ));
+        setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
+            translation_factor * max_translation_acceleration,
+            max_rotation_acceleration,
+            elbow_factor * max_elbow_acceleration
+        ));
+        setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
+            translation_factor * max_translation_jerk,
+            max_rotation_jerk,
+            elbow_factor * max_elbow_jerk
+        ));
+
+    } else {
+        setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
+            translation_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
+            waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
+            elbow_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
+        ));
+        setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
+            translation_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
+            derivative_factor * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
+            elbow_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
+        ));
+        setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
+            translation_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_translation_jerk,
+            std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_rotation_jerk,
+            elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_elbow_jerk
+        ));
+    }
 
     if (waypoint.minimum_time.has_value()) {
         input_parameters->SetMinimumSynchronizationTime(waypoint.minimum_time.value());

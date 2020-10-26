@@ -73,6 +73,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readwrite("acceleration_rel", &MotionData::acceleration_rel)
         .def_readonly("reactions", &MotionData::reactions)
         .def("with_dynamic_rel", &MotionData::withDynamicRel)
+        .def("with_max_dynamics", &MotionData::withMaxDynamics)
         .def("with_reaction", &MotionData::withReaction);
 
     py::class_<Waypoint> waypoint(m, "Waypoint");

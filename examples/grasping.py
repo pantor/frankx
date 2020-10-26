@@ -27,18 +27,14 @@ class Grasping:
 
         self.gripper.move(self.gripper.max_width)
 
-        self.robot.move(LinearMotion(self.get_base(0.0, 0.0, 0.0), 1.75), MotionData(0.5))
+        self.robot.move(LinearMotion(self.get_base(0, 0, 0), 1.75), MotionData(0.5))
 
     @staticmethod
     def get_base(x, y, z, a=0.0, b=0.0, c=0.0):
         return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c)
 
     def grasp(self, grasp: Grasp):
-        data_down = MotionData(0.5)
-        # .with_reaction(Reaction(
-        #     Measure.ForceZ, Comparison.Less, -7.0,
-        #     LinearRelativeMotion(Affine(0.0, 0.0, 0.01))
-        # ))
+        data_down = MotionData(0.5).with_reaction(Reaction(Measure.ForceZ < -7.0, LinearRelativeMotion(Affine(0, 0, 0))))
         data_up = MotionData(0.8)
 
         self.gripper.move_async(grasp.d)

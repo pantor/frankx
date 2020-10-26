@@ -64,37 +64,37 @@ public:
     }
 
     Condition operator==(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) == threshold;
         });
     }
 
     Condition operator!=(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) != threshold;
         });
     }
 
     Condition operator<(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) < threshold;
         });
     }
 
     Condition operator<=(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) <= threshold;
         });
     }
 
     Condition operator>(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) > threshold;
         });
     }
 
     Condition operator>=(double threshold) {
-        return Condition([this, threshold](const franka::RobotState& robot_state, double time) {
+        return Condition([*this, threshold](const franka::RobotState& robot_state, double time) {
             return callback(robot_state, time) >= threshold;
         });
     }
