@@ -30,6 +30,15 @@ struct MotionData {
         reactions.push_back(reaction);
         return *this;
     }
+
+    bool didBreak() {
+        for (auto& reaction: reactions) {
+            if (reaction.has_fired) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 } // namespace frankx

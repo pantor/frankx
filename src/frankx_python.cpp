@@ -97,7 +97,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("reactions", &MotionData::reactions)
         .def("with_dynamic_rel", &MotionData::withDynamicRel)
         .def("with_max_dynamics", &MotionData::withMaxDynamics)
-        .def("with_reaction", &MotionData::withReaction);
+        .def("with_reaction", &MotionData::withReaction)
+        .def_property_readonly("did_break", &MotionData::didBreak);
 
     py::class_<Waypoint> waypoint(m, "Waypoint");
     py::enum_<Waypoint::ReferenceType>(waypoint, "Waypoint")

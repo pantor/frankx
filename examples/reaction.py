@@ -18,3 +18,6 @@ if __name__ == '__main__':
     motion_down_data = MotionData().with_reaction(Reaction(Measure.ForceZ < -5.0, StopMotion(Affine(0.0, 0.0, 0.002), 0.0)))
 
     robot.move(motion_down, motion_down_data)
+
+    if motion_down_data.did_break:
+        print('Robot stopped at: ', robot.current_pose())
