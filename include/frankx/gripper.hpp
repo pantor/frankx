@@ -30,6 +30,7 @@ public:
 
     double gripper_force {20.0}; // [N]
     double gripper_speed {0.02}; // [m/s]
+    bool has_error {false};
 
     const double max_width {0.081 + width_calibration}; // [m]
 
@@ -38,8 +39,10 @@ public:
 
     bool move(double width); // [m]
     std::future<bool> moveAsync(double width); // [m]
+
     bool open();
     bool clamp();
+    bool clamp(double min_clamping_width);
 
     bool release();
     bool release(double width); // [m]

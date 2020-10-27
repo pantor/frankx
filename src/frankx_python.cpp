@@ -325,6 +325,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
+        .def_readonly("has_error", &Gripper::has_error)
         .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
         .def("grasp", (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
@@ -335,7 +336,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def("width", &Gripper::width)
         .def("is_grasping", &Gripper::isGrasping)
         .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())
-        .def("clamp", &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
+        .def("clamp", (bool (Gripper::*)()) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
+        .def("clamp", (bool (Gripper::*)(double)) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
         .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>());

@@ -20,11 +20,22 @@ bool Gripper::isGrasping() const {
 
 bool Gripper::move(double width) { // [m]
   try {
-    return ((franka::Gripper*) this)->move(width - width_calibration, gripper_speed); // [m] [m/s]
+    const bool result = ((franka::Gripper*) this)->move(width - width_calibration, gripper_speed); // [m] [m/s]
+    const double current_width = this->width();
+    if (current_width > 0.01 && std::abs(current_width - width) > 0.01) {
+      has_error = true;
+      throw std::runtime_error("Gripper does (" + std::to_string(current_width) + ") not do what it should (" + std::to_string(width) + ").");
+      return false;
+    }
+    if (result) {
+      has_error = false;
+    }
+    return result;
   } catch (franka::Exception const& e) {
+    has_error = true;
     std::cout << e.what() << std::endl;
-    stop();
-    homing();
+    this->stop();
+    this->homing();
     return ((franka::Gripper*) this)->move(width - width_calibration, gripper_speed); // [m] [m/s]
   }
 }
@@ -43,13 +54,19 @@ bool Gripper::clamp() {
   return success;
 }
 
+bool Gripper::clamp(double min_clamping_width) {
+  const bool success = this->grasp(min_clamping_width, gripper_speed, gripper_force, min_width, 1.0); // [m] [m/s] [N] [m] [m]
+  last_clamp_width = this->width();
+  return success;
+}
+
 bool Gripper::release() { // [m]
   return release(last_clamp_width);
 }
 
 bool Gripper::release(double width) { // [m]
   try {
-    stop();
+    // stop();
     return move(width);
   } catch (franka::Exception const& e) {
     std::cout << e.what() << std::endl;
