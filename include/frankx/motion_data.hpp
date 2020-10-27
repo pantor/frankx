@@ -5,7 +5,6 @@
 
 namespace frankx {
 
-
 struct MotionData {
     explicit MotionData(double dynamic_rel = 1.0): velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) { }
 

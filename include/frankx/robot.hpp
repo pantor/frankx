@@ -7,6 +7,7 @@
 #include <franka/control_types.h>
 #include <franka/duration.h>
 #include <franka/exception.h>
+#include <franka/model.h>
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
@@ -76,10 +77,10 @@ struct Robot: public franka::Robot {
 
     Affine currentPose(const Affine& frame = Affine());
 
-    bool move(ImpedanceMotion motion);
-    bool move(ImpedanceMotion motion, MotionData& data);
-    bool move(const Affine& frame, ImpedanceMotion motion);
-    bool move(const Affine& frame, ImpedanceMotion motion, MotionData& data);
+    bool move(ImpedanceMotion& motion);
+    bool move(ImpedanceMotion& motion, MotionData& data);
+    bool move(const Affine& frame, ImpedanceMotion& motion);
+    bool move(const Affine& frame, ImpedanceMotion& motion, MotionData& data);
 
     bool move(JointMotion motion);
     bool move(JointMotion motion, MotionData& data);

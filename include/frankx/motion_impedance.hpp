@@ -26,25 +26,27 @@ namespace frankx {
 class Robot;
 
 class ImpedanceMotion {
-    bool is_active {false};
-
     Affine frame;
     MotionData motion_data;
     Robot* robot;
 
 public:
-    const double translational_stiffness {150.0};
-    const double rotational_stiffness {10.0};
+    const double translational_stiffness {2000.0};  // in [10, 3000] N/m
+    const double rotational_stiffness {200.0};  // in [1, 300] Nm/rad
 
     Affine target;
+    bool is_active {false};
+    bool should_finish {false};
+
+    double filter_params {0.005};
 
     explicit ImpedanceMotion() { }
+    explicit ImpedanceMotion(double translational_stiffness, double rotational_stiffness): translational_stiffness(translational_stiffness), rotational_stiffness(rotational_stiffness) { }
 
-    void setTarget(Affine new_target);
+    Affine getTarget() const;
+    void setTarget(const Affine& new_target);
     bool isActive() const;
-
-    franka::CartesianPose operator()(const franka::RobotState& robot_state, franka::Duration period);
-    void update(Robot* robot, const Affine& frame, const MotionData& motion_data);
+    void finish();
 };
 
 } // namespace frankx

@@ -1,9 +1,18 @@
+from time import sleep
+from threading import Thread
+
 from _frankx import Robot as _Robot
 from .gripper import Gripper as _Gripper
 
 
 class Robot(_Robot):
     logged_in = False
+
+    def move_async(self, *args) -> Thread:
+        p = Thread(target=self.move, args=tuple(args), daemon=True)
+        p.start()
+        sleep(0.001)  # Sleep on control cycle
+        return p
 
     def get_gripper(self):
         return _Gripper(self.fci_ip)

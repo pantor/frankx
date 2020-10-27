@@ -147,8 +147,10 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
         .def(py::init<>())
+        .def(py::init<double, double>(), "translational_stiffness"_a, "rotational_stiffness"_a)
         .def_property_readonly("is_active", &ImpedanceMotion::isActive)
-        .def("set_target", &ImpedanceMotion::setTarget);
+        .def_property("target", &ImpedanceMotion::getTarget, &ImpedanceMotion::setTarget)
+        .def("finish", &ImpedanceMotion::finish);
 
     py::class_<franka::Duration>(m, "Duration")
         .def(py::init<>())
@@ -306,12 +308,16 @@ PYBIND11_MODULE(_frankx, m) {
         .def("recover_from_errors", &Robot::recoverFromErrors)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
+        .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(JointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(const Affine &, WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>());
+        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>());
 
     py::class_<franka::GripperState>(m, "GripperState")
         .def_readonly("width", &franka::GripperState::width)

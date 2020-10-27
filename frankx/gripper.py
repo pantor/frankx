@@ -5,6 +5,6 @@ from _frankx import Gripper as _Gripper
 
 class Gripper(_Gripper):
     def move_async(self, width) -> Thread:
-        p = Thread(target=self.move, args=(width, ))
+        p = Thread(target=self.move, args=(width, ), daemon=True)
         p.start()
         return p

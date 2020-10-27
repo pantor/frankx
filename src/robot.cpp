@@ -43,28 +43,136 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
-bool Robot::move(ImpedanceMotion motion) {
+bool Robot::move(ImpedanceMotion& motion) {
     return move(Affine(), motion);
 }
 
-bool Robot::move(ImpedanceMotion motion, MotionData& data) {
+bool Robot::move(ImpedanceMotion& motion, MotionData& data) {
     return move(Affine(), motion, data);
 }
 
-bool Robot::move(const Affine& frame, ImpedanceMotion motion) {
+bool Robot::move(const Affine& frame, ImpedanceMotion& motion) {
     auto data = MotionData();
-    return move(motion, data);
+    return move(frame, motion, data);
 }
 
-bool Robot::move(const Affine& frame, ImpedanceMotion motion, MotionData& data) {
-    // motion.setDynamicRel(data.velocity_rel * velocity_rel, data.acceleration_rel * acceleration_rel, data.jerk_rel * jerk_rel);
-    // try {
-    //     control(motion);
+bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data) {
+    /* setCartesianImpedance({{motion.translational_stiffness, motion.translational_stiffness, motion.translational_stiffness, motion.rotational_stiffness, motion.rotational_stiffness, motion.rotational_stiffness}});
 
-    // } catch (franka::Exception exception) {
-    //     std::cout << exception.what() << std::endl;
-    //     return false;
-    // }
+    double time = 0.0;
+    auto motion_generator = [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::CartesianPose {
+        time += period.toSec();
+        if (time == 0.0) {
+            franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
+            motion.target = Affine(initial_pose.O_T_EE);
+            motion.is_active = true;
+        }
+
+#ifdef WITH_PYTHON
+        if (PyErr_CheckSignals() == -1) {
+            motion.is_active = false;
+            return franka::CartesianPose(motion.target.array());
+        }
+#endif
+
+        if (motion.should_finish) {
+            motion.is_active = false;
+            return franka::MotionFinished(motion.target.array());
+        }
+
+        return franka::CartesianPose(motion.target.array());
+    };
+
+    try {
+        control(motion_generator, franka::ControllerMode::kCartesianImpedance);
+
+    } catch (const franka::Exception& exception) {
+        std::cout << exception.what() << std::endl;
+        return false;
+    }
+    return true; */
+
+
+    Eigen::MatrixXd stiffness(6, 6), damping(6, 6);
+    stiffness.setZero();
+    stiffness.topLeftCorner(3, 3) << motion.translational_stiffness * Eigen::MatrixXd::Identity(3, 3);
+    stiffness.bottomRightCorner(3, 3) << motion.rotational_stiffness * Eigen::MatrixXd::Identity(3, 3);
+    damping.setZero();
+    damping.topLeftCorner(3, 3) << 2.0 * sqrt(motion.translational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
+    damping.bottomRightCorner(3, 3) << 2.0 * sqrt(motion.rotational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
+
+    franka::Model model = loadModel();
+    franka::RobotState initial_state = readOnce();
+
+    Eigen::Affine3d initial_transform(Eigen::Matrix4d::Map(initial_state.O_T_EE.data()));
+    Eigen::Vector3d position_d(initial_transform.translation());
+    Eigen::Quaterniond orientation_d(initial_transform.linear());
+
+    double time = 0.0;
+
+    auto impedance_callback = [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::Torques {
+        time += period.toSec();
+
+        std::array<double, 7> coriolis_array = model.coriolis(robot_state);
+        std::array<double, 42> jacobian_array = model.zeroJacobian(franka::Frame::kEndEffector, robot_state);
+
+        Eigen::Map<const Eigen::Matrix<double, 7, 1>> coriolis(coriolis_array.data());
+        Eigen::Map<const Eigen::Matrix<double, 6, 7>> jacobian(jacobian_array.data());
+        Eigen::Map<const Eigen::Matrix<double, 7, 1>> q(robot_state.q.data());
+        Eigen::Map<const Eigen::Matrix<double, 7, 1>> dq(robot_state.dq.data());
+        Eigen::Affine3d transform(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
+        Eigen::Vector3d position(transform.translation());
+        Eigen::Quaterniond orientation(transform.linear());
+
+        if (time == 0.0) {
+            motion.target = Affine(transform);
+            motion.is_active = true;
+        }
+
+        Eigen::Matrix<double, 6, 1> error;
+        error.head(3) << position - position_d;
+
+        if (orientation_d.coeffs().dot(orientation.coeffs()) < 0.0) {
+            orientation.coeffs() << -orientation.coeffs();
+        }
+
+        Eigen::Quaterniond error_quaternion(orientation.inverse() * orientation_d);
+        error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
+        error.tail(3) << -transform.linear() * error.tail(3);
+
+        Eigen::VectorXd tau_task(7), tau_d(7);
+        tau_task << jacobian.transpose() * (-stiffness * error - damping * (jacobian * dq));
+        tau_d << tau_task + coriolis;
+
+        std::array<double, 7> tau_d_array{};
+        Eigen::VectorXd::Map(&tau_d_array[0], 7) = tau_d;
+
+#ifdef WITH_PYTHON
+        if (PyErr_CheckSignals() == -1) {
+            motion.is_active = false;
+            return franka::MotionFinished(franka::Torques(tau_d_array));
+        }
+#endif
+
+        if (motion.should_finish) {
+            motion.is_active = false;
+            return franka::MotionFinished(franka::Torques(tau_d_array));
+        }
+
+        // Update parameters changed online
+        position_d = motion.filter_params * motion.target.translation() + (1.0 - motion.filter_params) * position_d;
+        orientation_d = orientation_d.slerp(motion.filter_params, motion.target.quaternion());
+
+        return franka::Torques(tau_d_array);
+    };
+
+    try {
+        control(impedance_callback);
+
+    } catch (const franka::Exception& exception) {
+        std::cout << exception.what() << std::endl;
+        return false;
+    }
     return true;
 }
 
