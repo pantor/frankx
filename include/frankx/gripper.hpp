@@ -21,15 +21,15 @@ class Gripper: public franka::Gripper {
     double last_clamp_width; // [m]
 
 public:
-    static constexpr double max_speed {0.02}; // [m/s]
+    static constexpr double max_speed {0.1}; // [m/s]
 
     /**
     * Connects to a gripper at the given FCI IP address.
     */
-    explicit Gripper(const std::string& fci_ip, double gripper_speed = 0.02);
+    explicit Gripper(const std::string& fci_ip, double speed = 0.04, double force = 20.0);
 
     double gripper_force {20.0}; // [N]
-    double gripper_speed {0.02}; // [m/s]
+    double gripper_speed {0.04}; // [m/s]
     bool has_error {false};
 
     const double max_width {0.081 + width_calibration}; // [m]

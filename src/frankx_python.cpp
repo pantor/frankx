@@ -321,7 +321,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("time", &franka::GripperState::time);
 
     py::class_<Gripper>(m, "Gripper")
-        .def(py::init<const std::string&, double>(), "fci_ip"_a, "gripper_speed"_a = 0.02)
+        .def(py::init<const std::string&, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
         .def_readwrite("gripper_force", &Gripper::gripper_force)
         .def_readwrite("gripper_speed", &Gripper::gripper_speed)
         .def_readonly("max_width", &Gripper::max_width)
