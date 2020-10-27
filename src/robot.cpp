@@ -163,7 +163,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
             }
 
             if (reaction.condition.callback(robot_state, time)) {
-                std::cout << "reaction fired" << std::endl;
+                std::cout << "[frankx] reaction fired." << std::endl;
                 reaction.has_fired = true;
 
                 bool new_motion = false;
@@ -274,21 +274,21 @@ void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const W
     constexpr double elbow_factor {0.38};
     constexpr double derivative_factor {0.4};
 
-    if (data.max_dynamics) {
+    if (waypoint.max_dynamics || data.max_dynamics) {
         setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
             translation_factor * max_translation_velocity,
             max_rotation_velocity,
             elbow_factor * max_elbow_velocity
         ));
         setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
-            translation_factor * max_translation_acceleration,
-            max_rotation_acceleration,
-            elbow_factor * max_elbow_acceleration
+            translation_factor * derivative_factor * max_translation_acceleration,
+            derivative_factor * max_rotation_acceleration,
+            elbow_factor * derivative_factor * max_elbow_acceleration
         ));
         setVector(input_parameters->MaxJerkVector, VectorCartRotElbow(
-            translation_factor * max_translation_jerk,
-            max_rotation_jerk,
-            elbow_factor * max_elbow_jerk
+            translation_factor * derivative_factor * max_translation_jerk,
+            derivative_factor * max_rotation_jerk,
+            elbow_factor * derivative_factor * max_elbow_jerk
         ));
 
     } else {
@@ -307,10 +307,10 @@ void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const W
             std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_rotation_jerk,
             elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_elbow_jerk
         ));
-    }
 
-    if (waypoint.minimum_time.has_value()) {
-        input_parameters->SetMinimumSynchronizationTime(waypoint.minimum_time.value());
+        if (waypoint.minimum_time.has_value()) {
+            input_parameters->SetMinimumSynchronizationTime(waypoint.minimum_time.value());
+        }
     }
 }
 

@@ -4,15 +4,22 @@
 namespace frankx {
 
 Affine::Affine() {
-    this->data = Eigen::Affine3d::Identity();
+    this->data = Type::Identity();
 }
 
-Affine::Affine(const Eigen::Affine3d& data) {
+Affine::Affine(const Type& data) {
     this->data = data;
 }
 
 Affine::Affine(double x, double y, double z, double a, double b, double c) {
-    data = Eigen::Translation<double, 3>(x, y, z) * Euler(a, b, c).toRotationMatrix();
+    // data = Eigen::Translation<double, 3>(x, y, z) * Euler(a, b, c).toRotationMatrix();
+    data.translation() = Eigen::Vector3d(x, y, z);
+    data.linear() = Euler(a, b, c).toRotationMatrix();
+}
+
+Affine::Affine(double x, double y, double z, double q_w, double q_x, double q_y, double q_z) {
+    data.translation() = Eigen::Vector3d(x, y, z);
+    data.linear() = Eigen::Quaterniond(q_w, q_x, q_y, q_z).toRotationMatrix();
 }
 
 Affine::Affine(const Vector6d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
@@ -20,7 +27,7 @@ Affine::Affine(const Vector6d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { 
 Affine::Affine(const Vector7d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
 
 Affine::Affine(const std::array<double, 16>& array) {
-    Eigen::Affine3d affine(Eigen::Matrix4d::Map(array.data()));
+    Type affine(Eigen::Matrix4d::Map(array.data()));
     data = affine;
 }
 
@@ -29,14 +36,14 @@ Affine::Affine(const std::array<double, 16>& array) {
 Affine::Affine(RMLVector<double> *rml_vector): Affine(rml_vector->VecData[0], rml_vector->VecData[1], rml_vector->VecData[2], rml_vector->VecData[3], rml_vector->VecData[4], rml_vector->VecData[5]) { }
 
 Affine::Affine(const franka::CartesianPose& pose) {
-    Eigen::Affine3d affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
+    Type affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
     data = affine;
 }
 
 #endif
 
 Affine Affine::operator *(const Affine &a) const {
-    Eigen::Affine3d result;
+    Type result;
     result = data * a.data;
     return Affine(result);
 }
@@ -49,7 +56,7 @@ bool Affine::isApprox(const Affine &a) const {
     return data.isApprox(a.data);
 }
 
-Eigen::Ref<Eigen::Affine3d::MatrixType> Affine::matrix() {
+Eigen::Ref<Affine::Type::MatrixType> Affine::matrix() {
     return data.matrix();
 }
 
@@ -124,18 +131,23 @@ void Affine::set_z(double z) {
     data.translation()(2) = z;
 }
 
-void Affine::rotate(const Eigen::Affine3d::LinearMatrixType &r) {
+void Affine::rotate(const Type::LinearMatrixType &r) {
     data.rotate(r);
 }
 
-void Affine::prerotate(const Eigen::Affine3d::LinearMatrixType &r) {
+void Affine::prerotate(const Type::LinearMatrixType &r) {
     data.prerotate(r);
 }
 
-Eigen::Affine3d::LinearMatrixType Affine::rotation() const {
-    Eigen::Affine3d::LinearMatrixType result;
+Affine::Type::LinearMatrixType Affine::rotation() const {
+    Type::LinearMatrixType result;
     result << data.rotation();
     return result;
+}
+
+Eigen::Quaterniond Affine::quaternion() const {
+    Eigen::Quaterniond q(data.rotation());
+    return q;
 }
 
 double Affine::a() const {
@@ -152,17 +164,46 @@ double Affine::c() const {
 
 void Affine::set_a(double a) {
     Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(a, euler(1), euler(2)).toRotationMatrix();
+    data.linear() = Euler(a, euler(1), euler(2)).toRotationMatrix();
 }
 
 void Affine::set_b(double b) {
     Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), b, euler(2)).toRotationMatrix();
+    data.linear() = Euler(euler(0), b, euler(2)).toRotationMatrix();
 }
 
 void Affine::set_c(double c) {
     Eigen::Vector3d euler = angles();
-    data = Eigen::Translation<double, 3>(data.translation()) * Euler(euler(0), euler(1), c).toRotationMatrix();
+    data.linear() = Euler(euler(0), euler(1), c).toRotationMatrix();
+}
+
+double Affine::q_w() const {
+    return quaternion().w();
+}
+
+double Affine::q_x() const {
+    return quaternion().x();
+}
+
+double Affine::q_y() const {
+    return quaternion().y();
+}
+
+double Affine::q_z() const {
+    return quaternion().z();
+}
+
+void Affine::set_quaternion(double w, double x, double y, double z) {
+    data.linear() = Eigen::Quaterniond(w, x, y, z).toRotationMatrix();
+}
+
+Affine Affine::slerp(const Affine& affine, double t) const {
+    Type result;
+    Eigen::Quaterniond q_start(data.rotation());
+    Eigen::Quaterniond q_end(affine.rotation());
+    result.translation() = data.translation() + t * (affine.translation() - data.translation());
+    result.linear() = q_start.slerp(t, q_end).toRotationMatrix();
+    return Affine(result);
 }
 
 Affine Affine::getInnerRandom() const {

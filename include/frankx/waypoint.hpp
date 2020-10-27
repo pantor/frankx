@@ -20,6 +20,7 @@ struct Waypoint {
     ReferenceType reference_type {ReferenceType::Absolute};
 
     double velocity_rel {1.0};
+    bool max_dynamics {false};
 
     std::optional<double> minimum_time;
 
@@ -27,6 +28,7 @@ struct Waypoint {
     explicit Waypoint(double minimum_time): minimum_time(minimum_time), reference_type(ReferenceType::Relative) {}
     explicit Waypoint(const Affine& affine, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), reference_type(reference_type), velocity_rel(velocity_rel) {}
     explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(velocity_rel) {}
+    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type, bool max_dynamics): affine(affine), elbow(elbow), reference_type(reference_type), max_dynamics(max_dynamics) {}
     explicit Waypoint(const Affine& affine, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), velocity(velocity), reference_type(reference_type), velocity_rel(velocity_rel) {}
     explicit Waypoint(const Affine& affine, double elbow, const Vector7d& velocity, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0): affine(affine), elbow(elbow), velocity(velocity), reference_type(reference_type), velocity_rel(velocity_rel) {}
 

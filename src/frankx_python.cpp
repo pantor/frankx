@@ -18,17 +18,17 @@ PYBIND11_MODULE(_frankx, m) {
     m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
     py::class_<Affine>(m, "Affine")
-        .def(py::init<>())
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
+        .def(py::init<double, double, double, double, double, double, double>(), "x"_a, "y"_a, "z"_a, "q_w"_a, "q_x"_a, "q_y"_a, "q_z"_a)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
         .def(py::init<const Affine &>()) // Copy constructor
-        // .def(py::init([](py::dict d) {
-        //     if (d.contains("q_x")) { // Prefer quaternion construction
-        //         return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
-        //     }
-        //     return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
-        // }))
+        .def(py::init([](py::dict d) {
+            if (d.contains("q_x")) { // Prefer quaternion construction
+                return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
+            }
+            return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
+        }))
         .def(py::self * py::self)
         .def("matrix", &Affine::matrix)
         .def("inverse", &Affine::inverse)
@@ -42,11 +42,34 @@ PYBIND11_MODULE(_frankx, m) {
         .def("rotate", &Affine::rotate)
         .def("prerotate", &Affine::prerotate)
         .def("rotation", &Affine::rotation)
+        .def("quaternion", &Affine::quaternion)
         .def_property("a", &Affine::a, &Affine::set_a)
         .def_property("b", &Affine::b, &Affine::set_b)
         .def_property("c", &Affine::c, &Affine::set_c)
+        .def_property_readonly("q_w", &Affine::q_w)
+        .def_property_readonly("q_x", &Affine::q_x)
+        .def_property_readonly("q_y", &Affine::q_y)
+        .def_property_readonly("q_z", &Affine::q_z)
+        .def("slerp", &Affine::slerp)
         .def("get_inner_random", &Affine::getInnerRandom)
-        .def("__repr__", &Affine::toString);
+        .def("__repr__", &Affine::toString)
+        .def("as_dict", [](Affine self) {
+            auto translation = self.translation();
+            auto quaternion = self.quaternion();
+
+            py::dict d;
+            d["x"] = translation.x();
+            d["y"] = translation.y();
+            d["z"] = translation.z();
+            d["a"] = self.a();
+            d["b"] = self.b();
+            d["c"] = self.c();
+            d["q_w"] = quaternion.w();
+            d["q_x"] = quaternion.x();
+            d["q_y"] = quaternion.y();
+            d["q_z"] = quaternion.z();
+            return d;
+        });
 
     py::class_<Condition>(m, "Condition");
 
@@ -87,6 +110,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<const Affine &, Waypoint::ReferenceType, double>(), "affine"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, bool>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "max_dynamics"_a = false)
         .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
         .def_readonly("affine", &Waypoint::affine)
@@ -112,6 +136,10 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<const Affine&>())
         .def(py::init<const Affine&, double>())
         .def(py::init<const Affine&, double, double>());
+
+    py::class_<StopMotion, WaypointMotion, std::shared_ptr<StopMotion>>(m, "StopMotion")
+        .def(py::init<const Affine&>())
+        .def(py::init<const Affine&, double>());
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
         .def(py::init<double>());

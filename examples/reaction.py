@@ -1,4 +1,4 @@
-from frankx import Affine, JointMotion, LinearRelativeMotion, Measure, MotionData, Reaction, Robot
+from frankx import Affine, JointMotion, LinearRelativeMotion, Measure, MotionData, Reaction, Robot, StopMotion
 
 
 if __name__ == '__main__':
@@ -15,6 +15,6 @@ if __name__ == '__main__':
 
     # Define and move forwards
     motion_down = LinearRelativeMotion(Affine(0.0, 0.0, -0.11), -0.2)
-    motion_down_data = MotionData().with_reaction(Reaction(Measure.ForceZ < -5.0, LinearRelativeMotion(Affine(0.0, 0.0, 0.002), 0.0, 2.0)))
+    motion_down_data = MotionData().with_reaction(Reaction(Measure.ForceZ < -5.0, StopMotion(Affine(0.0, 0.0, 0.002), 0.0)))
 
     robot.move(motion_down, motion_down_data)

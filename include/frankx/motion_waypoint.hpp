@@ -37,6 +37,12 @@ struct LinearRelativeMotion: public WaypointMotion {
 };
 
 
+struct StopMotion: public WaypointMotion {
+    explicit StopMotion(const Affine& affine): WaypointMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative, true) }) { }
+    explicit StopMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative, true) }) { }
+};
+
+
 struct PositionHold: public WaypointMotion {
     explicit PositionHold(double duration): WaypointMotion({ Waypoint(duration) }) { }
 };

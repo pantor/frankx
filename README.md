@@ -92,7 +92,7 @@ Furthermore, we will introduce methods for geometric calculations, for moving th
 
 ### Geometry
 
-`frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
+`frankx::Affine` is a thin wrapper around [Eigen::Isometry3D](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
 ```c++
 // Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation
 Affine z_translation = Affine(0.0, 0.0, 0.5);
