@@ -39,6 +39,7 @@ if(BUILD_PYTHON_MODULE)
   if(BUILD_PYBIND11)
     add_subdirectory(pybind11)
   else()
+    find_package(Python COMPONENTS Interpreter Development)
     find_package(pybind11 REQUIRED)
   endif()
 
@@ -51,7 +52,7 @@ if(BUILD_PYTHON_MODULE)
   target_link_libraries(_frankx PUBLIC ${PROJECT_NAME})
 
   pybind11_add_module(otgx src/otgx_python.cpp)
-  target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
   target_link_libraries(otgx PUBLIC Eigen3::Eigen)
 endif()
 

@@ -105,8 +105,7 @@ void JointMotion::calculateSynchronizedValues() {
       dq_max_sync_[i] = (-1.0 * b - std::sqrt(delta)) / (2.0 * a);
       t_1_sync_[i] = 1.5 * dq_max_sync_[i] / ddq_max_start_[i];
       delta_t_2_sync[i] = 1.5 * dq_max_sync_[i] / ddq_max_goal_[i];
-      t_f_sync_[i] =
-          (t_1_sync_)[i] / 2.0 + delta_t_2_sync[i] / 2.0 + std::abs(delta_q_[i] / dq_max_sync_[i]);
+      t_f_sync_[i] = (t_1_sync_)[i] / 2.0 + delta_t_2_sync[i] / 2.0 + std::abs(delta_q_[i] / dq_max_sync_[i]);
       t_2_sync_[i] = (t_f_sync_)[i] - delta_t_2_sync[i];
       q_1_[i] = (dq_max_sync_)[i] * sign_delta_q[i] * (0.5 * (t_1_sync_)[i]);
     }

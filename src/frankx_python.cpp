@@ -139,6 +139,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<const Affine&, double, double>());
 
     py::class_<StopMotion, WaypointMotion, std::shared_ptr<StopMotion>>(m, "StopMotion")
+        .def(py::init<>())
         .def(py::init<const Affine&>())
         .def(py::init<const Affine&, double>());
 
@@ -147,9 +148,13 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
         .def(py::init<>())
+        .def(py::init<double>(), "joint_stiffness"_a)
         .def(py::init<double, double>(), "translational_stiffness"_a, "rotational_stiffness"_a)
         .def_property_readonly("is_active", &ImpedanceMotion::isActive)
         .def_property("target", &ImpedanceMotion::getTarget, &ImpedanceMotion::setTarget)
+        .def("set_linear_relative_target_motion", &ImpedanceMotion::setLinearRelativeTargetMotion, "relative_target"_a, "duration"_a)
+        .def("set_spiral_target_motion", &ImpedanceMotion::setSpiralTargetMotion)
+        .def("add_force_constraint", (void (ImpedanceMotion::*)(std::optional<double>, std::optional<double>, std::optional<double>)) &ImpedanceMotion::addForceConstraint, py::kw_only(), "x"_a = std::nullopt, "y"_a = std::nullopt, "z"_a = std::nullopt)
         .def("finish", &ImpedanceMotion::finish);
 
     py::class_<franka::Duration>(m, "Duration")

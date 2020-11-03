@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     sleep(0.5)
 
-    impedance_motion.target = Affine(y=0.2) * initial_target
+    impedance_motion.target = Affine(y=0.15) * initial_target
     print('set new target: ', impedance_motion.target)
 
     sleep(2.0)
