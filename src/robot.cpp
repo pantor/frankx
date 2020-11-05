@@ -98,7 +98,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion) {
     return move(frame, motion, data);
 }
 
-bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
+bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error) {
     const auto rml = std::make_shared<ReflexxesAPI>(degrees_of_freedoms, control_rate);
     auto input_parameters = std::make_shared<RMLPositionInputParameters>(degrees_of_freedoms);
     auto output_parameters = std::make_shared<RMLPositionOutputParameters>(degrees_of_freedoms);
@@ -119,7 +119,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
     double old_elbow = 0.0;
 
     double time = 0.0;
-
     auto motion_generator = [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::CartesianPose {
         time += period.toSec();
         if (time == 0.0) {
@@ -211,14 +210,17 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
             result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
             if (current_motion.reload || result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
-                waypoint_iterator += 1;
+                if (waypoint_iterator != current_motion.waypoints.end()) {
+                    // std::cout << "[frankx robot] next waypoint" << std::endl;
+                    waypoint_iterator += 1;
+                }
 
                 if (current_motion.reload) {
                     waypoint_iterator = current_motion.waypoints.begin();
                     current_motion.reload = false;
 
                 } else if (waypoint_iterator == current_motion.waypoints.end()) {
-                    return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector, waypoint_has_elbow));
+                    return franka::MotionFinished(CartesianPose(input_parameters->TargetPositionVector, waypoint_has_elbow));
                 }
 
                 const Waypoint current_waypoint = *waypoint_iterator;
@@ -251,6 +253,32 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data) {
         control(motion_generator, controller_mode);
 
     } catch (franka::Exception exception) {
+        auto errors = readOnce().last_motion_errors;
+        if (repeat_on_error && errors.cartesian_motion_generator_joint_acceleration_discontinuity || errors.cartesian_motion_generator_joint_velocity_discontinuity || errors.cartesian_motion_generator_velocity_discontinuity || errors.cartesian_motion_generator_acceleration_discontinuity) {
+            std::cout << "[frankx robot] continue motion" << std::endl;
+
+            auto robot_state = readOnce();
+            franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
+            Vector7d initial_vector = Affine(initial_pose).vector_with_elbow(initial_pose.elbow[0]);
+            Vector7d initial_velocity = (Vector7d() << robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]).finished();
+
+            setVector(input_parameters->CurrentPositionVector, initial_vector);
+            setVector(input_parameters->CurrentVelocityVector, initial_velocity);
+            setZero(input_parameters->CurrentAccelerationVector);
+
+            data.velocity_rel *= 0.4;
+            data.acceleration_rel *= 0.4;
+            data.jerk_rel *= 0.4;
+            automaticErrorRecovery();
+            setInputLimits(input_parameters.get(), *waypoint_iterator, data);
+            try {
+                control(motion_generator, controller_mode);
+            } catch (franka::Exception exception) {
+                std::cout << exception.what() << std::endl;
+                return false;
+            }
+            return true;
+        }
         std::cout << exception.what() << std::endl;
         return false;
     }
@@ -263,14 +291,14 @@ void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const M
 
 void Robot::setInputLimits(RMLPositionInputParameters *input_parameters, const Waypoint& waypoint, const MotionData& data) {
     constexpr double translation_factor {0.5};
-    constexpr double elbow_factor {0.38};
+    constexpr double elbow_factor {0.32};
     constexpr double derivative_factor {0.4};
 
     if (waypoint.max_dynamics || data.max_dynamics) {
         setVector(input_parameters->MaxVelocityVector, VectorCartRotElbow(
-            translation_factor * max_translation_velocity,
+            0.8 * translation_factor * max_translation_velocity,
             max_rotation_velocity,
-            elbow_factor * max_elbow_velocity
+            0.5 * elbow_factor * max_elbow_velocity
         ));
         setVector(input_parameters->MaxAccelerationVector, VectorCartRotElbow(
             translation_factor * derivative_factor * max_translation_acceleration,

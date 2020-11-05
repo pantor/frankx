@@ -6,3 +6,4 @@ dist
 *.egg-info
 __pycache__
 geckodriver.log
+examples/login.yaml

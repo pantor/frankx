@@ -6,7 +6,7 @@ from frankx import Affine, Robot
 
 
 if __name__ == '__main__':
-    robot = Robot("172.16.0.2")
+    robot = Robot('172.16.0.2')
     robot.set_default_behavior()
 
     while True:

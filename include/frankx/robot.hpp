@@ -90,7 +90,7 @@ struct Robot: public franka::Robot {
     bool move(WaypointMotion motion);
     bool move(WaypointMotion motion, MotionData& data);
     bool move(const Affine& frame, WaypointMotion motion);
-    bool move(const Affine& frame, WaypointMotion motion, MotionData& data);
+    bool move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error = true);
 
 private:
     void setInputLimits(RMLPositionInputParameters *input_parameters, const MotionData& data);

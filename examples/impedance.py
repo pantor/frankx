@@ -4,7 +4,7 @@ from frankx import Affine, JointMotion, ImpedanceMotion, Robot
 
 if __name__ == '__main__':
     # Connect to the robot
-    robot = Robot("172.16.0.2")
+    robot = Robot('172.16.0.2')
     robot.set_default_behavior()
     robot.recover_from_errors()
 

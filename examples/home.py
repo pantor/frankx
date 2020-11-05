@@ -4,7 +4,7 @@ from frankx import Affine, LinearMotion, Robot
 
 
 # Connect to the robot
-robot = Robot("172.16.0.2")
+robot = Robot('172.16.0.2')
 robot.recover_from_errors()
 robot.set_dynamic_rel(0.1)
 
