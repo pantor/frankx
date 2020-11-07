@@ -6,8 +6,6 @@ var searchData=
   ['finish_5fwait_5ffactor',['finish_wait_factor',['../structfrankx_1_1_impedance_motion_1_1_linear_target_motion.html#a1a5d22ca2f0698ee08134833baea89a6',1,'frankx::ImpedanceMotion::LinearTargetMotion']]],
   ['finished',['Finished',['../classotgx_1_1_quintic.html#a9216110a57a636776c41829a715eb1b6a6504d450242b312cdeef028fa9cdcd52',1,'otgx::Quintic']]],
   ['force_5fconstraints',['force_constraints',['../structfrankx_1_1_impedance_motion.html#ac1f86962ab4e5a8c9329f94ae53a90fd',1,'frankx::ImpedanceMotion']]],
-  ['force_5fcontrol',['force_control',['../namespaceforce__control.html',1,'']]],
-  ['force_5fcontrol_2epy',['force_control.py',['../force__control_8py.html',1,'']]],
   ['forcexynorm',['ForceXYNorm',['../classfrankx_1_1_measure.html#a421ca31d7fde07f9b216f100e6eeb1fa',1,'frankx::Measure']]],
   ['forcexyznorm',['ForceXYZNorm',['../classfrankx_1_1_measure.html#a44d5aa7719116b34acbbda8725407746',1,'frankx::Measure']]],
   ['forcez',['ForceZ',['../classfrankx_1_1_measure.html#a3dec204d519e604b11b77acc0d4007d4',1,'frankx::Measure']]],

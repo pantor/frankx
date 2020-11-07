@@ -29,9 +29,5 @@ var searchData=
   ['max_5ftranslation_5fvelocity',['max_translation_velocity',['../structfrankx_1_1_robot.html#a7a15611c976941d744fc32123dd3ca21',1,'frankx::Robot']]],
   ['max_5fvelocity',['max_velocity',['../structotgx_1_1_input_parameter.html#a54245e3335b445d6dcfc28cf11945fd5',1,'otgx::InputParameter']]],
   ['max_5fwidth',['max_width',['../classfrankx_1_1_gripper.html#ae576d3576dffa02831218201b5e56f5a',1,'frankx::Gripper']]],
-  ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]],
-  ['motion_5fbackward',['motion_backward',['../namespacesimple.html#a7104e95f29978a742ab3b1ae8111adee',1,'simple']]],
-  ['motion_5fdown',['motion_down',['../namespacereaction.html#a3cbe86bf7b38cbf3258a150ea02f196b',1,'reaction']]],
-  ['motion_5fdown_5fdata',['motion_down_data',['../namespacereaction.html#adc7ec911e87aa33d76d3955d66dc8d75',1,'reaction']]],
-  ['motion_5fforward',['motion_forward',['../namespacesimple.html#a65d19badf9315937c4fda7672d97b37c',1,'simple']]]
+  ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]]
 ];

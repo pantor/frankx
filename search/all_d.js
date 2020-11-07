@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['main',['main',['../grasping_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;grasping.cpp'],['../simple_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;simple.cpp']]],
   ['matrix',['matrix',['../structfrankx_1_1_affine.html#aafd5ff40d72393b24af676c932ab0a3d',1,'frankx::Affine']]],
   ['max_5facceleration',['max_acceleration',['../structotgx_1_1_input_parameter.html#a4c067bd557f7aa5ea32d1def0b81ce3c',1,'otgx::InputParameter']]],
   ['max_5fdynamics',['max_dynamics',['../structfrankx_1_1_motion_data.html#a4fa5ddd26b420cd7ea9f224be6ed3f86',1,'frankx::MotionData::max_dynamics()'],['../structfrankx_1_1_waypoint.html#abf97509f703188b0a1f21607f9a35863',1,'frankx::Waypoint::max_dynamics()']]],
@@ -36,11 +35,7 @@ var searchData=
   ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]],
   ['motion',['Motion',['../classfrankx_1_1_motion.html',1,'frankx']]],
   ['motion_2ehpp',['motion.hpp',['../motion_8hpp.html',1,'']]],
-  ['motion_5fbackward',['motion_backward',['../namespacesimple.html#a7104e95f29978a742ab3b1ae8111adee',1,'simple']]],
   ['motion_5fdata_2ehpp',['motion_data.hpp',['../motion__data_8hpp.html',1,'']]],
-  ['motion_5fdown',['motion_down',['../namespacereaction.html#a3cbe86bf7b38cbf3258a150ea02f196b',1,'reaction']]],
-  ['motion_5fdown_5fdata',['motion_down_data',['../namespacereaction.html#adc7ec911e87aa33d76d3955d66dc8d75',1,'reaction']]],
-  ['motion_5fforward',['motion_forward',['../namespacesimple.html#a65d19badf9315937c4fda7672d97b37c',1,'simple']]],
   ['motion_5fimpedance_2ecpp',['motion_impedance.cpp',['../motion__impedance_8cpp.html',1,'']]],
   ['motion_5fimpedance_2ehpp',['motion_impedance.hpp',['../motion__impedance_8hpp.html',1,'']]],
   ['motion_5fjoint_2ecpp',['motion_joint.cpp',['../motion__joint_8cpp.html',1,'']]],

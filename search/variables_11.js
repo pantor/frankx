@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['target',['target',['../structfrankx_1_1_impedance_motion.html#ad9f82e0867c10b29ee113770df8b5324',1,'frankx::ImpedanceMotion::target()'],['../namespaceimpedance.html#a0f226336fa05988f0b8307d3830b1fd8',1,'impedance.target()']]],
+  ['target',['target',['../structfrankx_1_1_impedance_motion.html#ad9f82e0867c10b29ee113770df8b5324',1,'frankx::ImpedanceMotion']]],
   ['target_5facceleration',['target_acceleration',['../structotgx_1_1_input_parameter.html#a731f7175f4c0e57392b19322b298b46e',1,'otgx::InputParameter']]],
   ['target_5fmotion',['target_motion',['../structfrankx_1_1_impedance_motion.html#a3b05997577f3a91cf057377951c05691',1,'frankx::ImpedanceMotion']]],
   ['target_5fposition',['target_position',['../structotgx_1_1_input_parameter.html#a5ce14a374a8534da0ab21d3166cbaf99',1,'otgx::InputParameter']]],

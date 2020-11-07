@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['impedance',['impedance',['../namespaceimpedance.html',1,'']]],
-  ['impedance_2epy',['impedance.py',['../impedance_8py.html',1,'']]],
-  ['impedance_5fmotion',['impedance_motion',['../namespaceforce__control.html#a4ab1613297fc1477c446579278744be7',1,'force_control.impedance_motion()'],['../namespaceimpedance.html#ac201fb75c98a2eb10a55a58832bee870',1,'impedance.impedance_motion()']]],
   ['impedancemotion',['ImpedanceMotion',['../structfrankx_1_1_impedance_motion.html',1,'frankx::ImpedanceMotion'],['../structfrankx_1_1_impedance_motion.html#ab0c0b7fb24c345f62cd2afc459b1225a',1,'frankx::ImpedanceMotion::ImpedanceMotion()'],['../structfrankx_1_1_impedance_motion.html#ad37857283e44d01c78028e806cd18188',1,'frankx::ImpedanceMotion::ImpedanceMotion(double joint_stiffness)'],['../structfrankx_1_1_impedance_motion.html#a1a602ddc54883e8c666db3337fd9f303',1,'frankx::ImpedanceMotion::ImpedanceMotion(double translational_stiffness, double rotational_stiffness)']]],
-  ['initial_5ftarget',['initial_target',['../namespaceimpedance.html#ac10e905e23684dad3741f05d8812bfb6',1,'impedance']]],
   ['initialized',['initialized',['../structfrankx_1_1_impedance_motion_1_1_linear_target_motion.html#a18b77eddbc7c850b0e3c79f313dc0e87',1,'frankx::ImpedanceMotion::LinearTargetMotion::initialized()'],['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#aefe9c4aaa769d9e87ddd8f98aa8578a9',1,'frankx::ImpedanceMotion::SpiralTargetMotion::initialized()']]],
   ['inputparameter',['InputParameter',['../structotgx_1_1_input_parameter.html',1,'otgx']]],
   ['inverse',['inverse',['../structfrankx_1_1_affine.html#a35b18788e122f1759cdbcd58dff3b1d2',1,'frankx::Affine']]],

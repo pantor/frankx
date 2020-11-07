@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['grasping',['grasping',['../namespacegrasping.html',1,'']]]
+  ['setup',['setup',['../namespacesetup.html',1,'']]]
 ];
