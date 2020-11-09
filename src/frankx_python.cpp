@@ -22,6 +22,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<double, double, double, double, double, double, double>(), "x"_a, "y"_a, "z"_a, "q_w"_a, "q_x"_a, "q_y"_a, "q_z"_a)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
+        .def(py::init<const std::array<double, 16>&>()) // Copy constructor
         .def(py::init<const Affine &>()) // Copy constructor
         .def(py::init([](py::dict d) {
             if (d.contains("q_x")) { // Prefer quaternion construction

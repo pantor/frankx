@@ -77,7 +77,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='frankx',
-    version='0.0.3',
+    version='0.1.0',
     description='High-Level Motion Library for the Franka Panda Robot',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -90,7 +90,7 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control', 'interface'],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 2 - Pre-Beta',
         'Intended Audience :: Science/Research',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',

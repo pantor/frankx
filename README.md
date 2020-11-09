@@ -275,7 +275,7 @@ The Python API should be very straight-forward for the Gripper class.
 
 ## Documentation
 
-We will add a more detailed documentation once frankx reaches v1.0. However, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We also try to add more examples over time.
+We have a generated documentation at [pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
 
 
 ## Development
@@ -286,7 +286,7 @@ Frankx is written in C++17 and Python3. It is currently tested against following
 - Eigen v3.3.7
 - Libfranka v0.6.0
 - Reflexxes v1.2.7
-- Pybind11 v2.4.3
+- Pybind11 v2.6.0
 - Catch2 v2.9 (only for testing)
 
 

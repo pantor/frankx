@@ -7,3 +7,4 @@ dist
 __pycache__
 geckodriver.log
 examples/login.yaml
+doc/html
