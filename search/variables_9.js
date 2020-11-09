@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['keywords',['keywords',['../classsetup_1_1_c_make_build.html#adbe5f017876fb97b5f9493feb370e755',1,'setup::CMakeBuild']]]
+  ['linear_5fmotion',['linear_motion',['../structfrankx_1_1_impedance_motion.html#adae1f99cfb0168395560ee320572f32a',1,'frankx::ImpedanceMotion']]],
+  ['logged_5fin',['logged_in',['../classfrankx_1_1robot_1_1_robot.html#a90d49bd161c5daf0ae0699df0acd9bf5',1,'frankx.robot.Robot.logged_in()'],['../classfrankx_1_1robot_1_1_robot.html#a538a8cfae08c554087b2fad48501ee63',1,'frankx.robot.Robot.logged_in()']]]
 ];

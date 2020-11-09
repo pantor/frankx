@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['url',['url',['../classsetup_1_1_c_make_build.html#a3eaf0fb3467a577a2c58c84586bac5eb',1,'setup::CMakeBuild']]],
-  ['username',['username',['../classfrankx_1_1robot_1_1_robot.html#a26def8bcba84590251da622ef0dd6a9c',1,'frankx::robot::Robot']]]
+  ['velocity',['velocity',['../structfrankx_1_1_waypoint.html#abf784dbdeaf4743957ad8e6b83593d59',1,'frankx::Waypoint']]],
+  ['velocity_5frel',['velocity_rel',['../structfrankx_1_1_motion_data.html#ad5dc33456806eecdcde4a5dc33cb5ed0',1,'frankx::MotionData::velocity_rel()'],['../structfrankx_1_1_robot.html#aefbdd5cfd0244e0780647e5354c12fa1',1,'frankx::Robot::velocity_rel()'],['../structfrankx_1_1_waypoint.html#ac767e8416bf0fd817f131cc45f409959',1,'frankx::Waypoint::velocity_rel()']]]
 ];

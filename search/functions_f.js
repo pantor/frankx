@@ -6,6 +6,5 @@ var searchData=
   ['releaserelative',['releaseRelative',['../classfrankx_1_1_gripper.html#a20591754c3a6a16fe15cf6e0b267f847',1,'frankx::Gripper']]],
   ['robot',['Robot',['../structfrankx_1_1_robot.html#a8a7f839dcab8c440a32d43d4171309ba',1,'frankx::Robot']]],
   ['rotate',['rotate',['../structfrankx_1_1_affine.html#aa367bdada6a30a617031401041317c7d',1,'frankx::Affine']]],
-  ['rotation',['rotation',['../structfrankx_1_1_affine.html#aac63830a11396f7f5ee64a91de9a7b68',1,'frankx::Affine']]],
-  ['run',['run',['../classsetup_1_1_c_make_build.html#aaeaa47a0e82fe56564dd8cec58f772c9',1,'setup::CMakeBuild']]]
+  ['rotation',['rotation',['../structfrankx_1_1_affine.html#aac63830a11396f7f5ee64a91de9a7b68',1,'frankx::Affine']]]
 ];

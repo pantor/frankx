@@ -9,7 +9,5 @@ var searchData=
   ['affine_2ehpp',['affine.hpp',['../affine_8hpp.html',1,'']]],
   ['angles',['angles',['../structfrankx_1_1_affine.html#a345afd9b6e7a1fb011adc082468b082f',1,'frankx::Affine']]],
   ['array',['array',['../structfrankx_1_1_affine.html#a6ff67db985cc71d9de633f62c09fe06c',1,'frankx::Affine']]],
-  ['author',['author',['../classsetup_1_1_c_make_build.html#a07b78cf40fab1fc47f5d0ed12a5da188',1,'setup::CMakeBuild']]],
-  ['author_5femail',['author_email',['../classsetup_1_1_c_make_build.html#a5895355ef0154a602a1b3292d59d7c0b',1,'setup::CMakeBuild']]],
   ['axis',['Axis',['../structfrankx_1_1_impedance_motion.html#ace5c0b1c69e1568198f9f5e2a28fb2b1',1,'frankx::ImpedanceMotion']]]
 ];

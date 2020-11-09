@@ -1,11 +1,15 @@
 var searchData=
 [
-  ['vector',['vector',['../structfrankx_1_1_affine.html#aadec80e3bbab5622ef67a8f0584b88d6',1,'frankx::Affine::vector()'],['../structotgx_1_1_input_parameter.html#ad6a4633223c79c445f7ce63d5bfe3658',1,'otgx::InputParameter::Vector()'],['../structotgx_1_1_output_parameter.html#a0fd217016f744ef337693512868cbc66',1,'otgx::OutputParameter::Vector()'],['../namespacefrankx.html#a2b495d4443a7ce2012010b59b9db2343',1,'frankx::Vector(const std::vector&lt; double &gt; &amp;vector)'],['../namespacefrankx.html#a0add8ace463a76583c3e24071a916d07',1,'frankx::Vector(RMLVector&lt; double &gt; *rml_vector)']]],
-  ['vector6d',['Vector6d',['../namespacefrankx.html#a3ff5f45e0788c6347b020256df16ae42',1,'frankx']]],
-  ['vector7d',['Vector7d',['../namespacefrankx.html#a71e28f4f2cf6b0954234574e81902524',1,'frankx']]],
-  ['vector_5fwith_5felbow',['vector_with_elbow',['../structfrankx_1_1_affine.html#a4790fb7eecefa9cd87c814fd24ee09e8',1,'frankx::Affine']]],
-  ['vectorcartrotelbow',['VectorCartRotElbow',['../namespacefrankx.html#a9f139ed4c8151f8921a1ebf8f1e17c05',1,'frankx']]],
-  ['velocity',['velocity',['../structfrankx_1_1_waypoint.html#abf784dbdeaf4743957ad8e6b83593d59',1,'frankx::Waypoint']]],
-  ['velocity_5frel',['velocity_rel',['../structfrankx_1_1_motion_data.html#ad5dc33456806eecdcde4a5dc33cb5ed0',1,'frankx::MotionData::velocity_rel()'],['../structfrankx_1_1_robot.html#aefbdd5cfd0244e0780647e5354c12fa1',1,'frankx::Robot::velocity_rel()'],['../structfrankx_1_1_waypoint.html#ac767e8416bf0fd817f131cc45f409959',1,'frankx::Waypoint::velocity_rel()']]],
-  ['version',['version',['../classsetup_1_1_c_make_build.html#a55193e7e37c21db6086d66ca0406bca4',1,'setup::CMakeBuild']]]
+  ['waypoint',['Waypoint',['../structfrankx_1_1_waypoint.html',1,'frankx::Waypoint'],['../structfrankx_1_1_waypoint.html#a89a05adb934c22dedeb56414899d6cff',1,'frankx::Waypoint::Waypoint()'],['../structfrankx_1_1_waypoint.html#a7917f35bf0f9cc89b8573119030d8065',1,'frankx::Waypoint::Waypoint(double minimum_time)'],['../structfrankx_1_1_waypoint.html#a6b98b0432be568ebe77c7572b76ce01d',1,'frankx::Waypoint::Waypoint(const Affine &amp;affine, ReferenceType reference_type=ReferenceType::Absolute, double velocity_rel=1.0)'],['../structfrankx_1_1_waypoint.html#a7c5c83e8581505b284cb7d2915e825c7',1,'frankx::Waypoint::Waypoint(const Affine &amp;affine, double elbow, ReferenceType reference_type=ReferenceType::Absolute, double velocity_rel=1.0)'],['../structfrankx_1_1_waypoint.html#acfe9b0c1cac7d90925aa63fb72cefc5e',1,'frankx::Waypoint::Waypoint(const Affine &amp;affine, double elbow, ReferenceType reference_type, bool max_dynamics)'],['../structfrankx_1_1_waypoint.html#a14f77db2245658207b85ed0774b6ae44',1,'frankx::Waypoint::Waypoint(const Affine &amp;affine, const Vector7d &amp;velocity, ReferenceType reference_type=ReferenceType::Absolute, double velocity_rel=1.0)'],['../structfrankx_1_1_waypoint.html#a7044644b7cf41be56247f7896127a807',1,'frankx::Waypoint::Waypoint(const Affine &amp;affine, double elbow, const Vector7d &amp;velocity, ReferenceType reference_type=ReferenceType::Absolute, double velocity_rel=1.0)']]],
+  ['waypoint_2ehpp',['waypoint.hpp',['../waypoint_8hpp.html',1,'']]],
+  ['waypoint_5faction',['waypoint_action',['../structfrankx_1_1_reaction.html#a8597863c20a67bffef6aa78ff6ccfc25',1,'frankx::Reaction']]],
+  ['waypoint_5fmotion',['waypoint_motion',['../structfrankx_1_1_reaction.html#a00f9ef8cd1101a91efba220b151b7aab',1,'frankx::Reaction']]],
+  ['waypointaction',['WaypointAction',['../structfrankx_1_1_reaction.html#a5be401d96f714dd2ab4a361dd5483641',1,'frankx::Reaction']]],
+  ['waypointmotion',['WaypointMotion',['../structfrankx_1_1_waypoint_motion.html',1,'frankx::WaypointMotion'],['../structfrankx_1_1_waypoint_motion.html#af50d3539a134c0abba321b52a3e9647f',1,'frankx::WaypointMotion::WaypointMotion()']]],
+  ['waypoints',['waypoints',['../structfrankx_1_1_waypoint_motion.html#ad8cc7cce7bb3394d83700c81696a9b5a',1,'frankx::WaypointMotion']]],
+  ['width',['width',['../classfrankx_1_1_gripper.html#a2e85fe8b123844a0330c965da5ed7cca',1,'frankx::Gripper']]],
+  ['withdynamicrel',['withDynamicRel',['../structfrankx_1_1_motion_data.html#a25ce0279daed1638be0fca76b1a98e4e',1,'frankx::MotionData']]],
+  ['withmaxdynamics',['withMaxDynamics',['../structfrankx_1_1_motion_data.html#a005d066b3278d96dae6eb87bece663aa',1,'frankx::MotionData']]],
+  ['withreaction',['withReaction',['../structfrankx_1_1_motion_data.html#aa2f325e4a6b8f6eb8d81a6cd2a3ed922',1,'frankx::MotionData']]],
+  ['working',['Working',['../classotgx_1_1_quintic.html#a9216110a57a636776c41829a715eb1b6a3f9707f816090dca5c06570c3b1458ac',1,'otgx::Quintic']]]
 ];
