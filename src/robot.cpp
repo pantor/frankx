@@ -141,7 +141,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
             setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, waypoint_has_elbow));
             setInputLimits(input_parameters.get(), current_waypoint, data);
             setVector(input_parameters->TargetPositionVector, target_position_vector);
-            setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+            setZero(input_parameters->TargetVelocityVector);
 
             old_affine = current_waypoint.getTargetAffine(frame, old_affine);
             old_vector = target_position_vector;
@@ -188,7 +188,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
                     setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, waypoint_has_elbow));
                     setInputLimits(input_parameters.get(), current_waypoint, data);
                     setVector(input_parameters->TargetPositionVector, target_position_vector);
-                    setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+                    setZero(input_parameters->TargetVelocityVector);
 
                     old_affine = current_waypoint.getTargetAffine(Affine(), old_affine);
                     old_vector = target_position_vector;
@@ -211,7 +211,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
 
             if (current_motion.reload || result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
                 if (waypoint_iterator != current_motion.waypoints.end()) {
-                    // std::cout << "[frankx robot] next waypoint" << std::endl;
                     waypoint_iterator += 1;
                 }
 
@@ -230,14 +229,14 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
                 setVector(input_parameters->SelectionVector, VectorCartRotElbow(true, true, waypoint_has_elbow));
                 setInputLimits(input_parameters.get(), current_waypoint, data);
                 setVector(input_parameters->TargetPositionVector, target_position_vector);
-                setVector(input_parameters->TargetVelocityVector, current_waypoint.velocity);
+                setZero(input_parameters->TargetVelocityVector);
 
                 old_affine = current_waypoint.getTargetAffine(frame, old_affine);
                 old_vector = target_position_vector;
                 old_elbow = old_vector(6);
 
             } else if (result_value == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
-                std::cout << "Invalid inputs:" << std::endl;
+                std::cout << "[frankx robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(CartesianPose(input_parameters->CurrentPositionVector, waypoint_has_elbow));
             }
 

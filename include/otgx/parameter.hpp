@@ -1,0 +1,54 @@
+#pragma once
+
+#include <Eigen/Core>
+
+
+namespace otgx {
+
+enum class Result {
+    Working,
+    Finished,
+    Error
+};
+
+template<size_t DOFs>
+struct InputParameter {
+    using Vector = Eigen::Matrix<double, DOFs, 1>;
+
+    Vector current_position;
+    Vector current_velocity;
+    Vector current_acceleration;
+
+    Vector target_position;
+    Vector target_velocity;
+    Vector target_acceleration;
+
+    Vector max_velocity;
+    Vector max_acceleration;
+    Vector max_jerk;
+
+    bool operator!=(const InputParameter<DOFs>& rhs) const {
+        return (
+            current_position != rhs.current_position
+            || current_velocity != rhs.current_velocity
+            || current_acceleration != rhs.current_acceleration
+            || target_position != rhs.target_position
+            || target_velocity != rhs.target_velocity
+            || target_acceleration != rhs.target_acceleration
+            || max_velocity != rhs.max_velocity
+            || max_acceleration != rhs.max_acceleration
+            || max_jerk != rhs.max_jerk
+        );
+    }
+};
+
+template<size_t DOFs>
+struct OutputParameter {
+    using Vector = Eigen::Matrix<double, DOFs, 1>;
+
+    Vector new_position;
+    Vector new_velocity;
+    Vector new_acceleration;
+};
+
+} // namespace otgx

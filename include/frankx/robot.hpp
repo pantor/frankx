@@ -39,21 +39,8 @@ struct Robot: public franka::Robot {
     static constexpr double max_elbow_jerk {5000.0}; // [rad/s³]
 
     // Joint
-    static constexpr double max_joint_1_velocity {2.175}; // [rad/s]
-    static constexpr double max_joint_2_velocity {2.175}; // [rad/s]
-    static constexpr double max_joint_3_velocity {2.175}; // [rad/s]
-    static constexpr double max_joint_4_velocity {2.175}; // [rad/s]
-    static constexpr double max_joint_5_velocity {2.610}; // [rad/s]
-    static constexpr double max_joint_6_velocity {2.610}; // [rad/s]
-    static constexpr double max_joint_7_velocity {2.610}; // [rad/s]
-
-    static constexpr double max_joint_1_acceleration {15.0}; // [rad/s²]
-    static constexpr double max_joint_2_acceleration {7.5}; // [rad/s²]
-    static constexpr double max_joint_3_acceleration {10.0}; // [rad/s²]
-    static constexpr double max_joint_4_acceleration {12.5}; // [rad/s²]
-    static constexpr double max_joint_5_acceleration {15.0}; // [rad/s²]
-    static constexpr double max_joint_6_acceleration {20.0}; // [rad/s²]
-    static constexpr double max_joint_7_acceleration {20.0}; // [rad/s²]
+    static constexpr std::array<double, 7> max_joint_velocity {{2.175, 2.175, 2.175, 2.175, 2.610, 2.610, 2.610}}; // [rad/s]
+    static constexpr std::array<double, 7> max_joint_acceleration {{15.0, 7.5, 10.0, 12.5, 15.0, 20.0, 20.0}}; // [rad/s²]
 
     const int degrees_of_freedoms {7};
     const double control_rate {0.001};

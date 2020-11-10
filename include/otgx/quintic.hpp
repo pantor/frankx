@@ -2,48 +2,10 @@
 
 #include <Eigen/Core>
 
+#include <otgx/parameter.hpp>
+
 
 namespace otgx {
-
-template<size_t DOFs>
-struct InputParameter {
-    using Vector = Eigen::Matrix<double, DOFs, 1>;
-
-    Vector current_position;
-    Vector current_velocity;
-    Vector current_acceleration;
-
-    Vector target_position;
-    Vector target_velocity;
-    Vector target_acceleration;
-
-    Vector max_velocity;
-    Vector max_acceleration;
-    Vector max_jerk;
-
-    bool operator!=(const InputParameter<DOFs>& rhs) const {
-        return (
-            current_position != rhs.current_position
-            || current_velocity != rhs.current_velocity
-            || current_acceleration != rhs.current_acceleration
-            || target_position != rhs.target_position
-            || target_velocity != rhs.target_velocity
-            || target_acceleration != rhs.target_acceleration
-            || max_velocity != rhs.max_velocity
-            || max_acceleration != rhs.max_acceleration
-            || max_jerk != rhs.max_jerk
-        );
-    }
-};
-
-template<size_t DOFs>
-struct OutputParameter {
-    using Vector = Eigen::Matrix<double, DOFs, 1>;
-
-    Vector new_position;
-    Vector new_velocity;
-    Vector new_acceleration;
-};
 
 template<size_t DOFs>
 class Quintic {
@@ -73,10 +35,6 @@ class Quintic {
         auto j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3);
 
         tf = std::max<double>({v_max_tfs.maxCoeff(), a_max_tfs.maxCoeff(), j_max_tfs.maxCoeff()});
-        std::cout << v_max_tfs << std::endl;
-        std::cout << a_max_tfs << std::endl;
-        std::cout << j_max_tfs << std::endl;
-        std::cout << tf << std::endl;
         t = 0.0;
 
         a = -((a0 - af) * std::pow(tf, 2) + 6 * tf * v0 + 6 * tf * vf + 12 * x0 - 12 * xf) / (2 * std::pow(tf, 5));
@@ -90,12 +48,6 @@ class Quintic {
     }
 
 public:
-    enum Result {
-        Working,
-        Finished,
-        Error
-    };
-
     double delta_time;
 
     explicit Quintic(double delta_time): delta_time(delta_time) { }

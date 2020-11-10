@@ -1,6 +1,5 @@
 // Copyright (c) 2017 Franka Emika GmbH
 // Use of this source code is governed by the Apache-2.0 license, see LICENSE
-// #include <franka/examples_common.h>
 
 #include <algorithm>
 #include <array>
@@ -10,6 +9,7 @@
 #include <franka/robot.h>
 
 #include <frankx/motion_joint.hpp>
+
 
 namespace frankx {
 
@@ -26,7 +26,7 @@ JointMotion::JointMotion(const std::array<double, 7> q_goal): q_goal(q_goal.data
 void JointMotion::update(Robot* robot, const Affine& frame, const MotionData& motion_data) {
   this->robot = robot;
 
-  dq_max_ = (Vector7d() << robot->max_joint_1_velocity, robot->max_joint_2_velocity, robot->max_joint_3_velocity, robot->max_joint_4_velocity, robot->max_joint_5_velocity, robot->max_joint_6_velocity, robot->max_joint_7_velocity).finished();
+  dq_max_ = (Vector7d() << robot->max_joint_velocity[0], robot->max_joint_velocity[1], robot->max_joint_velocity[2], robot->max_joint_velocity[3], robot->max_joint_velocity[4], robot->max_joint_velocity[5], robot->max_joint_velocity[6]).finished();
   ddq_max_start_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
   ddq_max_goal_ = (Vector7d() << 5, 5, 5, 5, 5, 5, 5).finished();
 

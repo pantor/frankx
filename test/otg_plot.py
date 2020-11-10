@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import copy
 
-from otgx import Quintic, InputParameter, OutputParameter, Result
+from otgx import Quintic, InputParameter, OutputParameter, Result, Reflexxes, Ruckig
 
 
 if __name__ == '__main__':
@@ -13,13 +13,15 @@ if __name__ == '__main__':
     inp.target_position = [1.0]
     inp.target_velocity = [0.0]
     inp.target_acceleration = [0.0]
-    inp.max_velocity = [100.0]
+    inp.max_velocity = [1.0]
     inp.max_acceleration = [1.0]
-    inp.max_jerk = [100.0]
+    inp.max_jerk = [1.0]
 
     out = OutputParameter()
 
-    qui = Quintic(0.005)
+    otg = Quintic(0.005)
+    # otg = Reflexxes(0.005)
+    # otg = Ruckig(0.005)
 
     t = 0.0
     t_list = []
@@ -27,7 +29,7 @@ if __name__ == '__main__':
 
     res = Result.Working
     while res == Result.Working:
-        res = qui.update(inp, out)
+        res = otg.update(inp, out)
 
         inp.current_position = out.new_position
         inp.current_velocity = out.new_velocity
@@ -35,7 +37,7 @@ if __name__ == '__main__':
 
         t_list.append(t)
         out_list.append(copy.copy(out))
-        t += qui.delta_time
+        t += otg.delta_time
 
 
     dof = 0
@@ -43,7 +45,7 @@ if __name__ == '__main__':
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
-    dddqaxis = np.diff(ddqaxis, axis=0, prepend=0) / qui.delta_time
+    dddqaxis = np.diff(ddqaxis, axis=0, prepend=0) / otg.delta_time
 
     plt.plot(xaxis, qaxis, label=f'r_{dof+1} (q)')
     plt.plot(xaxis, dqaxis, label=f'v_{dof+1} (dq)')
@@ -60,6 +62,8 @@ if __name__ == '__main__':
     plt.xlabel('t')
     plt.legend()
     plt.grid(True)
+
+    print(f'Trajectory duration: {t_list[-1]:0.4f} [s]')
 
     # plt.show()
     plt.savefig('quintic_trajectory.png')

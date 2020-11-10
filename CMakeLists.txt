@@ -53,7 +53,7 @@ if(BUILD_PYTHON_MODULE)
 
   pybind11_add_module(otgx src/otgx_python.cpp)
   target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
-  target_link_libraries(otgx PUBLIC Eigen3::Eigen)
+  target_link_libraries(otgx PUBLIC Eigen3::Eigen Reflexxes::Reflexxes)
 endif()
 
 

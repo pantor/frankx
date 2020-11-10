@@ -22,8 +22,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<double, double, double, double, double, double, double>(), "x"_a, "y"_a, "z"_a, "q_w"_a, "q_x"_a, "q_y"_a, "q_z"_a)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
-        .def(py::init<const std::array<double, 16>&>()) // Copy constructor
-        .def(py::init<const Affine &>()) // Copy constructor
+        .def(py::init<const std::array<double, 16>&>(), "data"_a)
+        .def(py::init<const Affine &>(), "affine"_a) // Copy constructor
         .def(py::init([](py::dict d) {
             if (d.contains("q_x")) { // Prefer quaternion construction
                 return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
@@ -51,7 +51,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_property_readonly("q_x", &Affine::q_x)
         .def_property_readonly("q_y", &Affine::q_y)
         .def_property_readonly("q_z", &Affine::q_z)
-        .def("slerp", &Affine::slerp)
+        .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
         .def("get_inner_random", &Affine::getInnerRandom)
         .def("__repr__", &Affine::toString)
         .def("as_dict", [](Affine self) {
@@ -111,33 +111,29 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<double>(), "minimum_time"_a)
         .def(py::init<const Affine &, Waypoint::ReferenceType, double>(), "affine"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
-        .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
-        .def(py::init<const Affine &, const Vector7d &, Waypoint::ReferenceType, bool>(), "affine"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "max_dynamics"_a = false)
-        .def(py::init<const Affine &, double, const Vector7d &, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "velocity"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
         .def_readonly("affine", &Waypoint::affine)
-        .def_readonly("velocity", &Waypoint::velocity)
         .def_readonly("elbow", &Waypoint::elbow)
         .def_readonly("reference_type", &Waypoint::reference_type)
         .def_readonly("minimum_time", &Waypoint::minimum_time);
 
     py::class_<JointMotion>(m, "JointMotion")
-        .def(py::init<const std::array<double, 7>>())
+        .def(py::init<const std::array<double, 7>>(), "target"_a)
         // .def(py::init<const std::array<double, 7>, const std::array<double, 7>>())
         .def_readonly("q_goal", &JointMotion::q_goal);
         // .def_readonly("dq_goal", &JointMotion::dq_goal);
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
-        .def(py::init<const std::vector<Waypoint> &>());
+        .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a);
 
     py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
-        .def(py::init<const Affine&>())
-        .def(py::init<const Affine&, double>());
+        .def(py::init<const Affine&>(), "target"_a)
+        .def(py::init<const Affine&, double>(), "target"_a, "elbow"_a);
 
     py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
-        .def(py::init<const Affine&>())
-        .def(py::init<const Affine&, double>())
-        .def(py::init<const Affine&, double, double>());
+        .def(py::init<const Affine&>(), "affine"_a)
+        .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a)
+        .def(py::init<const Affine&, double, double>(), "affine"_a, "elbow"_a, "dynamic_rel"_a);
 
     py::class_<StopMotion, WaypointMotion, std::shared_ptr<StopMotion>>(m, "StopMotion")
         .def(py::init<>())
@@ -145,7 +141,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<const Affine&, double>());
 
     py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
-        .def(py::init<double>());
+        .def(py::init<double>(), "duration"_a);
 
     py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
         .def(py::init<>())
