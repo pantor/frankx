@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['working',['Working',['../classotgx_1_1_quintic.html#a9216110a57a636776c41829a715eb1b6a3f9707f816090dca5c06570c3b1458ac',1,'otgx::Quintic']]]
+  ['working',['Working',['../namespaceotgx.html#a17c5b684d3c6f2cb75d2b1b180c842d6a829eadc8e29caab50cc26bc6a451a1f1',1,'otgx']]]
 ];

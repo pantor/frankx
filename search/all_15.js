@@ -5,6 +5,5 @@ var searchData=
   ['vector7d',['Vector7d',['../namespacefrankx.html#a71e28f4f2cf6b0954234574e81902524',1,'frankx']]],
   ['vector_5fwith_5felbow',['vector_with_elbow',['../structfrankx_1_1_affine.html#a4790fb7eecefa9cd87c814fd24ee09e8',1,'frankx::Affine']]],
   ['vectorcartrotelbow',['VectorCartRotElbow',['../namespacefrankx.html#a9f139ed4c8151f8921a1ebf8f1e17c05',1,'frankx']]],
-  ['velocity',['velocity',['../structfrankx_1_1_waypoint.html#abf784dbdeaf4743957ad8e6b83593d59',1,'frankx::Waypoint']]],
   ['velocity_5frel',['velocity_rel',['../structfrankx_1_1_motion_data.html#ad5dc33456806eecdcde4a5dc33cb5ed0',1,'frankx::MotionData::velocity_rel()'],['../structfrankx_1_1_robot.html#aefbdd5cfd0244e0780647e5354c12fa1',1,'frankx::Robot::velocity_rel()'],['../structfrankx_1_1_waypoint.html#ac767e8416bf0fd817f131cc45f409959',1,'frankx::Waypoint::velocity_rel()']]]
 ];

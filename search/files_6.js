@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quintic_2ehpp',['quintic.hpp',['../quintic_8hpp.html',1,'']]]
+  ['parameter_2ehpp',['parameter.hpp',['../parameter_8hpp.html',1,'']]]
 ];
