@@ -13,14 +13,14 @@ if __name__ == '__main__':
     inp.target_position = [1.0]
     inp.target_velocity = [0.0]
     inp.target_acceleration = [0.0]
-    inp.max_velocity = [1.0]
-    inp.max_acceleration = [1.0]
+    inp.max_velocity = [0.5]
+    inp.max_acceleration = [0.5]
     inp.max_jerk = [1.0]
 
     out = OutputParameter()
 
-    otg = Quintic(0.005)
-    # otg = Reflexxes(0.005)
+    # otg = Quintic(0.005)
+    otg = Reflexxes(0.005)
     # otg = Ruckig(0.005)
 
     t = 0.0
