@@ -17,5 +17,6 @@ var searchData=
   ['setvector',['setVector',['../namespacefrankx.html#a37b36df0f8a35ac2ad24d742f97c2915',1,'frankx::setVector(RMLVector&lt; T &gt; *rml_vector, const std::vector&lt; T &gt; &amp;vector)'],['../namespacefrankx.html#a11839090f30ccd9f5b6f6c31c25eddd7',1,'frankx::setVector(RMLVector&lt; T &gt; *rml_vector, const std::array&lt; T, 7 &gt; &amp;vector)'],['../namespacefrankx.html#a1548623e4e2a02404df5ecd2b8519400',1,'frankx::setVector(RMLVector&lt; double &gt; *rml_vector, const Vector7d &amp;vector)']]],
   ['setzero',['setZero',['../namespacefrankx.html#a4803f068ec6fd91759826d994977ca7d',1,'frankx']]],
   ['slerp',['slerp',['../structfrankx_1_1_affine.html#a2001a1daf0af23bff18119fb0ce77e0d',1,'frankx::Affine']]],
+  ['sqrt',['Sqrt',['../namespaceotgx.html#a2af38ca03349a813bf04919aa94483c7',1,'otgx']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

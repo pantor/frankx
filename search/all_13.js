@@ -11,5 +11,5 @@ var searchData=
   ['translate',['translate',['../structfrankx_1_1_affine.html#a43b47bf518e2d3b31f97b5f7a0992659',1,'frankx::Affine']]],
   ['translation',['translation',['../structfrankx_1_1_affine.html#a7079bd05c9539dc59eb9ad0813358bfb',1,'frankx::Affine']]],
   ['translational_5fstiffness',['translational_stiffness',['../structfrankx_1_1_impedance_motion.html#aec62ec63d841fb6f7d16934475ee6eda',1,'frankx::ImpedanceMotion']]],
-  ['type',['type',['../structfrankx_1_1_impedance_motion.html#a26740e5da8235dd78cac7eb098afa9e1',1,'frankx::ImpedanceMotion::type()'],['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708',1,'frankx::ImpedanceMotion::Type()'],['../structfrankx_1_1_affine.html#a7a7a69114bf8bef84dad3bc62fafb0f6',1,'frankx::Affine::Type()']]]
+  ['type',['Type',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708',1,'frankx::ImpedanceMotion::Type()'],['../structfrankx_1_1_affine.html#a7a7a69114bf8bef84dad3bc62fafb0f6',1,'frankx::Affine::Type()'],['../structfrankx_1_1_impedance_motion.html#a26740e5da8235dd78cac7eb098afa9e1',1,'frankx::ImpedanceMotion::type()']]]
 ];
