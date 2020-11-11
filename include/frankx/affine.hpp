@@ -7,7 +7,6 @@
 
 #ifdef AFFINE_WITH_ROBOT_CONTROL
     #include <franka/robot.h>
-    #include <ReflexxesAPI.h>
 #endif
 
 
@@ -31,7 +30,6 @@ struct Affine {
     explicit Affine(const std::array<double, 16>& array);
 
     #ifdef AFFINE_WITH_ROBOT_CONTROL
-        explicit Affine(RMLVector<double> *rml_vector);
         explicit Affine(const franka::CartesianPose& pose);
     #endif
 

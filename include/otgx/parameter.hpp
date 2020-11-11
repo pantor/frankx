@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <Eigen/Core>
 
 
@@ -15,6 +17,8 @@ template<size_t DOFs>
 struct InputParameter {
     using Vector = Eigen::Matrix<double, DOFs, 1>;
 
+    std::array<bool, DOFs> enabled {true};
+
     Vector current_position;
     Vector current_velocity;
     Vector current_acceleration;
@@ -26,6 +30,8 @@ struct InputParameter {
     Vector max_velocity;
     Vector max_acceleration;
     Vector max_jerk;
+
+    std::optional<double> minimum_duration;
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {
         return (

@@ -9,30 +9,30 @@ namespace otgx {
 
 template<size_t DOFs>
 class Quintic {
-    using Vector = Eigen::Matrix<double, DOFs, 1>;
+    using Vector7d = Eigen::Matrix<double, DOFs, 1>;
 
     // Trajectory
-    Vector a, b, c, d, e, f;
+    Vector7d a, b, c, d, e, f;
     double t, tf;
     InputParameter<DOFs> current_input;
 
     bool calculate(const InputParameter<DOFs>& input) {
         current_input = input;
 
-        const auto& x0 = input.current_position;
-        const auto& v0 = input.current_velocity;
-        const auto& a0 = input.current_acceleration;
-        const auto& xf = input.target_position;
-        const auto& vf = input.target_velocity;
-        const auto& af = input.target_acceleration;
-        const auto& v_max = input.max_velocity;
-        const auto& a_max = input.max_acceleration;
-        const auto& j_max = input.max_jerk;
+        const Vector7d& x0 = input.current_position;
+        const Vector7d& v0 = input.current_velocity;
+        const Vector7d& a0 = input.current_acceleration;
+        const Vector7d& xf = input.target_position;
+        const Vector7d& vf = input.target_velocity;
+        const Vector7d& af = input.target_acceleration;
+        const Vector7d& v_max = input.max_velocity;
+        const Vector7d& a_max = input.max_acceleration;
+        const Vector7d& j_max = input.max_jerk;
 
         // Approximations for v0 == 0, vf == 0, a0 == 0, af == 0
-        auto v_max_tfs = (15 * (x0 - xf).array().abs()) / (8 * v_max).array();
-        auto a_max_tfs = (std::sqrt(10) * (x0.array().pow(2) - 2 * x0 * xf + xf.array().pow(2)).pow(1./4)) / (std::pow(3, 1./4) * a_max.array().sqrt());
-        auto j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3);
+        Vector7d v_max_tfs = (15 * (x0 - xf).array().abs()) / (8 * v_max).array();
+        Vector7d a_max_tfs = (std::sqrt(10) * (x0.array().pow(2) - 2 * x0.array() * xf.array() + xf.array().pow(2)).pow(1./4)) / (std::pow(3, 1./4) * a_max.array().sqrt());
+        Vector7d j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3);
 
         tf = std::max<double>({v_max_tfs.maxCoeff(), a_max_tfs.maxCoeff(), j_max_tfs.maxCoeff()});
         t = 0.0;

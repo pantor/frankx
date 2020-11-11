@@ -52,6 +52,7 @@ if(BUILD_PYTHON_MODULE)
   target_link_libraries(_frankx PUBLIC ${PROJECT_NAME})
 
   pybind11_add_module(otgx src/otgx_python.cpp)
+  target_compile_features(otgx PUBLIC cxx_std_17)
   target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
   target_link_libraries(otgx PUBLIC Eigen3::Eigen Reflexxes::Reflexxes)
 endif()
@@ -68,13 +69,13 @@ endif()
 if(BUILD_TESTS)
   enable_testing()
 
-  find_package(Catch2 REQUIRED)
+  # find_package(Catch2 REQUIRED)
 
-  foreach(test IN ITEMS unit-test robot-test)
-    add_executable(${test} "test/${test}.cpp")
-    target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
-    add_test(${test} COMMAND ${test})
-  endforeach()
+  # foreach(test IN ITEMS)
+  #   add_executable(${test} "test/${test}.cpp")
+  #   target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
+  #   add_test(${test} COMMAND ${test})
+  # endforeach()
 endif()
 
 
