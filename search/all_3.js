@@ -4,7 +4,7 @@ var searchData=
   ['callback',['callback',['../structfrankx_1_1_condition.html#a93ac975bc75f6266484d5c7636d09366',1,'frankx::Condition']]],
   ['callbacktype',['CallbackType',['../structfrankx_1_1_condition.html#a514586743d19fa8a174184550d224e9a',1,'frankx::Condition']]],
   ['cartesian',['Cartesian',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708ac62cd6a7dfc8d04ae078b2b3d6293b9c',1,'frankx::ImpedanceMotion']]],
-  ['cartesianpose',['CartesianPose',['../namespacefrankx.html#ace7e4007b643a6c9e893f74d77c332db',1,'frankx']]],
+  ['cartesianpose',['CartesianPose',['../namespacefrankx.html#a53ed6544a0c53acafb1c28cbf3274bc9',1,'frankx']]],
   ['center',['center',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#aa0af6d59f4e177afadfd74be58132e91',1,'frankx::ImpedanceMotion::SpiralTargetMotion']]],
   ['clamp',['clamp',['../classfrankx_1_1_gripper.html#a49dcb096bf0f4d02ec6575261d159875',1,'frankx::Gripper::clamp()'],['../classfrankx_1_1_gripper.html#a8d72dc91da3955a604798c118f765a3d',1,'frankx::Gripper::clamp(double min_clamping_width)']]],
   ['condition',['Condition',['../structfrankx_1_1_condition.html',1,'frankx::Condition'],['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction::condition()'],['../structfrankx_1_1_condition.html#a2001278a1e8c1f24cf8e1bf1c0a41de5',1,'frankx::Condition::Condition()']]],

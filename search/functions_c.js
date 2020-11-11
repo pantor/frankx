@@ -6,7 +6,7 @@ var searchData=
   ['operator_28_29',['operator()',['../classfrankx_1_1_joint_motion.html#aa6d8af599fad868e4d9e9b05173a6134',1,'frankx::JointMotion']]],
   ['operator_2a',['operator*',['../structfrankx_1_1_affine.html#a961cb9366321ca9a89882abfe5ca2895',1,'frankx::Affine']]],
   ['operator_3c',['operator&lt;',['../classfrankx_1_1_measure.html#acae16ad401c91d019335ae60bc69ade5',1,'frankx::Measure']]],
-  ['operator_3c_3c',['operator&lt;&lt;',['../namespacefrankx.html#af649427e65072923efe17c4ce5563c00',1,'frankx::operator&lt;&lt;(std::ostream &amp;o, const std::array&lt; T, N &gt; &amp;arr)'],['../namespacefrankx.html#a7bced1492f226b4387247363f1f744f3',1,'frankx::operator&lt;&lt;(std::ostream &amp;o, const RMLVector&lt; T &gt; *rml_vector)']]],
+  ['operator_3c_3c',['operator&lt;&lt;',['../namespacefrankx.html#af649427e65072923efe17c4ce5563c00',1,'frankx']]],
   ['operator_3c_3d',['operator&lt;=',['../classfrankx_1_1_measure.html#a0f8aa00f00113d724ae5b0193ab89b0f',1,'frankx::Measure']]],
   ['operator_3d_3d',['operator==',['../classfrankx_1_1_measure.html#a3038ee7f8c772805029da025af3f3e71',1,'frankx::Measure']]],
   ['operator_3e',['operator&gt;',['../classfrankx_1_1_measure.html#ab1a49d83e48fac41125945c8eaaf128a',1,'frankx::Measure']]],

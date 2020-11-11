@@ -17,5 +17,6 @@ var searchData=
   ['max_5ftranslation_5fvelocity',['max_translation_velocity',['../structfrankx_1_1_robot.html#a7a15611c976941d744fc32123dd3ca21',1,'frankx::Robot']]],
   ['max_5fvelocity',['max_velocity',['../structotgx_1_1_input_parameter.html#a54245e3335b445d6dcfc28cf11945fd5',1,'otgx::InputParameter']]],
   ['max_5fwidth',['max_width',['../classfrankx_1_1_gripper.html#ae576d3576dffa02831218201b5e56f5a',1,'frankx::Gripper']]],
+  ['minimum_5fduration',['minimum_duration',['../structotgx_1_1_input_parameter.html#ab66e3e4af3dbf908539f30a5f31a977f',1,'otgx::InputParameter']]],
   ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]]
 ];

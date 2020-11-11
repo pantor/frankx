@@ -20,6 +20,7 @@ var searchData=
   ['max_5fwidth',['max_width',['../classfrankx_1_1_gripper.html#ae576d3576dffa02831218201b5e56f5a',1,'frankx::Gripper']]],
   ['measure',['Measure',['../classfrankx_1_1_measure.html',1,'frankx']]],
   ['measure_2ehpp',['measure.hpp',['../measure_8hpp.html',1,'']]],
+  ['minimum_5fduration',['minimum_duration',['../structotgx_1_1_input_parameter.html#ab66e3e4af3dbf908539f30a5f31a977f',1,'otgx::InputParameter']]],
   ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]],
   ['motion',['Motion',['../classfrankx_1_1_motion.html',1,'frankx']]],
   ['motion_2ehpp',['motion.hpp',['../motion_8hpp.html',1,'']]],
