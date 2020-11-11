@@ -16,23 +16,34 @@ set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") #
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
-find_package(Reflexxes REQUIRED)
+find_package(Reflexxes)
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 
+if(Reflexxes)
+  message("Found Reflexxes")
+else()
+  message("Did not found Reflexxes.")
+endif()
 
-add_library(${PROJECT_NAME} SHARED
+
+add_library(frankx SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_impedance.cpp
   src/motion_joint.cpp
   src/robot.cpp
 )
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-target_compile_definitions(${PROJECT_NAME} PUBLIC AFFINE_WITH_ROBOT_CONTROL)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} PUBLIC Franka::Franka Reflexxes::Reflexxes Eigen3::Eigen)
+target_compile_features(frankx PUBLIC cxx_std_17)
+target_compile_definitions(frankx PUBLIC AFFINE_WITH_ROBOT_CONTROL)
+target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen)
+
+if(Reflexxes)
+  target_compile_definitions(frankx PUBLIC WITH_REFLEXXES)
+  target_link_libraries(frankx PUBLIC Reflexxes::Reflexxes)
+endif()
 
 
 if(BUILD_PYTHON_MODULE)
@@ -44,17 +55,22 @@ if(BUILD_PYTHON_MODULE)
   endif()
 
   if(USE_PYTHON_EXTENSION)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC WITH_PYTHON)
-    target_link_libraries(${PROJECT_NAME} PUBLIC pybind11::embed)
+    target_compile_definitions(frankx PUBLIC WITH_PYTHON)
+    target_link_libraries(frankx PUBLIC pybind11::embed)
   endif()
 
   pybind11_add_module(_frankx src/frankx_python.cpp)
-  target_link_libraries(_frankx PUBLIC ${PROJECT_NAME})
+  target_link_libraries(_frankx PUBLIC frankx)
 
   pybind11_add_module(otgx src/otgx_python.cpp)
   target_compile_features(otgx PUBLIC cxx_std_17)
   target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
-  target_link_libraries(otgx PUBLIC Eigen3::Eigen Reflexxes::Reflexxes)
+  target_link_libraries(otgx PUBLIC Eigen3::Eigen)
+
+  if(Reflexxes)
+    target_compile_definitions(otgx PUBLIC WITH_REFLEXXES)
+    target_link_libraries(otgx PUBLIC Reflexxes::Reflexxes)
+  endif()
 endif()
 
 
@@ -69,13 +85,13 @@ endif()
 if(BUILD_TESTS)
   enable_testing()
 
-  # find_package(Catch2 REQUIRED)
+  find_package(Catch2 REQUIRED)
 
-  # foreach(test IN ITEMS)
-  #   add_executable(${test} "test/${test}.cpp")
-  #   target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
-  #   add_test(${test} COMMAND ${test})
-  # endforeach()
+  foreach(test IN ITEMS unit-test)
+    add_executable(${test} "test/${test}.cpp")
+    target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
+    add_test(${test} COMMAND ${test})
+  endforeach()
 endif()
 
 

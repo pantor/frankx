@@ -7,8 +7,11 @@
 #include <pybind11/operators.h>
 
 #include <otgx/quintic.hpp>
-#include <otgx/reflexxes.hpp>
 #include <otgx/ruckig.hpp>
+
+#ifdef WITH_REFLEXXES
+#include <otgx/reflexxes.hpp>
+#endif
 
 
 namespace py = pybind11;
@@ -21,7 +24,7 @@ PYBIND11_MODULE(otgx, m) {
 
     constexpr size_t DOFs {1};
 
-    py::class_<InputParameter<1>>(m, "InputParameter")
+    py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
         .def_readwrite("current_position", &InputParameter<DOFs>::current_position)
         .def_readwrite("current_velocity", &InputParameter<DOFs>::current_velocity)
@@ -31,15 +34,16 @@ PYBIND11_MODULE(otgx, m) {
         .def_readwrite("target_acceleration", &InputParameter<DOFs>::target_acceleration)
         .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
         .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
-        .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk);
+        .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
+        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration);
 
-    py::class_<OutputParameter<1>>(m, "OutputParameter")
+    py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
         .def_readwrite("new_position", &OutputParameter<DOFs>::new_position)
         .def_readwrite("new_velocity", &OutputParameter<DOFs>::new_velocity)
         .def_readwrite("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
         .def("__copy__",  [](const OutputParameter<DOFs> &self) {
-            return OutputParameter<1>(self);
+            return OutputParameter<DOFs>(self);
         });
 
     py::enum_<Result>(m, "Result")
@@ -53,10 +57,12 @@ PYBIND11_MODULE(otgx, m) {
         .def_readonly("delta_time", &Quintic<DOFs>::delta_time)
         .def("update", &Quintic<DOFs>::update);
 
+#ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
         .def("update", &Reflexxes<DOFs>::update);
+#endif
 
     py::class_<Ruckig<DOFs>>(m, "Ruckig")
         .def(py::init<double>(), "delta_time"_a)

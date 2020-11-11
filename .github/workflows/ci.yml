@@ -23,14 +23,6 @@ jobs:
         cmake ..
         sudo make install
 
-    - name: install Reflexxes
-      run: |
-        git clone https://github.com/pantor/RMLTypeII.git
-        cd RMLTypeII
-        mkdir build && cd build
-        cmake ..
-        make
-
     - name: install libfranka
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
@@ -64,7 +56,7 @@ jobs:
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DREFLEXXES_TYPE=ReflexxesTypeII -DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/ -DReflexxes_LIB_DIR=RMLTypeII/build ..
+        cmake ..
         make
 
     - name: test

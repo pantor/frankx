@@ -2,20 +2,21 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-from otgx import Quintic, InputParameter, OutputParameter, Result, Reflexxes, Ruckig
+from otgx import Quintic, InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.2]
-    inp.current_velocity = [0.0]
+    inp.current_position = [0.0]
+    inp.current_velocity = [1.0]
     inp.current_acceleration = [0.0]
-    inp.target_position = [0.4]
+    inp.target_position = [1.0]
     inp.target_velocity = [0.0]
     inp.target_acceleration = [0.0]
     inp.max_velocity = [1.5]
-    inp.max_acceleration = [0.5]
-    inp.max_jerk = [1.0]
+    inp.max_acceleration = [2.5]
+    inp.max_jerk = [10.0]
+    # inp.minimum_duration = 223.0
 
     out = OutputParameter()
 
@@ -54,8 +55,8 @@ if __name__ == '__main__':
 
     # plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
     # plt.axhline(y=-inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
-    plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
-    plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+    # plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+    # plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
     # plt.axhline(y=inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
     # plt.axhline(y=-inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
 

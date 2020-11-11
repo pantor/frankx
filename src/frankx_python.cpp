@@ -124,7 +124,9 @@ PYBIND11_MODULE(_frankx, m) {
         // .def_readonly("dq_goal", &JointMotion::dq_goal);
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
-        .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a);
+        .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)
+        .def("set_next_waypoint", &WaypointMotion::setNextWaypoint, "waypoint"_a)
+        .def("set_next_waypoints", &WaypointMotion::setNextWaypoints, "waypoints"_a);
 
     py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
         .def(py::init<const Affine&>(), "target"_a)
