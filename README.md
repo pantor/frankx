@@ -42,17 +42,22 @@ For using frankx with Python, you can start by
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Reflexxes](http://reflexxes.ws) as a trajectory-generator, [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Make sure to have these dependencies installed, then you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx implements its own Online Trajectory Generator (OTG), but you can optionally use the battle-tested [Reflexxes](http://reflexxes.ws) library. As the Franka is quite sensitive to acceleration discontinuities, make sure to use *Reflexxes Type IV*. Make sure to have these dependencies installed, then you can build and install frankx via
 
 ```bash
 mkdir -p build
 cd build
-cmake -DReflexxes_ROOT_DIR=../RMLTypeII -DREFLEXXES_TYPE=ReflexxesTypeII -DBUILD_TYPE=Release ..
-make -j4
+cmake -DBUILD_TYPE=Release ..
+make
 make install
 ```
 
-Of course, you need to adapt the Reflexxes directory and type (either `ReflexxesTypeII` or `ReflexxesTypeIV`). We strongly recommend Type IV, as the Panda robot is quite sensitive to acceleration discontinuities. To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
+To use Reflexxes, make sure that it can be found by CMake by setting the `Reflexxes_ROOT_DIR`and `REFLEXXES_TYPE` argument:
+```bash
+cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV ..
+```
+
+To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
 
 
 ## Tutorial
@@ -285,7 +290,7 @@ Frankx is written in C++17 and Python3.7. It is currently tested against followi
 - Eigen v3.3.7
 - Libfranka v0.6.0
 - Pybind11 v2.6.0
-- Reflexxes v1.2.7
+- Reflexxes v1.2.7 (optional)
 - Catch2 v2.9 (only for testing)
 
 
