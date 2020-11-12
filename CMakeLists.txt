@@ -33,7 +33,6 @@ add_library(frankx SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_impedance.cpp
-  src/motion_joint.cpp
   src/robot.cpp
 )
 target_compile_features(frankx PUBLIC cxx_std_17)

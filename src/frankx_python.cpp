@@ -75,6 +75,8 @@ PYBIND11_MODULE(_frankx, m) {
     py::class_<Condition>(m, "Condition");
 
     py::class_<Measure>(m, "Measure")
+        .def_property_readonly_static("ForceX", [](py::object) { return Measure::ForceX(); })
+        .def_property_readonly_static("ForceY", [](py::object) { return Measure::ForceY(); })
         .def_property_readonly_static("ForceZ", [](py::object) { return Measure::ForceZ(); })
         .def_property_readonly_static("ForceXYNorm", [](py::object) { return Measure::ForceXYNorm(); })
         .def_property_readonly_static("ForceXYZNorm", [](py::object) { return Measure::ForceXYZNorm(); })

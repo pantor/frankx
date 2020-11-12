@@ -30,8 +30,8 @@ class CMakeBuild(build_ext):
             )
 
         cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
-        if cmake_version < LooseVersion('3.5.0'):
-            raise RuntimeError('CMake >= 3.5.0 is required')
+        if cmake_version < LooseVersion('3.11.0'):
+            raise RuntimeError('CMake >= 3.11.0 is required')
 
         for ext in self.extensions:
             self.build_extension(ext)
@@ -49,22 +49,13 @@ class CMakeBuild(build_ext):
         cmake_args += ['-DBUILD_PYBIND11=ON']
         cmake_args += ['-DUSE_PYTHON_EXTENSION=OFF']
         cmake_args += ['-DPYBIND11_TEST=OFF']
-        cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
-        cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
-        cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
-
-        # Local
-        # cmake_args += ['-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/']
-        # cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
-        # cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeIV']
-        # cmake_args += ['-DReflexxes_ROOT_DIR=$HOME/Documents/libs/ReflexxesTypeIV']
 
         # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args += ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE']
         cmake_args += ['-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN')]
 
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + build_type]
-        build_args += ['--', '-j4']
+        build_args += ['--', '-j2']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
@@ -88,7 +79,7 @@ setup(
     license='LGPL',
     ext_modules=[CMakeExtension('_frankx')],
     cmdclass=dict(build_ext=CMakeBuild),
-    keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control', 'interface'],
+    keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control'],
     classifiers=[
         'Development Status :: 2 - Pre-Beta',
         'Intended Audience :: Science/Research',

@@ -8,6 +8,7 @@
 
 #include <otgx/quintic.hpp>
 #include <otgx/ruckig.hpp>
+#include <otgx/smoothie.hpp>
 
 #ifdef WITH_REFLEXXES
 #include <otgx/reflexxes.hpp>
@@ -22,7 +23,7 @@ using namespace otgx;
 PYBIND11_MODULE(otgx, m) {
     m.doc() = "Online Trajectory Generation";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {3};
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
@@ -35,7 +36,9 @@ PYBIND11_MODULE(otgx, m) {
         .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
         .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
         .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
-        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration);
+        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
+        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom);
+
 
     py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
@@ -56,6 +59,11 @@ PYBIND11_MODULE(otgx, m) {
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Quintic<DOFs>::delta_time)
         .def("update", &Quintic<DOFs>::update);
+
+    py::class_<Smoothie<DOFs>>(m, "Smoothie")
+        .def(py::init<double>(), "delta_time"_a)
+        .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
+        .def("update", &Smoothie<DOFs>::update);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")

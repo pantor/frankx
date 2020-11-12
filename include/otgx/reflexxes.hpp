@@ -37,6 +37,10 @@ public:
         if (input != current_input) {
             current_input = input;
 
+            if ((input.target_acceleration.array() != 0.0).any()) {
+                return Result::Error;
+            }
+
             for (size_t i = 0; i < DOFs; i += 1) {
                 input_parameters->SelectionVector->VecData[i] = true;
                 input_parameters->CurrentPositionVector->VecData[i] = input.current_position(i);

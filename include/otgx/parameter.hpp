@@ -17,6 +17,7 @@ enum class Result {
 template<size_t DOFs>
 struct InputParameter {
     using Vector = Eigen::Matrix<double, DOFs, 1>;
+    static constexpr size_t degrees_of_freedom {DOFs};
 
     std::array<bool, DOFs> enabled {true};
 
