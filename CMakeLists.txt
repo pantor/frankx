@@ -28,17 +28,20 @@ else()
 endif()
 
 
-add_library(frankx SHARED
+add_library(${PROJECT_NAME} SHARED
   src/affine.cpp
   src/gripper.cpp
   src/motion_impedance.cpp
   src/motion_joint.cpp
   src/robot.cpp
 )
-target_compile_features(frankx PUBLIC cxx_std_17)
-target_compile_definitions(frankx PUBLIC AFFINE_WITH_ROBOT_CONTROL)
-target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_definitions(${PROJECT_NAME} PUBLIC AFFINE_WITH_ROBOT_CONTROL)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  Franka::Franka
+  Eigen3::Eigen
+)
 
 if(Reflexxes)
   target_compile_definitions(frankx PUBLIC WITH_REFLEXXES)
@@ -59,8 +62,10 @@ if(BUILD_PYTHON_MODULE)
     target_link_libraries(frankx PUBLIC pybind11::embed)
   endif()
 
-  pybind11_add_module(_frankx src/frankx_python.cpp)
-  target_link_libraries(_frankx PUBLIC frankx)
+  set(PYTHON_MODULE_NAME _${PROJECT_NAME})
+
+  pybind11_add_module(${PYTHON_MODULE_NAME} src/frankx_python.cpp)
+  target_link_libraries(${PYTHON_MODULE_NAME} PUBLIC ${PROJECT_NAME})
 
   pybind11_add_module(otgx src/otgx_python.cpp)
   target_compile_features(otgx PUBLIC cxx_std_17)
@@ -95,4 +100,28 @@ if(BUILD_TESTS)
 endif()
 
 
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib INCLUDES DESTINATION include)
+#install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib INCLUDES DESTINATION include)
+
+if(NOT DEFINED LIB_INSTALL_DIR)
+	set(LIB_INSTALL_DIR "lib")
+endif()
+if(NOT DEFINED BIN_INSTALL_DIR)
+	set(BIN_INSTALL_DIR "bin")
+endif()
+if(NOT DEFINED INCLUDE_INSTALL_DIR)
+  set(INCLUDE_INSTALL_DIR "include")
+endif()
+
+install(TARGETS ${PROJECT_NAME}
+        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+        ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+        INCLUDES DESTINATION ${INCLUDE_INSTALL_DIR}
+        )
+
+execute_process ( COMMAND python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+message(STATUS ${PYTHON_SITE_PACKAGES})
+if(${BUILD_PYTHON_MODULE})
+	install(TARGETS ${PYTHON_MODULE_NAME} LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+endif()

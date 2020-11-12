@@ -44,14 +44,21 @@ class CMakeBuild(build_ext):
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
-        # CI
-        cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
-        cmake_args += ['-DBUILD_PYBIND11=ON']
-        cmake_args += ['-DUSE_PYTHON_EXTENSION=OFF']
-        cmake_args += ['-DPYBIND11_TEST=OFF']
+        # Local
         cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
-        cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
-        cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
+        cmake_args += ['-DReflexxes_INCLUDE_DIR=/code/RMLTypeII/include/RMLTypeII/']
+        cmake_args += ['-DReflexxes_LIB_DIR=/code/RMLTypeII/build']
+        cmake_args += ['-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/']
+        cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+
+        # CI
+        # cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
+        # cmake_args += ['-DBUILD_PYBIND11=OFF']
+        # cmake_args += ['-DUSE_PYTHON_EXTENSION=OFF']
+        # cmake_args += ['-DPYBIND11_TEST=OFF']
+        # cmake_args += ['-DREFLEXXES_TYPE=ReflexxesTypeII']
+        # cmake_args += ['-DReflexxes_INCLUDE_DIR=RMLTypeII/include/RMLTypeII/']
+        # cmake_args += ['-DReflexxes_LIB_DIR=RMLTypeII/build']
 
         # Local
         # cmake_args += ['-DEIGEN3_INCLUDE_DIRS=/usr/local/include/eigen3/']
