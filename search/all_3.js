@@ -7,7 +7,7 @@ var searchData=
   ['cartesianpose',['CartesianPose',['../namespacefrankx.html#a53ed6544a0c53acafb1c28cbf3274bc9',1,'frankx']]],
   ['center',['center',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#aa0af6d59f4e177afadfd74be58132e91',1,'frankx::ImpedanceMotion::SpiralTargetMotion']]],
   ['clamp',['clamp',['../classfrankx_1_1_gripper.html#a49dcb096bf0f4d02ec6575261d159875',1,'frankx::Gripper::clamp()'],['../classfrankx_1_1_gripper.html#a8d72dc91da3955a604798c118f765a3d',1,'frankx::Gripper::clamp(double min_clamping_width)']]],
-  ['condition',['Condition',['../structfrankx_1_1_condition.html',1,'frankx::Condition'],['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction::condition()'],['../structfrankx_1_1_condition.html#a2001278a1e8c1f24cf8e1bf1c0a41de5',1,'frankx::Condition::Condition()']]],
+  ['condition',['Condition',['../structfrankx_1_1_condition.html',1,'frankx::Condition'],['../structfrankx_1_1_condition.html#a2001278a1e8c1f24cf8e1bf1c0a41de5',1,'frankx::Condition::Condition()'],['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction::condition()']]],
   ['control_5frate',['control_rate',['../structfrankx_1_1_robot.html#a089ceac8cb52299f67656587234b5523',1,'frankx::Robot']]],
   ['controller_5fmode',['controller_mode',['../structfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057',1,'frankx::Robot']]],
   ['current_5facceleration',['current_acceleration',['../structotgx_1_1_input_parameter.html#ab7a2cc23c1b03075735bf93b0a781ec9',1,'otgx::InputParameter']]],

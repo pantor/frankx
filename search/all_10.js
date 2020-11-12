@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['q_5fgoal',['q_goal',['../classfrankx_1_1_joint_motion.html#a75cbc354a3b686972c370028fcedb183',1,'frankx::JointMotion']]],
+  ['q_5fgoal',['q_goal',['../structfrankx_1_1_joint_motion.html#a75cbc354a3b686972c370028fcedb183',1,'frankx::JointMotion']]],
   ['q_5fw',['q_w',['../structfrankx_1_1_affine.html#af7a048887e55e3cd65fec726adcc1670',1,'frankx::Affine']]],
   ['q_5fx',['q_x',['../structfrankx_1_1_affine.html#a6af1b3e787336084c6f11ca57bf828e5',1,'frankx::Affine']]],
   ['q_5fy',['q_y',['../structfrankx_1_1_affine.html#a0560f88b7aa66335d7e51b68d1698cc4',1,'frankx::Affine']]],

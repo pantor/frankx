@@ -3,7 +3,6 @@ var searchData=
   ['open',['open',['../classfrankx_1_1_gripper.html#a95c90e88fb0203c7a0dc1760bf238c3a',1,'frankx::Gripper']]],
   ['operator_20_26_26',['operator &amp;&amp;',['../structfrankx_1_1_condition.html#ac48ec787764735452a79fe5953d9c3c7',1,'frankx::Condition']]],
   ['operator_21_3d',['operator!=',['../classfrankx_1_1_measure.html#a02651613a70666fad0a43a43c12ef80d',1,'frankx::Measure::operator!=()'],['../structotgx_1_1_input_parameter.html#addcf8b9f002686020210710b01b33f2d',1,'otgx::InputParameter::operator!=()']]],
-  ['operator_28_29',['operator()',['../classfrankx_1_1_joint_motion.html#aa6d8af599fad868e4d9e9b05173a6134',1,'frankx::JointMotion']]],
   ['operator_2a',['operator*',['../structfrankx_1_1_affine.html#a961cb9366321ca9a89882abfe5ca2895',1,'frankx::Affine']]],
   ['operator_3c',['operator&lt;',['../classfrankx_1_1_measure.html#acae16ad401c91d019335ae60bc69ade5',1,'frankx::Measure']]],
   ['operator_3c_3c',['operator&lt;&lt;',['../namespacefrankx.html#af649427e65072923efe17c4ce5563c00',1,'frankx']]],

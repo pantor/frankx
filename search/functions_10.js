@@ -16,6 +16,7 @@ var searchData=
   ['settarget',['setTarget',['../structfrankx_1_1_impedance_motion.html#abb67409350ce90cf2c0498ab683b1a1a',1,'frankx::ImpedanceMotion']]],
   ['setvector',['setVector',['../namespacefrankx.html#a063dc4aaf13fa4d6e8b664861009ba88',1,'frankx']]],
   ['slerp',['slerp',['../structfrankx_1_1_affine.html#a2001a1daf0af23bff18119fb0ce77e0d',1,'frankx::Affine']]],
+  ['smoothie',['Smoothie',['../classotgx_1_1_smoothie.html#a557b61292f3e3e0f703d0dcb203f8c33',1,'otgx::Smoothie']]],
   ['sqrt',['Sqrt',['../namespaceotgx.html#a2af38ca03349a813bf04919aa94483c7',1,'otgx']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

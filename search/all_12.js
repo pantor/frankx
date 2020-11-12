@@ -17,6 +17,8 @@ var searchData=
   ['setvector',['setVector',['../namespacefrankx.html#a063dc4aaf13fa4d6e8b664861009ba88',1,'frankx']]],
   ['should_5ffinish',['should_finish',['../structfrankx_1_1_impedance_motion.html#a79bb9b73a2b8e169e53f61e17eea438c',1,'frankx::ImpedanceMotion']]],
   ['slerp',['slerp',['../structfrankx_1_1_affine.html#a2001a1daf0af23bff18119fb0ce77e0d',1,'frankx::Affine']]],
+  ['smoothie',['Smoothie',['../classotgx_1_1_smoothie.html',1,'otgx::Smoothie&lt; DOFs &gt;'],['../classotgx_1_1_smoothie.html#a557b61292f3e3e0f703d0dcb203f8c33',1,'otgx::Smoothie::Smoothie()']]],
+  ['smoothie_2ehpp',['smoothie.hpp',['../smoothie_8hpp.html',1,'']]],
   ['spiral',['Spiral',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63ac978545ade9f5ce21bfa0353c04feda9',1,'frankx::ImpedanceMotion']]],
   ['spiral_5fmotion',['spiral_motion',['../structfrankx_1_1_impedance_motion.html#a016840ea1dd65bee2c16dd5898b432af',1,'frankx::ImpedanceMotion']]],
   ['spiraltargetmotion',['SpiralTargetMotion',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'frankx::ImpedanceMotion']]],
