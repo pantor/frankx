@@ -37,31 +37,20 @@ class Quintic {
         // Approximations for v0 == 0, vf == 0, a0 == 0, af == 0
         Vector7d v_max_tfs = (15 * (x0 - xf).array().abs()) / (8 * v_max).array();
         Vector7d a_max_tfs = (std::sqrt(10) * (x0.array().pow(2) - 2 * x0.array() * xf.array() + xf.array().pow(2)).pow(1./4)) / (std::pow(3, 1./4) * a_max.array().sqrt());
-        Vector7d j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3);
+        Vector7d j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3); // Also solvable for v0 != 0
 
         tf = std::max<double>({v_max_tfs.maxCoeff(), a_max_tfs.maxCoeff(), j_max_tfs.maxCoeff()});
         if (input.minimum_duration.has_value()) {
             tf = std::max<double>({tf, input.minimum_duration.value()});
         }
-        std::cout << "tf: " << tf << std::endl;
-        std::cout << "v_max_tfs: " << v_max_tfs << std::endl;
-        std::cout << "a_max_tfs: " << a_max_tfs << std::endl;
-        std::cout << "j_max_tfs: " << j_max_tfs << std::endl;
 
         t = 0.0;
-        a = -((a0 - af) * std::pow(tf, 2) + 6 * tf * v0 + 6 * tf * vf + 12 * (x0 - xf)) / (2 * std::pow(tf, 5));
+        a = -((a0 - af) * std::pow(tf, 2) + 6 * tf * (v0 + vf) + 12 * (x0 - xf)) / (2 * std::pow(tf, 5));
         b = -((2 * af - 3 * a0) * std::pow(tf, 2) - 16 * tf * v0 - 14 * tf * vf - 30 * (x0 - xf)) / (2 * std::pow(tf, 4));
         c = -((3 * a0 - af) * std::pow(tf, 2) + 12 * tf * v0 + 8 * tf * vf + 20 * (x0 - xf)) / (2 * std::pow(tf, 3));
         d = a0 / 2;
         e = v0;
         f = x0;
-
-        std::cout << "a: " << a << std::endl;
-        std::cout << "b: " << b << std::endl;
-        std::cout << "c: " << c << std::endl;
-        std::cout << "d: " << d << std::endl;
-        std::cout << "e: " << e << std::endl;
-        std::cout << "f: " << f << std::endl;
 
         return true;
     }

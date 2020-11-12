@@ -19,7 +19,7 @@ class Reflexxes {
     std::shared_ptr<RMLPositionInputParameters> input_parameters;
     std::shared_ptr<RMLPositionOutputParameters> output_parameters;
 
-    int result_value = 0;
+    int result_value {0};
     RMLPositionFlags flags;
 
 public:
@@ -60,7 +60,7 @@ public:
 
         if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
             return Result::Finished;
-        } else if (result_value == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
+        } else if (result_value == ReflexxesAPI::RML_ERROR) {
             return Result::Error;
         }
         return Result::Working;

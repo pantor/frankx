@@ -11,18 +11,19 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYBIND11 "Build pybind11 with cmake" OFF)
 option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
 
-set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
-
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka 0.6.0 REQUIRED)
 find_package(Reflexxes)
 
+
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 
 if(Reflexxes)
-  message("Found Reflexxes")
+  set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
+
+  message("Found Reflexxes ${REFLEXXES_TYPE}")
 else()
   message("Did not found Reflexxes.")
 endif()
