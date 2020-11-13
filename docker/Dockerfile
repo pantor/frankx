@@ -40,7 +40,7 @@ RUN git clone https://github.com/eigenteam/eigen-git-mirror.git \
 
 RUN git clone --recursive https://github.com/frankaemika/libfranka.git \
     && cd libfranka \
-    && git checkout 0.6.0 \
+    && git checkout 0.8.0 \
     && git submodule update \
     && mkdir build && cd build \
     && cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF .. \
@@ -60,15 +60,15 @@ RUN git clone https://github.com/pybind/pybind11.git \
     && make install
 
 
-# ---------------- #
-# Install RML      #
-# ---------------- #
-
-RUN git clone https://github.com/pantor/RMLTypeII.git \
-    && cd RMLTypeII \
-    && mkdir build && cd build \
-    && cmake .. \
-    && make install
+## ---------------- #
+## Install RML      #
+## ---------------- #
+#
+#RUN git clone https://github.com/pantor/RMLTypeII.git \
+#    && cd RMLTypeII \
+#    && mkdir build && cd build \
+#    && cmake .. \
+#    && make install
 
 # ---------------- #
 # Install Catch2   #
@@ -87,10 +87,11 @@ RUN git clone https://github.com/catchorg/Catch2.git \
 
 RUN git clone https://github.com/pantor/frankx.git \
   && mkdir -p frankx/build && cd frankx/build \
-  && cmake -DREFLEXXES_TYPE=ReflexxesTypeII \
-           -DReflexxes_INCLUDE_DIR=/code/RMLTypeII/include/RMLTypeII/ \
-           -DReflexxes_LIB_DIR=/code/RMLTypeII/build \
-           -DBUILD_EXAMPLES=ON .. \
-  && make -j$(nproc)\
+  #&& cmake -DREFLEXXES_TYPE=ReflexxesTypeII \
+  #         -DReflexxes_INCLUDE_DIR=/code/RMLTypeII/include/RMLTypeII/ \
+  #         -DReflexxes_LIB_DIR=/code/RMLTypeII/build \
+  #         -DBUILD_EXAMPLES=ON .. \
+  && cmake .. \
+  && make -j$(nproc) \
   && make install \
   && ./unit-test
