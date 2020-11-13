@@ -15,7 +15,7 @@ class Grasp:
 
 class Grasping:
     def __init__(self):
-        self.robot = Robot('172.16.0.2')
+        self.robot = Robot('10.224.60.160')
         self.gripper = self.robot.get_gripper()
 
         self.robot.set_default_behavior()
