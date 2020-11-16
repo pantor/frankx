@@ -14,9 +14,10 @@
 #include <frankx/motion_data.hpp>
 #include <frankx/motion_impedance.hpp>
 #include <frankx/motion_joint.hpp>
+#include <frankx/motion_path.hpp>
 #include <frankx/motion_waypoint.hpp>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
 namespace frankx {
@@ -44,7 +45,7 @@ struct Robot: public franka::Robot {
     static constexpr std::array<double, 7> max_joint_acceleration {{15.0, 7.5, 10.0, 12.5, 15.0, 20.0, 20.0}}; // [rad/s²]
 
     static constexpr size_t degrees_of_freedoms {7};
-    const double control_rate {0.001};
+    const double control_rate {0.001}; // [s]
 
     double velocity_rel {1.0};
     double acceleration_rel {1.0};
@@ -81,8 +82,8 @@ struct Robot: public franka::Robot {
     bool move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error = true);
 
 private:
-    void setInputLimits(otgx::InputParameter<7>& input_parameters, const MotionData& data);
-    void setInputLimits(otgx::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data);
+    void setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data);
+    void setInputLimits(movex::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data);
 };
 
 } // namespace frankx

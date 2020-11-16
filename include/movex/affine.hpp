@@ -5,12 +5,8 @@
 #include <Eigen/Geometry>
 #include <unsupported/Eigen/EulerAngles>
 
-#ifdef AFFINE_WITH_ROBOT_CONTROL
-    #include <franka/robot.h>
-#endif
 
-
-namespace frankx {
+namespace movex {
 
 using Vector6d = Eigen::Matrix<double, 6, 1>;
 using Vector7d = Eigen::Matrix<double, 7, 1>;
@@ -28,10 +24,6 @@ struct Affine {
     explicit Affine(const Vector6d& v);
     explicit Affine(const Vector7d& v);
     explicit Affine(const std::array<double, 16>& array);
-
-    #ifdef AFFINE_WITH_ROBOT_CONTROL
-        explicit Affine(const franka::CartesianPose& pose);
-    #endif
 
     Affine operator*(const Affine &a) const;
     Affine inverse() const;
