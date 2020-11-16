@@ -5,7 +5,7 @@ var searchData=
   ['condition',['condition',['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction']]],
   ['control_5frate',['control_rate',['../structfrankx_1_1_robot.html#a089ceac8cb52299f67656587234b5523',1,'frankx::Robot']]],
   ['controller_5fmode',['controller_mode',['../structfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057',1,'frankx::Robot']]],
-  ['current_5facceleration',['current_acceleration',['../structotgx_1_1_input_parameter.html#ab7a2cc23c1b03075735bf93b0a781ec9',1,'otgx::InputParameter']]],
-  ['current_5fposition',['current_position',['../structotgx_1_1_input_parameter.html#a8d1faa069556cf92e76f0b1a63061ef9',1,'otgx::InputParameter']]],
-  ['current_5fvelocity',['current_velocity',['../structotgx_1_1_input_parameter.html#afb5e3b62a2a874897a2feb6854cb487e',1,'otgx::InputParameter']]]
+  ['current_5facceleration',['current_acceleration',['../structmovex_1_1_input_parameter.html#ab1bfa3a2ae9f2e1570f87c0e787513ce',1,'movex::InputParameter']]],
+  ['current_5fposition',['current_position',['../structmovex_1_1_input_parameter.html#a2a30f8ff34d3f188d1d4c83e0286b0bf',1,'movex::InputParameter']]],
+  ['current_5fvelocity',['current_velocity',['../structmovex_1_1_input_parameter.html#ad498e1180dba0f127598b644fd04eca7',1,'movex::InputParameter']]]
 ];

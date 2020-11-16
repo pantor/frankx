@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['data',['data',['../structfrankx_1_1_affine.html#a100f6b6fa830bb4445f4fa44a0e5d827',1,'frankx::Affine']]],
-  ['degrees_5fof_5ffreedom',['degrees_of_freedom',['../structotgx_1_1_input_parameter.html#a294bd8f8d6fbdd81ea39d7ce23259916',1,'otgx::InputParameter']]],
+  ['data',['data',['../structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6',1,'movex::Affine']]],
+  ['degrees_5fof_5ffreedom',['degrees_of_freedom',['../structmovex_1_1_input_parameter.html#a89d3c204ef536668443863d6924df439',1,'movex::InputParameter']]],
   ['degrees_5fof_5ffreedoms',['degrees_of_freedoms',['../structfrankx_1_1_robot.html#a9c5147b73dca46191e0ff3a8ff23fc78',1,'frankx::Robot']]],
-  ['delta_5ftime',['delta_time',['../classotgx_1_1_quintic.html#abc3107d056bb6c42968ccdcf2b0c8fa8',1,'otgx::Quintic::delta_time()'],['../classotgx_1_1_reflexxes.html#af82cc14048f7c27e92fb62e3060cc957',1,'otgx::Reflexxes::delta_time()'],['../classotgx_1_1_ruckig.html#ac9fe786a9a37527467efd80009b946ca',1,'otgx::Ruckig::delta_time()'],['../classotgx_1_1_smoothie.html#adb2219c5b093aef88679883a17f33dc0',1,'otgx::Smoothie::delta_time()']]],
+  ['delta_5ftime',['delta_time',['../classmovex_1_1_quintic.html#aa1d93eca132dd09b151f8350827e653c',1,'movex::Quintic::delta_time()'],['../classmovex_1_1_reflexxes.html#a8df008bdfb5f1355f5c51642ab8782b8',1,'movex::Reflexxes::delta_time()'],['../classmovex_1_1_ruckig.html#a9a33bcc03bb198342d93043e55ebbf36',1,'movex::Ruckig::delta_time()'],['../classmovex_1_1_smoothie.html#a7d2a53f8fadc8b3154aab00a774e649a',1,'movex::Smoothie::delta_time()']]],
   ['driver',['driver',['../classfrankx_1_1robot_1_1_robot.html#a19cc2323a4d252a89db0b03c40e100f2',1,'frankx::robot::Robot']]],
   ['duration',['duration',['../structfrankx_1_1_impedance_motion_1_1_linear_target_motion.html#a9b4d71bc54d33025706f1ad0ec79d112',1,'frankx::ImpedanceMotion::LinearTargetMotion']]]
 ];

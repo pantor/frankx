@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['euler',['Euler',['../structfrankx_1_1_affine.html#ae2d6304870b7dd679850ee615e39cd06',1,'frankx::Affine']]]
+  ['callbacktype',['CallbackType',['../structfrankx_1_1_condition.html#a514586743d19fa8a174184550d224e9a',1,'frankx::Condition']]]
 ];

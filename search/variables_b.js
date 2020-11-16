@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['new_5facceleration',['new_acceleration',['../structotgx_1_1_output_parameter.html#a434d7b0bf3878bd870efc8f742930242',1,'otgx::OutputParameter']]],
-  ['new_5fposition',['new_position',['../structotgx_1_1_output_parameter.html#a8d90dff6a91b419c83071f863c63c89e',1,'otgx::OutputParameter']]],
-  ['new_5fvelocity',['new_velocity',['../structotgx_1_1_output_parameter.html#a0e7a2bda6a563255b1ea1b815c6096de',1,'otgx::OutputParameter']]]
+  ['new_5facceleration',['new_acceleration',['../structmovex_1_1_output_parameter.html#a2e2fa32586dde630418dca834eb4f3f0',1,'movex::OutputParameter']]],
+  ['new_5fposition',['new_position',['../structmovex_1_1_output_parameter.html#a3883740df696d64c8607cd1476e58295',1,'movex::OutputParameter']]],
+  ['new_5fvelocity',['new_velocity',['../structmovex_1_1_output_parameter.html#a0c4f49382e66fe68907dbd2b053bf80f',1,'movex::OutputParameter']]]
 ];
