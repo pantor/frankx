@@ -7,10 +7,10 @@
 #include <RMLPositionInputParameters.h>
 #include <RMLPositionOutputParameters.h>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
-namespace otgx {
+namespace movex {
 
 template<size_t DOFs>
 class Reflexxes {
@@ -19,7 +19,7 @@ class Reflexxes {
     std::shared_ptr<RMLPositionInputParameters> input_parameters;
     std::shared_ptr<RMLPositionOutputParameters> output_parameters;
 
-    int result_value = 0;
+    int result_value {0};
     RMLPositionFlags flags;
 
 public:
@@ -36,6 +36,10 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         if (input != current_input) {
             current_input = input;
+
+            if ((input.target_acceleration.array() != 0.0).any()) {
+                return Result::Error;
+            }
 
             for (size_t i = 0; i < DOFs; i += 1) {
                 input_parameters->SelectionVector->VecData[i] = true;
@@ -60,11 +64,11 @@ public:
 
         if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
             return Result::Finished;
-        } else if (result_value == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
+        } else if (result_value == ReflexxesAPI::RML_ERROR) {
             return Result::Error;
         }
         return Result::Working;
     }
 };
 
-} // namespace otgx
+} // namespace movex

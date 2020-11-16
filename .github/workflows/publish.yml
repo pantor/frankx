@@ -34,15 +34,6 @@ jobs:
         cmake ..
         make install
 
-    - name: install Reflexxes
-      run: |
-        git clone https://github.com/pantor/RMLTypeII.git
-        cd RMLTypeII
-        mkdir build && cd build
-        cmake ..
-        make
-        make install
-
     - name: install libfranka
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git

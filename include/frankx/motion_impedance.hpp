@@ -16,7 +16,7 @@
 #include <franka/exception.h>
 #include <franka/robot_state.h>
 
-#include <frankx/affine.hpp>
+#include <movex/affine.hpp>
 #include <frankx/measure.hpp>
 #include <frankx/motion_data.hpp>
 #include <frankx/utils.hpp>

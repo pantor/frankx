@@ -42,7 +42,7 @@ For using frankx with Python, you can start by
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx implements its own Online Trajectory Generator (OTG), but you can optionally use the battle-tested [Reflexxes](http://reflexxes.ws) library. As the Franka is quite sensitive to acceleration discontinuities, make sure to use *Reflexxes Type IV*. Make sure to have these dependencies installed, then you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx implements its own Online Trajectory Generator (OTG), but you can optionally use the battle-tested [Reflexxes](http://reflexxes.ws) library. As the Franka is quite sensitive to acceleration discontinuities, make sure to use *Reflexxes Type IV*. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
 
 ```bash
 mkdir -p build
@@ -52,7 +52,7 @@ make
 make install
 ```
 
-To use Reflexxes, make sure that it can be found by CMake by setting the `Reflexxes_ROOT_DIR`and `REFLEXXES_TYPE` argument:
+If you want to use Reflexxes, make sure that it can be found by CMake by setting the `Reflexxes_ROOT_DIR`and `REFLEXXES_TYPE` argument:
 ```bash
 cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV ..
 ```
@@ -280,7 +280,7 @@ The Python API should be very straight-forward for the Gripper class.
 
 ## Documentation
 
-We have a generated documentation at [pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
+We have a generated documentation at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
 
 
 ## Development

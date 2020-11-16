@@ -1,7 +1,7 @@
-#include <frankx/affine.hpp>
+#include <movex/affine.hpp>
 
 
-namespace frankx {
+namespace movex {
 
 Affine::Affine() {
     this->data = Type::Identity();
@@ -30,15 +30,6 @@ Affine::Affine(const std::array<double, 16>& array) {
     Type affine(Eigen::Matrix4d::Map(array.data()));
     data = affine;
 }
-
-#ifdef AFFINE_WITH_ROBOT_CONTROL
-
-Affine::Affine(const franka::CartesianPose& pose) {
-    Type affine(Eigen::Matrix4d::Map(pose.O_T_EE.data()));
-    data = affine;
-}
-
-#endif
 
 Affine Affine::operator *(const Affine &a) const {
     Type result;

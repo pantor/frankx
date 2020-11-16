@@ -1,11 +1,13 @@
 #pragma once
 
+// This one is still under development.
+
 #include <Eigen/Core>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
-namespace otgx {
+namespace movex {
 
 inline double Power(double v, int e) {
     return std::pow(v, e);
@@ -370,4 +372,4 @@ public:
     }
 };
 
-} // namespace otgx
+} // namespace movex

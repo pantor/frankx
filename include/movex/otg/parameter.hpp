@@ -5,7 +5,7 @@
 #include <Eigen/Core>
 
 
-namespace otgx {
+namespace movex {
 
 enum class Result {
     Working,
@@ -13,19 +13,21 @@ enum class Result {
     Error
 };
 
+
 template<size_t DOFs>
 struct InputParameter {
     using Vector = Eigen::Matrix<double, DOFs, 1>;
+    static constexpr size_t degrees_of_freedom {DOFs};
 
     std::array<bool, DOFs> enabled {true};
 
     Vector current_position;
-    Vector current_velocity;
-    Vector current_acceleration;
+    Vector current_velocity {Vector::Zero()};
+    Vector current_acceleration {Vector::Zero()};
 
     Vector target_position;
-    Vector target_velocity;
-    Vector target_acceleration;
+    Vector target_velocity {Vector::Zero()};
+    Vector target_acceleration {Vector::Zero()};
 
     Vector max_velocity;
     Vector max_acceleration;
@@ -48,6 +50,7 @@ struct InputParameter {
     }
 };
 
+
 template<size_t DOFs>
 struct OutputParameter {
     using Vector = Eigen::Matrix<double, DOFs, 1>;
@@ -57,4 +60,4 @@ struct OutputParameter {
     Vector new_acceleration;
 };
 
-} // namespace otgx
+} // namespace movex

@@ -34,6 +34,18 @@ class Measure {
     explicit Measure(MeasureCallback callback): callback(callback) { }
 
 public:
+    static Measure ForceX() {
+        return Measure([](const franka::RobotState& robot_state, double time) {
+            return robot_state.O_F_ext_hat_K[0];
+        });
+    }
+
+    static Measure ForceY() {
+        return Measure([](const franka::RobotState& robot_state, double time) {
+            return robot_state.O_F_ext_hat_K[1];
+        });
+    }
+
     static Measure ForceZ() {
         return Measure([](const franka::RobotState& robot_state, double time) {
             return robot_state.O_F_ext_hat_K[2];
