@@ -7,10 +7,10 @@
 #include <RMLPositionInputParameters.h>
 #include <RMLPositionOutputParameters.h>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
-namespace otgx {
+namespace movex {
 
 template<size_t DOFs>
 class Reflexxes {
@@ -71,4 +71,4 @@ public:
     }
 };
 
-} // namespace otgx
+} // namespace movex

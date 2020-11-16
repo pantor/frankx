@@ -2,10 +2,10 @@
 
 #include <Eigen/Core>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
-namespace otgx {
+namespace movex {
 
 /**
  * Adapted from: Wisama Khalil and Etienne Dombre. 2002. Modeling, Identification and Control of Robots (Kogan Page Science Paper edition).
@@ -140,4 +140,4 @@ public:
     }
 };
 
-} // namespace otgx
+} // namespace movex

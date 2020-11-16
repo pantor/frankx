@@ -30,13 +30,12 @@ endif()
 
 
 add_library(frankx SHARED
-  src/affine.cpp
-  src/gripper.cpp
-  src/motion_impedance.cpp
-  src/robot.cpp
+  src/movex/affine.cpp
+  src/frankx/gripper.cpp
+  src/frankx/motion_impedance.cpp
+  src/frankx/robot.cpp
 )
 target_compile_features(frankx PUBLIC cxx_std_17)
-target_compile_definitions(frankx PUBLIC AFFINE_WITH_ROBOT_CONTROL)
 target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen)
 
@@ -59,17 +58,17 @@ if(BUILD_PYTHON_MODULE)
     target_link_libraries(frankx PUBLIC pybind11::embed)
   endif()
 
-  pybind11_add_module(_frankx src/frankx_python.cpp)
+  pybind11_add_module(_frankx src/frankx/python.cpp)
   target_link_libraries(_frankx PUBLIC frankx)
 
-  pybind11_add_module(otgx src/otgx_python.cpp)
-  target_compile_features(otgx PUBLIC cxx_std_17)
-  target_include_directories(otgx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
-  target_link_libraries(otgx PUBLIC Eigen3::Eigen)
+  pybind11_add_module(movex src/movex/python.cpp)
+  target_compile_features(movex PUBLIC cxx_std_17)
+  target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
+  target_link_libraries(movex PUBLIC Eigen3::Eigen)
 
   if(Reflexxes)
-    target_compile_definitions(otgx PUBLIC WITH_REFLEXXES)
-    target_link_libraries(otgx PUBLIC Reflexxes::Reflexxes)
+    target_compile_definitions(movex PUBLIC WITH_REFLEXXES)
+    target_link_libraries(movex PUBLIC Reflexxes::Reflexxes)
   endif()
 endif()
 

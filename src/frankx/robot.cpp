@@ -1,11 +1,11 @@
 #include <frankx/robot.hpp>
 
-#include <otgx/quintic.hpp>
-#include <otgx/smoothie.hpp>
+#include <movex/otg/quintic.hpp>
+#include <movex/otg/smoothie.hpp>
 
 
 #ifdef WITH_REFLEXXES
-#include <otgx/reflexxes.hpp>
+#include <movex/otg/reflexxes.hpp>
 #endif
 
 
@@ -81,11 +81,11 @@ bool Robot::move(const Affine& frame, JointMotion motion) {
 }
 
 bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
-    otgx::Smoothie<degrees_of_freedoms> trajectory_generator(control_rate);
+    movex::Smoothie<degrees_of_freedoms> trajectory_generator(control_rate);
 
-    otgx::InputParameter<degrees_of_freedoms> input_para;
-    otgx::OutputParameter<degrees_of_freedoms> output_para;
-    otgx::Result result;
+    movex::InputParameter<degrees_of_freedoms> input_para;
+    movex::OutputParameter<degrees_of_freedoms> output_para;
+    movex::Result result;
 
     std::array<double, 7> joint_positions;
 
@@ -119,11 +119,11 @@ bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
             result = trajectory_generator.update(input_para, output_para);
             Eigen::VectorXd::Map(&joint_positions[0], 7) = output_para.new_position;
 
-            if (result == otgx::Result::Finished) {
+            if (result == movex::Result::Finished) {
                 Eigen::VectorXd::Map(&joint_positions[0], 7) = input_para.target_position;
                 return franka::MotionFinished(franka::JointPositions(joint_positions));
 
-            } else if (result == otgx::Result::Error) {
+            } else if (result == movex::Result::Error) {
                 std::cout << "[frankx robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(franka::JointPositions(joint_positions));
             }
@@ -160,15 +160,15 @@ bool Robot::move(const Affine& frame, WaypointMotion motion) {
 }
 
 bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error) {
-    #ifdef WITH_REFLEXXES
-    otgx::Reflexxes<degrees_of_freedoms> trajectory_generator(control_rate);
-    #else
-    otgx::Quintic<degrees_of_freedoms> trajectory_generator(control_rate);
-    #endif
+#ifdef WITH_REFLEXXES
+    movex::Reflexxes<degrees_of_freedoms> trajectory_generator(control_rate);
+#else
+    movex::Quintic<degrees_of_freedoms> trajectory_generator(control_rate);
+#endif
 
-    otgx::InputParameter<degrees_of_freedoms> input_para;
-    otgx::OutputParameter<degrees_of_freedoms> output_para;
-    otgx::Result result;
+    movex::InputParameter<degrees_of_freedoms> input_para;
+    movex::OutputParameter<degrees_of_freedoms> output_para;
+    movex::Result result;
 
     input_para.enabled = VectorCartRotElbow(true, true, true);
     setInputLimits(input_para, data);
@@ -185,11 +185,13 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
     auto motion_generator = [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::CartesianPose {
         time += period.toSec();
         if (time == 0.0) {
-            franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-            Vector7d initial_vector = Affine(initial_pose).vector_with_elbow(initial_pose.elbow[0]);
+            franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
+            Affine initial_pose(initial_cartesian_pose.O_T_EE);
+
+            Vector7d initial_vector = initial_pose.vector_with_elbow(initial_cartesian_pose.elbow[0]);
             Vector7d initial_velocity = (Vector7d() << robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]).finished();
 
-            old_affine = Affine(initial_pose);
+            old_affine = initial_pose;
             old_vector = initial_vector;
             old_elbow = old_vector(6);
 
@@ -238,9 +240,10 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
                 if (new_motion) {
                     waypoint_iterator = current_motion.waypoints.begin();
 
-                    auto current_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-                    auto current_vector = Affine(current_pose).vector_with_elbow(current_pose.elbow[0]);
-                    old_affine = Affine(current_pose);
+                    franka::CartesianPose current_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
+                    Affine current_pose(current_cartesian_pose.O_T_EE);
+                    auto current_vector = current_pose.vector_with_elbow(current_cartesian_pose.elbow[0]);
+                    old_affine = current_pose;
                     old_vector = current_vector;
                     old_elbow = old_vector(6);
 
@@ -272,7 +275,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
         for (int i = 0; i < steps; i++) {
             result = trajectory_generator.update(input_para, output_para);
 
-            if (current_motion.reload || result == otgx::Result::Finished) {
+            if (current_motion.reload || result == movex::Result::Finished) {
                 if (waypoint_iterator != current_motion.waypoints.end()) {
                     waypoint_iterator += 1;
                 }
@@ -298,7 +301,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
                 old_vector = target_position_vector;
                 old_elbow = old_vector(6);
 
-            } else if (result == otgx::Result::Error) {
+            } else if (result == movex::Result::Error) {
                 std::cout << "[frankx robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(CartesianPose(input_para.current_position, waypoint_has_elbow));
             }
@@ -320,8 +323,10 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
             std::cout << "[frankx robot] continue motion" << std::endl;
 
             auto robot_state = readOnce();
-            franka::CartesianPose initial_pose = franka::CartesianPose(robot_state.O_T_EE_c, robot_state.elbow_c);
-            Vector7d initial_vector = Affine(initial_pose).vector_with_elbow(initial_pose.elbow[0]);
+            franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
+            Affine initial_pose(initial_cartesian_pose.O_T_EE);
+
+            Vector7d initial_vector = initial_pose.vector_with_elbow(initial_cartesian_pose.elbow[0]);
             Vector7d initial_velocity = (Vector7d() << robot_state.O_dP_EE_c[0], robot_state.O_dP_EE_c[1], robot_state.O_dP_EE_c[2], robot_state.O_dP_EE_c[3], robot_state.O_dP_EE_c[4], robot_state.O_dP_EE_c[5], robot_state.delbow_c[0]).finished();
 
             data.velocity_rel *= 0.4;
@@ -348,11 +353,11 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
     return true;
 }
 
-void Robot::setInputLimits(otgx::InputParameter<7>& input_parameters, const MotionData& data) {
+void Robot::setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data) {
     setInputLimits(input_parameters, Waypoint(), data);
 }
 
-void Robot::setInputLimits(otgx::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data) {
+void Robot::setInputLimits(movex::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data) {
     constexpr double translation_factor {0.5};
     constexpr double elbow_factor {0.32};
     constexpr double derivative_factor {0.4};

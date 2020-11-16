@@ -31,12 +31,7 @@ struct MotionData {
     }
 
     bool didBreak() {
-        for (auto& reaction: reactions) {
-            if (reaction.has_fired) {
-                return true;
-            }
-        }
-        return false;
+        return std::any_of(reactions.begin(), reactions.end(), [](auto r) { return r.has_fired; });
     }
 };
 

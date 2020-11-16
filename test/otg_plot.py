@@ -2,7 +2,7 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-from otgx import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
+from movex import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
 
 
 def walk_through_trajectory(otg, inp):

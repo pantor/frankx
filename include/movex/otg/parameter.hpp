@@ -5,7 +5,7 @@
 #include <Eigen/Core>
 
 
-namespace otgx {
+namespace movex {
 
 enum class Result {
     Working,
@@ -60,4 +60,4 @@ struct OutputParameter {
     Vector new_acceleration;
 };
 
-} // namespace otgx
+} // namespace movex

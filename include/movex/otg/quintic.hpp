@@ -2,10 +2,10 @@
 
 #include <Eigen/Core>
 
-#include <otgx/parameter.hpp>
+#include <movex/otg/parameter.hpp>
 
 
-namespace otgx {
+namespace movex {
 
 template<size_t DOFs>
 class Quintic {
@@ -85,4 +85,4 @@ public:
     }
 };
 
-} // namespace otgx
+} // namespace movex

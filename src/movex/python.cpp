@@ -6,22 +6,22 @@
 #include <pybind11/eigen.h>
 #include <pybind11/operators.h>
 
-#include <otgx/quintic.hpp>
-#include <otgx/ruckig.hpp>
-#include <otgx/smoothie.hpp>
+#include <movex/otg/quintic.hpp>
+#include <movex/otg/ruckig.hpp>
+#include <movex/otg/smoothie.hpp>
 
 #ifdef WITH_REFLEXXES
-#include <otgx/reflexxes.hpp>
+    #include <movex/otg/reflexxes.hpp>
 #endif
 
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal
-using namespace otgx;
+using namespace movex;
 
 
-PYBIND11_MODULE(otgx, m) {
-    m.doc() = "Online Trajectory Generation";
+PYBIND11_MODULE(movex, m) {
+    m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
     constexpr size_t DOFs {3};
 

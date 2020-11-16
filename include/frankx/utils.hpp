@@ -9,11 +9,15 @@
 
 #include <franka/robot.h>
 
-#include <frankx/affine.hpp>
-#include <otgx/parameter.hpp>
+#include <movex/affine.hpp>
+#include <movex/otg/parameter.hpp>
 
 
 namespace frankx {
+
+using Vector6d = Eigen::Matrix<double, 6, 1>;
+using Vector7d = Eigen::Matrix<double, 7, 1>;
+using Affine = movex::Affine;
 
 // Print std::arrays to cout
 template <class T, std::size_t N>
