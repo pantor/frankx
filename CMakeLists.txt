@@ -80,7 +80,7 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS simple grasping)
+  foreach(example IN ITEMS simple grasping home)
     add_executable(${example} "examples/${example}.cpp")
     target_link_libraries(${example} PRIVATE ${PROJECT_NAME})
   endforeach()

@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     wget \
+    iputils-ping \
     python3-dev \
     python3-pip \
     python3-setuptools \
@@ -47,7 +48,7 @@ RUN git clone --recursive https://github.com/frankaemika/libfranka.git \
     && git checkout $libfranka_version \
     && git submodule update \
     && mkdir build && cd build \
-    && cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF .. \
+    && cmake -DBUILD_EXAMPLES=ON .. \
     && make -j$(nproc) \
     && make install
 
