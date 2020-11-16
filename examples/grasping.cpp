@@ -9,6 +9,11 @@ inline Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a =
 
 
 int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <robot-hostname>" << std::endl;
+        return -1;
+    }
+    
     Robot robot(argv[1]);
     robot.automaticErrorRecovery();
     robot.setDefaultBehavior();

@@ -71,9 +71,3 @@ with FrankaAPI(args.host, args.user, args.password) as api:
         log("ERROR Opening Brakes")
     sleep(11)
     log("Brakes Unlocked")
-
-    sleep(5)
-    try:
-        api.lock_brakes()
-    except:
-        log("ERROR locking brakes")
