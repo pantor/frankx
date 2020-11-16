@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     robot.automaticErrorRecovery();
 
     // Reduce the acceleration and velocity dynamic
-    robot.setDynamicRel(0.2);
+    robot.setDynamicRel(0.5);
 
     std::array<double, 7> home = {M_PI_2, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4};
     auto motion_home = JointMotion(home);
