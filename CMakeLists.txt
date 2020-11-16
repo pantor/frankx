@@ -28,14 +28,11 @@ else()
   message("Did not found Reflexxes.")
 endif()
 
-
-<<<<<<< HEAD
 add_library(${PROJECT_NAME} SHARED
-  src/affine.cpp
-  src/gripper.cpp
-  src/motion_impedance.cpp
-  src/motion_joint.cpp
-  src/robot.cpp
+  src/movex/affine.cpp
+  src/frankx/gripper.cpp
+  src/frankx/motion_impedance.cpp
+  src/frankx/robot.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} PUBLIC AFFINE_WITH_ROBOT_CONTROL)
@@ -44,17 +41,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   Franka::Franka
   Eigen3::Eigen
 )
-=======
-add_library(frankx SHARED
-  src/movex/affine.cpp
-  src/frankx/gripper.cpp
-  src/frankx/motion_impedance.cpp
-  src/frankx/robot.cpp
-)
-target_compile_features(frankx PUBLIC cxx_std_17)
-target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen)
->>>>>>> 180434e87a7528f336f4ac610f4aef57b02b8e59
 
 if(Reflexxes)
   target_compile_definitions(frankx PUBLIC WITH_REFLEXXES)
