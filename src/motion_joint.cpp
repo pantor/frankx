@@ -129,11 +129,11 @@ franka::JointPositions JointMotion::operator()(const franka::RobotState& robot_s
   franka::JointPositions output(joint_positions);
   output.motion_finished = motion_finished;
 
-#ifdef WITH_PYTHON
+/*#ifdef WITH_PYTHON
   if (PyErr_CheckSignals() == -1) {
     robot->stop();
   }
-#endif
+#endif*/
 
   return output;
 }

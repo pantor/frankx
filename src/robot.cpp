@@ -213,12 +213,6 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
             }
         } */
 
-/*#ifdef WITH_PYTHON
-        if (PyErr_CheckSignals() == -1) {
-            stop();
-        }
-#endif*/
-
         const int steps = std::max<int>(period.toMSec(), 1);
         for (int i = 0; i < steps; i++) {
             result = trajectory_generator.update(input_para, output_para);
