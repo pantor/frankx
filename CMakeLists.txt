@@ -13,7 +13,7 @@ option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
 
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
-find_package(Franka 0.6.0 REQUIRED)
+find_package(Franka 0.7 REQUIRED)
 find_package(Reflexxes)
 
 

@@ -2,7 +2,7 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-from movex import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
+from movex import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie, Reflexxes
 
 
 def walk_through_trajectory(otg, inp):
@@ -30,25 +30,26 @@ if __name__ == '__main__':
     inp.current_position = [0.0]
     inp.current_velocity = [0.0] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [1.0]
+    inp.target_position = [-1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [0.5] * inp.degrees_of_freedom
-    inp.max_acceleration = [1.5] * inp.degrees_of_freedom
+    inp.max_velocity = [1.0] * inp.degrees_of_freedom
+    inp.max_acceleration = [1.0] * inp.degrees_of_freedom
     inp.max_jerk = [1.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    otg = Reflexxes(0.005)
+    # otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
-    dddqaxis = np.diff(ddqaxis, axis=0, prepend=0) / otg.delta_time
+    # print(qaxis[-20:, 0])
+    dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / otg.delta_time
 
 
     plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)

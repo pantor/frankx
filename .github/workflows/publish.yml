@@ -18,7 +18,6 @@ jobs:
       run: |
         yum -y install poco-devel*
 
-        /opt/python/cp35-cp35m/bin/pip install cmake setuptools wheel --user
         /opt/python/cp36-cp36m/bin/pip install cmake setuptools wheel --user
         /opt/python/cp37-cp37m/bin/pip install cmake setuptools wheel --user
 
@@ -49,7 +48,7 @@ jobs:
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.4.3
+        git checkout v2.6.0
 
     - name: install Catch2
       run: |
@@ -67,7 +66,7 @@ jobs:
 
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp35m"* ]] || [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
@@ -79,7 +78,7 @@ jobs:
 
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" == *"cp35m"* ]] || [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi
