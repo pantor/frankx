@@ -9,6 +9,11 @@ inline Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a =
 
 
 int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <robot-hostname>" << std::endl;
+        return -1;
+    }
+
     Robot robot(argv[1]);
     robot.automaticErrorRecovery();
     robot.setDefaultBehavior();
@@ -23,14 +28,14 @@ int main(int argc, char *argv[]) {
     ));
 
     WaypointMotion waypoint_motion({
-      Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
-      Waypoint {getBase(0.05, 0.05, -0.185, M_PI_2)}
+        Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
+        Waypoint {getBase(0.05, 0.05, -0.185, M_PI_2)}
     });
     robot.move(waypoint_motion, data);
 
     WaypointMotion waypoint_motion2({
-      Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
-      Waypoint {getBase(0.0, 0.0, 0.0), 1.75}
+        Waypoint {getBase(0.05, 0.05, 0.0, M_PI_2)},
+        Waypoint {getBase(0.0, 0.0, 0.0), 1.75}
     });
     robot.move(waypoint_motion2);
 

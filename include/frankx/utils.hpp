@@ -15,8 +15,8 @@
 
 namespace frankx {
 
-using Vector6d = Eigen::Matrix<double, 6, 1>;
-using Vector7d = Eigen::Matrix<double, 7, 1>;
+using Vector6d = Eigen::Matrix<double, 6, 1, Eigen::ColMajor>;
+using Vector7d = Eigen::Matrix<double, 7, 1, Eigen::ColMajor>;
 using Affine = movex::Affine;
 
 // Print std::arrays to cout

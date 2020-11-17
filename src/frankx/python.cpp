@@ -125,8 +125,10 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)
+        .def(py::init<const std::vector<Waypoint> &, bool>(), "waypoints"_a, "return_when_finished"_a)
         .def("set_next_waypoint", &WaypointMotion::setNextWaypoint, "waypoint"_a)
-        .def("set_next_waypoints", &WaypointMotion::setNextWaypoints, "waypoints"_a);
+        .def("set_next_waypoints", &WaypointMotion::setNextWaypoints, "waypoints"_a)
+        .def("finish", &WaypointMotion::finish);
 
     py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
         .def(py::init<const Affine&>(), "target"_a)
@@ -318,10 +320,10 @@ PYBIND11_MODULE(_frankx, m) {
         .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(JointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(JointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(WaypointMotion, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion, MotionData &, bool)) &Robot::move, py::call_guard<py::gil_scoped_release>(), "frame"_a, "waypoint_motion"_a, "motion_data"_a, "repeat_on_error"_a = true);
+        .def("move", (bool (Robot::*)(WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(WaypointMotion&, MotionData &)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+        .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&, MotionData &, bool)) &Robot::move, py::call_guard<py::gil_scoped_release>(), "frame"_a, "waypoint_motion"_a, "motion_data"_a, "repeat_on_error"_a = true);
 
     py::class_<franka::GripperState>(m, "GripperState")
         .def_readonly("width", &franka::GripperState::width)
@@ -343,6 +345,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def("read_once", &Gripper::readOnce)
         .def("server_version", &Gripper::serverVersion)
         .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
+        .def("move_unsafe", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
         .def("width", &Gripper::width)
         .def("is_grasping", &Gripper::isGrasping)
         .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())

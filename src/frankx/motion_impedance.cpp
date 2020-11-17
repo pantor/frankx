@@ -133,7 +133,7 @@ bool ImpedanceMotion::move(Robot* robot, const Affine& frame, MotionData& data) 
         Eigen::VectorXd::Map(&tau_d_array[0], 7) = tau_d;
 
 #ifdef WITH_PYTHON
-        if (PyErr_CheckSignals() == -1) {
+        if (Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             is_active = false;
             return franka::MotionFinished(franka::Torques(tau_d_array));
         }
@@ -206,7 +206,7 @@ bool ImpedanceMotion::move(Robot* robot, const Affine& frame, MotionData& data) 
         }
 
 #ifdef WITH_PYTHON
-        if (PyErr_CheckSignals() == -1) {
+        if (Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             motion.is_active = false;
             return franka::CartesianPose(motion.target.array());
         }

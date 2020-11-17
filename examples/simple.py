@@ -8,7 +8,7 @@ if __name__ == '__main__':
     robot.recover_from_errors()
 
     # Reduce the acceleration and velocity dynamic
-    robot.set_dynamic_rel(0.2)
+    robot.set_dynamic_rel(0.15)
 
     # Define and move forwards
     way = Affine(0.0, 0.2, 0.0)

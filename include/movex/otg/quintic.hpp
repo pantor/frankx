@@ -9,25 +9,25 @@ namespace movex {
 
 template<size_t DOFs>
 class Quintic {
-    using Vector7d = Eigen::Matrix<double, DOFs, 1>;
+    using Vector = Eigen::Matrix<double, DOFs, 1, Eigen::ColMajor>;
 
     // Trajectory
-    Vector7d a, b, c, d, e, f;
+    Vector a, b, c, d, e, f;
     double t, tf;
     InputParameter<DOFs> current_input;
 
     bool calculate(const InputParameter<DOFs>& input) {
         current_input = input;
 
-        const Vector7d& x0 = input.current_position;
-        const Vector7d& v0 = input.current_velocity;
-        const Vector7d& a0 = input.current_acceleration;
-        const Vector7d& xf = input.target_position;
-        const Vector7d& vf = input.target_velocity;
-        const Vector7d& af = input.target_acceleration;
-        const Vector7d& v_max = input.max_velocity;
-        const Vector7d& a_max = input.max_acceleration;
-        const Vector7d& j_max = input.max_jerk;
+        const Vector& x0 = input.current_position;
+        const Vector& v0 = input.current_velocity;
+        const Vector& a0 = input.current_acceleration;
+        const Vector& xf = input.target_position;
+        const Vector& vf = input.target_velocity;
+        const Vector& af = input.target_acceleration;
+        const Vector& v_max = input.max_velocity;
+        const Vector& a_max = input.max_acceleration;
+        const Vector& j_max = input.max_jerk;
 
         // Check input
         if ((v_max.array() <= 0.0).any() || (a_max.array() <= 0.0).any() || (j_max.array() <= 0.0).any()) {
@@ -35,9 +35,9 @@ class Quintic {
         }
 
         // Approximations for v0 == 0, vf == 0, a0 == 0, af == 0
-        Vector7d v_max_tfs = (15 * (x0 - xf).array().abs()) / (8 * v_max).array();
-        Vector7d a_max_tfs = (std::sqrt(10) * (x0.array().pow(2) - 2 * x0.array() * xf.array() + xf.array().pow(2)).pow(1./4)) / (std::pow(3, 1./4) * a_max.array().sqrt());
-        Vector7d j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3); // Also solvable for v0 != 0
+        Vector v_max_tfs = (15 * (x0 - xf).array().abs()) / (8 * v_max).array();
+        Vector a_max_tfs = (std::sqrt(10) * (x0.array().pow(2) - 2 * x0.array() * xf.array() + xf.array().pow(2)).pow(1./4)) / (std::pow(3, 1./4) * a_max.array().sqrt());
+        Vector j_max_tfs = ((60 * (x0 - xf).array().abs()) / j_max.array()).pow(1./3); // Also solvable for v0 != 0
 
         tf = std::max<double>({v_max_tfs.maxCoeff(), a_max_tfs.maxCoeff(), j_max_tfs.maxCoeff()});
         if (input.minimum_duration.has_value()) {

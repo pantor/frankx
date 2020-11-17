@@ -109,7 +109,7 @@ bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
         }
 
 #ifdef WITH_PYTHON
-        if (PyErr_CheckSignals() == -1) {
+        if (Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             stop();
         }
 #endif
@@ -146,20 +146,20 @@ bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
     return true;
 }
 
-bool Robot::move(WaypointMotion motion) {
+bool Robot::move(WaypointMotion& motion) {
     return move(Affine(), motion);
 }
 
-bool Robot::move(WaypointMotion motion, MotionData& data) {
+bool Robot::move(WaypointMotion& motion, MotionData& data) {
     return move(Affine(), motion, data);
 }
 
-bool Robot::move(const Affine& frame, WaypointMotion motion) {
+bool Robot::move(const Affine& frame, WaypointMotion& motion) {
     auto data = MotionData();
     return move(frame, motion, data);
 }
 
-bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error) {
+bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data, bool repeat_on_error) {
 #ifdef WITH_REFLEXXES
     movex::Reflexxes<degrees_of_freedoms> trajectory_generator(control_rate);
 #else
@@ -266,7 +266,7 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
         }
 
 #ifdef WITH_PYTHON
-        if (PyErr_CheckSignals() == -1) {
+        if (Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             stop();
         }
 #endif
@@ -275,17 +275,20 @@ bool Robot::move(const Affine& frame, WaypointMotion motion, MotionData& data, b
         for (int i = 0; i < steps; i++) {
             result = trajectory_generator.update(input_para, output_para);
 
-            if (current_motion.reload || result == movex::Result::Finished) {
+            if (motion.reload || result == movex::Result::Finished) {
                 if (waypoint_iterator != current_motion.waypoints.end()) {
                     waypoint_iterator += 1;
                 }
 
-                if (current_motion.reload) {
+                if (motion.return_when_finished && waypoint_iterator == current_motion.waypoints.end()) {
+                    return franka::MotionFinished(CartesianPose(input_para.target_position, waypoint_has_elbow));
+
+                } else if (motion.reload) {
+                    current_motion = motion;
                     waypoint_iterator = current_motion.waypoints.begin();
+                    motion.reload = false;
                     current_motion.reload = false;
 
-                } else if (waypoint_iterator == current_motion.waypoints.end()) {
-                    return franka::MotionFinished(CartesianPose(input_para.target_position, waypoint_has_elbow));
                 }
 
                 const Waypoint current_waypoint = *waypoint_iterator;

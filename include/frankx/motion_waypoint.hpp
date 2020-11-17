@@ -9,10 +9,12 @@ namespace frankx {
 
 struct WaypointMotion {
     bool reload {false};
+    bool return_when_finished {true};
 
     std::vector<Waypoint> waypoints;
 
     explicit WaypointMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) {}
+    explicit WaypointMotion(const std::vector<Waypoint>& waypoints, bool return_when_finished): waypoints(waypoints), return_when_finished(return_when_finished) {}
 
     void setNextWaypoint(const Waypoint& waypoint) {
         waypoints = { waypoint };
@@ -21,6 +23,11 @@ struct WaypointMotion {
 
     void setNextWaypoints(const std::vector<Waypoint>& waypoints) {
         this->waypoints = waypoints;
+        reload = true;
+    }
+
+    void finish() {
+        return_when_finished = true;
         reload = true;
     }
 };

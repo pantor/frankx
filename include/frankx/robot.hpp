@@ -76,10 +76,10 @@ struct Robot: public franka::Robot {
     bool move(const Affine& frame, JointMotion motion);
     bool move(const Affine& frame, JointMotion motion, MotionData& data);
 
-    bool move(WaypointMotion motion);
-    bool move(WaypointMotion motion, MotionData& data);
-    bool move(const Affine& frame, WaypointMotion motion);
-    bool move(const Affine& frame, WaypointMotion motion, MotionData& data, bool repeat_on_error = true);
+    bool move(WaypointMotion& motion);
+    bool move(WaypointMotion& motion, MotionData& data);
+    bool move(const Affine& frame, WaypointMotion& motion);
+    bool move(const Affine& frame, WaypointMotion& motion, MotionData& data, bool repeat_on_error = true);
 
 private:
     void setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data);

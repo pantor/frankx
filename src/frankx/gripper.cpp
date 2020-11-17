@@ -40,6 +40,11 @@ bool Gripper::move(double width) { // [m]
   }
 }
 
+bool Gripper::move_unsafe(double width) { // [m]
+  const bool result_stop = ((franka::Gripper*) this)->stop();
+  return ((franka::Gripper*) this)->move(width - width_calibration, gripper_speed); // [m] [m/s]
+}
+
 std::future<bool> Gripper::moveAsync(double width) { // [m]
   return std::async(std::launch::async, &Gripper::move, this, width - width_calibration);
 }
