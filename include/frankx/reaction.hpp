@@ -14,7 +14,6 @@ namespace frankx {
 
 class WaypointMotion;
 
-
 struct Reaction {
     using WaypointAction = std::function<WaypointMotion(const franka::RobotState&, double)>;
     std::optional<WaypointAction> waypoint_action;

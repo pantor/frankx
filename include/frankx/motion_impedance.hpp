@@ -1,5 +1,4 @@
 #pragma once
-// Inpspired by: https://github.com/frankaemika/libfranka/blob/develop/examples/cartesian_impedance_control.cpp
 
 #include <map>
 #include <optional>
@@ -68,7 +67,7 @@ struct ImpedanceMotion {
 public:
     const double translational_stiffness {2000.0};  // in [10, 3000] N/m
     const double rotational_stiffness {200.0};  // in [1, 300] Nm/rad
-    double joint_stiffness {200.0};  // ?
+    const double joint_stiffness {200.0};  // ?
 
     Affine target;
     bool is_active {false};

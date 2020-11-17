@@ -310,7 +310,53 @@ class Ruckig {
     }
 
     ProfileType get_profile_type(double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        return ProfileType::UP_2;
+        Profile profile;
+
+        // Test all cases
+
+        time_UDDU_case1(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        std::cout << profile.t[0] << " " << profile.t[1] << " " << profile.t[2] << " " << profile.t[3] << " " << profile.t[4] << " " << profile.t[5] << " " << profile.t[6] << std::endl;
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            std::cout << "UP_1" << std::endl;
+            return ProfileType::UP_1;  // If all limit:
+        }
+
+        time_UDDU_case2(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        std::cout << profile.t[0] << " " << profile.t[1] << " " << profile.t[2] << " " << profile.t[3] << " " << profile.t[4] << " " << profile.t[5] << " " << profile.t[6] << std::endl;
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            std::cout << "UP_2" << std::endl;
+            return ProfileType::UP_2;  // If no max vel
+        }
+
+        time_UDDU_case3(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        std::cout << profile.t[0] << " " << profile.t[1] << " " << profile.t[2] << " " << profile.t[3] << " " << profile.t[4] << " " << profile.t[5] << " " << profile.t[6] << std::endl;
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            std::cout << "UP_3" << std::endl;
+            return ProfileType::UP_3;  // If no max acc0
+        }
+
+        time_UDDU_case4(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        std::cout << profile.t[0] << " " << profile.t[1] << " " << profile.t[2] << " " << profile.t[3] << " " << profile.t[4] << " " << profile.t[5] << " " << profile.t[6] << std::endl;
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            std::cout << "UP_4" << std::endl;
+            return ProfileType::UP_4;  // // If no max acc1
+        }
+
+        time_UDDU_case5(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        std::cout << profile.t[0] << " " << profile.t[1] << " " << profile.t[2] << " " << profile.t[3] << " " << profile.t[4] << " " << profile.t[5] << " " << profile.t[6] << std::endl;
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            std::cout << "UP_5" << std::endl;
+            return ProfileType::UP_5;  // If no max acc0, acc1
+        }
+
+
+        return ProfileType::UP_6;  // If no max acc0, vel
+
+
+        return ProfileType::UP_7;  // If no max acc1, vel
+
+
+        return ProfileType::UP_8;  // If no limit:
     }
 
     bool calculate(const InputParameter<DOFs>& input) {

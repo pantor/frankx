@@ -288,7 +288,7 @@ We have a generated documentation at [https://pantor.github.io/frankx/](https://
 Frankx is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
-- Libfranka v0.6.0
+- Libfranka v0.7.1
 - Pybind11 v2.6.0
 - Reflexxes v1.2.7 (optional)
 - Catch2 v2.9 (only for testing)

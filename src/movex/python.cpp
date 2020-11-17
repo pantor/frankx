@@ -23,7 +23,7 @@ using namespace movex;
 PYBIND11_MODULE(movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {3};
+    constexpr size_t DOFs {1};
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())

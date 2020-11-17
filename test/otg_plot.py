@@ -27,21 +27,21 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.0, 1.0, 0.0]
+    inp.current_position = [0.0]
     inp.current_velocity = [0.0] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [0.2, 0.5, 0.8]
+    inp.target_position = [1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [1.5] * inp.degrees_of_freedom
-    inp.max_acceleration = [2.0] * inp.degrees_of_freedom
-    inp.max_jerk = [3.0] * inp.degrees_of_freedom
+    inp.max_velocity = [0.5] * inp.degrees_of_freedom
+    inp.max_acceleration = [1.5] * inp.degrees_of_freedom
+    inp.max_jerk = [1.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
-    otg = Smoothie(0.005)
+    # otg = Smoothie(0.005)
     # otg = Reflexxes(0.005)
-    # otg = Ruckig(0.005)
+    otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)
 
     for dof in range(inp.degrees_of_freedom):
-        plt.subplot(3, 1, dof + 1)
+        plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
         plt.plot(t_list, qaxis[:, dof], label=f'r_{dof+1}')
         plt.plot(t_list, dqaxis[:, dof], label=f'v_{dof+1}')
         plt.plot(t_list, ddqaxis[:, dof], label=f'a_{dof+1}')

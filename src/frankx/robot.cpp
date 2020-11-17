@@ -97,7 +97,7 @@ bool Robot::move(const Affine& frame, JointMotion motion, MotionData& data) {
             input_para.current_velocity = Vector7d::Zero();
             input_para.current_acceleration = Vector7d::Zero();
 
-            input_para.target_position = motion.q_goal;
+            input_para.target_position = motion.target;
             input_para.target_velocity = Vector7d::Zero();
             input_para.target_acceleration = Vector7d::Zero();
 
