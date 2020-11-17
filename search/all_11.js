@@ -16,6 +16,7 @@ var searchData=
   ['releaserelative',['releaseRelative',['../classfrankx_1_1_gripper.html#a20591754c3a6a16fe15cf6e0b267f847',1,'frankx::Gripper']]],
   ['reload',['reload',['../structfrankx_1_1_waypoint_motion.html#a5285f1abb8d79e3250cb801659f0ae4a',1,'frankx::WaypointMotion']]],
   ['result',['Result',['../namespacemovex.html#a6fd778bb7e86cd4c8b7e52584c82b1d7',1,'movex']]],
+  ['return_5fwhen_5ffinished',['return_when_finished',['../structfrankx_1_1_waypoint_motion.html#afd6d32de0dd29380fd316998e5eda96e',1,'frankx::WaypointMotion']]],
   ['revolutions_5fper_5fsecond',['revolutions_per_second',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#a6c7b5b5495042948ebeab1e0ee70fbe3',1,'frankx::ImpedanceMotion::SpiralTargetMotion']]],
   ['robot',['Robot',['../structfrankx_1_1_robot.html',1,'frankx::Robot'],['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot'],['../structfrankx_1_1_robot.html#a8a7f839dcab8c440a32d43d4171309ba',1,'frankx::Robot::Robot()']]],
   ['robot_2ecpp',['robot.cpp',['../robot_8cpp.html',1,'']]],
