@@ -2,7 +2,7 @@ var searchData=
 [
   ['matrix',['matrix',['../structmovex_1_1_affine.html#ae719cee8e1482dcba1ca3c885a8ec1ab',1,'movex::Affine']]],
   ['max_5facceleration',['max_acceleration',['../structmovex_1_1_input_parameter.html#aaaaafdf2f3b0be28ff795abc77533e57',1,'movex::InputParameter']]],
-  ['max_5fblend_5fdistance',['max_blend_distance',['../structfrankx_1_1_path_point.html#a9900afa79b90153bde69a46a9b44703e',1,'frankx::PathPoint']]],
+  ['max_5fblend_5fdistance',['max_blend_distance',['../structmovex_1_1_path_point.html#ad100564d1f013fd48ddf4051f1112218',1,'movex::PathPoint']]],
   ['max_5fdynamics',['max_dynamics',['../structfrankx_1_1_motion_data.html#a4fa5ddd26b420cd7ea9f224be6ed3f86',1,'frankx::MotionData::max_dynamics()'],['../structfrankx_1_1_waypoint.html#abf97509f703188b0a1f21607f9a35863',1,'frankx::Waypoint::max_dynamics()']]],
   ['max_5felbow_5facceleration',['max_elbow_acceleration',['../structfrankx_1_1_robot.html#a567a162f7c626b7da1234911edb323f0',1,'frankx::Robot']]],
   ['max_5felbow_5fjerk',['max_elbow_jerk',['../structfrankx_1_1_robot.html#a9bb6c1ec1604d3f3c7b99c8dabd5589f',1,'frankx::Robot']]],

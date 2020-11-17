@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "fm",
   3: "_afgmpqrsuw",
   4: "_abcdfghijlmopqrstuvwxyz",
-  5: "acdefghijlmnpqrstuvw",
+  5: "acdefghijlmnprstuvw",
   6: "acetvw",
   7: "art",
   8: "acefjlrswxyz"
