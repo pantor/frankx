@@ -10,7 +10,7 @@ using namespace frankx;
 
 
 inline Affine getRelativeBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
-  return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
+    return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
 }
 
 

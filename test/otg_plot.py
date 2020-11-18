@@ -28,27 +28,26 @@ def walk_through_trajectory(otg, inp):
 if __name__ == '__main__':
     inp = InputParameter()
     inp.current_position = [0.0]
-    inp.current_velocity = [0.0] * inp.degrees_of_freedom
+    inp.current_velocity = [-0.2] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [-1.0]
+    inp.target_position = [1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [1.0] * inp.degrees_of_freedom
+    inp.max_velocity = [2.0] * inp.degrees_of_freedom
     inp.max_acceleration = [1.0] * inp.degrees_of_freedom
     inp.max_jerk = [1.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    otg = Reflexxes(0.005)
-    # otg = Ruckig(0.005)
+    # otg = Reflexxes(0.005)
+    otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
-    # print(qaxis[-20:, 0])
     dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / otg.delta_time
 
 
@@ -61,6 +60,7 @@ if __name__ == '__main__':
         plt.plot(t_list, ddqaxis[:, dof], label=f'a_{dof+1}')
         plt.plot(t_list, dddqaxis[:, dof], label=f'j_{dof+1}')
 
+        # Plot limit lines
         if inp.max_velocity[dof] < 1.5 * np.max(dqaxis[:, dof]):
             plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 

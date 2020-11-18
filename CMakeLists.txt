@@ -86,7 +86,7 @@ if(BUILD_TESTS)
 
   find_package(Catch2 REQUIRED)
 
-  foreach(test IN ITEMS unit-test)
+  foreach(test IN ITEMS unit-test otg-test)
     add_executable(${test} "test/${test}.cpp")
     target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
     add_test(${test} COMMAND ${test})
