@@ -27,15 +27,15 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.0]
-    inp.current_velocity = [-0.2] * inp.degrees_of_freedom
+    inp.current_position = [0.0, 0.2]
+    inp.current_velocity = [0.0] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [1.0]
+    inp.target_position = [1.0, 1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [2.0] * inp.degrees_of_freedom
+    inp.max_velocity = [0.6] * inp.degrees_of_freedom
     inp.max_acceleration = [1.0] * inp.degrees_of_freedom
-    inp.max_jerk = [1.0] * inp.degrees_of_freedom
+    inp.max_jerk = [2.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
     dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / otg.delta_time
-
+    print(qaxis[-20:, 1])
 
     plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)
 

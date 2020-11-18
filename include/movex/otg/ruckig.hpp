@@ -21,13 +21,14 @@ inline double Sqrt(double v) {
     return std::sqrt(v);
 }
 
+
 template<size_t DOFs>
 class Ruckig {
     InputParameter<DOFs> current_input;
 
     enum class ProfileType {
-        UP_1, UP_2, UP_3, UP_4, UP_5, UP_6, UP_7, UP_8,
-        DOWN_1, DOWN_2, DOWN_3, DOWN_4, DOWN_5, DOWN_6, DOWN_7, DOWN_8
+        UP_ACC0_ACC1_VEL, UP_VEL, UP_ACC0, UP_ACC1, UP_ACC0_ACC1, UP_ACC0_VEL, UP_ACC1_VEL, UP_NONE,
+        DOWN_ACC0_ACC1_VEL, DOWN_VEL, DOWN_ACC0, DOWN_ACC1, DOWN_ACC0_ACC1, DOWN_ACC0_VEL, DOWN_ACC1_VEL, DOWN_NONE
     };
 
     struct Profile {
@@ -51,64 +52,76 @@ class Ruckig {
                 p[i+1] = p[i] + t[i] * v[i] + 0.5 * std::pow(t[i], 2) * a[i] + 1. / 6 * std::pow(t[i], 3) * j[i];
             }
         }
+
+        void reset(double p0, double v0, double a0, double base_jerk) {
+            std::array<double, 7> new_j;
+            for (size_t step = 0; step < 7; step += 1) {
+                if (j[step] > 0.0) {
+                    new_j[step] = base_jerk;
+                } else if (j[step] < 0.0) {
+                    new_j[step] = -base_jerk;
+                }
+            }
+            set(p0, v0, a0, new_j);
+        }
     };
 
-    void time_UDDU_case1(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    void time_UDDU_case1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
         profile.t[0] = (-a0 + aMax)/jMax;
         profile.t[1] = (Power(a0,2) - 2*Power(aMax,2) - 2*jMax*v0 + 2*jMax*vMax)/(2.*aMax*jMax);
         profile.t[2] = aMax/jMax;
-        profile.t[3] = (3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 12*jMax*(2*aMax*jMax*(p0 - pf) + Power(aMax,2)*(v0 + 2*vMax) - jMax*(Power(v0,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
+        profile.t[3] = (3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 12*jMax*(2*aMax*jMax*(p0 - pf) + Power(aMax,2)*(v0 + vf + 2*vMax) - jMax*(Power(v0,2) + Power(vf,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
         profile.t[4] = aMax/jMax;
-        profile.t[5] = -(aMax/jMax) + vMax/aMax;
+        profile.t[5] = (-(Power(aMax,2)/jMax) - vf + vMax)/aMax;
         profile.t[6] = aMax/jMax;
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
 
-    void time_UDDU_case2(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    void time_UDDU_case2(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {        
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = (6*Power(a0,2)*aMax*jMax - 18*Power(aMax,3)*jMax - 12*aMax*Power(jMax,2)*v0 + Sqrt(6)*Sqrt(Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) + 6*(Power(aMax,4) + 4*aMax*Power(jMax,2)*(-p0 + pf) - 2*Power(aMax,2)*jMax*v0 + 2*Power(jMax,2)*Power(v0,2)))))/(12.*Power(aMax,2)*Power(jMax,2));
+        profile.t[1] = (6*Power(a0,2)*aMax*jMax - 18*Power(aMax,3)*jMax - 12*aMax*Power(jMax,2)*v0 + Sqrt(6)*Sqrt(Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) + 6*(Power(aMax,4) + 4*aMax*Power(jMax,2)*(-p0 + pf) - 2*Power(aMax,2)*jMax*(v0 + vf) + 2*Power(jMax,2)*(Power(v0,2) + Power(vf,2))))))/(12.*Power(aMax,2)*Power(jMax,2));
         profile.t[2] = aMax/jMax;
         profile.t[3] = 0;
         profile.t[4] = aMax/jMax;
-        profile.t[5] = (-18*Power(aMax,3)*jMax + Sqrt(6)*Sqrt(Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) + 6*(Power(aMax,4) + 4*aMax*Power(jMax,2)*(-p0 + pf) - 2*Power(aMax,2)*jMax*v0 + 2*Power(jMax,2)*Power(v0,2)))))/(12.*Power(aMax,2)*Power(jMax,2));
+        profile.t[5] = (-18*Power(aMax,3)*jMax - 12*aMax*Power(jMax,2)*vf + Sqrt(6)*Sqrt(Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) + 6*(Power(aMax,4) + 4*aMax*Power(jMax,2)*(-p0 + pf) - 2*Power(aMax,2)*jMax*(v0 + vf) + 2*Power(jMax,2)*(Power(v0,2) + Power(vf,2))))))/(12.*Power(aMax,2)*Power(jMax,2));
         profile.t[6] = aMax/jMax;
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
 
-    void time_UDDU_case3(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    void time_UDDU_case3(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
         profile.t[0] = (-2*a0*jMax + Sqrt(2)*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax))))/(2.*Power(jMax,2));
         profile.t[1] = 0;
         profile.t[2] = Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax)))/(Sqrt(2)*Power(jMax,2));
-        profile.t[3] = (-4*Power(a0,3)*aMax*jMax + 12*a0*aMax*Power(jMax,2)*v0 + 3*Sqrt(2)*Power(a0,2)*aMax*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax)) - 6*jMax*(2*aMax*Power(jMax,2)*(p0 - pf) + Power(aMax,2)*jMax*vMax + Power(jMax,2)*Power(vMax,2) + Sqrt(2)*aMax*(v0 + vMax)*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax)))))/(12.*aMax*Power(jMax,3)*vMax);
+        profile.t[3] = (-4*Power(a0,3)*aMax*jMax + 12*a0*aMax*Power(jMax,2)*v0 + 3*Sqrt(2)*Power(a0,2)*aMax*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax)) - 6*jMax*(2*aMax*Power(jMax,2)*(p0 - pf) + Power(aMax,2)*jMax*(vf + vMax) + Power(jMax,2)*(-Power(vf,2) + Power(vMax,2)) + Sqrt(2)*aMax*(v0 + vMax)*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax)))))/(12.*aMax*Power(jMax,3)*vMax);
         profile.t[4] = aMax/jMax;
-        profile.t[5] = -(aMax/jMax) + vMax/aMax;
+        profile.t[5] = (-(Power(aMax,2)/jMax) - vf + vMax)/aMax;
         profile.t[6] = aMax/jMax;
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
 
-    void time_UDDU_case4(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    void time_UDDU_case4(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
         profile.t[0] = (-a0 + aMax)/jMax;
         profile.t[1] = (Power(a0,2) - 2*Power(aMax,2) - 2*jMax*v0 + 2*jMax*vMax)/(2.*aMax*jMax);
         profile.t[2] = aMax/jMax;
-        profile.t[3] = (3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 12*jMax*(Power(aMax,2)*(v0 + vMax) + 2*aMax*(jMax*p0 - jMax*pf + Sqrt(jMax)*Power(vMax,1.5)) + jMax*(-Power(v0,2) + Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
-        profile.t[4] = Sqrt(vMax)/Sqrt(jMax);
+        profile.t[3] = (3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 12*jMax*(Power(aMax,2)*(v0 + vMax) + jMax*(-Power(v0,2) + Power(vMax,2)) + 2*aMax*(jMax*(p0 - pf) + Sqrt(jMax)*Sqrt(-vf + vMax)*(vf + vMax))))/(24.*aMax*Power(jMax,2)*vMax);
+        profile.t[4] = Sqrt(-vf + vMax)/Sqrt(jMax);
         profile.t[5] = 0;
-        profile.t[6] = Sqrt(vMax)/Sqrt(jMax);
+        profile.t[6] = Sqrt(-vf + vMax)/Sqrt(jMax);
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
 
-    void time_UDDU_case5(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    void time_UDDU_case5(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
         profile.t[0] = (-2*a0*jMax + Sqrt(2)*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax))))/(2.*Power(jMax,2));
         profile.t[1] = 0;
         profile.t[2] = Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*(-v0 + vMax)))/(Sqrt(2)*Power(jMax,2));
-        profile.t[3] = (-4*Power(a0,3)*jMax + 12*a0*Power(jMax,2)*v0 + 3*Sqrt(2)*Power(a0,2)*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax)) - 6*(2*Power(jMax,3)*(p0 - pf) + 2*Power(jMax,2.5)*Power(vMax,1.5) + Sqrt(2)*jMax*(v0 + vMax)*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax))))/(12.*Power(jMax,3)*vMax);
-        profile.t[4] = Sqrt(vMax)/Sqrt(jMax);
+        profile.t[3] = (-4*Power(a0,3)*jMax + 12*a0*Power(jMax,2)*v0 + 3*Sqrt(2)*Power(a0,2)*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax)) - 6*(2*Power(jMax,3)*(p0 - pf) + 2*Power(jMax,2.5)*Sqrt(-vf + vMax)*(vf + vMax) + Sqrt(2)*jMax*(v0 + vMax)*Sqrt(Power(jMax,2)*(Power(a0,2) - 2*jMax*v0 + 2*jMax*vMax))))/(12.*Power(jMax,3)*vMax);
+        profile.t[4] = Sqrt(-vf + vMax)/Sqrt(jMax);
         profile.t[5] = 0;
-        profile.t[6] = Sqrt(vMax)/Sqrt(jMax);
+        profile.t[6] = Sqrt(-vf + vMax)/Sqrt(jMax);
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
@@ -211,206 +224,166 @@ class Ruckig {
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     }
 
-    void time_DUUD_case1(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (a0 - aMax)/jMax;
-        profile.t[1] = (-Power(a0,2) + 2*Power(aMax,2) - 2*jMax*v0 + 2*jMax*vMax)/(2.*aMax*jMax);
-        profile.t[2] = -(aMax/jMax);
-        profile.t[3] = (3*Power(a0,4) - 8*Power(a0,3)*aMax + 6*Power(a0,2)*Power(aMax,2) - 24*aMax*Power(jMax,2)*p0 + 24*aMax*Power(jMax,2)*pf + 12*Power(a0,2)*jMax*v0 - 24*a0*aMax*jMax*v0 + 12*Power(aMax,2)*jMax*v0 + 12*Power(jMax,2)*Power(v0,2) + 24*Power(aMax,2)*jMax*vMax - 24*Power(jMax,2)*Power(vMax,2))/(24.*aMax*Power(jMax,2)*vMax);
-        profile.t[4] = -(aMax/jMax);
-        profile.t[5] = (Power(aMax,2) + jMax*vMax)/(aMax*jMax);
-        profile.t[6] = -(aMax/jMax);
-
+    void time_DUUD_case1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
+        time_UDDU_case1(profile, p0, v0, a0, pf, vf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
-    void time_DUUD_case2(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (a0 - aMax)/jMax;
-        profile.t[1] = (-6*Power(a0,2) + 18*Power(aMax,2) - 12*jMax*v0 - (Sqrt(6)*Sqrt(Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 6*Power(a0,2)*Power(aMax,2) + 6*Power(aMax,4) - 24*aMax*Power(jMax,2)*p0 + 24*aMax*Power(jMax,2)*pf + 12*Power(a0,2)*jMax*v0 - 24*a0*aMax*jMax*v0 + 12*Power(aMax,2)*jMax*v0 + 12*Power(jMax,2)*Power(v0,2))))/(aMax*jMax))/(12.*aMax*jMax);
-        profile.t[2] = -(aMax/jMax);
-        profile.t[3] = 0;
-        profile.t[4] = -(aMax/jMax);
-        profile.t[5] = -(-72*Power(aMax,3)*jMax + Sqrt(5184*Power(aMax,6)*Power(jMax,2) + 96*Power(aMax,2)*Power(jMax,2)*(3*Power(a0,4) - 8*Power(a0,3)*aMax + 6*Power(a0,2)*Power(aMax,2) - 48*Power(aMax,4) - 24*aMax*Power(jMax,2)*p0 + 24*aMax*Power(jMax,2)*pf + 12*Power(a0,2)*jMax*v0 - 24*a0*aMax*jMax*v0 + 12*Power(aMax,2)*jMax*v0 + 12*Power(jMax,2)*Power(v0,2))))/(48.*Power(aMax,2)*Power(jMax,2));
-        profile.t[6] = -(aMax/jMax);
-
+    void time_DUUD_case2(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
+        time_UDDU_case2(profile, p0, v0, a0, pf, vf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
-    void time_DUUD_case3(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (2*a0*jMax - Sqrt(2)*Sqrt(Power(a0,2)*Power(jMax,2) + 2*Power(jMax,3)*v0 - 2*Power(jMax,3)*vMax))/(2.*Power(jMax,2));
-        profile.t[1] = 0;
-        profile.t[2] = -(Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*v0 - 2*jMax*vMax))/(Sqrt(2)*Power(jMax,2)));
-        profile.t[3] = (-4*Power(a0,3)*aMax - 12*aMax*Power(jMax,2)*p0 + 12*aMax*Power(jMax,2)*pf - 12*a0*aMax*jMax*v0 + 6*Power(aMax,2)*jMax*vMax - 6*Power(jMax,2)*Power(vMax,2) + (3*Sqrt(2)*Power(a0,2)*aMax*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*v0 - 2*jMax*vMax)))/jMax + 6*Sqrt(2)*aMax*v0*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*v0 - 2*jMax*vMax)) + 6*Sqrt(2)*aMax*vMax*Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*v0 - 2*jMax*vMax)))/(12.*aMax*Power(jMax,2)*vMax);
-        profile.t[4] = -(aMax/jMax);
-        profile.t[5] = (Power(aMax,2) + jMax*vMax)/(aMax*jMax);
-        profile.t[6] = -(aMax/jMax);
-
+    void time_DUUD_case3(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
+        time_UDDU_case3(profile, p0, v0, a0, pf, vf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
-    void time_DUUD_case4(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (a0 - aMax)/jMax;
-        profile.t[1] = (-Power(a0,2) + 2*Power(aMax,2) - 2*jMax*v0 + 2*jMax*vMax)/(2.*aMax*jMax);
-        profile.t[2] = -(aMax/jMax);
-        profile.t[3];
-        profile.t[4];
-        profile.t[5] = 0;
-        profile.t[6];
-
+    void time_DUUD_case4(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
+        time_UDDU_case4(profile, p0, v0, a0, pf, vf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
-    void time_DUUD_case5(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (2*a0*jMax - Sqrt(2)*Sqrt(Power(a0,2)*Power(jMax,2) + 2*Power(jMax,3)*v0 - 2*Power(jMax,3)*vMax))/(2.*Power(jMax,2));
-        profile.t[1] = 0;
-        profile.t[2] = -(Sqrt(Power(jMax,2)*(Power(a0,2) + 2*jMax*v0 - 2*jMax*vMax))/(Sqrt(2)*Power(jMax,2)));
-        profile.t[3];
-        profile.t[4];
-        profile.t[5] = 0;
-        profile.t[6];
-
+    void time_DUUD_case5(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
+        time_UDDU_case5(profile, p0, v0, a0, pf, vf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
     void time_DUUD_case6(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0];
-        profile.t[1] = 0;
-        profile.t[2];
-        profile.t[3] = 0;
-        profile.t[4] = -(aMax/jMax);
-        profile.t[5];
-        profile.t[6] = -(aMax/jMax);
-
+        time_UDDU_case6(profile, p0, v0, a0, pf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
     void time_DUUD_case7(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0] = (a0 - aMax)/jMax;
-        profile.t[1];
-        profile.t[2] = -(aMax/jMax);
-        profile.t[3] = 0;
-        profile.t[4];
-        profile.t[5] = 0;
-        profile.t[6];
-
+        time_UDDU_case7(profile, p0, v0, a0, pf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
     void time_DUUD_case8(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        profile.t[0];
-        profile.t[1] = 0;
-        profile.t[2];
-        profile.t[3] = 0;
-        profile.t[4];
-        profile.t[5] = 0;
-        profile.t[6];
-
+        time_UDDU_case8(profile, p0, v0, a0, pf, -vMax, -aMax, -jMax);
         profile.set(p0, v0, a0, {-jMax, 0, jMax, 0, jMax, 0, -jMax});
     }
 
-    void calculate_times(Profile& profile, double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
-        switch (profile.type) {
-            case ProfileType::UP_1: {
-                time_UDDU_case1(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_2: {
-                time_UDDU_case2(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_3: {
-                time_UDDU_case3(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_4: {
-                time_UDDU_case4(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_5: {
-                time_UDDU_case5(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_6: {
-                time_UDDU_case6(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_7: {
-                time_UDDU_case7(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::UP_8: {
-                time_UDDU_case8(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_1: {
-                time_DUUD_case1(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_2: {
-                time_DUUD_case2(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_3: {
-                time_DUUD_case3(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_4: {
-                time_DUUD_case4(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_5: {
-                time_DUUD_case5(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_6: {
-                time_DUUD_case6(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_7: {
-                time_DUUD_case7(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-            case ProfileType::DOWN_8: {
-                time_DUUD_case8(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-            } break;
-        }
+    double jerk_to_reach_target_with_times(const std::array<double, 7>& t, double p0, double v0, double a0, double pf) const {
+        const double t1 {t[0]}, t2 {t[1]}, t3 {t[2]}, t4 {t[3]}, t5 {t[4]}, t6 {t[5]}, t7 {t[6]};
+        return -((-6*p0 + 6*pf - 3*(t1 + t2 + t3 + t4 + t5 + t6 + t7)*(a0*(t1 + t2 + t3 + t4 + t5 + t6 + t7) + 2*v0))/(-Power(t1,3) + Power(t3,3) + Power(t5,3) + 3*Power(t5,2)*t6 + 3*t5*Power(t6,2) + 3*Power(t5,2)*t7 + 6*t5*t6*t7 + 3*t5*Power(t7,2) - Power(t7,3) + 3*Power(t3,2)*(t4 + t5 + t6 + t7) + 3*t3*Power(t4 + t5 + t6 + t7,2) - 3*Power(t1,2)*(t2 + t3 + t4 + t5 + t6 + t7) - 3*t1*Power(t2 + t3 + t4 + t5 + t6 + t7,2)));
     }
 
-    ProfileType get_profile_type(double p0, double v0, double a0, double pf, double vMax, double aMax, double jMax) {
+    Profile get_profile(double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax) {
         Profile profile;
 
-        // Test all cases
+        // Test all cases to get ones that match
 
-        time_UDDU_case1(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        time_UDDU_case1(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
-            std::cout << "UP_1" << std::endl;
-            return ProfileType::UP_1;  // If no max acc0, acc1, vel:
+            profile.type = ProfileType::UP_ACC0_ACC1_VEL;
+            std::cout << "UP_ACC0_ACC1_VEL" << std::endl;
+            return profile;  
         }
 
-        time_UDDU_case3(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_3" << std::endl;
-            return ProfileType::UP_3;  // If no max acc0
+        time_DUUD_case1(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC0_ACC1_VEL;
+            std::cout << "DOWN_ACC0_ACC1_VEL" << std::endl;
+            return profile;
         }
 
-        time_UDDU_case4(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        time_UDDU_case3(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_4" << std::endl;
-            return ProfileType::UP_4;  // // If no max acc1
+            profile.type = ProfileType::UP_ACC0;
+            std::cout << "UP_ACC0" << std::endl;
+            return profile;
         }
 
-        time_UDDU_case2(profile, p0, v0, a0, pf, vMax, aMax, jMax);
-        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_2" << std::endl;
-            return ProfileType::UP_2;  // If no max vel
+        time_DUUD_case3(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC0;
+            std::cout << "DOWN_ACC0" << std::endl;
+            return profile;
         }
 
-        time_UDDU_case5(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        time_UDDU_case4(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_5" << std::endl;
-            return ProfileType::UP_5;  // If no max acc0, acc1
+            profile.type = ProfileType::UP_ACC1;
+            std::cout << "UP_ACC1" << std::endl;
+            return profile;
+        }
+
+        time_DUUD_case4(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC1;
+            std::cout << "DOWN_ACC1" << std::endl;
+            return profile;
+        }
+
+        time_UDDU_case5(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            profile.type = ProfileType::UP_ACC0_ACC1;
+            std::cout << "UP_ACC0_ACC1" << std::endl;
+            return profile;  
+        }
+
+        time_DUUD_case5(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC0_ACC1;
+            std::cout << "DOWN_ACC0_ACC1" << std::endl;
+            return profile;
+        }
+
+        time_UDDU_case2(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
+            profile.type = ProfileType::UP_VEL;
+            std::cout << "UP_VEL" << std::endl;
+            return profile;
+        }
+
+        time_DUUD_case2(profile, p0, v0, a0, pf, vf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_VEL;
+            std::cout << "DOWN_VEL" << std::endl;
+            return profile;
         }
 
         time_UDDU_case6(profile, p0, v0, a0, pf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_6" << std::endl;
-            return ProfileType::UP_6;  // If no max acc0, vel
+            profile.type = ProfileType::UP_ACC0_VEL;
+            std::cout << "UP_ACC0_VEL" << std::endl;
+            return profile;
+        }
+
+        time_DUUD_case6(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC0_VEL;
+            std::cout << "DOWN_ACC0_VEL" << std::endl;
+            return profile;
         }
 
         time_UDDU_case7(profile, p0, v0, a0, pf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_7" << std::endl;
-            return ProfileType::UP_7;  // If no max acc1, vel
+            profile.type = ProfileType::UP_ACC1_VEL;
+            std::cout << "UP_ACC1_VEL" << std::endl;
+            return profile;
+        }
+
+        time_DUUD_case7(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_ACC1_VEL;
+            std::cout << "DOWN_ACC1_VEL" << std::endl;
+            return profile;
         }
 
         time_UDDU_case8(profile, p0, v0, a0, pf, vMax, aMax, jMax);
         if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t >= 0; })) {
-            std::cout << "UP_8" << std::endl;
-            return ProfileType::UP_8;  // If no limit:
+            profile.type = ProfileType::UP_NONE;
+            std::cout << "UP_NONE" << std::endl;
+            return profile;  
+        }
+
+        time_DUUD_case8(profile, p0, v0, a0, pf, vMax, aMax, jMax);
+        if (std::all_of(profile.t.begin(), profile.t.end(), [](double t){ return t > 0; })) {
+            profile.type = ProfileType::DOWN_NONE;
+            std::cout << "DOWN_NONE" << std::endl;
+            return profile;
         }
 
         throw std::runtime_error("Could not find trajectory.");
@@ -419,15 +392,42 @@ class Ruckig {
     bool calculate(const InputParameter<DOFs>& input) {
         current_input = input;
 
-        // Find profile first.
+        // Check input
+        if ((input.max_velocity.array() <= 0.0).any() || (input.max_acceleration.array() <= 0.0).any() || (input.max_jerk.array() <= 0.0).any()) {
+            return false;
+        }
+
+        if (input.minimum_duration.has_value()) {
+            std::cerr << "Ruckig does not consider the minimum duration value." << std::endl;
+            return false;
+        }
+
+        std::array<double, DOFs> tfs;
         for (size_t dof = 0; dof < DOFs; dof += 1) {
-            profiles[dof].type = get_profile_type(input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
-            calculate_times(profiles[dof], input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
-            tf = profiles[dof].t_sum[6];
+            if (!input.enabled[dof]) {
+                tfs[dof] = 0.0;
+                continue;
+            }
+
+            profiles[dof] = get_profile(input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof], 0.0, input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+            tfs[dof] = profiles[dof].t_sum[6];
+        }
+
+        auto tf_max_pointer = std::max_element(tfs.begin(), tfs.end());
+        size_t limiting_dof = std::distance(tfs.begin(), tf_max_pointer);
+        tf = *tf_max_pointer;
+
+        for (size_t dof = 0; dof < DOFs; dof += 1) {
+            if (!input.enabled[dof] || dof == limiting_dof) {
+                continue;
+            }
+
+            double new_jerk = jerk_to_reach_target_with_times(profiles[limiting_dof].t, input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof]);
+            profiles[dof].t = profiles[limiting_dof].t;
+            profiles[dof].reset(input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], new_jerk);
         }
 
         t = 0.0;
-
         return true;
     }
 
@@ -446,26 +446,34 @@ public:
             return Result::Error;
         }
 
-        auto p = profiles[0];
-        auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t);
-        size_t index = std::distance(p.t_sum.begin(), index_ptr);
-
-        if (t + delta_time > p.t_sum[6]) {
-            output.new_position[0] = input.target_position[0];
-            output.new_velocity[0] = input.target_velocity[0];
-            output.new_acceleration[0] = input.target_acceleration[0];
+        if (t + delta_time > tf) {
+            output.new_position = input.target_position;
+            output.new_velocity = input.target_velocity;
+            output.new_acceleration = input.target_acceleration;
             return Result::Finished;
         }
 
-        double t_diff = t;
-        if (index > 0) {
-            t_diff -= p.t_sum[index - 1];
+        for (size_t dof = 0; dof < DOFs; dof += 1) {
+            if (!input.enabled[dof]) {
+                output.new_acceleration[dof] = input.current_acceleration[dof];
+                output.new_velocity[dof] = input.current_velocity[dof];
+                output.new_position[dof] = input.current_position[dof];
+            }
+
+            auto& p = profiles[dof];
+            auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t);
+            size_t index = std::distance(p.t_sum.begin(), index_ptr);        
+
+            double t_diff = t;
+            if (index > 0) {
+                t_diff -= p.t_sum[index - 1];
+            }
+
+            output.new_acceleration[dof] = p.a[index] + t_diff * p.j[index];
+            output.new_velocity[dof] = p.v[index] + t_diff * p.a[index] + 0.5 * std::pow(t_diff, 2) * p.j[index];
+            output.new_position[dof] = p.p[index] + t_diff * p.v[index] + 0.5 * std::pow(t_diff, 2) * p.a[index] + 1. / 6 * std::pow(t_diff, 3) * p.j[index];
         }
-
-        output.new_acceleration[0] = p.a[index] + t_diff * p.j[index];
-        output.new_velocity[0] = p.v[index] + t_diff * p.a[index] + 0.5 * std::pow(t_diff, 2) * p.j[index];
-        output.new_position[0] = p.p[index] + t_diff * p.v[index] + 0.5 * std::pow(t_diff, 2) * p.a[index] + 1. / 6 * std::pow(t_diff, 3) * p.j[index];
-
+        
         current_input.current_position = output.new_position;
         current_input.current_velocity = output.new_velocity;
         current_input.current_acceleration = output.new_acceleration;

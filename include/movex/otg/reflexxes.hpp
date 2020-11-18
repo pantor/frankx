@@ -41,17 +41,19 @@ public:
                 return Result::Error;
             }
 
-            for (size_t i = 0; i < DOFs; i += 1) {
-                input_parameters->SelectionVector->VecData[i] = true;
-                input_parameters->CurrentPositionVector->VecData[i] = input.current_position(i);
-                input_parameters->CurrentVelocityVector->VecData[i] = input.current_velocity(i);
-                input_parameters->CurrentAccelerationVector->VecData[i] = input.current_acceleration(i);
-                input_parameters->TargetPositionVector->VecData[i] = input.target_position(i);
-                input_parameters->TargetVelocityVector->VecData[i] = input.target_velocity(i);
-                input_parameters->MaxVelocityVector->VecData[i] = input.max_velocity(i);
-                input_parameters->MaxAccelerationVector->VecData[i] = input.max_acceleration(i);
-                input_parameters->MaxJerkVector->VecData[i] = input.max_jerk(i);
+            if (input.minimum_duration.has_value()) {
+                input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value()); 
             }
+
+            input_parameters->SetSelectionVector(input.enabled.data());
+            input_parameters->SetCurrentPositionVector(input.current_position.data());
+            input_parameters->SetCurrentVelocityVector(input.current_velocity.data());
+            input_parameters->SetCurrentAccelerationVector(input.current_acceleration.data());
+            input_parameters->SetTargetPositionVector(input.target_position.data());
+            input_parameters->SetTargetVelocityVector(input.target_velocity.data());
+            input_parameters->SetMaxVelocityVector(input.max_velocity.data());
+            input_parameters->SetMaxAccelerationVector(input.max_acceleration.data());
+            input_parameters->SetMaxJerkVector(input.max_jerk.data());
         }
 
         result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);

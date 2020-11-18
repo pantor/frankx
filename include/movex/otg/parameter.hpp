@@ -19,8 +19,6 @@ struct InputParameter {
     using Vector = Eigen::Matrix<double, DOFs, 1, Eigen::ColMajor>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
-    std::array<bool, DOFs> enabled {true};
-
     Vector current_position;
     Vector current_velocity {Vector::Zero()};
     Vector current_acceleration {Vector::Zero()};
@@ -33,7 +31,12 @@ struct InputParameter {
     Vector max_acceleration;
     Vector max_jerk;
 
+    std::array<bool, DOFs> enabled;
     std::optional<double> minimum_duration;
+
+    InputParameter() {
+        enabled.fill(true);
+    }
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {
         return (
@@ -46,6 +49,8 @@ struct InputParameter {
             || max_velocity != rhs.max_velocity
             || max_acceleration != rhs.max_acceleration
             || max_jerk != rhs.max_jerk
+            || enabled != enabled
+            || minimum_duration != minimum_duration
         );
     }
 };
