@@ -84,13 +84,13 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a2a5519ecdc4ade5afbafd660a23cfaf6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#a2a5519ecdc4ade5afbafd660a23cfaf6">InputParameter</a> ()</td></tr>
+<tr class="separator:a2a5519ecdc4ade5afbafd660a23cfaf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe50f12fceecbddaf267b87148c216eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#abe50f12fceecbddaf267b87148c216eb">operator!=</a> (const <a class="el" href="structmovex_1_1_input_parameter.html">InputParameter</a>&lt; DOFs &gt; &amp;rhs) const</td></tr>
 <tr class="separator:abe50f12fceecbddaf267b87148c216eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:afa534aa43494b7ee8b1eb13436802a0a"><td class="memItemLeft" align="right" valign="top">std::array&lt; bool, DOFs &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#afa534aa43494b7ee8b1eb13436802a0a">enabled</a> {true}</td></tr>
-<tr class="separator:afa534aa43494b7ee8b1eb13436802a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a30f8ff34d3f188d1d4c83e0286b0bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmovex_1_1_input_parameter.html#af9b16a12bdc0d66f96c57e8b2bac1b4a">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#a2a30f8ff34d3f188d1d4c83e0286b0bf">current_position</a></td></tr>
 <tr class="separator:a2a30f8ff34d3f188d1d4c83e0286b0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad498e1180dba0f127598b644fd04eca7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmovex_1_1_input_parameter.html#af9b16a12bdc0d66f96c57e8b2bac1b4a">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#ad498e1180dba0f127598b644fd04eca7">current_velocity</a> {Vector::Zero()}</td></tr>
@@ -109,6 +109,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aaaaafdf2f3b0be28ff795abc77533e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd2dd12f9b19bec9f96c921b6f3ad498"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmovex_1_1_input_parameter.html#af9b16a12bdc0d66f96c57e8b2bac1b4a">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#abd2dd12f9b19bec9f96c921b6f3ad498">max_jerk</a></td></tr>
 <tr class="separator:abd2dd12f9b19bec9f96c921b6f3ad498"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa534aa43494b7ee8b1eb13436802a0a"><td class="memItemLeft" align="right" valign="top">std::array&lt; bool, DOFs &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#afa534aa43494b7ee8b1eb13436802a0a">enabled</a></td></tr>
+<tr class="separator:afa534aa43494b7ee8b1eb13436802a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1f9ac249e7b009ea4d5a5731a9f41a8"><td class="memItemLeft" align="right" valign="top">std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html#ad1f9ac249e7b009ea4d5a5731a9f41a8">minimum_duration</a></td></tr>
 <tr class="separator:ad1f9ac249e7b009ea4d5a5731a9f41a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -130,6 +132,34 @@ template&lt;size_t DOFs&gt; </div>
           <td class="memname">using <a class="el" href="structmovex_1_1_input_parameter.html">movex::InputParameter</a>&lt; DOFs &gt;::<a class="el" href="structmovex_1_1_input_parameter.html#af9b16a12bdc0d66f96c57e8b2bac1b4a">Vector</a> =  Eigen::Matrix&lt;double, DOFs, 1, Eigen::ColMajor&gt;</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2a5519ecdc4ade5afbafd660a23cfaf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a5519ecdc4ade5afbafd660a23cfaf6">&#9670;&nbsp;</a></span>InputParameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t DOFs&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structmovex_1_1_input_parameter.html">movex::InputParameter</a>&lt; DOFs &gt;::<a class="el" href="structmovex_1_1_input_parameter.html">InputParameter</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -245,7 +275,7 @@ template&lt;size_t DOFs&gt; </div>
 template&lt;size_t DOFs&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt;bool, DOFs&gt; <a class="el" href="structmovex_1_1_input_parameter.html">movex::InputParameter</a>&lt; DOFs &gt;::enabled {true}</td>
+          <td class="memname">std::array&lt;bool, DOFs&gt; <a class="el" href="structmovex_1_1_input_parameter.html">movex::InputParameter</a>&lt; DOFs &gt;::enabled</td>
         </tr>
       </table>
 </div><div class="memdoc">
