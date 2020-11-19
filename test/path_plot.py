@@ -19,8 +19,8 @@ if __name__ == '__main__':
     p = Path.Linear([
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         [1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-    ])
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -3.0],
+    ], blend_max_distance=0.08)
 
     s_list, qaxis = walk_through_path(p)
     plt.figure(figsize=(8.0, 2.0 + 3.0 * p.degrees_of_freedom), dpi=120)

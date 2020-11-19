@@ -87,12 +87,12 @@ PYBIND11_MODULE(movex, m) {
         .def("pddq", &LineSegment::pddq, "s"_a)
         .def("pdddq", &LineSegment::pdddq, "s"_a);
 
-    py::class_<QuinticPolynomialSegment, Segment>(m, "QuinticPolynomialSegment")
-        .def_property_readonly("length", &QuinticPolynomialSegment::get_length)
-        .def("q", &QuinticPolynomialSegment::q, "s"_a)
-        .def("pdq", &QuinticPolynomialSegment::pdq, "s"_a)
-        .def("pddq", &QuinticPolynomialSegment::pddq, "s"_a)
-        .def("pdddq", &QuinticPolynomialSegment::pdddq, "s"_a);
+    py::class_<QuinticSegment, Segment>(m, "QuinticSegment")
+        .def_property_readonly("length", &QuinticSegment::get_length)
+        .def("q", &QuinticSegment::q, "s"_a)
+        .def("pdq", &QuinticSegment::pdq, "s"_a)
+        .def("pddq", &QuinticSegment::pddq, "s"_a)
+        .def("pdddq", &QuinticSegment::pdddq, "s"_a);
 
     py::class_<PathPoint>(m, "PathPoint");
 

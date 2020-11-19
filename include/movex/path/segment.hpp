@@ -21,9 +21,9 @@ struct Segment {
 
 
 class LineSegment: public Segment {
+public:
     Vector7d start, end;
 
-public:
     explicit LineSegment(const Vector7d& start, const Vector7d&end): start(start), end(end) {
         Vector7d diff = end - start;
 
@@ -56,24 +56,8 @@ class CircleSegment: public Segment {
     Vector7d center, x, y;
     double radius;
 
-    explicit CircleSegment(const Vector7d& start, const Vector7d& intersection, const Vector7d& end, double max_deviation) {
-        const Vector7d start_direction = (intersection - start).normalized();
-		const Vector7d end_direction = (end - intersection).normalized();
+    explicit CircleSegment(const Vector7d& center, const Vector7d& start, double angle = 2 * M_PI) {
 
-        const double start_distance = (start - intersection).norm();
-		const double end_distance = (end - intersection).norm();
-
-        double distance = std::min((start - intersection).norm(), (end - intersection).norm());
-		const double angle = acos(start_direction.dot(end_direction));
-
-		distance = std::min(distance, max_deviation * sin(0.5 * angle) / (1.0 - cos(0.5 * angle)));  // enforce max deviation
-
-		radius = distance / tan(0.5 * angle);
-		length = angle * radius;
-
-		center = intersection + (end_direction - start_direction).normalized() * radius / cos(0.5 * angle);
-		x = (intersection - distance * start_direction - center).normalized();
-		y = start_direction;
     }
 
     double get_length() const {
@@ -102,11 +86,13 @@ class CircleSegment: public Segment {
 };
 
 
-class QuinticPolynomialSegment: public Segment {
-    Vector7d a, b, c, d, e, f;
+class QuinticSegment: public Segment {
+    double s_length;
 
 public:
-    explicit QuinticPolynomialSegment(const Vector7d& a, const Vector7d& b, const Vector7d& c, const Vector7d& d, const Vector7d& e, const Vector7d& f): a(a), b(b), c(c), d(d), e(e), f(f) {
+    Vector7d a, b, c, d, e, f;
+
+    explicit QuinticSegment(const Vector7d& a, const Vector7d& b, const Vector7d& c, const Vector7d& d, const Vector7d& e, const Vector7d& f, double s_length): a(a), b(b), c(c), d(d), e(e), f(f), s_length(s_length) {
         // Numerical integration here
         length = 1.0;
     }
@@ -120,21 +106,16 @@ public:
     }
 
     Vector7d pdq(double s) const {
-        return 5 * a * std::pow(s, 4) + 4 * b * std::pow(s, 3) + 3 * c * std::pow(s, 2) + 2 * d * s + e;
+        return e + s * (2 * d + s * (3 * c + s * (4 * b + s * 5 * a)));
     }
 
     Vector7d pddq(double s) const {
-        return 20 * a * std::pow(s, 3) + 12 * b * std::pow(s, 2) + 6 * c * s + 2 * d;
+        return 2 * d + s * (6 * c + s * (12 * b + s * 20 * a));
     }
 
     Vector7d pdddq(double s) const {
-        return 60 * a * std::pow(s, 2) + 24 * b * s + 6 * c;
+        return 6 * c + s * (24 * b + s * 60 * a);
     }
-};
-
-
-class SplineSegment: public Segment {
-
 };
 
 } // namespace movex
