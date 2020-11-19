@@ -1,4 +1,6 @@
 import copy
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -27,14 +29,14 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.0, 0.2]
-    inp.current_velocity = [0.0] * inp.degrees_of_freedom
+    inp.current_position = [0.0]
+    inp.current_velocity = [0.01] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [1.0, 1.0]
+    inp.target_position = [-1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [0.6] * inp.degrees_of_freedom
-    inp.max_acceleration = [1.0] * inp.degrees_of_freedom
+    inp.max_velocity = [10.0] * inp.degrees_of_freedom
+    inp.max_acceleration = [10.0] * inp.degrees_of_freedom
     inp.max_jerk = [2.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
@@ -49,7 +51,6 @@ if __name__ == '__main__':
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
     dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / otg.delta_time
-    print(qaxis[-20:, 1])
 
     plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)
 
@@ -87,4 +88,4 @@ if __name__ == '__main__':
     print(f'Trajectory duration: {t_list[-1]:0.4f} [s]')
 
     # plt.show()
-    plt.savefig('otg_trajectory.png')
+    plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')

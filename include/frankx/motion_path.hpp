@@ -1,3 +1,3 @@
 #pragma once
 
-#include <movex/path.hpp>
+#include <movex/path/path.hpp>

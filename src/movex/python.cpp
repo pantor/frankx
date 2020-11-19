@@ -9,6 +9,7 @@
 #include <movex/otg/quintic.hpp>
 #include <movex/otg/ruckig.hpp>
 #include <movex/otg/smoothie.hpp>
+#include <movex/path/path.hpp>
 
 #ifdef WITH_REFLEXXES
     #include <movex/otg/reflexxes.hpp>
@@ -23,7 +24,7 @@ using namespace movex;
 PYBIND11_MODULE(movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {2};
+    constexpr size_t DOFs {1};
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
@@ -65,6 +66,11 @@ PYBIND11_MODULE(movex, m) {
         .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
         .def("update", &Smoothie<DOFs>::update);
 
+    py::class_<Ruckig<DOFs>>(m, "Ruckig")
+        .def(py::init<double>(), "delta_time"_a)
+        .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
+        .def("update", &Ruckig<DOFs>::update);
+
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
@@ -72,8 +78,31 @@ PYBIND11_MODULE(movex, m) {
         .def("update", &Reflexxes<DOFs>::update);
 #endif
 
-    py::class_<Ruckig<DOFs>>(m, "Ruckig")
-        .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
-        .def("update", &Ruckig<DOFs>::update);
+    py::class_<Segment>(m, "Segment");
+
+    py::class_<LineSegment, Segment>(m, "LineSegment")
+        .def_property_readonly("length", &LineSegment::get_length)
+        .def("q", &LineSegment::q, "s"_a)
+        .def("pdq", &LineSegment::pdq, "s"_a)
+        .def("pddq", &LineSegment::pddq, "s"_a)
+        .def("pdddq", &LineSegment::pdddq, "s"_a);
+
+    py::class_<QuinticPolynomialSegment, Segment>(m, "QuinticPolynomialSegment")
+        .def_property_readonly("length", &QuinticPolynomialSegment::get_length)
+        .def("q", &QuinticPolynomialSegment::q, "s"_a)
+        .def("pdq", &QuinticPolynomialSegment::pdq, "s"_a)
+        .def("pddq", &QuinticPolynomialSegment::pddq, "s"_a)
+        .def("pdddq", &QuinticPolynomialSegment::pdddq, "s"_a);
+
+    py::class_<PathPoint>(m, "PathPoint");
+
+    py::class_<Path>(m, "Path")
+        .def(py::init<const std::vector<PathPoint>&>(), "waypoints"_a)
+        .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
+        .def_static("Linear", &Path::Linear, "waypoints"_a, "blend_max_distance"_a = 0.0)
+        .def_property_readonly("length", &Path::get_length)
+        .def("q", &Path::q, "s"_a)
+        .def("pdq", &Path::pdq, "s"_a)
+        .def("pddq", &Path::pddq, "s"_a)
+        .def("pdddq", &Path::pdddq, "s"_a);
 }

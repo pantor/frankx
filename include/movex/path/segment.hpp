@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <Eigen/Core>
 
 
@@ -7,8 +9,9 @@ namespace movex {
 
 using Vector7d = Eigen::Matrix<double, 7, 1>;
 
-class Segment {
-public:
+struct Segment {
+    double length;
+
     virtual double get_length() const = 0;
     virtual Vector7d q(double s) const = 0;
     virtual Vector7d pdq(double s) const = 0;
@@ -19,13 +22,12 @@ public:
 
 class LineSegment: public Segment {
     Vector7d start, end;
-    double length;
 
 public:
     explicit LineSegment(const Vector7d& start, const Vector7d&end): start(start), end(end) {
         Vector7d diff = end - start;
 
-        length = 0.0;
+        length = diff.norm();
     }
 
     double get_length() const {
@@ -52,7 +54,7 @@ public:
 
 class CircleSegment: public Segment {
     Vector7d center, x, y;
-    double length, radius;
+    double radius;
 
     explicit CircleSegment(const Vector7d& start, const Vector7d& intersection, const Vector7d& end, double max_deviation) {
         const Vector7d start_direction = (intersection - start).normalized();
@@ -100,30 +102,39 @@ class CircleSegment: public Segment {
 };
 
 
-class SplineSegment: public Segment {
+class QuinticPolynomialSegment: public Segment {
+    Vector7d a, b, c, d, e, f;
 
-};
+public:
+    explicit QuinticPolynomialSegment(const Vector7d& a, const Vector7d& b, const Vector7d& c, const Vector7d& d, const Vector7d& e, const Vector7d& f): a(a), b(b), c(c), d(d), e(e), f(f) {
+        // Numerical integration here
+        length = 1.0;
+    }
 
+    double get_length() const {
+        return length;
+    }
 
-struct PathPoint {
-    Vector7d point;
-    double max_blend_distance;
+    Vector7d q(double s) const {
+        return f + s * (e + s * (d + s * (c + s * (b + s * a))));
+    }
 
-    PathPoint(const Vector7d& point): point(point) { }
+    Vector7d pdq(double s) const {
+        return 5 * a * std::pow(s, 4) + 4 * b * std::pow(s, 3) + 3 * c * std::pow(s, 2) + 2 * d * s + e;
+    }
 
-    void blend_into_next(double max_distance) {
-        max_blend_distance = max_distance;
+    Vector7d pddq(double s) const {
+        return 20 * a * std::pow(s, 3) + 12 * b * std::pow(s, 2) + 6 * c * s + 2 * d;
+    }
+
+    Vector7d pdddq(double s) const {
+        return 60 * a * std::pow(s, 2) + 24 * b * s + 6 * c;
     }
 };
 
 
-class Path {
-    std::vector<Segment> segments;
+class SplineSegment: public Segment {
 
-    double length;
-
-    explicit Path() { }
-    explicit Path(const std::vector<PathPoint> waypoints) { }
 };
 
 } // namespace movex
