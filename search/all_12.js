@@ -24,6 +24,6 @@ var searchData=
   ['spiral',['Spiral',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63ac978545ade9f5ce21bfa0353c04feda9',1,'frankx::ImpedanceMotion']]],
   ['spiral_5fmotion',['spiral_motion',['../structfrankx_1_1_impedance_motion.html#a016840ea1dd65bee2c16dd5898b432af',1,'frankx::ImpedanceMotion']]],
   ['spiraltargetmotion',['SpiralTargetMotion',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'frankx::ImpedanceMotion']]],
-  ['splinesegment',['SplineSegment',['../classmovex_1_1_spline_segment.html',1,'movex']]],
+  ['start',['start',['../classmovex_1_1_line_segment.html#a8b805b122d4fe451ed1a05d58aa33036',1,'movex::LineSegment']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html',1,'frankx::StopMotion'],['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

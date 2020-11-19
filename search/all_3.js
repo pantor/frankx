@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['c',['c',['../structmovex_1_1_affine.html#a2fc076d9990acfca7fb999b58a4e4e35',1,'movex::Affine']]],
+  ['c',['c',['../classmovex_1_1_quintic_segment.html#a462758891aca9646464037b6e3366503',1,'movex::QuinticSegment::c()'],['../structmovex_1_1_affine.html#a2fc076d9990acfca7fb999b58a4e4e35',1,'movex::Affine::c()']]],
   ['callback',['callback',['../structfrankx_1_1_condition.html#a93ac975bc75f6266484d5c7636d09366',1,'frankx::Condition']]],
   ['callbacktype',['CallbackType',['../structfrankx_1_1_condition.html#a514586743d19fa8a174184550d224e9a',1,'frankx::Condition']]],
   ['cartesian',['Cartesian',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708ac62cd6a7dfc8d04ae078b2b3d6293b9c',1,'frankx::ImpedanceMotion']]],

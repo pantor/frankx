@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['d',['d',['../classmovex_1_1_quintic_segment.html#ad2454c19d474e94560f50f1ab292f4f9',1,'movex::QuinticSegment']]],
   ['data',['data',['../structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6',1,'movex::Affine']]],
   ['degrees_5fof_5ffreedom',['degrees_of_freedom',['../structmovex_1_1_input_parameter.html#a89d3c204ef536668443863d6924df439',1,'movex::InputParameter::degrees_of_freedom()'],['../classmovex_1_1_path.html#a01783b3e5ad2898b06f1417a647cb560',1,'movex::Path::degrees_of_freedom()']]],
   ['degrees_5fof_5ffreedoms',['degrees_of_freedoms',['../structfrankx_1_1_robot.html#a9c5147b73dca46191e0ff3a8ff23fc78',1,'frankx::Robot']]],
