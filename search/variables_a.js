@@ -1,23 +1,6 @@
 var searchData=
 [
-  ['max_5facceleration',['max_acceleration',['../structmovex_1_1_input_parameter.html#aaaaafdf2f3b0be28ff795abc77533e57',1,'movex::InputParameter']]],
-  ['max_5fblend_5fdistance',['max_blend_distance',['../structmovex_1_1_path_point.html#ad100564d1f013fd48ddf4051f1112218',1,'movex::PathPoint']]],
-  ['max_5fdynamics',['max_dynamics',['../structfrankx_1_1_motion_data.html#a4fa5ddd26b420cd7ea9f224be6ed3f86',1,'frankx::MotionData::max_dynamics()'],['../structfrankx_1_1_waypoint.html#abf97509f703188b0a1f21607f9a35863',1,'frankx::Waypoint::max_dynamics()']]],
-  ['max_5felbow_5facceleration',['max_elbow_acceleration',['../structfrankx_1_1_robot.html#a567a162f7c626b7da1234911edb323f0',1,'frankx::Robot']]],
-  ['max_5felbow_5fjerk',['max_elbow_jerk',['../structfrankx_1_1_robot.html#a9bb6c1ec1604d3f3c7b99c8dabd5589f',1,'frankx::Robot']]],
-  ['max_5felbow_5fvelocity',['max_elbow_velocity',['../structfrankx_1_1_robot.html#adb8934c142109119bc152600089dc2db',1,'frankx::Robot']]],
-  ['max_5fjerk',['max_jerk',['../structmovex_1_1_input_parameter.html#abd2dd12f9b19bec9f96c921b6f3ad498',1,'movex::InputParameter']]],
-  ['max_5fjoint_5facceleration',['max_joint_acceleration',['../structfrankx_1_1_robot.html#a06372773798b061d6fbec9f58dd295db',1,'frankx::Robot']]],
-  ['max_5fjoint_5fvelocity',['max_joint_velocity',['../structfrankx_1_1_robot.html#a993f27dfdacd3c65e5b72fa9fbeee6bf',1,'frankx::Robot']]],
-  ['max_5frotation_5facceleration',['max_rotation_acceleration',['../structfrankx_1_1_robot.html#ad189cef5d59a3d631f6ba2c492d8777a',1,'frankx::Robot']]],
-  ['max_5frotation_5fjerk',['max_rotation_jerk',['../structfrankx_1_1_robot.html#afbe3541b90ef23e8d2346b8c7d29d26f',1,'frankx::Robot']]],
-  ['max_5frotation_5fvelocity',['max_rotation_velocity',['../structfrankx_1_1_robot.html#a0a286b02c1b72f49e5fb3c7b25579ce8',1,'frankx::Robot']]],
-  ['max_5fspeed',['max_speed',['../classfrankx_1_1_gripper.html#a784b19563ca5b11c69a0e9144d83fcf1',1,'frankx::Gripper']]],
-  ['max_5ftranslation_5facceleration',['max_translation_acceleration',['../structfrankx_1_1_robot.html#ae124a423ac1965dd304b27b9d9ab22d1',1,'frankx::Robot']]],
-  ['max_5ftranslation_5fjerk',['max_translation_jerk',['../structfrankx_1_1_robot.html#ad755fee33f76a02aaf8c15c2a76f535a',1,'frankx::Robot']]],
-  ['max_5ftranslation_5fvelocity',['max_translation_velocity',['../structfrankx_1_1_robot.html#a7a15611c976941d744fc32123dd3ca21',1,'frankx::Robot']]],
-  ['max_5fvelocity',['max_velocity',['../structmovex_1_1_input_parameter.html#affe91329ccbb2418cf4f31f4aa1973cc',1,'movex::InputParameter']]],
-  ['max_5fwidth',['max_width',['../classfrankx_1_1_gripper.html#ae576d3576dffa02831218201b5e56f5a',1,'frankx::Gripper']]],
-  ['minimum_5fduration',['minimum_duration',['../structmovex_1_1_input_parameter.html#ad1f9ac249e7b009ea4d5a5731a9f41a8',1,'movex::InputParameter']]],
-  ['minimum_5ftime',['minimum_time',['../structfrankx_1_1_waypoint.html#ab28c63d1850eaafb8efe8411c383eab9',1,'frankx::Waypoint']]]
+  ['length',['length',['../structmovex_1_1_segment.html#a997fe764ff91f889fcbc4d757902b7cf',1,'movex::Segment']]],
+  ['linear_5fmotion',['linear_motion',['../structfrankx_1_1_impedance_motion.html#adae1f99cfb0168395560ee320572f32a',1,'frankx::ImpedanceMotion']]],
+  ['logged_5fin',['logged_in',['../classfrankx_1_1robot_1_1_robot.html#a90d49bd161c5daf0ae0699df0acd9bf5',1,'frankx.robot.Robot.logged_in()'],['../classfrankx_1_1robot_1_1_robot.html#a538a8cfae08c554087b2fad48501ee63',1,'frankx.robot.Robot.logged_in()']]]
 ];

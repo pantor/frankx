@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Frankx: movex::Segment Class Reference</title>
+<title>Frankx: movex::Segment Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -60,43 +60,50 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespacemovex.html">movex</a></li><li class="navelem"><a class="el" href="classmovex_1_1_segment.html">Segment</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacemovex.html">movex</a></li><li class="navelem"><a class="el" href="structmovex_1_1_segment.html">Segment</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classmovex_1_1_segment-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structmovex_1_1_segment-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">movex::Segment Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">movex::Segment Struct Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="path_8hpp_source.html">path.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="segment_8hpp_source.html">segment.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for movex::Segment:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classmovex_1_1_segment.png" usemap="#movex::Segment_map" alt=""/>
+  <img src="structmovex_1_1_segment.png" usemap="#movex::Segment_map" alt=""/>
   <map id="movex::Segment_map" name="movex::Segment_map">
-<area href="classmovex_1_1_circle_segment.html" alt="movex::CircleSegment" shape="rect" coords="0,56,137,80"/>
-<area href="classmovex_1_1_line_segment.html" alt="movex::LineSegment" shape="rect" coords="147,56,284,80"/>
-<area href="classmovex_1_1_spline_segment.html" alt="movex::SplineSegment" shape="rect" coords="294,56,431,80"/>
+<area href="classmovex_1_1_circle_segment.html" alt="movex::CircleSegment" shape="rect" coords="0,56,203,80"/>
+<area href="classmovex_1_1_line_segment.html" alt="movex::LineSegment" shape="rect" coords="213,56,416,80"/>
+<area href="classmovex_1_1_quintic_polynomial_segment.html" alt="movex::QuinticPolynomialSegment" shape="rect" coords="426,56,629,80"/>
+<area href="classmovex_1_1_spline_segment.html" alt="movex::SplineSegment" shape="rect" coords="639,56,842,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb9acc93bdffe6cf748b1cba7ade0177"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html#abb9acc93bdffe6cf748b1cba7ade0177">get_length</a> () const =0</td></tr>
+<tr class="memitem:abb9acc93bdffe6cf748b1cba7ade0177"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#abb9acc93bdffe6cf748b1cba7ade0177">get_length</a> () const =0</td></tr>
 <tr class="separator:abb9acc93bdffe6cf748b1cba7ade0177"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8d5b71668e43dd5bd741e2da3f9744e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html#aa8d5b71668e43dd5bd741e2da3f9744e">q</a> (double s) const =0</td></tr>
+<tr class="memitem:aa8d5b71668e43dd5bd741e2da3f9744e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#aa8d5b71668e43dd5bd741e2da3f9744e">q</a> (double s) const =0</td></tr>
 <tr class="separator:aa8d5b71668e43dd5bd741e2da3f9744e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3db0902b1b7ba8356f7d473e4af0323c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html#a3db0902b1b7ba8356f7d473e4af0323c">pdq</a> (double s) const =0</td></tr>
+<tr class="memitem:a3db0902b1b7ba8356f7d473e4af0323c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a3db0902b1b7ba8356f7d473e4af0323c">pdq</a> (double s) const =0</td></tr>
 <tr class="separator:a3db0902b1b7ba8356f7d473e4af0323c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6867cbbe40afde44f8f1c031fd738bbc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html#a6867cbbe40afde44f8f1c031fd738bbc">pddq</a> (double s) const =0</td></tr>
+<tr class="memitem:a6867cbbe40afde44f8f1c031fd738bbc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a6867cbbe40afde44f8f1c031fd738bbc">pddq</a> (double s) const =0</td></tr>
 <tr class="separator:a6867cbbe40afde44f8f1c031fd738bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cbb4cef47144a943576de1dab3970fa"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html#a0cbb4cef47144a943576de1dab3970fa">pdddq</a> (double s) const =0</td></tr>
+<tr class="memitem:a0cbb4cef47144a943576de1dab3970fa"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a0cbb4cef47144a943576de1dab3970fa">pdddq</a> (double s) const =0</td></tr>
 <tr class="separator:a0cbb4cef47144a943576de1dab3970fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a997fe764ff91f889fcbc4d757902b7cf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a997fe764ff91f889fcbc4d757902b7cf">length</a></td></tr>
+<tr class="separator:a997fe764ff91f889fcbc4d757902b7cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="abb9acc93bdffe6cf748b1cba7ade0177"></a>
@@ -122,7 +129,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quintic_polynomial_segment.html#ab767b5e30ce8f15190ad6b7c97d2ba42">movex::QuinticPolynomialSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -150,7 +157,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_line_segment.html#aa9fea6eccb89f5b0c438b5b8d4a769a8">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quintic_polynomial_segment.html#a8a5db5a6f2f15ce5928c4d5647af34ec">movex::QuinticPolynomialSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#aa9fea6eccb89f5b0c438b5b8d4a769a8">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -178,7 +185,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_line_segment.html#add4d5efe29ef0f504028bbf2324db7d2">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quintic_polynomial_segment.html#a43da63adcc209d7921c59231d5d7a6b9">movex::QuinticPolynomialSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#add4d5efe29ef0f504028bbf2324db7d2">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -206,7 +213,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_line_segment.html#a5b46c302f59e27a2b62e98d6efd6fdc6">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quintic_polynomial_segment.html#ab2905c6d431edc5860f9efec7477b8f9">movex::QuinticPolynomialSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a5b46c302f59e27a2b62e98d6efd6fdc6">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -234,12 +241,27 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_line_segment.html#a159f56aac66ba7794fd11a474c69cf2f">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quintic_polynomial_segment.html#afeb04bb6ae09fdc96753e7907b995525">movex::QuinticPolynomialSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a159f56aac66ba7794fd11a474c69cf2f">movex::LineSegment</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/runner/work/frankx/frankx/include/movex/<a class="el" href="path_8hpp_source.html">path.hpp</a></li>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a997fe764ff91f889fcbc4d757902b7cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a997fe764ff91f889fcbc4d757902b7cf">&#9670;&nbsp;</a></span>length</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double movex::Segment::length</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/frankx/frankx/include/movex/path/<a class="el" href="segment_8hpp_source.html">segment.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['gripper_5fforce',['gripper_force',['../classfrankx_1_1_gripper.html#a74ba71fc32a2a10043bd7e68fa105843',1,'frankx::Gripper']]],
-  ['gripper_5fspeed',['gripper_speed',['../classfrankx_1_1_gripper.html#a383e9fffbc02a49ba05d87b6ffa75cca',1,'frankx::Gripper']]]
+  ['fci_5fip',['fci_ip',['../structfrankx_1_1_robot.html#aac74827dfb2966ffbdc90b413e1663db',1,'frankx::Robot']]],
+  ['finish_5fafter',['finish_after',['../structfrankx_1_1_impedance_motion_1_1_linear_target_motion.html#a9dd8292573baabc7b6e046f5da4f716a',1,'frankx::ImpedanceMotion::LinearTargetMotion']]],
+  ['finish_5fwait_5ffactor',['finish_wait_factor',['../structfrankx_1_1_impedance_motion_1_1_linear_target_motion.html#a1a5d22ca2f0698ee08134833baea89a6',1,'frankx::ImpedanceMotion::LinearTargetMotion']]],
+  ['force_5fconstraints',['force_constraints',['../structfrankx_1_1_impedance_motion.html#ac1f86962ab4e5a8c9329f94ae53a90fd',1,'frankx::ImpedanceMotion']]]
 ];

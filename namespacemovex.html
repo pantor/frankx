@@ -63,8 +63,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">movex Namespace Reference</div>  </div>
 </div><!--header-->
@@ -88,11 +87,13 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_quintic.html">Quintic</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_quintic_polynomial_segment.html">QuinticPolynomialSegment</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_reflexxes.html">Reflexxes</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_ruckig.html">Ruckig</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_segment.html">Segment</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html">Segment</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_smoothie.html">Smoothie</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,15 +114,6 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacemovex.html#a6fd778bb7e86cd4c8b7e52584c82b1d7a902b0d55fddef6f8d651fe1035b7d4bd">Result::Error</a>
  }</td></tr>
 <tr class="separator:a6fd778bb7e86cd4c8b7e52584c82b1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a7d0443880056d581a985f9e0f36811f1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#a7d0443880056d581a985f9e0f36811f1">Power</a> (double v, int e)</td></tr>
-<tr class="separator:a7d0443880056d581a985f9e0f36811f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67821fe7778e67fa9d603c862f58ad93"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#a67821fe7778e67fa9d603c862f58ad93">Power</a> (double v, double e)</td></tr>
-<tr class="separator:a67821fe7778e67fa9d603c862f58ad93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2857ac4f73df66bc40a1fc347564662"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662">Sqrt</a> (double v)</td></tr>
-<tr class="separator:ab2857ac4f73df66bc40a1fc347564662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a4673c86a5b4656131071252aba314494"></a>
@@ -177,105 +169,6 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a6fd778bb7e86cd4c8b7e52584c82b1d7a8f3d10eb21bd36347c258679eba9e92b"></a>Finished&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a6fd778bb7e86cd4c8b7e52584c82b1d7a902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"></td></tr>
 </table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a7d0443880056d581a985f9e0f36811f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d0443880056d581a985f9e0f36811f1">&#9670;&nbsp;</a></span>Power() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double movex::Power </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>e</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a67821fe7778e67fa9d603c862f58ad93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67821fe7778e67fa9d603c862f58ad93">&#9670;&nbsp;</a></span>Power() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double movex::Power </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>e</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab2857ac4f73df66bc40a1fc347564662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2857ac4f73df66bc40a1fc347564662">&#9670;&nbsp;</a></span>Sqrt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double movex::Sqrt </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

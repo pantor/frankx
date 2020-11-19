@@ -17,6 +17,5 @@ var searchData=
   ['setvector',['setVector',['../namespacefrankx.html#a063dc4aaf13fa4d6e8b664861009ba88',1,'frankx']]],
   ['slerp',['slerp',['../structmovex_1_1_affine.html#ac23d9f49c02cfa7dd5e3503be482e013',1,'movex::Affine']]],
   ['smoothie',['Smoothie',['../classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c',1,'movex::Smoothie']]],
-  ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['linear_5fmotion',['linear_motion',['../structfrankx_1_1_impedance_motion.html#adae1f99cfb0168395560ee320572f32a',1,'frankx::ImpedanceMotion']]],
-  ['logged_5fin',['logged_in',['../classfrankx_1_1robot_1_1_robot.html#a90d49bd161c5daf0ae0699df0acd9bf5',1,'frankx.robot.Robot.logged_in()'],['../classfrankx_1_1robot_1_1_robot.html#a538a8cfae08c554087b2fad48501ee63',1,'frankx.robot.Robot.logged_in()']]]
+  ['jerk_5frel',['jerk_rel',['../structfrankx_1_1_motion_data.html#a61f2afa33b8952da99b7e6fd2da4ea7f',1,'frankx::MotionData::jerk_rel()'],['../structfrankx_1_1_robot.html#acad76f1aa3952698b6c861e20a44bf25',1,'frankx::Robot::jerk_rel()']]],
+  ['joint_5fstiffness',['joint_stiffness',['../structfrankx_1_1_impedance_motion.html#a8df493d05a8b3eb2eab8be02c1ae2bf0',1,'frankx::ImpedanceMotion']]]
 ];

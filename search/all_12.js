@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['segment',['Segment',['../classmovex_1_1_segment.html',1,'movex']]],
+  ['segment',['Segment',['../structmovex_1_1_segment.html',1,'movex']]],
+  ['segment_2ehpp',['segment.hpp',['../segment_8hpp.html',1,'']]],
   ['set_5fa',['set_a',['../structmovex_1_1_affine.html#aa4899f2fc9d778c227303c6476cf92f2',1,'movex::Affine']]],
   ['set_5fb',['set_b',['../structmovex_1_1_affine.html#a1045b15e156f121af974305d2fd152b4',1,'movex::Affine']]],
   ['set_5fc',['set_c',['../structmovex_1_1_affine.html#ad32a7211c04bfbea4e3b025900790229',1,'movex::Affine']]],
@@ -24,6 +25,5 @@ var searchData=
   ['spiral_5fmotion',['spiral_motion',['../structfrankx_1_1_impedance_motion.html#a016840ea1dd65bee2c16dd5898b432af',1,'frankx::ImpedanceMotion']]],
   ['spiraltargetmotion',['SpiralTargetMotion',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'frankx::ImpedanceMotion']]],
   ['splinesegment',['SplineSegment',['../classmovex_1_1_spline_segment.html',1,'movex']]],
-  ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html',1,'frankx::StopMotion'],['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];
