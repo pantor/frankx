@@ -66,7 +66,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classmovex_1_1_path-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -80,6 +79,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a714fd8c34977044af57161d58d109a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a714fd8c34977044af57161d58d109a24">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_path_point.html">PathPoint</a> &gt; &amp;waypoints)</td></tr>
 <tr class="separator:a714fd8c34977044af57161d58d109a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc9e85d87c16fbc2cb636bb489945834"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#adc9e85d87c16fbc2cb636bb489945834">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;waypoints, double blend_max_distance=0.0)</td></tr>
+<tr class="separator:adc9e85d87c16fbc2cb636bb489945834"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbaec66435a26e5a4a28da14ca715af9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#afbaec66435a26e5a4a28da14ca715af9">get_length</a> () const</td></tr>
 <tr class="separator:afbaec66435a26e5a4a28da14ca715af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58860bc773272e9ab7c676d36624d6f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a58860bc773272e9ab7c676d36624d6f9">q</a> (double s) const</td></tr>
@@ -90,11 +91,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2299da1a96871d19968d945a6d96c24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b56e3dbc43d2586872ec8fae9cc835b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6b56e3dbc43d2586872ec8fae9cc835b">pdddq</a> (double s) const</td></tr>
 <tr class="separator:a6b56e3dbc43d2586872ec8fae9cc835b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a49df9af409aa2013beb64a5d73713790"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classmovex_1_1_path.html">Path</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a49df9af409aa2013beb64a5d73713790">Linear</a> (const std::vector&lt; <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> &gt; &amp;waypoints, double blend_max_distance=0.0)</td></tr>
-<tr class="separator:a49df9af409aa2013beb64a5d73713790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c4f086e6a21daa190a8e406ddaad15a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6c4f086e6a21daa190a8e406ddaad15a">max_pddq</a> () const</td></tr>
+<tr class="separator:a6c4f086e6a21daa190a8e406ddaad15a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ffc12706ddca56aef2c86120485f8b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a5ffc12706ddca56aef2c86120485f8b1">max_pdddq</a> () const</td></tr>
+<tr class="separator:a5ffc12706ddca56aef2c86120485f8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -103,7 +103,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a714fd8c34977044af57161d58d109a24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a714fd8c34977044af57161d58d109a24">&#9670;&nbsp;</a></span>Path()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a714fd8c34977044af57161d58d109a24">&#9670;&nbsp;</a></span>Path() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -117,6 +117,42 @@ Static Public Attributes</h2></td></tr>
           <td class="paramtype">const std::vector&lt; <a class="el" href="structmovex_1_1_path_point.html">PathPoint</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>waypoints</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc9e85d87c16fbc2cb636bb489945834"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc9e85d87c16fbc2cb636bb489945834">&#9670;&nbsp;</a></span>Path() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">movex::Path::Path </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>waypoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>blend_max_distance</em> = <code>0.0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -154,8 +190,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a49df9af409aa2013beb64a5d73713790"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49df9af409aa2013beb64a5d73713790">&#9670;&nbsp;</a></span>Linear()</h2>
+<a id="a5ffc12706ddca56aef2c86120485f8b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ffc12706ddca56aef2c86120485f8b1">&#9670;&nbsp;</a></span>max_pdddq()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,26 +200,40 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classmovex_1_1_path.html">Path</a> movex::Path::Linear </td>
+          <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::max_pdddq </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>waypoints</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>blend_max_distance</em> = <code>0.0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c4f086e6a21daa190a8e406ddaad15a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c4f086e6a21daa190a8e406ddaad15a">&#9670;&nbsp;</a></span>max_pddq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::max_pddq </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

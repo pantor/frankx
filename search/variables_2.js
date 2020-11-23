@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['c',['c',['../classmovex_1_1_quintic_segment.html#a462758891aca9646464037b6e3366503',1,'movex::QuinticSegment']]],
+  ['c',['c',['../classmovex_1_1_quartic_blend_segment.html#a8bac23d1759c894207f8c2728d4e582e',1,'movex::QuarticBlendSegment']]],
   ['callback',['callback',['../structfrankx_1_1_condition.html#a93ac975bc75f6266484d5c7636d09366',1,'frankx::Condition']]],
   ['center',['center',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#aa0af6d59f4e177afadfd74be58132e91',1,'frankx::ImpedanceMotion::SpiralTargetMotion']]],
+  ['client',['client',['../classfrankx_1_1robot_1_1_robot.html#ad370c4c4b2da01c1b4fed805c41eda02',1,'frankx::robot::Robot']]],
   ['condition',['condition',['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction']]],
   ['control_5frate',['control_rate',['../structfrankx_1_1_robot.html#a089ceac8cb52299f67656587234b5523',1,'frankx::Robot']]],
   ['controller_5fmode',['controller_mode',['../structfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057',1,'frankx::Robot']]],

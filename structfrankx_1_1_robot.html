@@ -86,8 +86,8 @@ Inheritance diagram for frankx::Robot:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8a7f839dcab8c440a32d43d4171309ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a8a7f839dcab8c440a32d43d4171309ba">Robot</a> (std::string fci_ip, double dynamic_rel=1.0)</td></tr>
-<tr class="separator:a8a7f839dcab8c440a32d43d4171309ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e766fe34e82f895dc398ae5af3cb4cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a4e766fe34e82f895dc398ae5af3cb4cf">Robot</a> (std::string fci_ip, double dynamic_rel=1.0, bool repeat_on_error=true, bool stop_at_python_signal=true)</td></tr>
+<tr class="separator:a4e766fe34e82f895dc398ae5af3cb4cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2727e8748fe3fe59a12023e0e51d4c68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a2727e8748fe3fe59a12023e0e51d4c68">setDefaultBehavior</a> ()</td></tr>
 <tr class="separator:a2727e8748fe3fe59a12023e0e51d4c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55149f60409d653ad890637a18cb1aa0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a55149f60409d653ad890637a18cb1aa0">setDynamicRel</a> (double dynamic_rel)</td></tr>
@@ -114,29 +114,41 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a55b4b3e1ad13bdd1b41e357841403bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23b02730fe0bd359c523fa91a183c9e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a23b02730fe0bd359c523fa91a183c9e7">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_joint_motion.html">JointMotion</a> motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data)</td></tr>
 <tr class="separator:a23b02730fe0bd359c523fa91a183c9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a882d75923f000d67b5ca8ab417cf0c79"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a882d75923f000d67b5ca8ab417cf0c79">move</a> (<a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a> motion)</td></tr>
+<tr class="separator:a882d75923f000d67b5ca8ab417cf0c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6de551a3db2d7bd53cce8ac418838b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a0b6de551a3db2d7bd53cce8ac418838b">move</a> (<a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a> motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data)</td></tr>
+<tr class="separator:a0b6de551a3db2d7bd53cce8ac418838b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b9ebdbbfd55c18ac8bbdbda906c206d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a8b9ebdbbfd55c18ac8bbdbda906c206d">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a> motion)</td></tr>
+<tr class="separator:a8b9ebdbbfd55c18ac8bbdbda906c206d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a788ee42e09ce87bd303c66d281e46b43"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a788ee42e09ce87bd303c66d281e46b43">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a> motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data)</td></tr>
+<tr class="separator:a788ee42e09ce87bd303c66d281e46b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20851d0b591624832e31346ea3bd3ecb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a20851d0b591624832e31346ea3bd3ecb">move</a> (<a class="el" href="structfrankx_1_1_waypoint_motion.html">WaypointMotion</a> &amp;motion)</td></tr>
 <tr class="separator:a20851d0b591624832e31346ea3bd3ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52f2023ee9b7f5355d6c68925ac1e368"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a52f2023ee9b7f5355d6c68925ac1e368">move</a> (<a class="el" href="structfrankx_1_1_waypoint_motion.html">WaypointMotion</a> &amp;motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data)</td></tr>
 <tr class="separator:a52f2023ee9b7f5355d6c68925ac1e368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a633646fdda0572804d1913e9d0905092"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a633646fdda0572804d1913e9d0905092">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_waypoint_motion.html">WaypointMotion</a> &amp;motion)</td></tr>
 <tr class="separator:a633646fdda0572804d1913e9d0905092"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a831d32e730d619541a5fc67c0508e8b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a831d32e730d619541a5fc67c0508e8b0">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_waypoint_motion.html">WaypointMotion</a> &amp;motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data, bool repeat_on_error=true)</td></tr>
-<tr class="separator:a831d32e730d619541a5fc67c0508e8b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d126886900db191b23f928c21c55d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#ac8d126886900db191b23f928c21c55d4">move</a> (const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;frame, <a class="el" href="structfrankx_1_1_waypoint_motion.html">WaypointMotion</a> &amp;motion, <a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;data)</td></tr>
+<tr class="separator:ac8d126886900db191b23f928c21c55d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aac74827dfb2966ffbdc90b413e1663db"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#aac74827dfb2966ffbdc90b413e1663db">fci_ip</a></td></tr>
 <tr class="separator:aac74827dfb2966ffbdc90b413e1663db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a089ceac8cb52299f67656587234b5523"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a089ceac8cb52299f67656587234b5523">control_rate</a> {0.001}</td></tr>
-<tr class="separator:a089ceac8cb52299f67656587234b5523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefbdd5cfd0244e0780647e5354c12fa1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#aefbdd5cfd0244e0780647e5354c12fa1">velocity_rel</a> {1.0}</td></tr>
 <tr class="separator:aefbdd5cfd0244e0780647e5354c12fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91372496935af473aa8f143499f1c5fe"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a91372496935af473aa8f143499f1c5fe">acceleration_rel</a> {1.0}</td></tr>
 <tr class="separator:a91372496935af473aa8f143499f1c5fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acad76f1aa3952698b6c861e20a44bf25"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#acad76f1aa3952698b6c861e20a44bf25">jerk_rel</a> {1.0}</td></tr>
 <tr class="separator:acad76f1aa3952698b6c861e20a44bf25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a089ceac8cb52299f67656587234b5523"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#a089ceac8cb52299f67656587234b5523">control_rate</a> {0.001}</td></tr>
+<tr class="separator:a089ceac8cb52299f67656587234b5523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac948d9620b4be02b97df44e35dea4057"><td class="memItemLeft" align="right" valign="top">franka::ControllerMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057">controller_mode</a> {franka::ControllerMode::kJointImpedance}</td></tr>
 <tr class="separator:ac948d9620b4be02b97df44e35dea4057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af27224338975377ed4177f2107627e22"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#af27224338975377ed4177f2107627e22">repeat_on_error</a> {true}</td></tr>
+<tr class="separator:af27224338975377ed4177f2107627e22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1b26bc35836181686dd6db50e9aec12"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12">stop_at_python_signal</a> {true}</td></tr>
+<tr class="separator:ae1b26bc35836181686dd6db50e9aec12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -166,8 +178,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a9c5147b73dca46191e0ff3a8ff23fc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8a7f839dcab8c440a32d43d4171309ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a7f839dcab8c440a32d43d4171309ba">&#9670;&nbsp;</a></span>Robot()</h2>
+<a id="a4e766fe34e82f895dc398ae5af3cb4cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e766fe34e82f895dc398ae5af3cb4cf">&#9670;&nbsp;</a></span>Robot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +197,19 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>dynamic_rel</em> = <code>1.0</code>&#160;</td>
+          <td class="paramname"><em>dynamic_rel</em> = <code>1.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>repeat_on_error</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>stop_at_python_signal</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -240,7 +264,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a3b2d8484a8af95d65ef2a6deaef55597"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b2d8484a8af95d65ef2a6deaef55597">&#9670;&nbsp;</a></span>move() <span class="overload">[1/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b2d8484a8af95d65ef2a6deaef55597">&#9670;&nbsp;</a></span>move() <span class="overload">[1/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,7 +282,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a06dae7b0e3bf0be87b0272a09ddee979"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06dae7b0e3bf0be87b0272a09ddee979">&#9670;&nbsp;</a></span>move() <span class="overload">[2/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a06dae7b0e3bf0be87b0272a09ddee979">&#9670;&nbsp;</a></span>move() <span class="overload">[2/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,7 +310,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a085c35ee05154511a32b4c2c80a61e57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a085c35ee05154511a32b4c2c80a61e57">&#9670;&nbsp;</a></span>move() <span class="overload">[3/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a085c35ee05154511a32b4c2c80a61e57">&#9670;&nbsp;</a></span>move() <span class="overload">[3/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,7 +338,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a82e664cc63132e182106da2bc50d134a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82e664cc63132e182106da2bc50d134a">&#9670;&nbsp;</a></span>move() <span class="overload">[4/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a82e664cc63132e182106da2bc50d134a">&#9670;&nbsp;</a></span>move() <span class="overload">[4/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,7 +372,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ac7ccb6798d5a7aa5fcb4a6f2c9d907a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7ccb6798d5a7aa5fcb4a6f2c9d907a3">&#9670;&nbsp;</a></span>move() <span class="overload">[5/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7ccb6798d5a7aa5fcb4a6f2c9d907a3">&#9670;&nbsp;</a></span>move() <span class="overload">[5/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +390,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af78db9e551e2205fa134036b000a5f69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af78db9e551e2205fa134036b000a5f69">&#9670;&nbsp;</a></span>move() <span class="overload">[6/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af78db9e551e2205fa134036b000a5f69">&#9670;&nbsp;</a></span>move() <span class="overload">[6/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -394,7 +418,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a55b4b3e1ad13bdd1b41e357841403bad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55b4b3e1ad13bdd1b41e357841403bad">&#9670;&nbsp;</a></span>move() <span class="overload">[7/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a55b4b3e1ad13bdd1b41e357841403bad">&#9670;&nbsp;</a></span>move() <span class="overload">[7/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -422,7 +446,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a23b02730fe0bd359c523fa91a183c9e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23b02730fe0bd359c523fa91a183c9e7">&#9670;&nbsp;</a></span>move() <span class="overload">[8/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a23b02730fe0bd359c523fa91a183c9e7">&#9670;&nbsp;</a></span>move() <span class="overload">[8/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -455,8 +479,116 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a882d75923f000d67b5ca8ab417cf0c79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a882d75923f000d67b5ca8ab417cf0c79">&#9670;&nbsp;</a></span>move() <span class="overload">[9/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::move </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a>&#160;</td>
+          <td class="paramname"><em>motion</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b6de551a3db2d7bd53cce8ac418838b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6de551a3db2d7bd53cce8ac418838b">&#9670;&nbsp;</a></span>move() <span class="overload">[10/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::move </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a>&#160;</td>
+          <td class="paramname"><em>motion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b9ebdbbfd55c18ac8bbdbda906c206d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b9ebdbbfd55c18ac8bbdbda906c206d">&#9670;&nbsp;</a></span>move() <span class="overload">[11/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::move </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a>&#160;</td>
+          <td class="paramname"><em>motion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a788ee42e09ce87bd303c66d281e46b43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a788ee42e09ce87bd303c66d281e46b43">&#9670;&nbsp;</a></span>move() <span class="overload">[12/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::move </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a> &amp;&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a>&#160;</td>
+          <td class="paramname"><em>motion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a20851d0b591624832e31346ea3bd3ecb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20851d0b591624832e31346ea3bd3ecb">&#9670;&nbsp;</a></span>move() <span class="overload">[9/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a20851d0b591624832e31346ea3bd3ecb">&#9670;&nbsp;</a></span>move() <span class="overload">[13/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -474,7 +606,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a52f2023ee9b7f5355d6c68925ac1e368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52f2023ee9b7f5355d6c68925ac1e368">&#9670;&nbsp;</a></span>move() <span class="overload">[10/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a52f2023ee9b7f5355d6c68925ac1e368">&#9670;&nbsp;</a></span>move() <span class="overload">[14/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -502,7 +634,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a633646fdda0572804d1913e9d0905092"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a633646fdda0572804d1913e9d0905092">&#9670;&nbsp;</a></span>move() <span class="overload">[11/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a633646fdda0572804d1913e9d0905092">&#9670;&nbsp;</a></span>move() <span class="overload">[15/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -529,8 +661,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a831d32e730d619541a5fc67c0508e8b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a831d32e730d619541a5fc67c0508e8b0">&#9670;&nbsp;</a></span>move() <span class="overload">[12/12]</span></h2>
+<a id="ac8d126886900db191b23f928c21c55d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d126886900db191b23f928c21c55d4">&#9670;&nbsp;</a></span>move() <span class="overload">[16/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -551,13 +683,7 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a> &amp;&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>repeat_on_error</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -952,6 +1078,34 @@ Static Public Attributes</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af27224338975377ed4177f2107627e22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af27224338975377ed4177f2107627e22">&#9670;&nbsp;</a></span>repeat_on_error</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::repeat_on_error {true}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1b26bc35836181686dd6db50e9aec12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1b26bc35836181686dd6db50e9aec12">&#9670;&nbsp;</a></span>stop_at_python_signal</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool frankx::Robot::stop_at_python_signal {true}</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

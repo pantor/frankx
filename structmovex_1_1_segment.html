@@ -80,9 +80,9 @@ Inheritance diagram for movex::Segment:</div>
  <div class="center">
   <img src="structmovex_1_1_segment.png" usemap="#movex::Segment_map" alt=""/>
   <map id="movex::Segment_map" name="movex::Segment_map">
-<area href="classmovex_1_1_circle_segment.html" alt="movex::CircleSegment" shape="rect" coords="0,56,142,80"/>
-<area href="classmovex_1_1_line_segment.html" alt="movex::LineSegment" shape="rect" coords="152,56,294,80"/>
-<area href="classmovex_1_1_quintic_segment.html" alt="movex::QuinticSegment" shape="rect" coords="304,56,446,80"/>
+<area href="classmovex_1_1_circle_segment.html" alt="movex::CircleSegment" shape="rect" coords="0,56,176,80"/>
+<area href="classmovex_1_1_line_segment.html" alt="movex::LineSegment" shape="rect" coords="186,56,362,80"/>
+<area href="classmovex_1_1_quartic_blend_segment.html" alt="movex::QuarticBlendSegment" shape="rect" coords="372,56,548,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -98,6 +98,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6867cbbe40afde44f8f1c031fd738bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cbb4cef47144a943576de1dab3970fa"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a0cbb4cef47144a943576de1dab3970fa">pdddq</a> (double s) const =0</td></tr>
 <tr class="separator:a0cbb4cef47144a943576de1dab3970fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7073c104f3b11c5631c09802f081d5e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#ab7073c104f3b11c5631c09802f081d5e">max_pddq</a> () const =0</td></tr>
+<tr class="separator:ab7073c104f3b11c5631c09802f081d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a011d16c3928f877e3310196adf0f5eb2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html#a011d16c3928f877e3310196adf0f5eb2">max_pdddq</a> () const =0</td></tr>
+<tr class="separator:a011d16c3928f877e3310196adf0f5eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -128,7 +132,61 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_quintic_segment.html#ab57a160ba18f64b35cba1ebdb6f18e5a">movex::QuinticSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a0707ba9e32eb1ae2ae0f2763170a2ee3">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94">movex::LineSegment</a>.</p>
+
+</div>
+</div>
+<a id="a011d16c3928f877e3310196adf0f5eb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a011d16c3928f877e3310196adf0f5eb2">&#9670;&nbsp;</a></span>max_pdddq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Segment::max_pdddq </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a775981dafc42b813a4acf0c9b666fa03">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a52c29f535c290f56683ce8f3541c51ba">movex::LineSegment</a>.</p>
+
+</div>
+</div>
+<a id="ab7073c104f3b11c5631c09802f081d5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7073c104f3b11c5631c09802f081d5e">&#9670;&nbsp;</a></span>max_pddq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Segment::max_pddq </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a5655ad59b08f5d8fb1363ef0b052e1ea">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a0bf5d0bc0c59711b9f90d1dc861151db">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -156,7 +214,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_quintic_segment.html#a9606600de7eae5647ae88f6e42d08f80">movex::QuinticSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#aa9fea6eccb89f5b0c438b5b8d4a769a8">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a4343c72f1ff9140691826a5d82414082">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#aa9fea6eccb89f5b0c438b5b8d4a769a8">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -184,7 +242,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_quintic_segment.html#ab82d2a683c71f99006e639ba55bc88c9">movex::QuinticSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#add4d5efe29ef0f504028bbf2324db7d2">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#aeb23c1041bb252509f217e1472757b28">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#add4d5efe29ef0f504028bbf2324db7d2">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -212,7 +270,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_quintic_segment.html#aaee7f94545f0999c028d5b2b1b471f78">movex::QuinticSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a5b46c302f59e27a2b62e98d6efd6fdc6">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a21b8d6670c4f661226691f8854109d27">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a5b46c302f59e27a2b62e98d6efd6fdc6">movex::LineSegment</a>.</p>
 
 </div>
 </div>
@@ -240,7 +298,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classmovex_1_1_quintic_segment.html#a37a1bf59109da0f6c24dd421e1c3cd3f">movex::QuinticSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a159f56aac66ba7794fd11a474c69cf2f">movex::LineSegment</a>.</p>
+<p>Implemented in <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a787091c4ae0145ddc40f977e0050a3e9">movex::QuarticBlendSegment</a>, and <a class="el" href="classmovex_1_1_line_segment.html#a159f56aac66ba7794fd11a474c69cf2f">movex::LineSegment</a>.</p>
 
 </div>
 </div>

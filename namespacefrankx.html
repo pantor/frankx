@@ -95,6 +95,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_motion_data.html">MotionData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_path_motion.html">PathMotion</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_position_hold.html">PositionHold</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfrankx_1_1_reaction.html">Reaction</a></td></tr>
@@ -119,16 +121,8 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af649427e65072923efe17c4ce5563c00"><td class="memTemplParams" colspan="2">template&lt;class T , std::size_t N&gt; </td></tr>
-<tr class="memitem:af649427e65072923efe17c4ce5563c00"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#af649427e65072923efe17c4ce5563c00">operator&lt;&lt;</a> (std::ostream &amp;o, const std::array&lt; T, N &gt; &amp;arr)</td></tr>
-<tr class="separator:af649427e65072923efe17c4ce5563c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a063dc4aaf13fa4d6e8b664861009ba88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a063dc4aaf13fa4d6e8b664861009ba88">setVector</a> (<a class="el" href="namespacefrankx.html#a8e892b786a1d2077e6569d8315cd225e">Vector7d</a> &amp;vector, const std::array&lt; double, 7 &gt; &amp;data)</td></tr>
 <tr class="separator:a063dc4aaf13fa4d6e8b664861009ba88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a202d956f96f7b43a954e88b4457b935f"><td class="memTemplParams" colspan="2">template&lt;class T  = double&gt; </td></tr>
-<tr class="memitem:a202d956f96f7b43a954e88b4457b935f"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, 7 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a202d956f96f7b43a954e88b4457b935f">VectorCartRotElbow</a> (T cart, T rot, T elbow)</td></tr>
-<tr class="separator:a202d956f96f7b43a954e88b4457b935f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ed6544a0c53acafb1c28cbf3274bc9"><td class="memItemLeft" align="right" valign="top">franka::CartesianPose&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a53ed6544a0c53acafb1c28cbf3274bc9">CartesianPose</a> (const <a class="el" href="namespacefrankx.html#a8e892b786a1d2077e6569d8315cd225e">Vector7d</a> &amp;vector, bool include_elbow=true)</td></tr>
-<tr class="separator:a53ed6544a0c53acafb1c28cbf3274bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="aeea09133f320442f59334ead46170e7b"></a>
@@ -174,80 +168,6 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a53ed6544a0c53acafb1c28cbf3274bc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53ed6544a0c53acafb1c28cbf3274bc9">&#9670;&nbsp;</a></span>CartesianPose()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">franka::CartesianPose frankx::CartesianPose </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacefrankx.html#a8e892b786a1d2077e6569d8315cd225e">Vector7d</a> &amp;&#160;</td>
-          <td class="paramname"><em>vector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>include_elbow</em> = <code>true</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af649427e65072923efe17c4ce5563c00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af649427e65072923efe17c4ce5563c00">&#9670;&nbsp;</a></span>operator<<()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , std::size_t N&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::ostream&amp; frankx::operator&lt;&lt; </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>o</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::array&lt; T, N &gt; &amp;&#160;</td>
-          <td class="paramname"><em>arr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a063dc4aaf13fa4d6e8b664861009ba88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a063dc4aaf13fa4d6e8b664861009ba88">&#9670;&nbsp;</a></span>setVector()</h2>
 
@@ -268,50 +188,6 @@ template&lt;class T , std::size_t N&gt; </div>
           <td></td>
           <td class="paramtype">const std::array&lt; double, 7 &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a202d956f96f7b43a954e88b4457b935f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a202d956f96f7b43a954e88b4457b935f">&#9670;&nbsp;</a></span>VectorCartRotElbow()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T  = double&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::array&lt;T, 7&gt; frankx::VectorCartRotElbow </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>cart</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>rot</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>elbow</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

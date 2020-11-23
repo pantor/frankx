@@ -6,7 +6,7 @@ var searchData=
   ['waypoint_5fmotion',['waypoint_motion',['../structfrankx_1_1_reaction.html#a00f9ef8cd1101a91efba220b151b7aab',1,'frankx::Reaction']]],
   ['waypointaction',['WaypointAction',['../structfrankx_1_1_reaction.html#a5be401d96f714dd2ab4a361dd5483641',1,'frankx::Reaction']]],
   ['waypointmotion',['WaypointMotion',['../structfrankx_1_1_waypoint_motion.html',1,'frankx::WaypointMotion'],['../structfrankx_1_1_waypoint_motion.html#af50d3539a134c0abba321b52a3e9647f',1,'frankx::WaypointMotion::WaypointMotion(const std::vector&lt; Waypoint &gt; &amp;waypoints)'],['../structfrankx_1_1_waypoint_motion.html#af2c0df7e482fc397d8a7eae5ce84e6b2',1,'frankx::WaypointMotion::WaypointMotion(const std::vector&lt; Waypoint &gt; &amp;waypoints, bool return_when_finished)']]],
-  ['waypoints',['waypoints',['../structfrankx_1_1_waypoint_motion.html#ad8cc7cce7bb3394d83700c81696a9b5a',1,'frankx::WaypointMotion']]],
+  ['waypoints',['waypoints',['../structfrankx_1_1_path_motion.html#a7e91409a7c86bef96bfe0d0e177a0589',1,'frankx::PathMotion::waypoints()'],['../structfrankx_1_1_waypoint_motion.html#ad8cc7cce7bb3394d83700c81696a9b5a',1,'frankx::WaypointMotion::waypoints()']]],
   ['width',['width',['../classfrankx_1_1_gripper.html#a2e85fe8b123844a0330c965da5ed7cca',1,'frankx::Gripper']]],
   ['withdynamicrel',['withDynamicRel',['../structfrankx_1_1_motion_data.html#a25ce0279daed1638be0fca76b1a98e4e',1,'frankx::MotionData']]],
   ['withmaxdynamics',['withMaxDynamics',['../structfrankx_1_1_motion_data.html#a005d066b3278d96dae6eb87bece663aa',1,'frankx::MotionData']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['s_5flength',['s_length',['../classmovex_1_1_quartic_blend_segment.html#a119435750713c3b733b6ea46fa91cfd8',1,'movex::QuarticBlendSegment']]],
   ['segment',['Segment',['../structmovex_1_1_segment.html',1,'movex']]],
   ['segment_2ehpp',['segment.hpp',['../segment_8hpp.html',1,'']]],
   ['set_5fa',['set_a',['../structmovex_1_1_affine.html#aa4899f2fc9d778c227303c6476cf92f2',1,'movex::Affine']]],
@@ -25,5 +26,7 @@ var searchData=
   ['spiral_5fmotion',['spiral_motion',['../structfrankx_1_1_impedance_motion.html#a016840ea1dd65bee2c16dd5898b432af',1,'frankx::ImpedanceMotion']]],
   ['spiraltargetmotion',['SpiralTargetMotion',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'frankx::ImpedanceMotion']]],
   ['start',['start',['../classmovex_1_1_line_segment.html#a8b805b122d4fe451ed1a05d58aa33036',1,'movex::LineSegment']]],
+  ['start_5ftask',['start_task',['../classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198',1,'frankx::robot::Robot']]],
+  ['stop_5fat_5fpython_5fsignal',['stop_at_python_signal',['../structfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12',1,'frankx::Robot']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html',1,'frankx::StopMotion'],['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

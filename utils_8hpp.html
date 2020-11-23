@@ -75,8 +75,7 @@ $(function() {
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;Eigen/Geometry&gt;</code><br />
-<code>#include &lt;unsupported/Eigen/EulerAngles&gt;</code><br />
+<code>#include &lt;Eigen/Core&gt;</code><br />
 <code>#include &lt;franka/robot.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="affine_8hpp_source.html">movex/affine.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="parameter_8hpp_source.html">movex/otg/parameter.hpp</a>&gt;</code><br />
@@ -99,16 +98,8 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af649427e65072923efe17c4ce5563c00"><td class="memTemplParams" colspan="2">template&lt;class T , std::size_t N&gt; </td></tr>
-<tr class="memitem:af649427e65072923efe17c4ce5563c00"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#af649427e65072923efe17c4ce5563c00">frankx::operator&lt;&lt;</a> (std::ostream &amp;o, const std::array&lt; T, N &gt; &amp;arr)</td></tr>
-<tr class="separator:af649427e65072923efe17c4ce5563c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a063dc4aaf13fa4d6e8b664861009ba88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a063dc4aaf13fa4d6e8b664861009ba88">frankx::setVector</a> (Vector7d &amp;vector, const std::array&lt; double, 7 &gt; &amp;data)</td></tr>
 <tr class="separator:a063dc4aaf13fa4d6e8b664861009ba88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a202d956f96f7b43a954e88b4457b935f"><td class="memTemplParams" colspan="2">template&lt;class T  = double&gt; </td></tr>
-<tr class="memitem:a202d956f96f7b43a954e88b4457b935f"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, 7 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a202d956f96f7b43a954e88b4457b935f">frankx::VectorCartRotElbow</a> (T cart, T rot, T elbow)</td></tr>
-<tr class="separator:a202d956f96f7b43a954e88b4457b935f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ed6544a0c53acafb1c28cbf3274bc9"><td class="memItemLeft" align="right" valign="top">franka::CartesianPose&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefrankx.html#a53ed6544a0c53acafb1c28cbf3274bc9">frankx::CartesianPose</a> (const Vector7d &amp;vector, bool include_elbow=true)</td></tr>
-<tr class="separator:a53ed6544a0c53acafb1c28cbf3274bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

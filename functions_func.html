@@ -63,8 +63,14 @@ $(function() {
 &#160;
 
 <h3><a id="index__"></a>- _ -</h3><ul>
+<li>__enter__()
+: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#a535ca8eb517699982d683b9bb91d325c">frankx.robot.Robot</a>
+</li>
+<li>__exit__()
+: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#ab39b7d2044fe0e7b2a6c1a48372c87da">frankx.robot.Robot</a>
+</li>
 <li>__init__()
-: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#aee1f0aa8b5f05da876a0887ffb5ad09d">frankx.robot.Robot</a>
+: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#a7891763c75b190184a07cc453067d086">frankx.robot.Robot</a>
 </li>
 </ul>
 
@@ -148,7 +154,7 @@ $(function() {
 <li>get_length()
 : <a class="el" href="classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94">movex::LineSegment</a>
 , <a class="el" href="classmovex_1_1_path.html#afbaec66435a26e5a4a28da14ca715af9">movex::Path</a>
-, <a class="el" href="classmovex_1_1_quintic_segment.html#ab57a160ba18f64b35cba1ebdb6f18e5a">movex::QuinticSegment</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a0707ba9e32eb1ae2ae0f2763170a2ee3">movex::QuarticBlendSegment</a>
 , <a class="el" href="structmovex_1_1_segment.html#abb9acc93bdffe6cf748b1cba7ade0177">movex::Segment</a>
 </li>
 <li>getInnerRandom()
@@ -206,9 +212,6 @@ $(function() {
 
 
 <h3><a id="index_l"></a>- l -</h3><ul>
-<li>Linear()
-: <a class="el" href="classmovex_1_1_path.html#a49df9af409aa2013beb64a5d73713790">movex::Path</a>
-</li>
 <li>LinearMotion()
 : <a class="el" href="structfrankx_1_1_linear_motion.html#a469938bd660383b5be95a36a749c3142">frankx::LinearMotion</a>
 </li>
@@ -221,9 +224,6 @@ $(function() {
 <li>lock_brakes()
 : <a class="el" href="classfrankx_1_1robot_1_1_robot.html#a150e1596f2b9ea8429de77f71f5efb6e">frankx.robot.Robot</a>
 </li>
-<li>login()
-: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#a0cf7b0022f773d18a751b11e131a47ac">frankx.robot.Robot</a>
-</li>
 </ul>
 
 
@@ -231,13 +231,25 @@ $(function() {
 <li>matrix()
 : <a class="el" href="structmovex_1_1_affine.html#ae719cee8e1482dcba1ca3c885a8ec1ab">movex::Affine</a>
 </li>
+<li>max_pdddq()
+: <a class="el" href="classmovex_1_1_line_segment.html#a52c29f535c290f56683ce8f3541c51ba">movex::LineSegment</a>
+, <a class="el" href="classmovex_1_1_path.html#a5ffc12706ddca56aef2c86120485f8b1">movex::Path</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a775981dafc42b813a4acf0c9b666fa03">movex::QuarticBlendSegment</a>
+, <a class="el" href="structmovex_1_1_segment.html#a011d16c3928f877e3310196adf0f5eb2">movex::Segment</a>
+</li>
+<li>max_pddq()
+: <a class="el" href="classmovex_1_1_line_segment.html#a0bf5d0bc0c59711b9f90d1dc861151db">movex::LineSegment</a>
+, <a class="el" href="classmovex_1_1_path.html#a6c4f086e6a21daa190a8e406ddaad15a">movex::Path</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a5655ad59b08f5d8fb1363ef0b052e1ea">movex::QuarticBlendSegment</a>
+, <a class="el" href="structmovex_1_1_segment.html#ab7073c104f3b11c5631c09802f081d5e">movex::Segment</a>
+</li>
 <li>MotionData()
 : <a class="el" href="structfrankx_1_1_motion_data.html#a936d6e53bbaae243b024ba5cd6c2edd8">frankx::MotionData</a>
 </li>
 <li>move()
 : <a class="el" href="classfrankx_1_1_gripper.html#a51ad9c1a66f0869a6d94cedaae6a40c5">frankx::Gripper</a>
 , <a class="el" href="structfrankx_1_1_impedance_motion.html#a972b7be05f3463dc2f3c004185a7b060">frankx::ImpedanceMotion</a>
-, <a class="el" href="structfrankx_1_1_robot.html#a23b02730fe0bd359c523fa91a183c9e7">frankx::Robot</a>
+, <a class="el" href="structfrankx_1_1_robot.html#a3b2d8484a8af95d65ef2a6deaef55597">frankx::Robot</a>
 </li>
 <li>move_async()
 : <a class="el" href="classfrankx_1_1gripper_1_1_gripper.html#aa958884bee07c9aca4cf62296a46bedd">frankx.gripper.Gripper</a>
@@ -294,25 +306,28 @@ $(function() {
 <li>Path()
 : <a class="el" href="classmovex_1_1_path.html#a714fd8c34977044af57161d58d109a24">movex::Path</a>
 </li>
+<li>PathMotion()
+: <a class="el" href="structfrankx_1_1_path_motion.html#a7b2f7fa4cbe063d0e8269ad49b85d1db">frankx::PathMotion</a>
+</li>
 <li>PathPoint()
 : <a class="el" href="structmovex_1_1_path_point.html#ac37f4795f2d1cc330131222d5936a933">movex::PathPoint</a>
 </li>
 <li>pdddq()
 : <a class="el" href="classmovex_1_1_line_segment.html#aa9fea6eccb89f5b0c438b5b8d4a769a8">movex::LineSegment</a>
 , <a class="el" href="classmovex_1_1_path.html#a6b56e3dbc43d2586872ec8fae9cc835b">movex::Path</a>
-, <a class="el" href="classmovex_1_1_quintic_segment.html#a9606600de7eae5647ae88f6e42d08f80">movex::QuinticSegment</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a4343c72f1ff9140691826a5d82414082">movex::QuarticBlendSegment</a>
 , <a class="el" href="structmovex_1_1_segment.html#a0cbb4cef47144a943576de1dab3970fa">movex::Segment</a>
 </li>
 <li>pddq()
 : <a class="el" href="classmovex_1_1_line_segment.html#add4d5efe29ef0f504028bbf2324db7d2">movex::LineSegment</a>
 , <a class="el" href="classmovex_1_1_path.html#a2299da1a96871d19968d945a6d96c24f">movex::Path</a>
-, <a class="el" href="classmovex_1_1_quintic_segment.html#ab82d2a683c71f99006e639ba55bc88c9">movex::QuinticSegment</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#aeb23c1041bb252509f217e1472757b28">movex::QuarticBlendSegment</a>
 , <a class="el" href="structmovex_1_1_segment.html#a6867cbbe40afde44f8f1c031fd738bbc">movex::Segment</a>
 </li>
 <li>pdq()
 : <a class="el" href="classmovex_1_1_line_segment.html#a5b46c302f59e27a2b62e98d6efd6fdc6">movex::LineSegment</a>
 , <a class="el" href="classmovex_1_1_path.html#ac4f46e5e700f95ad291d36b7ba3315ab">movex::Path</a>
-, <a class="el" href="classmovex_1_1_quintic_segment.html#aaee7f94545f0999c028d5b2b1b471f78">movex::QuinticSegment</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a21b8d6670c4f661226691f8854109d27">movex::QuarticBlendSegment</a>
 , <a class="el" href="structmovex_1_1_segment.html#a3db0902b1b7ba8356f7d473e4af0323c">movex::Segment</a>
 </li>
 <li>PositionHold()
@@ -331,7 +346,7 @@ $(function() {
 <li>q()
 : <a class="el" href="classmovex_1_1_line_segment.html#a159f56aac66ba7794fd11a474c69cf2f">movex::LineSegment</a>
 , <a class="el" href="classmovex_1_1_path.html#a58860bc773272e9ab7c676d36624d6f9">movex::Path</a>
-, <a class="el" href="classmovex_1_1_quintic_segment.html#a37a1bf59109da0f6c24dd421e1c3cd3f">movex::QuinticSegment</a>
+, <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a787091c4ae0145ddc40f977e0050a3e9">movex::QuarticBlendSegment</a>
 , <a class="el" href="structmovex_1_1_segment.html#aa8d5b71668e43dd5bd741e2da3f9744e">movex::Segment</a>
 </li>
 <li>q_w()
@@ -346,14 +361,14 @@ $(function() {
 <li>q_z()
 : <a class="el" href="structmovex_1_1_affine.html#a0d9487fa472d299a3d25df327642fd7c">movex::Affine</a>
 </li>
+<li>QuarticBlendSegment()
+: <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a98a43188c4f3c8d038e9137772cbc206">movex::QuarticBlendSegment</a>
+</li>
 <li>quaternion()
 : <a class="el" href="structmovex_1_1_affine.html#afa1a8ce32fc5511ba10375dbf0d09fc2">movex::Affine</a>
 </li>
 <li>Quintic()
 : <a class="el" href="classmovex_1_1_quintic.html#a66a473d32252272096503bc27c6e5cde">movex::Quintic&lt; DOFs &gt;</a>
-</li>
-<li>QuinticSegment()
-: <a class="el" href="classmovex_1_1_quintic_segment.html#a227e7865c70db1633d252307841cd653">movex::QuinticSegment</a>
 </li>
 </ul>
 
@@ -375,7 +390,7 @@ $(function() {
 : <a class="el" href="classfrankx_1_1_gripper.html#a20591754c3a6a16fe15cf6e0b267f847">frankx::Gripper</a>
 </li>
 <li>Robot()
-: <a class="el" href="structfrankx_1_1_robot.html#a8a7f839dcab8c440a32d43d4171309ba">frankx::Robot</a>
+: <a class="el" href="structfrankx_1_1_robot.html#a4e766fe34e82f895dc398ae5af3cb4cf">frankx::Robot</a>
 </li>
 <li>rotate()
 : <a class="el" href="structmovex_1_1_affine.html#a7c1ab493fe8070d8f0b3bdcbe761f840">movex::Affine</a>
@@ -437,6 +452,9 @@ $(function() {
 </li>
 <li>Smoothie()
 : <a class="el" href="classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c">movex::Smoothie&lt; DOFs &gt;</a>
+</li>
+<li>start_task()
+: <a class="el" href="classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198">frankx.robot.Robot</a>
 </li>
 <li>StopMotion()
 : <a class="el" href="structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e">frankx::StopMotion</a>
