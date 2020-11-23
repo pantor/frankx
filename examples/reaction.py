@@ -1,9 +1,15 @@
+from argparse import ArgumentParser
+
 from frankx import Affine, JointMotion, LinearRelativeMotion, Measure, MotionData, Reaction, Robot, StopMotion
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('--host', default='172.16.0.2', help='FCI IP of the robot')
+    args = parser.parse_args()
+
     # Connect to the robot
-    robot = Robot('172.16.0.2')
+    robot = Robot(args.host, repeat_on_error=False)
     robot.set_default_behavior()
     robot.recover_from_errors()
 
@@ -14,9 +20,10 @@ if __name__ == '__main__':
     robot.move(joint_motion)
 
     # Define and move forwards
-    motion_down = LinearRelativeMotion(Affine(0.0, 0.0, -0.11), -0.2)
+    motion_down = LinearRelativeMotion(Affine(0.0, 0.0, -0.12), -0.2)
     motion_down_data = MotionData().with_reaction(Reaction(Measure.ForceZ < -5.0, StopMotion(Affine(0.0, 0.0, 0.002), 0.0)))
 
+    # You can try to block the robot now.
     robot.move(motion_down, motion_down_data)
 
     if motion_down_data.did_break:

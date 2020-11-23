@@ -17,6 +17,9 @@ struct Segment {
     virtual Vector7d pdq(double s) const = 0;
     virtual Vector7d pddq(double s) const = 0;
     virtual Vector7d pdddq(double s) const = 0;
+
+    virtual Vector7d max_pddq() const = 0;
+    virtual Vector7d max_pdddq() const = 0;
 };
 
 
@@ -49,72 +52,81 @@ public:
     Vector7d pdddq(double s) const {
         return Vector7d::Zero();
     }
+
+    Vector7d max_pddq() const {
+        return Vector7d::Zero();
+    }
+
+    Vector7d max_pdddq() const {
+        return Vector7d::Zero();
+    }
 };
 
 
 class CircleSegment: public Segment {
-    Vector7d center, x, y;
-    double radius;
-
-    explicit CircleSegment(const Vector7d& center, const Vector7d& start, double angle = 2 * M_PI) {
-
-    }
-
-    double get_length() const {
-        return length;
-    }
-
-    Vector7d q(double s) const {
-        const double angle = s / radius;
-        return center + radius * (x * cos(angle) + y * sin(angle));
-    }
-
-    Vector7d pdq(double s) const {
-        const double angle = s / radius;
-        return -x * sin(angle) + y * cos(angle);
-    }
-
-    Vector7d pddq(double s) const {
-        const double angle = s / radius;
-        return -1.0 / radius * (x * cos(angle) + y * sin(angle));
-    }
-
-    Vector7d pdddq(double s) const {
-        const double angle = s / radius;
-        return -1.0 / std::pow(radius, 2) * (-x * sin(angle) + y * cos(angle));
-    }
+    
 };
 
 
-class QuinticSegment: public Segment {
-    double s_length;
+class QuarticBlendSegment: public Segment {
+    void integrate_path_length() {
+        length = 0.0;
+
+        Vector7d f_s = q(0.0), f_s_new;
+        const size_t steps {5000};
+        const double step_length = s_length / steps;
+        const double step_length_squared = std::pow(step_length, 2);
+        for (int i = 1; i < steps; i += 1) {
+            f_s_new = q(i * step_length);
+            length += std::sqrt((f_s_new - f_s).squaredNorm() + step_length_squared);
+            std::swap(f_s_new, f_s);
+        }
+    }
 
 public:
-    Vector7d a, b, c, d, e, f;
+    double s_length;
+    Vector7d b, c, e, f;
+    Vector7d lb, lm, rb, rm;
 
-    explicit QuinticSegment(const Vector7d& a, const Vector7d& b, const Vector7d& c, const Vector7d& d, const Vector7d& e, const Vector7d& f, double s_length): a(a), b(b), c(c), d(d), e(e), f(f), s_length(s_length) {
-        // Numerical integration here
-        length = 1.0;
+    explicit QuarticBlendSegment(const Vector7d& lb, const Vector7d& lm, const Vector7d& rb, const Vector7d& rm, double s_mid, double max_diff, double s_abs_max): lb(lb), lm(lm), rb(rb), rm(rm) {
+        Vector7d sAbs_ = ((-16*max_diff)/(3.*(lm - rm).array())).abs();
+        double s_abs_min = std::min<double>({sAbs_.minCoeff(), s_abs_max});
+        s_length = 2 * s_abs_min;
+
+        b = (lm - rm).array() / (16.*std::pow(s_abs_min, 3));
+        c = (-lm + rm).array() / (4.*std::pow(s_abs_min, 2));
+        e = lm;
+        f = lb.array() + lm.array()*(-s_abs_min + s_mid);
     }
 
     double get_length() const {
-        return length;
+        return s_length;
     }
 
     Vector7d q(double s) const {
-        return f + s * (e + s * (d + s * (c + s * (b + s * a))));
+        return f + s * (e + s * (s * (c + s * b)));
     }
 
     Vector7d pdq(double s) const {
-        return e + s * (2 * d + s * (3 * c + s * (4 * b + s * 5 * a)));
+        return e + s * (s * (3 * c + s * 4 * b));
     }
 
     Vector7d pddq(double s) const {
-        return 2 * d + s * (6 * c + s * (12 * b + s * 20 * a));
+        return s * (6 * c + s * 12 * b);
     }
 
     Vector7d pdddq(double s) const {
-        return 6 * c + s * (24 * b + s * 60 * a);
+        return 6 * c + s * 24 * b;
+    }
+
+    Vector7d max_pddq() const {
+        double s_abs = s_length / 2;
+        return (-3*(lm - rm))/(4.*s_abs);
+    }
+
+    Vector7d max_pdddq() const {
+        double s_abs = s_length / 2;
+        return (3*(lm - rm))/(2.*std::pow(s_abs,2));
     }
 };
 

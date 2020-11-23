@@ -1,9 +1,15 @@
+from argparse import ArgumentParser
+
 from frankx import Affine, LinearRelativeMotion, Robot
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('--host', default='172.16.0.2', help='FCI IP of the robot')
+    args = parser.parse_args()
+
     # Connect to the robot
-    robot = Robot('172.16.0.2')
+    robot = Robot(args.host)
     robot.set_default_behavior()
     robot.recover_from_errors()
 

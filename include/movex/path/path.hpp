@@ -4,6 +4,7 @@
 
 #include <Eigen/Core>
 
+#include <movex/affine.hpp>
 #include <movex/path/segment.hpp>
 
 
@@ -34,24 +35,7 @@ class Path {
         return {segment, s_local};
     }
 
-    std::tuple<std::shared_ptr<QuinticSegment>, double> blend_polynomial(const Vector7d& lb, const Vector7d& lm, const Vector7d& rb, const Vector7d& rm, double s_mid, double max_diff) {
-        Vector7d sAbs_ = ((-16*max_diff)/(3.*(lm - rm).array())).abs();
-        double s_abs_min = sAbs_.minCoeff();
-
-        Vector7d a = Vector7d::Zero();
-        Vector7d b = (lm - rm).array() / (16.*std::pow(s_abs_min, 3));
-        Vector7d c = (-lm + rm).array() / (4.*std::pow(s_abs_min, 2));
-        Vector7d d = Vector7d::Zero();
-        Vector7d e = lm;
-        Vector7d f = lb.array() + lm.array()*(-s_abs_min + s_mid);
-
-        return {std::make_shared<QuinticSegment>(a, b, c, d, e, f, 2*s_abs_min), s_abs_min};
-    }
-
-public:
-    constexpr static size_t degrees_of_freedom {7};
-
-    explicit Path(const std::vector<PathPoint>& waypoints) {
+    void init_path_points(const std::vector<PathPoint>& waypoints) {
         std::vector<std::shared_ptr<LineSegment>> line_segments;
 
         for (size_t i = 0; i < waypoints.size() - 1; i += 1) {
@@ -68,7 +52,11 @@ public:
                 Vector7d lm = (left->end - left->start) / left->get_length();
                 Vector7d rm = (right->end - right->start) / right->get_length();
 
-                auto [blend, s_abs] = blend_polynomial(left->start, lm, right->start, rm, left->get_length(), waypoints[i].blend_max_distance);
+                double s_abs_max = std::min<double>({ left->get_length() / 2, right->get_length() / 2 });
+
+                auto blend = std::make_shared<QuarticBlendSegment>(left->start, lm, right->start, rm, left->get_length(), waypoints[i].blend_max_distance, s_abs_max);
+                double s_abs = blend->get_length() / 2;
+
                 auto new_left = std::make_shared<LineSegment>(left->start, left->q(left->get_length() - s_abs));
                 auto new_right = std::make_shared<LineSegment>(right->q(s_abs), right->end);
 
@@ -76,7 +64,7 @@ public:
                 segments.emplace_back(new_left);
                 cumulative_lengths.emplace_back(cumulative_length);
 
-                cumulative_length += 2 * s_abs;
+                cumulative_length += blend->get_length();
                 segments.emplace_back(blend);
                 cumulative_lengths.emplace_back(cumulative_length);
 
@@ -95,12 +83,19 @@ public:
         length = cumulative_length;
     }
 
-    static Path Linear(const std::vector<Vector7d>& waypoints, double blend_max_distance = 0.0) {
+public:
+    constexpr static size_t degrees_of_freedom {7};
+
+    explicit Path(const std::vector<PathPoint>& waypoints) {
+        init_path_points(waypoints);
+    }
+
+    explicit Path(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0) {
         std::vector<PathPoint> converted(waypoints.size());
         for (size_t i = 0; i < waypoints.size(); i += 1) {
-            converted[i] = PathPoint(waypoints[i], blend_max_distance);
+            converted[i] = PathPoint(waypoints[i].vector_with_elbow(0.0), blend_max_distance);
         }
-        return Path(converted);
+        init_path_points(converted);
     }
 
     double get_length() const {
@@ -125,6 +120,28 @@ public:
     Vector7d pdddq(double s) const {
         auto [segment, s_local] = get_local(s);
         return segment->pddq(s_local);
+    }
+
+    Vector7d max_pddq() const {
+        Vector7d result;
+        for (size_t i = 0; i < 7; i += 1) {
+            auto max_ptr = *std::max_element(segments.begin(), segments.end(), [&](std::shared_ptr<Segment> l, std::shared_ptr<Segment> r){
+                return std::abs(l->max_pddq()(i)) < std::abs(r->max_pddq()(i));
+            });
+            result(i) = std::abs(max_ptr->max_pddq()(i));
+        }
+        return result;
+    }
+
+    Vector7d max_pdddq() const {
+        Vector7d result;
+        for (size_t i = 0; i < 7; i += 1) {
+            auto max_ptr = *std::max_element(segments.begin(), segments.end(), [&](std::shared_ptr<Segment> l, std::shared_ptr<Segment> r){
+                return std::abs(l->max_pdddq()(i)) < std::abs(r->max_pdddq()(i));
+            });
+            result(i) = std::abs(max_ptr->max_pdddq()(i));
+        }
+        return result;
     }
 };
 

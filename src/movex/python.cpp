@@ -78,31 +78,17 @@ PYBIND11_MODULE(movex, m) {
         .def("update", &Reflexxes<DOFs>::update);
 #endif
 
-    py::class_<Segment>(m, "Segment");
-
-    py::class_<LineSegment, Segment>(m, "LineSegment")
-        .def_property_readonly("length", &LineSegment::get_length)
-        .def("q", &LineSegment::q, "s"_a)
-        .def("pdq", &LineSegment::pdq, "s"_a)
-        .def("pddq", &LineSegment::pddq, "s"_a)
-        .def("pdddq", &LineSegment::pdddq, "s"_a);
-
-    py::class_<QuinticSegment, Segment>(m, "QuinticSegment")
-        .def_property_readonly("length", &QuinticSegment::get_length)
-        .def("q", &QuinticSegment::q, "s"_a)
-        .def("pdq", &QuinticSegment::pdq, "s"_a)
-        .def("pddq", &QuinticSegment::pddq, "s"_a)
-        .def("pdddq", &QuinticSegment::pdddq, "s"_a);
-
     py::class_<PathPoint>(m, "PathPoint");
 
     py::class_<Path>(m, "Path")
         .def(py::init<const std::vector<PathPoint>&>(), "waypoints"_a)
+        .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
-        .def_static("Linear", &Path::Linear, "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_property_readonly("length", &Path::get_length)
         .def("q", &Path::q, "s"_a)
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
-        .def("pdddq", &Path::pdddq, "s"_a);
+        .def("pdddq", &Path::pdddq, "s"_a)
+        .def("max_pddq", &Path::max_pddq)
+        .def("max_pdddq", &Path::max_pdddq);
 }

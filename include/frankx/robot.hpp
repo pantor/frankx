@@ -44,19 +44,22 @@ struct Robot: public franka::Robot {
     static constexpr std::array<double, 7> max_joint_velocity {{2.175, 2.175, 2.175, 2.175, 2.610, 2.610, 2.610}}; // [rad/s]
     static constexpr std::array<double, 7> max_joint_acceleration {{15.0, 7.5, 10.0, 12.5, 15.0, 20.0, 20.0}}; // [rad/s²]
 
-    static constexpr size_t degrees_of_freedoms {7};
-    const double control_rate {0.001}; // [s]
-
     double velocity_rel {1.0};
     double acceleration_rel {1.0};
     double jerk_rel {1.0};
 
+    static constexpr size_t degrees_of_freedoms {7};
+    const double control_rate {0.001}; // [s]
+
     franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
+
+    bool repeat_on_error {true};
+    bool stop_at_python_signal {true};
 
     /**
      * Connects to a robot at the given FCI IP address.
      */
-    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0);
+    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0, bool repeat_on_error = true, bool stop_at_python_signal = true);
 
     void setDefaultBehavior();
     void setDynamicRel(double dynamic_rel);
@@ -76,14 +79,32 @@ struct Robot: public franka::Robot {
     bool move(const Affine& frame, JointMotion motion);
     bool move(const Affine& frame, JointMotion motion, MotionData& data);
 
+    bool move(PathMotion motion);
+    bool move(PathMotion motion, MotionData& data);
+    bool move(const Affine& frame, PathMotion motion);
+    bool move(const Affine& frame, PathMotion motion, MotionData& data);
+
     bool move(WaypointMotion& motion);
     bool move(WaypointMotion& motion, MotionData& data);
     bool move(const Affine& frame, WaypointMotion& motion);
-    bool move(const Affine& frame, WaypointMotion& motion, MotionData& data, bool repeat_on_error = true);
+    bool move(const Affine& frame, WaypointMotion& motion, MotionData& data);
 
 private:
     void setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data);
     void setInputLimits(movex::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data);
+
+    inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {
+        auto affine = Affine(vector);
+        if (include_elbow) {
+            return franka::CartesianPose(affine.array(), {vector(6), -1});
+        }
+        return franka::CartesianPose(affine.array());
+    }
+
+    template <class T = double>
+    inline std::array<T, 7> VectorCartRotElbow(T cart, T rot, T elbow) {
+        return {cart, cart, cart, rot, rot, rot, elbow};
+    }
 };
 
 } // namespace frankx

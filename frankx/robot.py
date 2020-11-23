@@ -1,3 +1,8 @@
+import base64
+import json
+import hashlib
+from http.client import HTTPSConnection
+import ssl
 from time import sleep
 from threading import Thread
 
@@ -6,13 +11,55 @@ from .gripper import Gripper as _Gripper
 
 
 class Robot(_Robot):
-    logged_in = False
-
-    def __init__(self, fci_ip, username=None, password=None):
-        super().__init__(fci_ip)
-        self.username = username
+    def __init__(self, fci_ip, dynamic_rel=1.0, user=None, password=None, repeat_on_error=True, stop_at_python_signal=True):
+        super().__init__(fci_ip, dynamic_rel=dynamic_rel, repeat_on_error=repeat_on_error, stop_at_python_signal=stop_at_python_signal)
+        self.hostname = fci_ip
+        self.user = user
         self.password = password
-        self.driver = None
+
+        self.client = None
+        self.token = None
+
+    @staticmethod
+    def _encode_password(user, password):
+        bs = ','.join([str(b) for b in hashlib.sha256((password + '#' + user + '@franka').encode('utf-8')).digest()])
+        return base64.encodebytes(bs.encode('utf-8')).decode('utf-8')
+
+    def __enter__(self):
+        self.client = HTTPSConnection(self.hostname, timeout=12, context=ssl._create_unverified_context())  # [s]
+        self.client.connect()
+        self.client.request(
+            'POST', '/admin/api/login',
+            body=json.dumps({'login': self.user, 'password': self._encode_password(self.user, self.password)}),
+            headers={'content-type': 'application/json'}
+        )
+        self.token = self.client.getresponse().read().decode('utf8')
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.client.close()
+
+    def start_task(self, task):
+        self.client.request(
+            'POST', '/desk/api/execution',
+            body=f'id={task}',
+            headers={'content-type': 'application/x-www-form-urlencoded', 'Cookie': f'authorization={self.token}'}
+        )
+        return self.client.getresponse().read()
+
+    def unlock_brakes(self):
+        self.client.request(
+            'POST', '/desk/api/robot/open-brakes',
+            headers={'content-type': 'application/x-www-form-urlencoded', 'Cookie': f'authorization={self.token}'}
+        )
+        return self.client.getresponse().read()
+
+    def lock_brakes(self):
+        self.client.request(
+            'POST', '/desk/api/robot/close-brakes',
+            headers={'content-type': 'application/x-www-form-urlencoded', 'Cookie': f'authorization={self.token}'}
+        )
+        return self.client.getresponse().read()
 
     def move_async(self, *args) -> Thread:
         p = Thread(target=self.move, args=tuple(args), daemon=True)
@@ -22,50 +69,3 @@ class Robot(_Robot):
 
     def get_gripper(self):
         return _Gripper(self.fci_ip)
-
-    def login(self, headless=True):
-        from selenium import webdriver
-        from selenium.webdriver.firefox.options import Options
-        from selenium.webdriver.common.keys import Keys
-
-        options = Options()
-        options.headless = headless
-
-        self.driver = webdriver.Firefox(options=options)
-        self.driver.get(f'https://{self.fci_ip}')
-
-        if self.driver.find_elements_by_xpath("//*[contains(text(),'" + 'Warning: Potential Security Risk Ahead' + "')]"):
-            print('error')
-
-        elem = self.driver.find_element_by_xpath('//input[@id=(//label[text()="Username"]/@for)]')
-        elem.clear()
-        elem.send_keys(self.username)
-
-        elem = self.driver.find_element_by_xpath('//input[@id=(//label[text()="Password"]/@for)]')
-        elem.clear()
-        elem.send_keys(self.password)
-        elem.send_keys(Keys.RETURN)
-
-        sleep(0.5)  # [s]
-        if self.driver.find_elements_by_xpath("//*[contains(text(),'" + 'Warning: Potential Security Risk Ahead' + "')]"):
-            print('error')
-
-        self.logged_in = True
-
-    def unlock_brakes(self):
-        if not self.logged_in or self.driver is None:
-            return
-
-        elem = self.driver.find_element_by_xpath("//div[contains(@data-bind, 'html: brakesOpen()')]")
-        elem.click()
-
-        elem = self.driver.find_element_by_xpath("//button[text()='Open']")
-        elem.click()
-
-    def lock_brakes(self):
-        if not self.logged_in or self.driver is None:
-            return
-
-        sleep(0.5)  # [s]
-        elem = self.driver.find_element_by_xpath("//div[contains(@data-bind, 'html: brakesOpen()')]")
-        elem.click()

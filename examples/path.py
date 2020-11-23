@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from frankx import Affine, JointMotion, LinearMotion, Robot
+from frankx import Affine, PathMotion, Robot
 
 
 if __name__ == '__main__':
@@ -12,13 +12,14 @@ if __name__ == '__main__':
     robot = Robot(args.host)
     robot.set_default_behavior()
     robot.recover_from_errors()
-    robot.set_dynamic_rel(0.15)
 
-    # Joint motion
-    robot.move(JointMotion([-1.811944, 1.179108, 1.757100, -2.14162, -1.143369, 1.633046, -0.432171]))
+    # Reduce the acceleration and velocity dynamic
+    robot.set_dynamic_rel(0.2)
 
     # Define and move forwards
-    camera = Affine(y=0.05)
-    home = Affine(0.480, -0.05, 0.40)
-
-    robot.move(camera, LinearMotion(home, 1.75))
+    motion = PathMotion([
+        Affine(0.5, 0.0, 0.35),
+        Affine(0.5, 0.0, 0.24, -0.3),
+        Affine(0.5, -0.2, 0.35),
+    ], blend_max_distance=0.05)
+    robot.move(motion)
