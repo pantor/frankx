@@ -68,6 +68,11 @@ class CircleSegment: public Segment {
 };
 
 
+class QuinticSegment: public Segment {
+
+};
+
+
 class QuarticBlendSegment: public Segment {
     void integrate_path_length() {
         length = 0.0;

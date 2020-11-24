@@ -30,7 +30,7 @@ def walk_through_trajectory(otg, inp):
 if __name__ == '__main__':
     inp = InputParameter()
     inp.current_position = [0.0]
-    inp.current_velocity = [0.01] * inp.degrees_of_freedom
+    inp.current_velocity = [0.2] * inp.degrees_of_freedom
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
     inp.target_position = [-1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
@@ -42,10 +42,12 @@ if __name__ == '__main__':
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
+    # otg = Reflexxes(0.001)
     otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
+
+    print(f'Calculation duration: {otg.last_calculation_duration:0.1f} [µs]')
 
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
@@ -85,7 +87,7 @@ if __name__ == '__main__':
 
 
     plt.xlabel('t')
-    print(f'Trajectory duration: {t_list[-1]:0.4f} [s]')
+    print(f'Trajectory duration: {t_list[-1]:0.3f} [s]')
 
     # plt.show()
     plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')

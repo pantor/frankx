@@ -26,6 +26,31 @@ PYBIND11_MODULE(movex, m) {
 
     constexpr size_t DOFs {1};
 
+    py::class_<Affine>(m, "Affine")
+        .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
+        .def(py::init<Vector6d>())
+        .def(py::init<Vector7d>())
+        .def(py::init<const std::array<double, 16>&>(), "data"_a)
+        .def(py::init<const Affine &>(), "affine"_a) // Copy constructor
+        .def(py::self * py::self)
+        .def("matrix", &Affine::matrix)
+        .def("inverse", &Affine::inverse)
+        .def("is_approx", &Affine::isApprox)
+        .def("translate", &Affine::translate)
+        .def("pretranslate", &Affine::pretranslate)
+        .def("translation", &Affine::translation)
+        .def_property("x", &Affine::x, &Affine::set_x)
+        .def_property("y", &Affine::y, &Affine::set_y)
+        .def_property("z", &Affine::z, &Affine::set_z)
+        .def("rotate", &Affine::rotate)
+        .def("prerotate", &Affine::prerotate)
+        .def("rotation", &Affine::rotation)
+        .def_property("a", &Affine::a, &Affine::set_a)
+        .def_property("b", &Affine::b, &Affine::set_b)
+        .def_property("c", &Affine::c, &Affine::set_c)
+        .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
+        .def("__repr__", &Affine::toString);
+
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
         .def_readwrite("current_position", &InputParameter<DOFs>::current_position)
@@ -69,6 +94,7 @@ PYBIND11_MODULE(movex, m) {
     py::class_<Ruckig<DOFs>>(m, "Ruckig")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
+        .def_readonly("last_calculation_duration", &Ruckig<DOFs>::last_calculation_duration)
         .def("update", &Ruckig<DOFs>::update);
 
 #ifdef WITH_REFLEXXES
@@ -78,10 +104,8 @@ PYBIND11_MODULE(movex, m) {
         .def("update", &Reflexxes<DOFs>::update);
 #endif
 
-    py::class_<PathPoint>(m, "PathPoint");
-
     py::class_<Path>(m, "Path")
-        .def(py::init<const std::vector<PathPoint>&>(), "waypoints"_a)
+        .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
         .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
         .def_property_readonly("length", &Path::get_length)

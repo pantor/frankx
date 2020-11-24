@@ -103,4 +103,12 @@ TEST_CASE("Ruckig") {
     input.current_acceleration = {0.0, 0.0, 0.0};
     input.target_position = {-1.0, -1.0, -1.0};
     check(otg, input, 2.765);
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.2, 0.2, 0.2};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {-1.0, -1.0, -1.0};
+    input.max_velocity = {10.0, 10.0, 10.0};
+    input.max_acceleration = {10.0, 10.0, 10.0};
+    check(otg, input, 2.720);
 }

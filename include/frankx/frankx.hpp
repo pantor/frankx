@@ -11,4 +11,3 @@
 #include <frankx/reaction.hpp>
 #include <frankx/robot.hpp>
 #include <frankx/utils.hpp>
-#include <frankx/waypoint.hpp>

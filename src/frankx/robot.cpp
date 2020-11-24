@@ -281,7 +281,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
             input_para.current_velocity = initial_velocity;
             input_para.current_acceleration = Vector7d::Zero();
 
-            const Waypoint current_waypoint = *waypoint_iterator;
+            const auto current_waypoint = *waypoint_iterator;
             waypoint_has_elbow = current_waypoint.elbow.has_value();
             auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
 
@@ -329,7 +329,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
                     old_vector = current_vector;
                     old_elbow = old_vector(6);
 
-                    const Waypoint current_waypoint = *waypoint_iterator;
+                    const auto current_waypoint = *waypoint_iterator;
                     waypoint_has_elbow = current_waypoint.elbow.has_value();
                     auto target_position_vector = current_waypoint.getTargetVector(Affine(), old_affine, old_elbow);
 
@@ -373,7 +373,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
 
                 }
 
-                const Waypoint current_waypoint = *waypoint_iterator;
+                const auto current_waypoint = *waypoint_iterator;
                 waypoint_has_elbow = current_waypoint.elbow.has_value();
                 auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
 
@@ -439,47 +439,47 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
 }
 
 void Robot::setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data) {
-    setInputLimits(input_parameters, Waypoint(), data);
+    setInputLimits(input_parameters, movex::Waypoint(), data);
 }
 
-void Robot::setInputLimits(movex::InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data) {
+void Robot::setInputLimits(movex::InputParameter<7>& input_parameters, const movex::Waypoint& waypoint, const MotionData& data) {
     constexpr double translation_factor {0.5};
     constexpr double elbow_factor {0.32};
     constexpr double derivative_factor {0.4};
 
     if (waypoint.max_dynamics || data.max_dynamics) {
-        setVector(input_parameters.max_velocity, VectorCartRotElbow(
+        setCartRotElbowVector(input_parameters.max_velocity,
             0.8 * translation_factor * max_translation_velocity,
             max_rotation_velocity,
             0.5 * elbow_factor * max_elbow_velocity
-        ));
-        setVector(input_parameters.max_acceleration, VectorCartRotElbow(
+        );
+        setCartRotElbowVector(input_parameters.max_acceleration,
             translation_factor * derivative_factor * max_translation_acceleration,
             derivative_factor * max_rotation_acceleration,
             elbow_factor * derivative_factor * max_elbow_acceleration
-        ));
-        setVector(input_parameters.max_jerk, VectorCartRotElbow(
+        );
+        setCartRotElbowVector(input_parameters.max_jerk,
             translation_factor * derivative_factor * max_translation_jerk,
             derivative_factor * max_rotation_jerk,
             elbow_factor * derivative_factor * max_elbow_jerk
-        ));
+        );
 
     } else {
-        setVector(input_parameters.max_velocity, VectorCartRotElbow(
+        setCartRotElbowVector(input_parameters.max_velocity,
             translation_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
             waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
             elbow_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
-        ));
-        setVector(input_parameters.max_acceleration, VectorCartRotElbow(
+        );
+        setCartRotElbowVector(input_parameters.max_acceleration,
             translation_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
             derivative_factor * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
             elbow_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
-        ));
-        setVector(input_parameters.max_jerk, VectorCartRotElbow(
+        );
+        setCartRotElbowVector(input_parameters.max_jerk,
             translation_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_translation_jerk,
             std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_rotation_jerk,
             elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_elbow_jerk
-        ));
+        );
 
         if (waypoint.minimum_time.has_value()) {
             input_parameters.minimum_duration = waypoint.minimum_time.value();

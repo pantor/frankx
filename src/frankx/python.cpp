@@ -103,16 +103,17 @@ PYBIND11_MODULE(_frankx, m) {
         .def("with_reaction", &MotionData::withReaction)
         .def_property_readonly("did_break", &MotionData::didBreak);
 
+    using ReferenceType = movex::Waypoint::ReferenceType;
     py::class_<Waypoint> waypoint(m, "Waypoint");
-    py::enum_<Waypoint::ReferenceType>(waypoint, "Waypoint")
-        .value("Absolute", Waypoint::ReferenceType::Absolute)
-        .value("Relative", Waypoint::ReferenceType::Relative)
+    py::enum_<ReferenceType>(waypoint, "Waypoint")
+        .value("Absolute", ReferenceType::Absolute)
+        .value("Relative", ReferenceType::Relative)
         .export_values();
 
     waypoint.def(py::init<>())
         .def(py::init<double>(), "minimum_time"_a)
-        .def(py::init<const Affine &, Waypoint::ReferenceType, double>(), "affine"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
-        .def(py::init<const Affine &, double, Waypoint::ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
         .def_readonly("affine", &Waypoint::affine)
         .def_readonly("elbow", &Waypoint::elbow)
@@ -301,6 +302,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
         .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
         .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
+        .def_readonly_static("degrees_of_freedoms", &Robot::degrees_of_freedoms)
+        .def_readonly_static("control_rate", &Robot::control_rate)
         .def_readonly("fci_ip", &Robot::fci_ip)
         .def_readwrite("controller_mode", &Robot::controller_mode)
         .def_readwrite("velocity_rel", &Robot::velocity_rel)

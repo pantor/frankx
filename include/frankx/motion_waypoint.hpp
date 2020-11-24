@@ -1,8 +1,10 @@
 #pragma once
 
 #include <atomic>
+#include <optional>
 
-#include <frankx/waypoint.hpp>
+#include <movex/affine.hpp>
+#include <movex/waypoint.hpp>
 
 
 namespace frankx {
@@ -11,17 +13,17 @@ struct WaypointMotion {
     bool reload {false};
     bool return_when_finished {true};
 
-    std::vector<Waypoint> waypoints;
+    std::vector<movex::Waypoint> waypoints;
 
-    explicit WaypointMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) {}
-    explicit WaypointMotion(const std::vector<Waypoint>& waypoints, bool return_when_finished): waypoints(waypoints), return_when_finished(return_when_finished) {}
+    explicit WaypointMotion(const std::vector<movex::Waypoint>& waypoints): waypoints(waypoints) {}
+    explicit WaypointMotion(const std::vector<movex::Waypoint>& waypoints, bool return_when_finished): waypoints(waypoints), return_when_finished(return_when_finished) {}
 
-    void setNextWaypoint(const Waypoint& waypoint) {
+    void setNextWaypoint(const movex::Waypoint& waypoint) {
         waypoints = { waypoint };
         reload = true;
     }
 
-    void setNextWaypoints(const std::vector<Waypoint>& waypoints) {
+    void setNextWaypoints(const std::vector<movex::Waypoint>& waypoints) {
         this->waypoints = waypoints;
         reload = true;
     }
@@ -34,27 +36,27 @@ struct WaypointMotion {
 
 
 struct LinearMotion: public WaypointMotion {
-    explicit LinearMotion(const Affine& target): WaypointMotion({ Waypoint(target) }) { }
-    explicit LinearMotion(const Affine& target, double elbow): WaypointMotion({ Waypoint(target, elbow) }) { }
+    explicit LinearMotion(const Affine& target): WaypointMotion({ movex::Waypoint(target) }) { }
+    explicit LinearMotion(const Affine& target, double elbow): WaypointMotion({ movex::Waypoint(target, elbow) }) { }
 };
 
 
 struct LinearRelativeMotion: public WaypointMotion {
-    explicit LinearRelativeMotion(const Affine& affine): WaypointMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative) }) { }
-    explicit LinearRelativeMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
-    explicit LinearRelativeMotion(const Affine& affine, double elbow, double dynamic_rel): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative, dynamic_rel) }) { }
+    explicit LinearRelativeMotion(const Affine& affine): WaypointMotion({ movex::Waypoint(affine, movex::Waypoint::ReferenceType::Relative) }) { }
+    explicit LinearRelativeMotion(const Affine& affine, double elbow): WaypointMotion({ movex::Waypoint(affine, elbow, movex::Waypoint::ReferenceType::Relative) }) { }
+    explicit LinearRelativeMotion(const Affine& affine, double elbow, double dynamic_rel): WaypointMotion({ movex::Waypoint(affine, elbow, movex::Waypoint::ReferenceType::Relative, dynamic_rel) }) { }
 };
 
 
 struct StopMotion: public WaypointMotion {
-    explicit StopMotion(): WaypointMotion({ Waypoint(Affine(), 0.0, Waypoint::ReferenceType::Relative, true) }) { }
-    explicit StopMotion(const Affine& affine): WaypointMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative, true) }) { }
-    explicit StopMotion(const Affine& affine, double elbow): WaypointMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative, true) }) { }
+    explicit StopMotion(): WaypointMotion({ movex::Waypoint(Affine(), 0.0, movex::Waypoint::ReferenceType::Relative, true) }) { }
+    explicit StopMotion(const Affine& affine): WaypointMotion({ movex::Waypoint(affine, movex::Waypoint::ReferenceType::Relative, true) }) { }
+    explicit StopMotion(const Affine& affine, double elbow): WaypointMotion({ movex::Waypoint(affine, elbow, movex::Waypoint::ReferenceType::Relative, true) }) { }
 };
 
 
 struct PositionHold: public WaypointMotion {
-    explicit PositionHold(double duration): WaypointMotion({ Waypoint(duration) }) { }
+    explicit PositionHold(double duration): WaypointMotion({ movex::Waypoint(duration) }) { }
 };
 
 } // namespace frankx

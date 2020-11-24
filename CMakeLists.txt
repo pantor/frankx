@@ -31,6 +31,7 @@ endif()
 
 add_library(frankx SHARED
   src/movex/affine.cpp
+  src/movex/path.cpp
   src/frankx/gripper.cpp
   src/frankx/motion_impedance.cpp
   src/frankx/robot.cpp
@@ -61,7 +62,7 @@ if(BUILD_PYTHON_MODULE)
   pybind11_add_module(_frankx src/frankx/python.cpp)
   target_link_libraries(_frankx PUBLIC frankx)
 
-  pybind11_add_module(movex src/movex/python.cpp)
+  pybind11_add_module(movex src/movex/affine.cpp src/movex/path.cpp src/movex/python.cpp)
   target_compile_features(movex PUBLIC cxx_std_17)
   target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
   target_link_libraries(movex PUBLIC Eigen3::Eigen)
