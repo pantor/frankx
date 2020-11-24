@@ -8,5 +8,6 @@ var searchData=
   ['quarticblendsegment',['QuarticBlendSegment',['../classmovex_1_1_quartic_blend_segment.html',1,'movex::QuarticBlendSegment'],['../classmovex_1_1_quartic_blend_segment.html#a98a43188c4f3c8d038e9137772cbc206',1,'movex::QuarticBlendSegment::QuarticBlendSegment()']]],
   ['quaternion',['quaternion',['../structmovex_1_1_affine.html#afa1a8ce32fc5511ba10375dbf0d09fc2',1,'movex::Affine']]],
   ['quintic',['Quintic',['../classmovex_1_1_quintic.html',1,'movex::Quintic&lt; DOFs &gt;'],['../classmovex_1_1_quintic.html#a66a473d32252272096503bc27c6e5cde',1,'movex::Quintic::Quintic()']]],
-  ['quintic_2ehpp',['quintic.hpp',['../quintic_8hpp.html',1,'']]]
+  ['quintic_2ehpp',['quintic.hpp',['../quintic_8hpp.html',1,'']]],
+  ['quinticsegment',['QuinticSegment',['../classmovex_1_1_quintic_segment.html',1,'movex']]]
 ];

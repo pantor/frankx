@@ -77,8 +77,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a714fd8c34977044af57161d58d109a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a714fd8c34977044af57161d58d109a24">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_path_point.html">PathPoint</a> &gt; &amp;waypoints)</td></tr>
-<tr class="separator:a714fd8c34977044af57161d58d109a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d1af063ca099903fe943d8ac318f1df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6d1af063ca099903fe943d8ac318f1df">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt; &amp;waypoints)</td></tr>
+<tr class="separator:a6d1af063ca099903fe943d8ac318f1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9e85d87c16fbc2cb636bb489945834"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#adc9e85d87c16fbc2cb636bb489945834">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;waypoints, double blend_max_distance=0.0)</td></tr>
 <tr class="separator:adc9e85d87c16fbc2cb636bb489945834"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbaec66435a26e5a4a28da14ca715af9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#afbaec66435a26e5a4a28da14ca715af9">get_length</a> () const</td></tr>
@@ -102,8 +102,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a01783b3e5ad2898b06f1417a647cb560"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a714fd8c34977044af57161d58d109a24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a714fd8c34977044af57161d58d109a24">&#9670;&nbsp;</a></span>Path() <span class="overload">[1/2]</span></h2>
+<a id="a6d1af063ca099903fe943d8ac318f1df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d1af063ca099903fe943d8ac318f1df">&#9670;&nbsp;</a></span>Path() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -114,14 +114,14 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">movex::Path::Path </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structmovex_1_1_path_point.html">PathPoint</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>waypoints</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -157,7 +157,7 @@ Static Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -170,9 +170,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">double movex::Path::get_length </td>
@@ -181,11 +178,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -195,9 +187,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::max_pdddq </td>
@@ -206,11 +195,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -220,9 +204,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::max_pddq </td>
@@ -231,11 +212,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -245,9 +221,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::pdddq </td>
@@ -257,11 +230,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -271,9 +239,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::pddq </td>
@@ -283,11 +248,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -297,9 +257,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::pdq </td>
@@ -309,11 +266,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -323,9 +275,6 @@ Static Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::q </td>
@@ -335,11 +284,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -367,8 +311,9 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/frankx/frankx/include/movex/path/<a class="el" href="path_8hpp_source.html">path.hpp</a></li>
+<li>/home/runner/work/frankx/frankx/src/movex/<a class="el" href="path_8cpp.html">path.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

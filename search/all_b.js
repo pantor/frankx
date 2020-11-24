@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['last_5fcalculation_5fduration',['last_calculation_duration',['../classmovex_1_1_ruckig.html#af3b6897e2031a50c0314982aeec7b423',1,'movex::Ruckig']]],
   ['lb',['lb',['../classmovex_1_1_quartic_blend_segment.html#ae962a7b4d7f76dd6c04841f88fec9965',1,'movex::QuarticBlendSegment']]],
   ['length',['length',['../structmovex_1_1_segment.html#a997fe764ff91f889fcbc4d757902b7cf',1,'movex::Segment']]],
   ['linear',['Linear',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63a32a843da6ea40ab3b17a3421ccdf671b',1,'frankx::ImpedanceMotion']]],
