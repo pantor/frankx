@@ -3,7 +3,7 @@
 
 namespace movex {
 
-//! Not used yet. This is need if we want to move the motions to movex.
+//! Not used yet. However needed if we want to move the motions classes to movex.
 class RobotState {
     std::array<double, 7> q;
     std::array<double, 7> q_d;

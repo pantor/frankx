@@ -29,25 +29,25 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.0]
-    inp.current_velocity = [0.2] * inp.degrees_of_freedom
-    inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [-1.0]
+    inp.current_position = [-0.9]
+    inp.current_velocity = [-0.04] * inp.degrees_of_freedom
+    inp.current_acceleration = [1.0] * inp.degrees_of_freedom
+    inp.target_position = [1.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [10.0] * inp.degrees_of_freedom
-    inp.max_acceleration = [10.0] * inp.degrees_of_freedom
-    inp.max_jerk = [2.0] * inp.degrees_of_freedom
+    inp.max_velocity = [0.2] * inp.degrees_of_freedom
+    inp.max_acceleration = [1.5] * inp.degrees_of_freedom
+    inp.max_jerk = [0.71] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.001)
-    otg = Ruckig(0.005)
+    otg = Reflexxes(0.005)
+    #otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
-    print(f'Calculation duration: {otg.last_calculation_duration:0.1f} [µs]')
+    # print(f'Calculation duration: {otg.last_calculation_duration:0.1f} [µs]')
 
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
