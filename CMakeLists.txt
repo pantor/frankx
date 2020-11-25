@@ -8,14 +8,12 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
-option(BUILD_PYBIND11 "Build pybind11 with cmake" OFF)
 option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
 
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka 0.7 REQUIRED)
 find_package(Reflexxes)
-
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
@@ -47,11 +45,12 @@ endif()
 
 
 if(BUILD_PYTHON_MODULE)
-  if(BUILD_PYBIND11)
+  # Check if pybind11 exists as a subdirectory
+  if(EXISTS pybind11)
     add_subdirectory(pybind11)
   else()
     find_package(Python COMPONENTS Interpreter Development)
-    find_package(pybind11 2.6.0 REQUIRED)
+    find_package(pybind11 2.6 REQUIRED)
   endif()
 
   if(USE_PYTHON_EXTENSION)
@@ -62,6 +61,7 @@ if(BUILD_PYTHON_MODULE)
   pybind11_add_module(_frankx src/frankx/python.cpp)
   target_link_libraries(_frankx PUBLIC frankx)
 
+  # Movex python package for development
   pybind11_add_module(movex src/movex/affine.cpp src/movex/path.cpp src/movex/python.cpp)
   target_compile_features(movex PUBLIC cxx_std_17)
   target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
@@ -77,7 +77,7 @@ endif()
 if(BUILD_EXAMPLES)
   foreach(example IN ITEMS linear grasping)
     add_executable(${example} "examples/${example}.cpp")
-    target_link_libraries(${example} PRIVATE ${PROJECT_NAME})
+    target_link_libraries(${example} PRIVATE frankx)
   endforeach()
 endif()
 
@@ -89,10 +89,23 @@ if(BUILD_TESTS)
 
   foreach(test IN ITEMS unit-test otg-test)
     add_executable(${test} "test/${test}.cpp")
-    target_link_libraries(${test} PRIVATE ${PROJECT_NAME} Catch2::Catch2)
+    target_link_libraries(${test} PRIVATE frankx Catch2::Catch2)
     add_test(${test} COMMAND ${test})
   endforeach()
 endif()
 
 
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib INCLUDES DESTINATION include)
+install(TARGETS frankx
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+if(BUILD_PYTHON_MODULE)
+  execute_process(
+    COMMAND python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+    OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+	install(TARGETS _frankx LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+endif()
