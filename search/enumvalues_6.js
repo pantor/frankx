@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['relative',['Relative',['../structmovex_1_1_waypoint.html#a47e011a3f2d8f352f69ce4bc924ad60ca2ca9469819fb0fb61ff98e914a7ccca0',1,'movex::Waypoint']]]
+  ['linear',['Linear',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63a32a843da6ea40ab3b17a3421ccdf671b',1,'frankx::ImpedanceMotion']]]
 ];

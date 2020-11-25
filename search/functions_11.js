@@ -1,6 +1,22 @@
 var searchData=
 [
   ['time',['Time',['../classfrankx_1_1_measure.html#a4f816cfe5b8e71726f43b945d1a813b8',1,'frankx::Measure']]],
+  ['time_5fdown_5facc0',['time_down_acc0',['../structmovex_1_1_ruckig_equation.html#a6f2b0b0f6df8fa67170e908e3f875f37',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5facc1',['time_down_acc0_acc1',['../structmovex_1_1_ruckig_equation.html#a68e7c901bc6d3cf0901cdfc16ce01587',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5facc1_5fvel',['time_down_acc0_acc1_vel',['../structmovex_1_1_ruckig_equation.html#af8531f6577cd26f04885730bd4a221ea',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5fvel',['time_down_acc0_vel',['../structmovex_1_1_ruckig_equation.html#a8710d58a82441c14291f0c741eb79c11',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc1',['time_down_acc1',['../structmovex_1_1_ruckig_equation.html#a7216160e7372127f27a8d797b647285d',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc1_5fvel',['time_down_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a821c75023438e4e69baa419b4b26ec95',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5fnone',['time_down_none',['../structmovex_1_1_ruckig_equation.html#a114174edb85b57ba4018b5534a88c353',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5fvel',['time_down_vel',['../structmovex_1_1_ruckig_equation.html#af1ff48da392677f921fef2e45b5f3512',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0',['time_up_acc0',['../structmovex_1_1_ruckig_equation.html#af245cd8ca3453f1dd0214e5f68fa227c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5facc1',['time_up_acc0_acc1',['../structmovex_1_1_ruckig_equation.html#a1a3f879f51f961d1fd9faa90871cd3e2',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5facc1_5fvel',['time_up_acc0_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a652fa63985e6d280cec1c04d747e7d3c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5fvel',['time_up_acc0_vel',['../structmovex_1_1_ruckig_equation.html#a673f720c2e576abdac13ffdcbf7fea3c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc1',['time_up_acc1',['../structmovex_1_1_ruckig_equation.html#a57cb306c8b3a9cac2503f8fba8fd61c2',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc1_5fvel',['time_up_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a9afba0048439a9095de5dbf8eb9284d8',1,'movex::RuckigEquation']]],
+  ['time_5fup_5fnone',['time_up_none',['../structmovex_1_1_ruckig_equation.html#aced6ad8b912ab76b79ac3e564e0eabb1',1,'movex::RuckigEquation']]],
+  ['time_5fup_5fvel',['time_up_vel',['../structmovex_1_1_ruckig_equation.html#ab2bbf828dbe5532b2ade201255fc3ae8',1,'movex::RuckigEquation']]],
   ['tostring',['toString',['../structmovex_1_1_affine.html#a433c7574ded5c3e16e279d3e0ec79480',1,'movex::Affine']]],
   ['translate',['translate',['../structmovex_1_1_affine.html#afe82797289e79f05e3a1e576fe1879e6',1,'movex::Affine']]],
   ['translation',['translation',['../structmovex_1_1_affine.html#a64b599739ea085c1f15fe0a188d8c4d3',1,'movex::Affine']]]

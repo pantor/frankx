@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['set',['set',['../structmovex_1_1_profile.html#ae6eef75a155cabd5c9ed200fc8bf4bbd',1,'movex::Profile']]],
   ['set_5fa',['set_a',['../structmovex_1_1_affine.html#aa4899f2fc9d778c227303c6476cf92f2',1,'movex::Affine']]],
   ['set_5fb',['set_b',['../structmovex_1_1_affine.html#a1045b15e156f121af974305d2fd152b4',1,'movex::Affine']]],
   ['set_5fc',['set_c',['../structmovex_1_1_affine.html#ad32a7211c04bfbea4e3b025900790229',1,'movex::Affine']]],
@@ -16,6 +17,8 @@ var searchData=
   ['settarget',['setTarget',['../structfrankx_1_1_impedance_motion.html#abb67409350ce90cf2c0498ab683b1a1a',1,'frankx::ImpedanceMotion']]],
   ['slerp',['slerp',['../structmovex_1_1_affine.html#ac23d9f49c02cfa7dd5e3503be482e013',1,'movex::Affine']]],
   ['smoothie',['Smoothie',['../classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c',1,'movex::Smoothie']]],
+  ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
+  ['sqrtcomplex',['SqrtComplex',['../namespacemovex.html#a21fd68c25a6e5b5e95707d22f7822271',1,'movex::SqrtComplex(double v)'],['../namespacemovex.html#a45c666a4243bec9f8f76ea980d03bea8',1,'movex::SqrtComplex(std::complex&lt; double &gt; v)']]],
   ['start_5ftask',['start_task',['../classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198',1,'frankx::robot::Robot']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

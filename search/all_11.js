@@ -17,11 +17,12 @@ var searchData=
   ['releaserelative',['releaseRelative',['../classfrankx_1_1_gripper.html#a20591754c3a6a16fe15cf6e0b267f847',1,'frankx::Gripper']]],
   ['reload',['reload',['../structfrankx_1_1_waypoint_motion.html#a5285f1abb8d79e3250cb801659f0ae4a',1,'frankx::WaypointMotion']]],
   ['repeat_5fon_5ferror',['repeat_on_error',['../classfrankx_1_1_robot.html#af27224338975377ed4177f2107627e22',1,'frankx::Robot']]],
+  ['reset',['reset',['../structmovex_1_1_profile.html#a60418dab018987c9a5051e6182ec44f8',1,'movex::Profile']]],
   ['result',['Result',['../namespacemovex.html#a6fd778bb7e86cd4c8b7e52584c82b1d7',1,'movex']]],
   ['return_5fwhen_5ffinished',['return_when_finished',['../structfrankx_1_1_waypoint_motion.html#afd6d32de0dd29380fd316998e5eda96e',1,'frankx::WaypointMotion']]],
   ['revolutions_5fper_5fsecond',['revolutions_per_second',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html#a6c7b5b5495042948ebeab1e0ee70fbe3',1,'frankx::ImpedanceMotion::SpiralTargetMotion']]],
   ['rm',['rm',['../classmovex_1_1_quartic_blend_segment.html#a2564b4489016fda72aa7284d014e0503',1,'movex::QuarticBlendSegment']]],
-  ['robot',['Robot',['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot'],['../classfrankx_1_1_robot.html',1,'frankx::Robot'],['../classfrankx_1_1_robot.html#a4e766fe34e82f895dc398ae5af3cb4cf',1,'frankx::Robot::Robot()']]],
+  ['robot',['Robot',['../classfrankx_1_1_robot.html',1,'frankx::Robot'],['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot'],['../classfrankx_1_1_robot.html#a4e766fe34e82f895dc398ae5af3cb4cf',1,'frankx::Robot::Robot()']]],
   ['robot_2ecpp',['robot.cpp',['../robot_8cpp.html',1,'']]],
   ['robot_2ehpp',['robot.hpp',['../robot_8hpp.html',1,'']]],
   ['robot_2epy',['robot.py',['../robot_8py.html',1,'']]],
@@ -31,5 +32,7 @@ var searchData=
   ['rotation',['rotation',['../structmovex_1_1_affine.html#adb72fb5d39be47935c9fb0c4dc75ca3c',1,'movex::Affine']]],
   ['rotational_5fstiffness',['rotational_stiffness',['../structfrankx_1_1_impedance_motion.html#ad386b8371816acd09d065d4016a81ddf',1,'frankx::ImpedanceMotion']]],
   ['ruckig',['Ruckig',['../classmovex_1_1_ruckig.html',1,'movex::Ruckig&lt; DOFs &gt;'],['../classmovex_1_1_ruckig.html#a2d4ca12b23990b458f04dc19fd752dc9',1,'movex::Ruckig::Ruckig()']]],
-  ['ruckig_2ehpp',['ruckig.hpp',['../ruckig_8hpp.html',1,'']]]
+  ['ruckig_2ecpp',['ruckig.cpp',['../ruckig_8cpp.html',1,'']]],
+  ['ruckig_2ehpp',['ruckig.hpp',['../ruckig_8hpp.html',1,'']]],
+  ['ruckigequation',['RuckigEquation',['../structmovex_1_1_ruckig_equation.html',1,'movex']]]
 ];

@@ -135,6 +135,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aac74827dfb2966ffbdc90b413e1663db"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#aac74827dfb2966ffbdc90b413e1663db">fci_ip</a></td></tr>
+<tr class="memdesc:aac74827dfb2966ffbdc90b413e1663db"><td class="mdescLeft">&#160;</td><td class="mdescRight">The robot's hostname / IP address.  <a href="#aac74827dfb2966ffbdc90b413e1663db">More...</a><br /></td></tr>
 <tr class="separator:aac74827dfb2966ffbdc90b413e1663db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefbdd5cfd0244e0780647e5354c12fa1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#aefbdd5cfd0244e0780647e5354c12fa1">velocity_rel</a> {1.0}</td></tr>
 <tr class="separator:aefbdd5cfd0244e0780647e5354c12fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,7 +146,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ac948d9620b4be02b97df44e35dea4057"><td class="memItemLeft" align="right" valign="top">franka::ControllerMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057">controller_mode</a> {franka::ControllerMode::kJointImpedance}</td></tr>
 <tr class="separator:ac948d9620b4be02b97df44e35dea4057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af27224338975377ed4177f2107627e22"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#af27224338975377ed4177f2107627e22">repeat_on_error</a> {true}</td></tr>
-<tr class="memdesc:af27224338975377ed4177f2107627e22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the robots try to continue an interrupted motion due to an error with reduced dynamics.  <a href="#af27224338975377ed4177f2107627e22">More...</a><br /></td></tr>
+<tr class="memdesc:af27224338975377ed4177f2107627e22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the robots try to continue an interrupted motion due to a libfranka position/velocity/acceleration discontinuity with reduced dynamics.  <a href="#af27224338975377ed4177f2107627e22">More...</a><br /></td></tr>
 <tr class="separator:af27224338975377ed4177f2107627e22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1b26bc35836181686dd6db50e9aec12"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12">stop_at_python_signal</a> {true}</td></tr>
 <tr class="memdesc:ae1b26bc35836181686dd6db50e9aec12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the robot stops if a python error signal is detected.  <a href="#ae1b26bc35836181686dd6db50e9aec12">More...</a><br /></td></tr>
@@ -154,7 +155,6 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a7a15611c976941d744fc32123dd3ca21"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#a7a15611c976941d744fc32123dd3ca21">max_translation_velocity</a> {1.7}</td></tr>
-<tr class="memdesc:a7a15611c976941d744fc32123dd3ca21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cartesian constraints.  <a href="#a7a15611c976941d744fc32123dd3ca21">More...</a><br /></td></tr>
 <tr class="separator:a7a15611c976941d744fc32123dd3ca21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a286b02c1b72f49e5fb3c7b25579ce8"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfrankx_1_1_robot.html#a0a286b02c1b72f49e5fb3c7b25579ce8">max_rotation_velocity</a> {2.5}</td></tr>
 <tr class="separator:a0a286b02c1b72f49e5fb3c7b25579ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -837,6 +837,8 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The robot's hostname / IP address. </p>
+
 </div>
 </div>
 <a id="acad76f1aa3952698b6c861e20a44bf25"></a>
@@ -1093,8 +1095,6 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cartesian constraints. </p>
-
 </div>
 </div>
 <a id="af27224338975377ed4177f2107627e22"></a>
@@ -1109,7 +1109,7 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Whether the robots try to continue an interrupted motion due to an error with reduced dynamics. </p>
+<p>Whether the robots try to continue an interrupted motion due to a libfranka position/velocity/acceleration discontinuity with reduced dynamics. </p>
 
 </div>
 </div>

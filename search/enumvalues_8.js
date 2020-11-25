@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['working',['Working',['../namespacemovex.html#a6fd778bb7e86cd4c8b7e52584c82b1d7a829eadc8e29caab50cc26bc6a451a1f1',1,'movex']]]
+  ['spiral',['Spiral',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63ac978545ade9f5ce21bfa0353c04feda9',1,'frankx::ImpedanceMotion']]]
 ];

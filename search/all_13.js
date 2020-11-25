@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['t',['t',['../structmovex_1_1_profile.html#ab6ae45c2f780e36519581ff0612ce2ac',1,'movex::Profile']]],
+  ['t_5fbrake',['t_brake',['../structmovex_1_1_profile.html#a4625f9b06d7355e1190c60fee7077332',1,'movex::Profile']]],
+  ['t_5fbrakes',['t_brakes',['../structmovex_1_1_profile.html#afdecd43ce07fca55c714e42de2659904',1,'movex::Profile']]],
+  ['t_5fsum',['t_sum',['../structmovex_1_1_profile.html#ad7cba6b25c3b91ee1841cffd8b12beaf',1,'movex::Profile']]],
   ['target',['target',['../structfrankx_1_1_impedance_motion.html#ad9f82e0867c10b29ee113770df8b5324',1,'frankx::ImpedanceMotion::target()'],['../structfrankx_1_1_joint_motion.html#a15b54a6b3d5b80ad14dfed7b6dc1fe13',1,'frankx::JointMotion::target()']]],
   ['target_5facceleration',['target_acceleration',['../structmovex_1_1_input_parameter.html#a669f8a43ca6e06d86abc817b3ceb111d',1,'movex::InputParameter']]],
   ['target_5fmotion',['target_motion',['../structfrankx_1_1_impedance_motion.html#a3b05997577f3a91cf057377951c05691',1,'frankx::ImpedanceMotion']]],
@@ -7,10 +11,26 @@ var searchData=
   ['target_5fvelocity',['target_velocity',['../structmovex_1_1_input_parameter.html#ad700dabcb1daf79765ba0896944fe48e',1,'movex::InputParameter']]],
   ['targetmotion',['TargetMotion',['../structfrankx_1_1_impedance_motion.html#a3f5392231545f98bb11fb3153ff77b63',1,'frankx::ImpedanceMotion']]],
   ['time',['Time',['../classfrankx_1_1_measure.html#a4f816cfe5b8e71726f43b945d1a813b8',1,'frankx::Measure']]],
+  ['time_5fdown_5facc0',['time_down_acc0',['../structmovex_1_1_ruckig_equation.html#a6f2b0b0f6df8fa67170e908e3f875f37',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5facc1',['time_down_acc0_acc1',['../structmovex_1_1_ruckig_equation.html#a68e7c901bc6d3cf0901cdfc16ce01587',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5facc1_5fvel',['time_down_acc0_acc1_vel',['../structmovex_1_1_ruckig_equation.html#af8531f6577cd26f04885730bd4a221ea',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc0_5fvel',['time_down_acc0_vel',['../structmovex_1_1_ruckig_equation.html#a8710d58a82441c14291f0c741eb79c11',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc1',['time_down_acc1',['../structmovex_1_1_ruckig_equation.html#a7216160e7372127f27a8d797b647285d',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5facc1_5fvel',['time_down_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a821c75023438e4e69baa419b4b26ec95',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5fnone',['time_down_none',['../structmovex_1_1_ruckig_equation.html#a114174edb85b57ba4018b5534a88c353',1,'movex::RuckigEquation']]],
+  ['time_5fdown_5fvel',['time_down_vel',['../structmovex_1_1_ruckig_equation.html#af1ff48da392677f921fef2e45b5f3512',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0',['time_up_acc0',['../structmovex_1_1_ruckig_equation.html#af245cd8ca3453f1dd0214e5f68fa227c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5facc1',['time_up_acc0_acc1',['../structmovex_1_1_ruckig_equation.html#a1a3f879f51f961d1fd9faa90871cd3e2',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5facc1_5fvel',['time_up_acc0_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a652fa63985e6d280cec1c04d747e7d3c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc0_5fvel',['time_up_acc0_vel',['../structmovex_1_1_ruckig_equation.html#a673f720c2e576abdac13ffdcbf7fea3c',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc1',['time_up_acc1',['../structmovex_1_1_ruckig_equation.html#a57cb306c8b3a9cac2503f8fba8fd61c2',1,'movex::RuckigEquation']]],
+  ['time_5fup_5facc1_5fvel',['time_up_acc1_vel',['../structmovex_1_1_ruckig_equation.html#a9afba0048439a9095de5dbf8eb9284d8',1,'movex::RuckigEquation']]],
+  ['time_5fup_5fnone',['time_up_none',['../structmovex_1_1_ruckig_equation.html#aced6ad8b912ab76b79ac3e564e0eabb1',1,'movex::RuckigEquation']]],
+  ['time_5fup_5fvel',['time_up_vel',['../structmovex_1_1_ruckig_equation.html#ab2bbf828dbe5532b2ade201255fc3ae8',1,'movex::RuckigEquation']]],
   ['token',['token',['../classfrankx_1_1robot_1_1_robot.html#ab9855cafe89a427caed1e151944bd8fe',1,'frankx::robot::Robot']]],
   ['tostring',['toString',['../structmovex_1_1_affine.html#a433c7574ded5c3e16e279d3e0ec79480',1,'movex::Affine']]],
   ['translate',['translate',['../structmovex_1_1_affine.html#afe82797289e79f05e3a1e576fe1879e6',1,'movex::Affine']]],
   ['translation',['translation',['../structmovex_1_1_affine.html#a64b599739ea085c1f15fe0a188d8c4d3',1,'movex::Affine']]],
   ['translational_5fstiffness',['translational_stiffness',['../structfrankx_1_1_impedance_motion.html#aec62ec63d841fb6f7d16934475ee6eda',1,'frankx::ImpedanceMotion']]],
-  ['type',['Type',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708',1,'frankx::ImpedanceMotion::Type()'],['../structmovex_1_1_affine.html#ac4bf91c090f1ae307d2afcf9707a102d',1,'movex::Affine::Type()'],['../structfrankx_1_1_impedance_motion.html#a26740e5da8235dd78cac7eb098afa9e1',1,'frankx::ImpedanceMotion::type()']]]
+  ['type',['Type',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708',1,'frankx::ImpedanceMotion::Type()'],['../structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8f',1,'movex::Profile::Type()'],['../structmovex_1_1_affine.html#ac4bf91c090f1ae307d2afcf9707a102d',1,'movex::Affine::Type()'],['../structfrankx_1_1_impedance_motion.html#a26740e5da8235dd78cac7eb098afa9e1',1,'frankx::ImpedanceMotion::type()'],['../structmovex_1_1_profile.html#a568f67119fc1d47d5436271009bab54c',1,'movex::Profile::type()']]]
 ];

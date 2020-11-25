@@ -5,6 +5,7 @@ var searchData=
   ['reflexxes',['Reflexxes',['../classmovex_1_1_reflexxes.html#a18a9bf623dd9523dc6f4fc9a9119b31f',1,'movex::Reflexxes']]],
   ['release',['release',['../classfrankx_1_1_gripper.html#a1e2cc28eb5e654960da9bcf3fc3ff830',1,'frankx::Gripper::release()'],['../classfrankx_1_1_gripper.html#af69fd4fae36c99a07f4942925c1370c7',1,'frankx::Gripper::release(double width)']]],
   ['releaserelative',['releaseRelative',['../classfrankx_1_1_gripper.html#a20591754c3a6a16fe15cf6e0b267f847',1,'frankx::Gripper']]],
+  ['reset',['reset',['../structmovex_1_1_profile.html#a60418dab018987c9a5051e6182ec44f8',1,'movex::Profile']]],
   ['robot',['Robot',['../classfrankx_1_1_robot.html#a4e766fe34e82f895dc398ae5af3cb4cf',1,'frankx::Robot']]],
   ['rotate',['rotate',['../structmovex_1_1_affine.html#a7c1ab493fe8070d8f0b3bdcbe761f840',1,'movex::Affine']]],
   ['rotation',['rotation',['../structmovex_1_1_affine.html#adb72fb5d39be47935c9fb0c4dc75ca3c',1,'movex::Affine']]],
