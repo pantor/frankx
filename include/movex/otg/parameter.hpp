@@ -63,6 +63,8 @@ struct OutputParameter {
     Vector new_position;
     Vector new_velocity;
     Vector new_acceleration;
+
+    double duration;
 };
 
 } // namespace movex

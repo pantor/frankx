@@ -50,9 +50,10 @@ class Robot: public franka::Robot {
     }
 
 public:
+    //! The robot's hostname / IP address
     std::string fci_ip;
 
-    /// Cartesian constraints
+    // Cartesian constraints
     static constexpr double max_translation_velocity {1.7}; // [m/s]
     static constexpr double max_rotation_velocity {2.5}; // [rad/s]
     static constexpr double max_elbow_velocity {2.175}; // [rad/s]
@@ -76,13 +77,13 @@ public:
 
     franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
 
-    /// Whether the robots try to continue an interrupted motion due to an error with reduced dynamics.
+    //! Whether the robots try to continue an interrupted motion due to a libfranka position/velocity/acceleration discontinuity with reduced dynamics.
     bool repeat_on_error {true};
 
-    /// Whether the robot stops if a python error signal is detected.
+    //! Whether the robot stops if a python error signal is detected.
     bool stop_at_python_signal {true};
 
-    /// Connects to a robot at the given FCI IP address.
+    //! Connects to a robot at the given FCI IP address.
     explicit Robot(std::string fci_ip, double dynamic_rel = 1.0, bool repeat_on_error = true, bool stop_at_python_signal = true);
 
     void setDefaultBehavior();

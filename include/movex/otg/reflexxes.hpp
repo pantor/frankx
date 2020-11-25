@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 #include <Eigen/Core>
 
 #include <ReflexxesAPI.h>
@@ -63,6 +65,7 @@ public:
             output.new_velocity(i) = output_parameters->NewVelocityVector->VecData[i];
             output.new_acceleration(i) = output_parameters->NewAccelerationVector->VecData[i];
         }
+        output.duration = output_parameters->GetSynchronizationTime();
 
         if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
             return Result::Finished;

@@ -5,10 +5,10 @@
 
 namespace frankx {
 
-struct Condition {
+class Condition {
+public:
     using CallbackType = std::function<bool(const franka::RobotState&, double)>;
-    CallbackType callback;
-
+    
     explicit Condition(CallbackType callback): callback(callback) { }
 
     Condition& operator&&(const Condition& rhs) {
@@ -24,6 +24,14 @@ struct Condition {
         };
         return *this;
     }
+
+    //! Check if the condition is fulfilled
+    bool operator()(const franka::RobotState& robot_state, double time) {
+        return callback(robot_state, time);
+    }
+
+private:
+    CallbackType callback;
 };
 
 

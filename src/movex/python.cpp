@@ -53,6 +53,7 @@ PYBIND11_MODULE(movex, m) {
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
+        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
         .def_readwrite("current_position", &InputParameter<DOFs>::current_position)
         .def_readwrite("current_velocity", &InputParameter<DOFs>::current_velocity)
         .def_readwrite("current_acceleration", &InputParameter<DOFs>::current_acceleration)
@@ -62,15 +63,14 @@ PYBIND11_MODULE(movex, m) {
         .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
         .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
         .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
-        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
-        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom);
-
+        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration);
 
     py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
         .def_readwrite("new_position", &OutputParameter<DOFs>::new_position)
         .def_readwrite("new_velocity", &OutputParameter<DOFs>::new_velocity)
         .def_readwrite("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
+        .def_readwrite("duration", &OutputParameter<DOFs>::duration)
         .def("__copy__",  [](const OutputParameter<DOFs> &self) {
             return OutputParameter<DOFs>(self);
         });

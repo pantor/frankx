@@ -300,7 +300,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
                 continue;
             }
 
-            if (reaction.condition.callback(robot_state, time)) {
+            if (reaction.condition(robot_state, time)) {
                 std::cout << "[frankx] reaction fired." << std::endl;
                 reaction.has_fired = true;
 

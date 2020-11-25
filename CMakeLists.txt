@@ -30,6 +30,7 @@ endif()
 add_library(frankx SHARED
   src/movex/affine.cpp
   src/movex/path.cpp
+  src/movex/ruckig.cpp
   src/frankx/gripper.cpp
   src/frankx/motion_impedance.cpp
   src/frankx/robot.cpp
@@ -62,7 +63,7 @@ if(BUILD_PYTHON_MODULE)
   target_link_libraries(_frankx PUBLIC frankx)
 
   # Movex python package for development
-  pybind11_add_module(movex src/movex/affine.cpp src/movex/path.cpp src/movex/python.cpp)
+  pybind11_add_module(movex src/movex/affine.cpp src/movex/path.cpp src/movex/ruckig.cpp src/movex/python.cpp)
   target_compile_features(movex PUBLIC cxx_std_17)
   target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
   target_link_libraries(movex PUBLIC Eigen3::Eigen)
@@ -89,6 +90,9 @@ if(BUILD_TESTS)
 
   foreach(test IN ITEMS unit-test otg-test)
     add_executable(${test} "test/${test}.cpp")
+    if(Reflexxes)
+      target_compile_definitions(${test} PUBLIC WITH_REFLEXXES)
+    endif()
     target_link_libraries(${test} PRIVATE frankx Catch2::Catch2)
     add_test(${test} COMMAND ${test})
   endforeach()

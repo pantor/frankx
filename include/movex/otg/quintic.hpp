@@ -16,7 +16,7 @@ class Quintic {
     double t, tf;
     InputParameter<DOFs> current_input;
 
-    bool calculate(const InputParameter<DOFs>& input) {
+    bool calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         current_input = input;
 
         const Vector& x0 = input.current_position;
@@ -43,8 +43,7 @@ class Quintic {
         if (input.minimum_duration.has_value()) {
             tf = std::max<double>({tf, input.minimum_duration.value()});
         }
-
-        t = 0.0;
+        
         a = -((a0 - af) * std::pow(tf, 2) + 6 * tf * (v0 + vf) + 12 * (x0 - xf)) / (2 * std::pow(tf, 5));
         b = -((2 * af - 3 * a0) * std::pow(tf, 2) - 16 * tf * v0 - 14 * tf * vf - 30 * (x0 - xf)) / (2 * std::pow(tf, 4));
         c = -((3 * a0 - af) * std::pow(tf, 2) + 12 * tf * v0 + 8 * tf * vf + 20 * (x0 - xf)) / (2 * std::pow(tf, 3));
@@ -52,6 +51,8 @@ class Quintic {
         e = v0;
         f = x0;
 
+        t = 0.0;
+        output.duration = tf;
         return true;
     }
 
@@ -63,7 +64,7 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         t += delta_time;
 
-        if (input != current_input && !calculate(input)) {
+        if (input != current_input && !calculate(input, output)) {
             return Result::Error;
         }
 
