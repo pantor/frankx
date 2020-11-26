@@ -51,6 +51,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def_property_readonly("q_x", &Affine::q_x)
         .def_property_readonly("q_y", &Affine::q_y)
         .def_property_readonly("q_z", &Affine::q_z)
+        .def("vector", &Affine::vector)
+        .def("vector_with_elbow", &Affine::vector_with_elbow, "elbow"_a)
         .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
         .def("get_inner_random", &Affine::getInnerRandom)
         .def("__repr__", &Affine::toString)

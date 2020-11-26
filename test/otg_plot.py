@@ -29,15 +29,15 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.8]
-    inp.current_velocity = [-0.9] * inp.degrees_of_freedom
-    inp.current_acceleration = [1.0] * inp.degrees_of_freedom
-    inp.target_position = [0.7]
+    inp.current_position = [0.6]
+    inp.current_velocity = [-0.6] * inp.degrees_of_freedom
+    inp.current_acceleration = [0.6] * inp.degrees_of_freedom
+    inp.target_position = [0.0]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [5.8] * inp.degrees_of_freedom
-    inp.max_acceleration = [0.8] * inp.degrees_of_freedom
-    inp.max_jerk = [6.0] * inp.degrees_of_freedom
+    inp.max_velocity = [0.3] * inp.degrees_of_freedom
+    inp.max_acceleration = [0.4] * inp.degrees_of_freedom
+    inp.max_jerk = [5.0] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
@@ -67,22 +67,22 @@ if __name__ == '__main__':
         plt.plot(t_list, dddqaxis[:, dof], label=f'j_{dof+1}')
 
         # Plot limit lines
-        if inp.max_velocity[dof] < 1.5 * global_max:
+        if inp.max_velocity[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 
-        if -inp.max_velocity[dof] > 1.5 * global_min:
+        if -inp.max_velocity[dof] > 1.4 * global_min:
             plt.axhline(y=-inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 
-        if inp.max_acceleration[dof] < 1.5 * global_max:
+        if inp.max_acceleration[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
 
-        if -inp.max_acceleration[dof] > 1.5 * global_min:
+        if -inp.max_acceleration[dof] > 1.4 * global_min:
             plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
 
-        if inp.max_jerk[dof] < 1.5 * global_max:
+        if inp.max_jerk[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
 
-        if -inp.max_jerk[dof] > 1.5 * global_min:
+        if -inp.max_jerk[dof] > 1.4 * global_min:
             plt.axhline(y=-inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
 
         plt.legend()

@@ -44,7 +44,7 @@ struct RuckigEquation {
     static bool time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    
+
     static bool time_down_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
@@ -156,60 +156,87 @@ class Ruckig {
             const double aMax = input.max_acceleration[dof];
             const double jMax = input.max_jerk[dof];
 
-            // std::cout << std::pow(a0, 2)/(2 * jMax) + v0 << std::endl;
-            // std::cout << -std::pow(a0, 2)/(2 * jMax) + v0 << std::endl;
+            j_brakes_[dof][0] = 0.0;
+            t_brakes_[dof][0] = 0.0;
+            j_brakes_[dof][1] = 0.0;
+            t_brakes_[dof][1] = 0.0;
+
+            // if a0 > aMax && v0 > vMax
+            // else if a0 > aMax && v0 < vMax
+            // else if a0 < aMax && v0 > vMax
+            // else if a0 < aMax && v0 < vMax
 
             if (a0 > aMax) {
                 j_brakes_[dof][0] = -jMax;
-                t_brakes_[dof][0] = (a0 - aMax) / jMax + 1e-15;
 
-                j_brakes_[dof][1] = 0.0;
-                t_brakes_[dof][1] = 0.0;
-            
+                double t_to_a_max = (a0 - aMax) / jMax;
+                double v_at_a_max = v0 + a0 * t_to_a_max - 0.5 * jMax * std::pow(t_to_a_max, 2);
+
+                t_brakes_[dof][0] = t_to_a_max + 1e-15;
+
+                if (v_at_a_max < -vMax) {
+                    double t_to_v_max_while_a_max = -(v_at_a_max + vMax)/aMax;
+                    t_brakes_[dof][1] = t_to_v_max_while_a_max;
+                }
+
             } else if (a0 < -aMax) {
                 j_brakes_[dof][0] = jMax;
-                t_brakes_[dof][0] = -(a0 - aMax) / jMax - 1e-15;
 
-                j_brakes_[dof][1] = 0.0;
-                t_brakes_[dof][1] = 0.0;
-            
+                double t_to_a_max = -(a0 + aMax) / jMax;
+                double v_at_a_max = v0 + a0 * t_to_a_max + 0.5 * jMax * std::pow(t_to_a_max, 2);
+
+                t_brakes_[dof][0] = t_to_a_max + 1e-15;
+
+                if (v_at_a_max > vMax) {
+                    double t_to_v_max_while_a_max = (v_at_a_max - vMax)/aMax;
+                    t_brakes_[dof][1] = t_to_v_max_while_a_max;
+                }
+
             } else if (v0 > vMax + 1e-9 || (a0 > 0 && std::pow(a0, 2)/(2 * jMax) + v0 > vMax + 1e-9)) {
                 j_brakes_[dof][0] = -jMax;
-                t_brakes_[dof][0] = std::min({
-                    (a0 + aMax)/jMax - 1e-15,
-                    -(-a0 - std::sqrt(std::pow(a0, 2) - 2 * jMax * (vMax - v0)))/jMax, // Velocity in jMax direction
-                    -(-2 * a0 - std::sqrt(2*(std::pow(a0, 2) + 2 * jMax * (v0 + vMax))))/(2 * jMax)  // Velocity in other direction
-                });
+                double t_to_a_max = (a0 + aMax)/jMax;
+                double t_to_v_max_in_j_direction = -(-a0 - std::sqrt(std::pow(a0, 2) - 2 * jMax * (vMax - v0)))/jMax;
+                double t_to_v_max_in_reverse_j_direction  = -(-2 * a0 - std::sqrt(2*(std::pow(a0, 2) + 2 * jMax * (v0 + vMax))))/(2 * jMax);
 
-                j_brakes_[dof][1] = 0.0;
-                t_brakes_[dof][1] = 0.0;
-            
+                if (t_to_a_max < t_to_v_max_in_j_direction && t_to_a_max < t_to_v_max_in_reverse_j_direction) {
+                    double v_at_a_max = v0 + a0 * t_to_a_max - 0.5 * jMax * std::pow(t_to_a_max, 2);
+                    double t_to_v_max_while_a_max = (v_at_a_max - vMax)/aMax;
+                    double t_to_v_max_in_reverse_j_direction = -(std::pow(aMax, 2) - 2 * jMax * (v_at_a_max + vMax))/(2 * aMax * jMax);
+
+                    t_brakes_[dof][0] = t_to_a_max;
+                    t_brakes_[dof][1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
+                } else {
+                    t_brakes_[dof][0] = std::min(t_to_v_max_in_j_direction, t_to_v_max_in_reverse_j_direction);
+                }
+
+                t_brakes_[dof][0] = std::max(t_brakes_[dof][0] - 1e-15, 0.0);
+
             } else if (v0 < -vMax - 1e-9 || (a0 < 0 && -std::pow(a0, 2)/(2 * jMax) + v0 < -vMax - 1e-9)) {
                 j_brakes_[dof][0] = jMax;
-                t_brakes_[dof][0] = std::min({
-                    -(a0 - aMax)/jMax - 1e-15,
-                    (-a0 + std::sqrt(std::pow(a0, 2) + 2 * jMax * (-vMax - v0)))/jMax, // Velocity in jMax direction
-                    (-2 * a0 + std::sqrt(2*(std::pow(a0, 2) - 2 * jMax * (v0 - vMax))))/(2 * jMax)  // Velocity in other direction
-                });
+                double t_to_a_max = -(a0 - aMax)/jMax;
+                double t_to_v_max_in_j_direction = (-a0 + std::sqrt(std::pow(a0, 2) + 2 * jMax * (-vMax - v0)))/jMax;
+                double t_to_v_max_in_reverse_j_direction  = (-2 * a0 + std::sqrt(2*(std::pow(a0, 2) - 2 * jMax * (v0 - vMax))))/(2 * jMax);
 
-                j_brakes_[dof][1] = 0.0;
-                t_brakes_[dof][1] = 0.0;
-            
-            } else {
-                j_brakes_[dof][0] = 0.0;
-                t_brakes_[dof][0] = 0.0;
+                if (t_to_a_max < t_to_v_max_in_j_direction && t_to_a_max < t_to_v_max_in_reverse_j_direction) {
+                    double v_at_a_max = v0 + a0 * t_to_a_max + 0.5 * jMax * std::pow(t_to_a_max, 2);
+                    double t_to_v_max_while_a_max = -(v_at_a_max + vMax)/aMax;
+                    double t_to_v_max_in_reverse_j_direction = -(std::pow(aMax, 2) + 2 * jMax * (v_at_a_max - vMax))/(2 * aMax * jMax);
 
-                j_brakes_[dof][1] = 0.0;
-                t_brakes_[dof][1] = 0.0;
+                    // std::cout << v_at_a_max << " " << t_to_v_max_while_a_max << " " << t_to_v_max_in_reverse_j_direction << std::endl;
+
+                    t_brakes_[dof][0] = t_to_a_max;
+                    t_brakes_[dof][1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
+                } else {
+                    t_brakes_[dof][0] = std::min(t_to_v_max_in_j_direction, t_to_v_max_in_reverse_j_direction);
+                }
+
+                t_brakes_[dof][0] = std::max(t_brakes_[dof][0] - 1e-15, 0.0);
             }
 
             t_brake_[dof] = t_brakes_[dof][0] + t_brakes_[dof][1];
             profiles[dof].t_brake = t_brake_[dof];
-            // std::cout << dof << ": " << t_brakes_[dof][0] << " " << t_brakes_[dof][1] << std::endl;       
+            // std::cout << dof << ": " << t_brakes_[dof][0] << " " << t_brakes_[dof][1] << std::endl;
         }
-
-        auto t_brake_max_pointer = std::max_element(t_brake_.begin(), t_brake_.end());
-        double t_brake = *t_brake_max_pointer;
 
         std::array<double, DOFs> tfs;
         for (size_t dof = 0; dof < DOFs; dof += 1) {
@@ -251,6 +278,9 @@ class Ruckig {
 
         auto tf_max_pointer = std::max_element(tfs.begin(), tfs.end());
         size_t limiting_dof = std::distance(tfs.begin(), tf_max_pointer);
+
+        auto t_brake_max_pointer = std::max_element(t_brake_.begin(), t_brake_.end());
+        double t_brake = *t_brake_max_pointer;
         tf = *tf_max_pointer + t_brake;
 
         for (size_t dof = 0; dof < DOFs; dof += 1) {
