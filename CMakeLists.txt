@@ -27,17 +27,24 @@ else()
 endif()
 
 
-add_library(frankx SHARED
+add_library(movex SHARED
   src/movex/affine.cpp
   src/movex/path.cpp
   src/movex/ruckig.cpp
+)
+target_compile_features(movex PUBLIC cxx_std_17)
+target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(movex PUBLIC Eigen3::Eigen)
+
+
+add_library(frankx SHARED
   src/frankx/gripper.cpp
   src/frankx/motion_impedance.cpp
   src/frankx/robot.cpp
 )
 target_compile_features(frankx PUBLIC cxx_std_17)
 target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen)
+target_link_libraries(frankx PUBLIC Franka::Franka Eigen3::Eigen movex)
 
 if(Reflexxes)
   target_compile_definitions(frankx PUBLIC WITH_REFLEXXES)
@@ -63,14 +70,14 @@ if(BUILD_PYTHON_MODULE)
   target_link_libraries(_frankx PUBLIC frankx)
 
   # Movex python package for development
-  pybind11_add_module(movex src/movex/affine.cpp src/movex/path.cpp src/movex/ruckig.cpp src/movex/python.cpp)
-  target_compile_features(movex PUBLIC cxx_std_17)
-  target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
-  target_link_libraries(movex PUBLIC Eigen3::Eigen)
+  pybind11_add_module(_movex src/movex/python.cpp)
+  target_compile_features(_movex PUBLIC cxx_std_17)
+  target_include_directories(_movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
+  target_link_libraries(_movex PUBLIC Eigen3::Eigen movex)
 
   if(Reflexxes)
-    target_compile_definitions(movex PUBLIC WITH_REFLEXXES)
-    target_link_libraries(movex PUBLIC Reflexxes::Reflexxes)
+    target_compile_definitions(_movex PUBLIC WITH_REFLEXXES)
+    target_link_libraries(_movex PUBLIC Reflexxes::Reflexxes)
   endif()
 endif()
 

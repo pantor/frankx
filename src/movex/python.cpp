@@ -21,7 +21,7 @@ using namespace pybind11::literals; // to bring in the `_a` literal
 using namespace movex;
 
 
-PYBIND11_MODULE(movex, m) {
+PYBIND11_MODULE(_movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
     constexpr size_t DOFs {1};

@@ -49,6 +49,13 @@ void check_calculation(OTGType& otg, InputParameter<DOFs>& input, std::optional<
     auto result = otg.update(input, output);
 
     CHECK( result == Result::Working );
+    CHECK_FALSE( std::isnan(output.duration) );
+
+    for (size_t dof = 0; dof < DOFs; dof += 1) {
+        CHECK_FALSE( std::isnan(output.new_position[dof]) );
+        CHECK_FALSE( std::isnan(output.new_velocity[dof]) );
+        CHECK_FALSE( std::isnan(output.new_acceleration[dof]) );
+    }
 
     if (time.has_value()) {
         CHECK( output.duration == Approx(time.value()).margin(0.005) );
@@ -181,13 +188,13 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 1024; i += 1) {
+        for (size_t i = 0; i < 2*4096; i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.target_position = Vec::Random();
             input.max_velocity = 10 * Vec::Random().array().abs() + 0.1;
-            input.max_acceleration = 10 * Vec::Random().array().abs() + input.current_acceleration.array().abs() + 0.1;
+            input.max_acceleration = 10 * Vec::Random().array().abs() + 0.1;
             input.max_jerk = 10 * Vec::Random().array().abs() + 0.1;
 
             check_calculation(otg, input);
@@ -204,10 +211,10 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 3200; i += 1) {
+        for (size_t i = 0; i < 4*4096; i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
-            input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.current_acceleration = dist(gen) < 0.85 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.target_position = Vec1::Random();
             input.max_velocity = 10 * Vec1::Random().array().abs() + 0.1;
             input.max_acceleration = 10 * Vec1::Random().array().abs() + 0.1;

@@ -1,4 +1,5 @@
 #include <complex>
+#include <iomanip>
 
 #include <movex/otg/ruckig.hpp>
 
@@ -36,10 +37,11 @@ void Profile::reset(double p0, double v0, double a0, double base_jerk) {
 
 bool Profile::check(double pf, double vf, double vMax, double aMax) const {
     // Velocity and acceleration limits can be broken in the beginnging if the initial velocity and acceleration are too high
+    // std::cout << std::setprecision(12) << "target: " << p[7] << " " << pf << " " << v[7] << " " << vf << std::endl;
     return std::all_of(t.begin(), t.end(), [](double tm){ return tm >= 0; })
-        && std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-8; })
-        && std::all_of(a.begin() + 3, a.end(), [aMax](double am){ return std::abs(am) < std::abs(aMax) + 1e-8; })
-        && std::abs(p[7] - pf) < 1e-7 && std::abs(v[7] - vf) < 1e-8;
+        && std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
+        && std::all_of(a.begin() + 2, a.end(), [aMax](double am){ return std::abs(am) < std::abs(aMax) + 1e-9; })
+        && std::abs(p[7] - pf) < 5e-7 && std::abs(v[7] - vf) < 5e-8;
 }
 
 std::tuple<double, double, double> Profile::integrate(double t, double p0, double v0, double a0, double j) {
@@ -89,6 +91,14 @@ bool RuckigEquation::time_up_acc0_acc1_vel(Profile& profile, double p0, double v
     profile.t[4] = aMax/jMax;
     profile.t[5] = (-(Power(aMax,2)/jMax) - vf + vMax)/aMax;
     profile.t[6] = aMax/jMax;
+
+    // std::cout << profile.t[0] << std::endl;
+    // std::cout << profile.t[1] << std::endl;
+    // std::cout << profile.t[2] << std::endl;
+    // std::cout << profile.t[3] << std::endl;
+    // std::cout << profile.t[4] << std::endl;
+    // std::cout << profile.t[5] << std::endl;
+    // std::cout << profile.t[6] << std::endl << std::endl;
 
     profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     return profile.check(pf, vf, vMax, aMax);
@@ -273,19 +283,22 @@ bool RuckigEquation::time_up_none(Profile& profile, double p0, double v0, double
         // Solution 2
         {
             const double h1 = Power(a0,3) + 3*Power(jMax,2)*(p0 - pf);
-            const double h2 = -(Power(a0,8)*Power(jMax,4)) + 192*Power(a0,5)*Power(jMax,6)*(p0 - pf) + 288*Power(a0,2)*Power(jMax,8)*Power(p0 - pf,2);
+            const double h2 = -Power(a0,8) + 192*Power(a0,5)*Power(jMax,2)*(p0 - pf) + 288*Power(a0,2)*Power(jMax,4)*Power(p0 - pf,2);
             const double h3 = Power(a0,2)*jMax*(Power(a0,3) + 3*Power(jMax,2)*(p0 - pf));
             const double h4 = 17*Power(a0,6) + 48*Power(a0,3)*Power(jMax,2)*(p0 - pf) + 72*Power(jMax,4)*Power(p0 - pf,2);
-            const double h5 = 3888*Power(jMax,4)*(-576*Power(a0,2)*Power(h3,2) + 96*Power(a0,4)*h1*h3*jMax + 3*Power(a0,12)*Power(jMax,2) + 12*Power(a0,6)*h4*Power(jMax,2) + 16*Power(h1,2)*h4*Power(jMax,2));
-            const double h6 = Power(h5 + Sqrt(-5038848*Power(h2,3) + Power(h5,2)),0.3333333333333333);
-            const double h7 = (216*Power(2,0.3333333333333333)*h2 + Power(2,0.6666666666666666)*Power(h6,2))/(216.*Power(a0,2)*h6*Power(jMax,4));
+            const double h5 = 3*(-576*Power(a0,2)*Power(h3,2) + 96*Power(a0,4)*h1*h3*jMax + 3*Power(a0,12)*Power(jMax,2) + (12*Power(a0,6) + 16*Power(h1,2))*h4*Power(jMax,2));
+            // Be careful of numerical stability of h6
+            const double h6 = 648*Power(jMax,4)*(h5 + Sqrt(Power(h5,2) - 3*Power(h2,3)*Power(jMax,4)));
+            const double h7 = (h2/Power(h6,1./3) + Power(h6,1./3)/(108.*Power(jMax,4)))/Power(a0,2);
             const double h8 = Sqrt(-9*h7 + (3*Power(a0,6) + 4*Power(h1,2))/(Power(a0,4)*Power(jMax,2)))/3.;
+            const double h9 = (8*h1*(-27 + (8*Power(h1,2))/Power(a0,6)))/(27.*Power(jMax,3));
+            const double h10 = (-6*h8 + Sqrt(36*h7 - (9*h9)/h8 + (8*(3*Power(a0,6) + 4*Power(h1,2)))/(Power(a0,4)*Power(jMax,2))) + (4*h1)/(Power(a0,2)*jMax))/12.;
 
-            profile.t[0] = -(4*Power(a0,3) - 3*Power(a0,2)*Sqrt(h7 + (54*Power(a0,6)*h1 - 16*Power(h1,3))/(9.*Power(a0,6)*Sqrt(-9*h7 + (3*Power(a0,6) + 4*Power(h1,2))/(Power(a0,4)*Power(jMax,2)))*Power(jMax,3)) + (2*Power(a0,2))/(3.*Power(jMax,2)) + (8*Power(h1,2))/(9.*Power(a0,4)*Power(jMax,2)))*jMax + Power(a0,2)*Sqrt(-9*h7 + (3*Power(a0,6) + 4*Power(h1,2))/(Power(a0,4)*Power(jMax,2)))*jMax - 6*Power(jMax,2)*p0 + 6*Power(jMax,2)*pf)/(6.*Power(a0,2)*jMax);
+            profile.t[0] = (-6*h8 + Sqrt(36*h7 - (9*h9)/h8 + (8*(3*Power(a0,6) + 4*Power(h1,2)))/(Power(a0,4)*Power(jMax,2))) - (8*a0)/jMax + (12*jMax*(p0 - pf))/Power(a0,2))/12.;
             profile.t[1] = 0;
-            profile.t[2] = (2*h1 + 3*Power(a0,2)*Sqrt(h7 + (54*Power(a0,6)*h1 - 16*Power(h1,3))/(9.*Power(a0,6)*Sqrt(-9*h7 + (3*Power(a0,6) + 4*Power(h1,2))/(Power(a0,4)*Power(jMax,2)))*Power(jMax,3)) + (2*Power(a0,2))/(3.*Power(jMax,2)) + (8*Power(h1,2))/(9.*Power(a0,4)*Power(jMax,2)))*jMax - Power(a0,2)*Sqrt(-9*h7 + (3*Power(a0,6) + 4*Power(h1,2))/(Power(a0,4)*Power(jMax,2)))*jMax)/(6.*Power(a0,2)*jMax);
+            profile.t[2] = h10;
             profile.t[3] = 0;
-            profile.t[4] = -(-192*Power(a0,3)*Power(h1,3) - 1080*Power(a0,11)*h8*jMax + 12*Power(a0,10)*h8*Power(jMax,2)*(-36*h8 + 7*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3)))) + 36*Power(a0,9)*(18*h1 + h8*Power(jMax,3)*(9*h7 + 9*Power(h8,2) - 2*h8*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))))) - 9*Power(a0,8)*(2*h1*jMax*(-97*h8 + 3*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3)))) + 3*h8*Power(jMax,3)*(h7*jMax*(-27*h8 + Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3)))) + 3*(-3*Power(h8,3)*jMax + Power(h8,2)*jMax*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))) + 40*p0 - 40*pf))) + 432*Power(a0,5)*h1*h8*jMax*(h1 + 4*Power(jMax,2)*(p0 - pf)) + 48*Power(a0,7)*h8*Power(jMax,2)*(-9*h8 + Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))))*(h1 + 6*Power(jMax,2)*(p0 - pf)) + 8*Power(a0,2)*h1*jMax*(Power(h1,2)*(-117*h8 + 2*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3)))) + 162*h1*h8*Power(jMax,2)*(p0 - pf) + 324*h8*Power(jMax,4)*Power(p0 - pf,2)) + 12*Power(a0,4)*h8*Power(jMax,2)*(-(Power(h1,2)*(-81*h8 + 5*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))))) + 12*h1*Power(jMax,2)*(-9*h8 + Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))))*(p0 - pf) + 36*Power(jMax,4)*(-9*h8 + Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3))))*Power(p0 - pf,2)) + 288*Power(h1,3)*(h1 + 2*Power(jMax,2)*(-p0 + pf)) - 54*Power(a0,6)*(18*h1 + h8*Power(jMax,3)*(9*h7 + 9*Power(h8,2) - 2*h8*Sqrt((-48*Power(h1,3) + 54*Power(a0,8)*h8*jMax + 72*Power(a0,2)*Power(h1,2)*h8*jMax + 81*Power(a0,6)*(2*h1 + h7*h8*Power(jMax,3)))/(Power(a0,6)*h8*Power(jMax,3)))))*(h1 + 2*Power(jMax,2)*(-p0 + pf)))/(108.*Power(a0,4)*h8*Power(jMax,2)*(Power(a0,6) - 48*Power(a0,3)*Power(jMax,2)*(p0 - pf) - 72*Power(jMax,4)*Power(p0 - pf,2)));
+            profile.t[4] = (-12*Power(a0,7) + 17*Power(a0,6)*h10*jMax + 12*Power(a0,5)*Power(h10,2)*Power(jMax,2) - 18*Power(a0,4)*Power(jMax,2)*(Power(h10,3)*jMax + 2*p0 - 2*pf) + 48*Power(a0,3)*h10*Power(jMax,3)*(p0 - pf) + 36*Power(a0,2)*Power(h10,2)*Power(jMax,4)*(p0 - pf) + 72*h10*Power(jMax,5)*Power(p0 - pf,2))/(-(Power(a0,6)*jMax) + 48*Power(a0,3)*Power(jMax,3)*(p0 - pf) + 72*Power(jMax,5)*Power(p0 - pf,2));
             profile.t[5] = 0;
             profile.t[6] = profile.t[4];
 
@@ -297,31 +310,91 @@ bool RuckigEquation::time_up_none(Profile& profile, double p0, double v0, double
         }
     }
 
+    // std::cout << std::setprecision(12) << "---" << std::endl;
+
     const double h1 = 2*Power(a0,3) + 3*Power(jMax,2)*(-p0 + pf) - 3*a0*jMax*(v0 - 2*vf);
     const double h2 = Power(a0,2) + 2*jMax*(-v0 + vf);
     const double h3 = Power(a0,5) - 24*Power(a0,2)*Power(jMax,2)*(p0 - pf) + 24*Power(jMax,3)*(-p0 + pf)*v0 + 4*Power(a0,3)*jMax*(v0 + 3*vf) + 12*a0*Power(jMax,2)*(Power(v0,2) + 2*v0*vf - Power(vf,2));
     const double h4 = 3*Power(a0,4) - 24*a0*Power(jMax,2)*(p0 - pf) - 4*Power(jMax,2)*Power(v0 - vf,2) + 4*Power(a0,2)*jMax*(v0 + 5*vf);
     const double h5 = Power(a0,6) - 48*Power(a0,3)*Power(jMax,2)*(p0 - pf) - 144*a0*Power(jMax,3)*(p0 - pf)*v0 + 6*Power(a0,4)*jMax*(v0 + 3*vf) + 36*Power(a0,2)*Power(jMax,2)*(Power(v0,2) + 2*v0*vf - Power(vf,2)) - 72*Power(jMax,3)*(jMax*Power(p0 - pf,2) - (v0 - vf)*Power(v0 + vf,2));
-    const double h6 = -(Power(jMax,4)*(Power(a0,8) - 192*Power(a0,5)*Power(jMax,2)*(p0 - pf) - 8*Power(a0,6)*jMax*(v0 - 5*vf) - 1152*a0*Power(jMax,4)*(p0 - pf)*v0*(v0 + vf) + 192*Power(a0,3)*Power(jMax,3)*(p0 - pf)*(5*v0 + 2*vf) + 120*Power(a0,4)*Power(jMax,2)*(Power(v0,2) - 2*v0*vf - 3*Power(vf,2)) - 96*Power(a0,2)*Power(jMax,3)*(3*jMax*Power(p0 - pf,2) + 5*Power(v0,3) - 3*Power(v0,2)*vf - 15*v0*Power(vf,2) + Power(vf,3)) + 48*Power(jMax,4)*(12*jMax*Power(p0 - pf,2)*(v0 + vf) + Power(v0 - vf,2)*(11*Power(v0,2) + 26*v0*vf + 11*Power(vf,2)))));
-    const double h7 = 3888*(36*h2*Power(h3,2) - 24*h1*h3*h4 + 3*Power(h4,3) + 16*Power(h1,2)*h5 - 12*h2*h4*h5);
-    const double h8 = (4*Power(h1,2) - 3*h2*h4)/(9.*Power(h2,2)*Power(jMax,2));
-    const double h9 = (-2*(8*Power(h1,3) + 9*Power(h2,2)*h3 - 9*h1*h2*h4))/(27.*Power(h2,3)*Power(jMax,3));
-    const auto h10 = PowerComplex(h7*Power(jMax,6) + SqrtComplex(-5038848*Power(h6,3) + Power(h7,2)*Power(jMax,12)),0.3333333333333333);
-    const auto h11 = (Power(2,0.6666666666666666)*h10 + (216*Power(2,0.3333333333333333)*h6)/h10)/(216.*h2*Power(jMax,4));
-    const auto h12 = SqrtComplex(h11 + h8);
-    const auto h13_c = h12/2. - SqrtComplex(-h11 + 2*h8 + h9/h12)/2. - h1/(3.*h2*jMax);
-    const auto h14_c = (h12 + SqrtComplex(-h11 + 2*h8 + h9/h12))/2. - h1/(3.*h2*jMax);
-    const auto h15_c = -h12/2. + SqrtComplex(-h11 + 2*h8 - h9/h12)/2. - h1/(3.*h2*jMax);
-    const auto h16_c = -(2*h1 + 3*h2*(h12 + SqrtComplex(-h11 + 2*h8 - h9/h12))*jMax)/(6.*h2*jMax);
     const double h17 = jMax*(-Power(a0,6) + 48*Power(a0,3)*Power(jMax,2)*(p0 - pf) - 144*a0*Power(jMax,3)*(p0 - pf)*v0 + 6*Power(a0,4)*jMax*(v0 - 3*vf) - 36*Power(a0,2)*Power(jMax,2)*(Power(v0,2) - 2*v0*vf - Power(vf,2)) + 72*Power(jMax,3)*(jMax*Power(p0 - pf,2) + Power(v0 - vf,2)*(v0 + vf)));
+    const double h6 = -Power(a0,8) + 192*Power(a0,5)*Power(jMax,2)*(p0 - pf) + 8*Power(a0,6)*jMax*(v0 - 5*vf) + 1152*a0*Power(jMax,4)*(p0 - pf)*v0*(v0 + vf) - 192*Power(a0,3)*Power(jMax,3)*(p0 - pf)*(5*v0 + 2*vf) - 120*Power(a0,4)*Power(jMax,2)*(Power(v0,2) - 2*v0*vf - 3*Power(vf,2)) + 96*Power(a0,2)*Power(jMax,3)*(3*jMax*Power(p0 - pf,2) + 5*Power(v0,3) - 3*Power(v0,2)*vf - 15*v0*Power(vf,2) + Power(vf,3)) - 48*Power(jMax,4)*(12*jMax*Power(p0 - pf,2)*(v0 + vf) + Power(v0 - vf,2)*(11*Power(v0,2) + 26*v0*vf + 11*Power(vf,2)));
+
+    const double h8 = 4*Power(h1,2)/(9.*h2) - h4/3.;
+    const double h9 = -2*(2*h1/h2*(h8 - h4/6) + h3)/(3*jMax);
+
+    const double h7 = 3*(36*h2*Power(h3,2) + 16*Power(h1,2)*h5 + 3*h4*(Power(h4,2) - 8*h1*h3 - 4*h2*h5));
+
+    // Important: Numerical stability of h10
+    const auto h10_x = h6*Power(h6/h7,2);
+    auto h10 = PowerComplex(3 * h7 *(1. - SqrtComplex(1 - 3*h10_x)),1./3);
+    // std::cout << h10_x << " " << Power(h6/h7,2) << std::endl;
+    if (std::abs(Power(h6/h7,2)) < 1e-11) {
+        // std::cout << "h10 old: " << h10 << " " << h10_x << std::endl;
+        h10 = PowerComplex(h10_x,1./3)*PowerComplex(9*h7/2,1./3) + PowerComplex(h10_x,4./3)*PowerComplex(9*h7/2,1./3)/4. + 5.*PowerComplex(h10_x,7./3)*PowerComplex(9*h7/2,1./3)/16.;
+
+        // h10 = PowerComplex(3,2./3)*h6/PowerComplex(2.*h7,1./3); // + Power(h6,4)/Power(std::abs(h7),8./3)*PowerComplex(9*h7/2,1./3)/4.;
+        // std::cout << "h10 new: " << h10 << " " << h10_x << std::endl;
+    }
+
+    // std::cout << h10 << " " << h10_x << std::endl;
+    // const auto h11 = h6/(6.*h10) + h10/18.;
+    const auto h11 = std::complex<double>(h10.real()/18 + (h10.real() * h6)/(6*std::norm(h10)), h10.imag()/18 - (h10.imag() * h6)/(6*std::norm(h10)));
+
+    // std::cout << h6 << " " << h7 << " " << h8 << " " << h9 << " " << h10 << " " << h11 << std::endl;
+
+    auto h11_h2 = h11/h2;
+    auto h8_h2 = h8/h2;
+    auto h12 = SqrtComplex(h11_h2 + h8_h2)/jMax;
+
+    if (std::abs(h11+h8) < 1e-3) {
+        // std::cout << std::setprecision(16) << "h11: " << h11 << std::endl;
+        // std::cout << "h8: " << h8 << std::endl;
+        // std::cout << "old h11+h8: " << h11+h8 << std::endl;
+
+        // std::cout << "old h12: " << h12 << std::endl;
+
+        h12 = SqrtComplex(h6/(6.*h10*h2) + Power(2*h1,2)/(Power(3*h2, 2)) + (h10 - 6*h4)/(18.*h2))/jMax;
+        // std::cout << "new h12: " << h12 << std::endl;
+    }
+
+    // auto h12_x_1 = (h11/h2).imag();
+    // auto h12_alt = std::complex<double>(
+    //     std::sqrt(h8/h2) + std::pow(h12_x_1, 2)/(8*Power(h8/h2,3./2)),
+    //     h12_x_1/(2*std::sqrt(h8/h2)) - (std::pow(h12_x_1,3))/(16 * Power(h8/h2,5./2))
+    // )/(jMax);
+
+    // std::cout << "h12: " << h12 << std::endl;
+
+    auto h9_h12_real = (h12.real() * h9)/(std::norm(h12)*h2);
+    auto h9_h12_imag = (-h12.imag() * h9)/(std::norm(h12)*h2);
+
+    auto h12_a = SqrtComplex(-h11_h2 + 2*h8_h2 + h9_h12_real + std::complex<double>(0, h9_h12_imag))/jMax;
+    auto h12_b = SqrtComplex(-h11_h2 + 2*h8_h2 - h9_h12_real - std::complex<double>(0, h9_h12_imag))/jMax;
+
+    // std::cout << h11 + h8 << std::endl;
+    // std::cout << -h11 + 2*h8 - h9/h12 << std::endl;
+    // std::cout << h12_b << std::endl;
+
+    auto h13_c = (h12 - h12_a)/2. - h1/(3.*h2*jMax);
+    auto h14_c = (h12 + h12_a)/2. - h1/(3.*h2*jMax);
+    auto h15_c = (-h12 + h12_b)/2. - h1/(3.*h2*jMax);
+    auto h16_c = (-h12 - h12_b)/2. - h1/(3.*h2*jMax);
+
+    // std::cout << "h13-16: " << std::endl;
+    // std::cout << h13_c << std::endl;
+    // std::cout << h14_c << std::endl;
+    // std::cout << h15_c << std::endl;
+    // std::cout << h16_c << std::endl;
+
 
     // Solution 3
     if (h13_c.real() > 0.0 && std::abs(h13_c.imag()) < 1e-8) {
-        const double h13 = h13_c.real();
+        const double h13 = std::abs(h13_c);
 
         profile.t[0] = h13;
         profile.t[1] = 0;
-        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h12*h2 - h2*SqrtComplex(-h11 + 2*h8 + h9/h12) + 2*jMax*p0 - 2*jMax*pf) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
+        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h2*(h12 - h12_a) + 2*jMax*(p0 - pf)) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
         profile.t[3] = 0;
         profile.t[4] = -((Power(a0,7) + 13*Power(a0,6)*h13*jMax + 72*Power(jMax,4)*(-(h13*(jMax*Power(p0 - pf,2) - Power(v0 - vf,3))) + Power(h13,2)*jMax*(p0 - pf)*(v0 - vf) + 2*(p0 - pf)*v0*(v0 - vf) + Power(h13,3)*jMax*Power(v0 - vf,2)) + 6*Power(a0,5)*jMax*(7*Power(h13,2)*jMax + v0 + 3*vf) - 12*Power(a0,3)*Power(jMax,2)*(10*h13*jMax*(p0 - pf) - Power(v0,2) + Power(h13,2)*jMax*(13*v0 - 16*vf) - 2*v0*vf + 3*Power(vf,2)) + 6*Power(a0,4)*Power(jMax,2)*(3*Power(h13,3)*jMax - 8*p0 + 8*pf + h13*(v0 + 19*vf)) - 36*Power(a0,2)*Power(jMax,3)*(Power(h13,2)*jMax*(p0 - pf) + 2*(-p0 + pf)*v0 + 2*Power(h13,3)*jMax*(v0 - vf) + h13*(3*Power(v0,2) + 2*v0*vf - 3*Power(vf,2))) - 72*a0*Power(jMax,3)*(Power(v0,3) + Power(v0,2)*vf - 3*v0*Power(vf,2) + Power(vf,3) + jMax*(Power(p0,2) + Power(pf,2) + h13*pf*(4*v0 - 2*vf) - 2*p0*(pf + 2*h13*v0 - h13*vf) + Power(h13,2)*(-2*Power(v0,2) + 5*v0*vf - 3*Power(vf,2)))))/h17);
         profile.t[5] = 0;
@@ -339,15 +412,23 @@ bool RuckigEquation::time_up_none(Profile& profile, double p0, double v0, double
 
     // Solution 4
     if (h14_c.real() > 0.0 && std::abs(h14_c.imag()) < 1e-8) {
-        const double h14 = h14_c.real();
+        const double h14 = std::abs(h14_c);
 
         profile.t[0] = h14;
         profile.t[1] = 0;
-        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h12*h2 + h2*SqrtComplex(-h11 + 2*h8 + h9/h12) + 2*jMax*p0 - 2*jMax*pf) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
+        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h2*(h12 + h12_a) + 2*jMax*(p0 - pf)) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
         profile.t[3] = 0;
         profile.t[4] = -((Power(a0,7) + 13*Power(a0,6)*h14*jMax + 72*Power(jMax,4)*(-(h14*(jMax*Power(p0 - pf,2) - Power(v0 - vf,3))) + Power(h14,2)*jMax*(p0 - pf)*(v0 - vf) + 2*(p0 - pf)*v0*(v0 - vf) + Power(h14,3)*jMax*Power(v0 - vf,2)) + 6*Power(a0,5)*jMax*(7*Power(h14,2)*jMax + v0 + 3*vf) - 12*Power(a0,3)*Power(jMax,2)*(10*h14*jMax*(p0 - pf) - Power(v0,2) + Power(h14,2)*jMax*(13*v0 - 16*vf) - 2*v0*vf + 3*Power(vf,2)) + 6*Power(a0,4)*Power(jMax,2)*(3*Power(h14,3)*jMax - 8*p0 + 8*pf + h14*(v0 + 19*vf)) - 36*Power(a0,2)*Power(jMax,3)*(Power(h14,2)*jMax*(p0 - pf) + 2*(-p0 + pf)*v0 + 2*Power(h14,3)*jMax*(v0 - vf) + h14*(3*Power(v0,2) + 2*v0*vf - 3*Power(vf,2))) - 72*a0*Power(jMax,3)*(Power(v0,3) + Power(v0,2)*vf - 3*v0*Power(vf,2) + Power(vf,3) + jMax*(Power(p0,2) + Power(pf,2) + h14*pf*(4*v0 - 2*vf) - 2*p0*(pf + 2*h14*v0 - h14*vf) + Power(h14,2)*(-2*Power(v0,2) + 5*v0*vf - 3*Power(vf,2)))))/h17);
         profile.t[5] = 0;
         profile.t[6] = profile.t[4];
+
+        // std::cout << std::setprecision(9) << profile.t[0] << std::endl;
+        // std::cout << profile.t[1] << std::endl;
+        // std::cout << profile.t[2] << std::endl;
+        // std::cout << profile.t[3] << std::endl;
+        // std::cout << profile.t[4] << std::endl;
+        // std::cout << profile.t[5] << std::endl;
+        // std::cout << profile.t[6] << std::endl << std::endl;
 
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2.;
         profile.t[4] = profile.t[2];
@@ -364,11 +445,19 @@ bool RuckigEquation::time_up_none(Profile& profile, double p0, double v0, double
 
         profile.t[0] = h15;
         profile.t[1] = 0;
-        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(-(h12*h2) + h2*SqrtComplex(-h11 + 2*h8 - h9/h12) + 2*jMax*p0 - 2*jMax*pf) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
+        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h2*(-h12 + h12_b) + 2*jMax*(p0 - pf)) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
         profile.t[3] = 0;
         profile.t[4] = -((Power(a0,7) + 13*Power(a0,6)*h15*jMax + 72*Power(jMax,4)*(-(h15*(jMax*Power(p0 - pf,2) - Power(v0 - vf,3))) + Power(h15,2)*jMax*(p0 - pf)*(v0 - vf) + 2*(p0 - pf)*v0*(v0 - vf) + Power(h15,3)*jMax*Power(v0 - vf,2)) + 6*Power(a0,5)*jMax*(7*Power(h15,2)*jMax + v0 + 3*vf) - 12*Power(a0,3)*Power(jMax,2)*(10*h15*jMax*(p0 - pf) - Power(v0,2) + Power(h15,2)*jMax*(13*v0 - 16*vf) - 2*v0*vf + 3*Power(vf,2)) + 6*Power(a0,4)*Power(jMax,2)*(3*Power(h15,3)*jMax - 8*p0 + 8*pf + h15*(v0 + 19*vf)) - 36*Power(a0,2)*Power(jMax,3)*(Power(h15,2)*jMax*(p0 - pf) + 2*(-p0 + pf)*v0 + 2*Power(h15,3)*jMax*(v0 - vf) + h15*(3*Power(v0,2) + 2*v0*vf - 3*Power(vf,2))) - 72*a0*Power(jMax,3)*(Power(v0,3) + Power(v0,2)*vf - 3*v0*Power(vf,2) + Power(vf,3) + jMax*(Power(p0,2) + Power(pf,2) + h15*pf*(4*v0 - 2*vf) - 2*p0*(pf + 2*h15*v0 - h15*vf) + Power(h15,2)*(-2*Power(v0,2) + 5*v0*vf - 3*Power(vf,2)))))/h17);
         profile.t[5] = 0;
         profile.t[6] = profile.t[4];
+
+        // std::cout << profile.t[0] << std::endl;
+        // std::cout << profile.t[1] << std::endl;
+        // std::cout << profile.t[2] << std::endl;
+        // std::cout << profile.t[3] << std::endl;
+        // std::cout << profile.t[4] << std::endl;
+        // std::cout << profile.t[5] << std::endl;
+        // std::cout << profile.t[6] << std::endl << std::endl;
 
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2.;
         profile.t[4] = profile.t[2];
@@ -385,11 +474,19 @@ bool RuckigEquation::time_up_none(Profile& profile, double p0, double v0, double
 
         profile.t[0] = h16;
         profile.t[1] = 0;
-        profile.t[2] = (-4*Power(a0,3) - 3*jMax*(h12*h2 + h2*SqrtComplex(-h11 + 2*h8 - h9/h12) - 2*jMax*p0 + 2*jMax*pf) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
+        profile.t[2] = (-4*Power(a0,3) + 3*jMax*(h2*(-h12 - h12_b) + 2*jMax*(p0 - pf)) + 6*a0*(h2 + jMax*(v0 - 2*vf))).real()/(6.*h2*jMax);
         profile.t[3] = 0;
         profile.t[4] = -((Power(a0,7) + 13*Power(a0,6)*h16*jMax + 72*Power(jMax,4)*(-(h16*(jMax*Power(p0 - pf,2) - Power(v0 - vf,3))) + Power(h16,2)*jMax*(p0 - pf)*(v0 - vf) + 2*(p0 - pf)*v0*(v0 - vf) + Power(h16,3)*jMax*Power(v0 - vf,2)) + 6*Power(a0,5)*jMax*(7*Power(h16,2)*jMax + v0 + 3*vf) - 12*Power(a0,3)*Power(jMax,2)*(10*h16*jMax*(p0 - pf) - Power(v0,2) + Power(h16,2)*jMax*(13*v0 - 16*vf) - 2*v0*vf + 3*Power(vf,2)) + 6*Power(a0,4)*Power(jMax,2)*(3*Power(h16,3)*jMax - 8*p0 + 8*pf + h16*(v0 + 19*vf)) - 36*Power(a0,2)*Power(jMax,3)*(Power(h16,2)*jMax*(p0 - pf) + 2*(-p0 + pf)*v0 + 2*Power(h16,3)*jMax*(v0 - vf) + h16*(3*Power(v0,2) + 2*v0*vf - 3*Power(vf,2))) - 72*a0*Power(jMax,3)*(Power(v0,3) + Power(v0,2)*vf - 3*v0*Power(vf,2) + Power(vf,3) + jMax*(Power(p0,2) + Power(pf,2) + h16*pf*(4*v0 - 2*vf) - 2*p0*(pf + 2*h16*v0 - h16*vf) + Power(h16,2)*(-2*Power(v0,2) + 5*v0*vf - 3*Power(vf,2)))))/h17);
         profile.t[5] = 0;
         profile.t[6] = profile.t[4];
+
+        // std::cout << profile.t[0] << std::endl;
+        // std::cout << profile.t[1] << std::endl;
+        // std::cout << profile.t[2] << std::endl;
+        // std::cout << profile.t[3] << std::endl;
+        // std::cout << profile.t[4] << std::endl;
+        // std::cout << profile.t[5] << std::endl;
+        // std::cout << profile.t[6] << std::endl << std::endl;
 
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2.;
         profile.t[4] = profile.t[2];

@@ -4,7 +4,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from movex import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie, Reflexxes
+from _movex import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie, Reflexxes
 
 
 def walk_through_trajectory(otg, inp):
@@ -29,15 +29,15 @@ def walk_through_trajectory(otg, inp):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.6]
-    inp.current_velocity = [-0.6] * inp.degrees_of_freedom
-    inp.current_acceleration = [0.6] * inp.degrees_of_freedom
-    inp.target_position = [0.0]
+    inp.current_position = [-0.413915]
+    inp.current_velocity = [-0.974002] * inp.degrees_of_freedom
+    inp.current_acceleration = [0] * inp.degrees_of_freedom
+    inp.target_position = [-0.413927]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [0.3] * inp.degrees_of_freedom
-    inp.max_acceleration = [0.4] * inp.degrees_of_freedom
-    inp.max_jerk = [5.0] * inp.degrees_of_freedom
+    inp.max_velocity = [4.51627] * inp.degrees_of_freedom
+    inp.max_acceleration = [0.844162] * inp.degrees_of_freedom
+    inp.max_jerk = [0.219483] * inp.degrees_of_freedom
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
