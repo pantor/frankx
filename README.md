@@ -290,14 +290,14 @@ All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs 
 
 | Name              | Input                                                                                                                                  | Details                                                                                        |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, *Velocity for 1 DoF*<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
+| **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, *(Velocity for 1 DoF)*<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
 | Smoothie          | Current Position<br>Target Position<br>Dynamic Scaling                                                                                      | Used by Franka in examples.                                                                    |
-| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds,<br>Quite slow.                                      |
+| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds.<br>Quite slow.                                      |
 | Reflexxes<br> Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
 | Reflexxes<br> Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and costly for non-academic licenses.<br>Time-optimal with given constraints. |
 
 
-**Ruckig** is our own OTG (and the default one) that is jerk-limited, time-optimal and open-source. For a single DoF, you can even specify a target velocity. We think that this could be very useful outside of frankx.
+**Ruckig** is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from *any* current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.
 
 
 ## Path
