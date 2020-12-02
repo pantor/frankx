@@ -27,28 +27,7 @@ def walk_through_trajectory(otg, inp):
     return t_list, out_list
 
 
-if __name__ == '__main__':
-    inp = InputParameter()
-    inp.current_position = [-0.413915]
-    inp.current_velocity = [-0.974002] * inp.degrees_of_freedom
-    inp.current_acceleration = [0] * inp.degrees_of_freedom
-    inp.target_position = [-0.413927]
-    inp.target_velocity = [0.0] * inp.degrees_of_freedom
-    inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [4.51627] * inp.degrees_of_freedom
-    inp.max_acceleration = [0.844162] * inp.degrees_of_freedom
-    inp.max_jerk = [0.219483] * inp.degrees_of_freedom
-    inp.minimum_duration = None
-
-    # otg = Quintic(0.005)
-    # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
-
-    t_list, out_list = walk_through_trajectory(otg, inp)
-
-    # print(f'Calculation duration: {otg.last_calculation_duration:0.1f} [µs]')
-
+def plot_trajectory(t_list, out_list):
     qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
     dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
     ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
@@ -56,10 +35,10 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)
 
-    global_max = np.max([qaxis, dqaxis, ddqaxis, dddqaxis])
-    global_min = np.min([qaxis, dqaxis, ddqaxis, dddqaxis])
-
     for dof in range(inp.degrees_of_freedom):
+        global_max = np.max([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
+        global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
+
         plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
         plt.plot(t_list, qaxis[:, dof], label=f'r_{dof+1}')
         plt.plot(t_list, dqaxis[:, dof], label=f'v_{dof+1}')
@@ -88,9 +67,32 @@ if __name__ == '__main__':
         plt.legend()
         plt.grid(True)
 
-
     plt.xlabel('t')
+    plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')
+    # plt.show()
+
+
+if __name__ == '__main__':
+    inp = InputParameter()
+    inp.current_position = [0.75762938]
+    inp.current_velocity = [0.73302413]
+    inp.current_acceleration = [0.797597]
+    inp.target_position = [0.8195042]
+    inp.target_velocity = [0.0] * inp.degrees_of_freedom
+    inp.target_acceleration = [0.0] * inp.degrees_of_freedom
+    inp.max_velocity = [0.83209525]
+    inp.max_acceleration = [0.2484699]
+    inp.max_jerk = [0.15451428]
+    inp.minimum_duration = None
+
+    # otg = Quintic(0.005)
+    # otg = Smoothie(0.005)
+    # otg = Reflexxes(0.005)
+    otg = Ruckig(0.005)
+
+    t_list, out_list = walk_through_trajectory(otg, inp)
+
+    # print(f'Calculation duration: {otg.last_calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out_list[0].duration:0.3f} [s]')
 
-    # plt.show()
-    plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')
+    plot_trajectory(t_list, out_list)

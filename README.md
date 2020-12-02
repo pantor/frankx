@@ -278,6 +278,25 @@ if (is_grasping) {
 The Python API should be very straight-forward for the Gripper class.
 
 
+## Movex
+
+We seperated some essential algorithms for robot motions into a standalone library *movex*.
+
+
+### Online Trajectory Generators
+
+All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:
+
+
+| Name              | Input                                                                                                                                  | Details                                                                                        |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| Ruckig            | Current Position, Velocity, Acceleration<br><br>Target Position<br>Target Velocity (for 1 DoF)<br><br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
+| Smoothie          | Current Position, Position<br><br>Dynamic Scaling                                                                                      | Used by Franka in examples.                                                                    |
+| Quintic           | Current Position, Velocity, Acceleration<br><br>Target Position, Velocity, Acceleration<br><br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds,<br>quite slow.                                      |
+| Reflexxes Type II | Current Position, Velocity<br><br>Target Position, Velocity<br><br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
+| Reflexxes Type IV | Current Position, Velocity, Acceleration<br><br>Target Position, Velocity<br><br>Max Velocity, Acceleration, Jerk                      | Closed-source and expensive for non-academic licenses.<br>Time-optimal with given constraints. |
+
+
 ## Documentation
 
 We have a generated documentation at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
