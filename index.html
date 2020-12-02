@@ -98,7 +98,7 @@ $(function() {
 <th>Name </th><th>Input </th><th>Details  </th></tr>
 <tr>
 <td><b>Ruckig</b> </td><td>Current Position, Velocity, Acceleration<br />
-Target Position, <em>Velocity for 1 DoF</em><br />
+Target Position, *(Velocity for 1 DoF)*<br />
 Max Velocity, Acceleration, Jerk </td><td>Time-optimal with given constraints.<br />
 Default OTG of Frankx. </td></tr>
 <tr>
@@ -108,7 +108,7 @@ Dynamic Scaling </td><td>Used by Franka in examples. </td></tr>
 <tr>
 <td>Quintic </td><td>Current Position, Velocity, Acceleration<br />
 Target Position, Velocity, Acceleration<br />
-Max Velocity, Acceleration, Jerk </td><td>Dynamics are not guaranteed within bounds,<br />
+Max Velocity, Acceleration, Jerk </td><td>Dynamics are not guaranteed within bounds.<br />
 Quite slow. </td></tr>
 <tr>
 <td>Reflexxes<br />
@@ -123,7 +123,7 @@ Target Position, Velocity<br />
 Max Velocity, Acceleration, Jerk </td><td>Closed-source and costly for non-academic licenses.<br />
 Time-optimal with given constraints. </td></tr>
 </table>
-<p><b>Ruckig</b> is our own OTG (and the default one) that is jerk-limited, time-optimal and open-source. For a single DoF, you can even specify a target velocity. We think that this could be very useful outside of frankx.</p>
+<p><b>Ruckig</b> is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from <em>any</em> current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.</p>
 <h2>Path</h2>
 <p>The path library is able to define paths from waypoints and blend them for a smooth second derivative.</p>
 <h2>Documentation</h2>
