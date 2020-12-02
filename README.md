@@ -290,16 +290,24 @@ All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs 
 
 | Name              | Input                                                                                                                                  | Details                                                                                        |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| Ruckig            | Current Position, Velocity, Acceleration<br><br>Target Position<br>Target Velocity (for 1 DoF)<br><br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
-| Smoothie          | Current Position, Position<br><br>Dynamic Scaling                                                                                      | Used by Franka in examples.                                                                    |
-| Quintic           | Current Position, Velocity, Acceleration<br><br>Target Position, Velocity, Acceleration<br><br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds,<br>quite slow.                                      |
-| Reflexxes Type II | Current Position, Velocity<br><br>Target Position, Velocity<br><br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
-| Reflexxes Type IV | Current Position, Velocity, Acceleration<br><br>Target Position, Velocity<br><br>Max Velocity, Acceleration, Jerk                      | Closed-source and expensive for non-academic licenses.<br>Time-optimal with given constraints. |
+| **Ruckig**            | Current Position, Velocity, Acceleration<br>Target Position, Velocity (only for 1 DoF)<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
+| Smoothie          | Current Position, Position<br>Dynamic Scaling                                                                                      | Used by Franka in examples.                                                                    |
+| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds,<br>quite slow.                                      |
+| Reflexxes Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
+| Reflexxes Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and expensive for non-academic licenses.<br>Time-optimal with given constraints. |
+
+
+**Ruckig** is our own OTG (and the default one) that is jerk-limited, time-optimal and open-source. For a single DoF, you can even specify a target velocity. We think that this could be very useful outside of frankx.
+
+
+## Path
+
+The path library is able to define paths from waypoints and blend them for a smooth second derivative.
 
 
 ## Documentation
 
-We have a generated documentation at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
+An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
 
 
 ## Development
