@@ -98,26 +98,29 @@ $(function() {
 <th>Name </th><th>Input </th><th>Details  </th></tr>
 <tr>
 <td><b>Ruckig</b> </td><td>Current Position, Velocity, Acceleration<br />
-Target Position, Velocity (only for 1 DoF)<br />
+Target Position, <em>Velocity for 1 DoF</em><br />
 Max Velocity, Acceleration, Jerk </td><td>Time-optimal with given constraints.<br />
 Default OTG of Frankx. </td></tr>
 <tr>
-<td>Smoothie </td><td>Current Position, Position<br />
+<td>Smoothie </td><td>Current Position<br />
+Target Position<br />
 Dynamic Scaling </td><td>Used by Franka in examples. </td></tr>
 <tr>
 <td>Quintic </td><td>Current Position, Velocity, Acceleration<br />
 Target Position, Velocity, Acceleration<br />
 Max Velocity, Acceleration, Jerk </td><td>Dynamics are not guaranteed within bounds,<br />
-quite slow. </td></tr>
+Quite slow. </td></tr>
 <tr>
-<td>Reflexxes Type II </td><td>Current Position, Velocity<br />
+<td>Reflexxes<br />
+ Type II </td><td>Current Position, Velocity<br />
 Target Position, Velocity<br />
 Max Velocity, Acceleration </td><td>Non-constrained Jerk.<br />
 Time-optimal with given constraints. </td></tr>
 <tr>
-<td>Reflexxes Type IV </td><td>Current Position, Velocity, Acceleration<br />
+<td>Reflexxes<br />
+ Type IV </td><td>Current Position, Velocity, Acceleration<br />
 Target Position, Velocity<br />
-Max Velocity, Acceleration, Jerk </td><td>Closed-source and expensive for non-academic licenses.<br />
+Max Velocity, Acceleration, Jerk </td><td>Closed-source and costly for non-academic licenses.<br />
 Time-optimal with given constraints. </td></tr>
 </table>
 <p><b>Ruckig</b> is our own OTG (and the default one) that is jerk-limited, time-optimal and open-source. For a single DoF, you can even specify a target velocity. We think that this could be very useful outside of frankx.</p>
