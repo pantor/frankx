@@ -33,6 +33,5 @@ var searchData=
   ['rotational_5fstiffness',['rotational_stiffness',['../structfrankx_1_1_impedance_motion.html#ad386b8371816acd09d065d4016a81ddf',1,'frankx::ImpedanceMotion']]],
   ['ruckig',['Ruckig',['../classmovex_1_1_ruckig.html',1,'movex::Ruckig&lt; DOFs &gt;'],['../classmovex_1_1_ruckig.html#a2d4ca12b23990b458f04dc19fd752dc9',1,'movex::Ruckig::Ruckig()']]],
   ['ruckig_2ecpp',['ruckig.cpp',['../ruckig_8cpp.html',1,'']]],
-  ['ruckig_2ehpp',['ruckig.hpp',['../ruckig_8hpp.html',1,'']]],
-  ['ruckigequation',['RuckigEquation',['../structmovex_1_1_ruckig_equation.html',1,'movex']]]
+  ['ruckig_2ehpp',['ruckig.hpp',['../ruckig_8hpp.html',1,'']]]
 ];

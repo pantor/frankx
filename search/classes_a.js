@@ -4,6 +4,5 @@ var searchData=
   ['reflexxes',['Reflexxes',['../classmovex_1_1_reflexxes.html',1,'movex']]],
   ['robot',['Robot',['../classfrankx_1_1_robot.html',1,'frankx::Robot'],['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot']]],
   ['robotstate',['RobotState',['../classmovex_1_1_robot_state.html',1,'movex']]],
-  ['ruckig',['Ruckig',['../classmovex_1_1_ruckig.html',1,'movex']]],
-  ['ruckigequation',['RuckigEquation',['../structmovex_1_1_ruckig_equation.html',1,'movex']]]
+  ['ruckig',['Ruckig',['../classmovex_1_1_ruckig.html',1,'movex']]]
 ];
