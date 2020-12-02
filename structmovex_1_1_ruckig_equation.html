@@ -108,10 +108,158 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a821c75023438e4e69baa419b4b26ec95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a114174edb85b57ba4018b5534a88c353"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_equation.html#a114174edb85b57ba4018b5534a88c353">time_down_none</a> (<a class="el" href="structmovex_1_1_profile.html">Profile</a> &amp;profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax)</td></tr>
 <tr class="separator:a114174edb85b57ba4018b5534a88c353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacdc03863abc10da4be52cdde8893e57"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_equation.html#aacdc03863abc10da4be52cdde8893e57">get_profile</a> (<a class="el" href="structmovex_1_1_profile.html">Profile</a> &amp;profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax)</td></tr>
+<tr class="separator:aacdc03863abc10da4be52cdde8893e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa42dca03e9f846f03d2fd4d70edb65d1"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_equation.html#aa42dca03e9f846f03d2fd4d70edb65d1">jerk_to_reach_target_with_times</a> (const std::array&lt; double, 7 &gt; &amp;t, double p0, double v0, double a0, double pf)</td></tr>
 <tr class="separator:aa42dca03e9f846f03d2fd4d70edb65d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a487856680cc126392efbb03d3af52423"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_equation.html#a487856680cc126392efbb03d3af52423">get_brake_trajectory</a> (double v0, double a0, double vMax, double aMax, double jMax, std::array&lt; double, 2 &gt; &amp;t_brake, std::array&lt; double, 2 &gt; &amp;j_brake)</td></tr>
+<tr class="separator:a487856680cc126392efbb03d3af52423"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a487856680cc126392efbb03d3af52423"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a487856680cc126392efbb03d3af52423">&#9670;&nbsp;</a></span>get_brake_trajectory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void movex::RuckigEquation::get_brake_trajectory </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>v0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>a0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>vMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>aMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>jMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; double, 2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>t_brake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; double, 2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>j_brake</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aacdc03863abc10da4be52cdde8893e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacdc03863abc10da4be52cdde8893e57">&#9670;&nbsp;</a></span>get_profile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool movex::RuckigEquation::get_profile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmovex_1_1_profile.html">Profile</a> &amp;&#160;</td>
+          <td class="paramname"><em>profile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>p0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>v0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>a0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>pf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>vf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>vMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>aMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>jMax</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa42dca03e9f846f03d2fd4d70edb65d1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa42dca03e9f846f03d2fd4d70edb65d1">&#9670;&nbsp;</a></span>jerk_to_reach_target_with_times()</h2>
 

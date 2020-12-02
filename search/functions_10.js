@@ -19,6 +19,8 @@ var searchData=
   ['smoothie',['Smoothie',['../classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c',1,'movex::Smoothie']]],
   ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
   ['sqrtcomplex',['SqrtComplex',['../namespacemovex.html#a21fd68c25a6e5b5e95707d22f7822271',1,'movex::SqrtComplex(double v)'],['../namespacemovex.html#a45c666a4243bec9f8f76ea980d03bea8',1,'movex::SqrtComplex(std::complex&lt; double &gt; v)']]],
+  ['sqrtcomplexlong',['SqrtComplexLong',['../namespacemovex.html#ad1ce12941e01799a3f2edcd59944c97c',1,'movex::SqrtComplexLong(long double v)'],['../namespacemovex.html#a99dd6fafe1196106761ed604b6633b8a',1,'movex::SqrtComplexLong(std::complex&lt; long double &gt; v)']]],
+  ['sqrtlong',['SqrtLong',['../namespacemovex.html#aacd313872f4e73a2c83ba9b033dc6f7c',1,'movex']]],
   ['start_5ftask',['start_task',['../classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198',1,'frankx::robot::Robot']]],
   ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

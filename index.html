@@ -89,6 +89,39 @@ $(function() {
 <p>While the robot moves in a background thread, you can change the waypoints in real-time. </p><div class="fragment"><div class="line">robot.moveAsync(motion_hold);</div><div class="line"></div><div class="line"><span class="comment">// Wait for key input from user</span></div><div class="line">std::cin.get();</div><div class="line"></div><div class="line">motion_hold.setNextWaypoint(<a class="code" href="namespacefrankx.html#a65f3ab7e27b917529b6ff29c3898da0e">Waypoint</a>(<a class="code" href="namespacefrankx.html#aeea09133f320442f59334ead46170e7b">Affine</a>(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);</div></div><!-- fragment --><h3>Gripper</h3>
 <p>In the <code><a class="el" href="classfrankx_1_1_gripper.html">frankx::Gripper</a></code> class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> gripper = Gripper(<span class="stringliteral">&quot;172.16.0.2&quot;</span>);</div><div class="line"></div><div class="line"><span class="comment">// These are the default values</span></div><div class="line">gripper.gripper_speed = 0.02; <span class="comment">// [m/s]</span></div><div class="line">gripper.gripper_force = 20.0; <span class="comment">// [N]</span></div><div class="line"></div><div class="line"><span class="comment">// Preshape gripper before grasp, use the given speed</span></div><div class="line">gripper.move(50.0); <span class="comment">// [mm]</span></div><div class="line"></div><div class="line"><span class="comment">// Grasp an object of unknown width</span></div><div class="line">is_grasping = gripper.clamp();</div><div class="line"></div><div class="line"><span class="comment">// Do something</span></div><div class="line">is_grasping &amp;= gripper.isGrasping();</div><div class="line"></div><div class="line"><span class="comment">// Release an object and move to a given distance</span></div><div class="line"><span class="keywordflow">if</span> (is_grasping) {</div><div class="line">  gripper.release(50.0);</div><div class="line">}</div></div><!-- fragment --><p>The Python API should be very straight-forward for the Gripper class.</p>
+<h2>Movex</h2>
+<p>We seperated some essential algorithms for robot motions into a standalone library <em>movex</em>.</p>
+<h3>Online Trajectory Generators</h3>
+<p>All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:</p>
+<table class="doxtable">
+<tr>
+<th>Name </th><th>Input </th><th>Details  </th></tr>
+<tr>
+<td>Ruckig </td><td>Current Position, Velocity, Acceleration&lt;br&gt;<br />
+Target Position<br />
+Target Velocity (for 1 DoF)<br />
+<br />
+Max Velocity, Acceleration, Jerk </td><td>Time-optimal with given constraints.<br />
+Default OTG of Frankx. </td></tr>
+<tr>
+<td>Smoothie </td><td>Current Position, Position&lt;br&gt;<br />
+Dynamic Scaling </td><td>Used by Franka in examples. </td></tr>
+<tr>
+<td>Quintic </td><td>Current Position, Velocity, Acceleration&lt;br&gt;<br />
+Target Position, Velocity, Acceleration&lt;br&gt;<br />
+Max Velocity, Acceleration, Jerk </td><td>Dynamics are not guaranteed within bounds,<br />
+quite slow. </td></tr>
+<tr>
+<td>Reflexxes Type II </td><td>Current Position, Velocity&lt;br&gt;<br />
+Target Position, Velocity&lt;br&gt;<br />
+Max Velocity, Acceleration </td><td>Non-constrained Jerk.<br />
+Time-optimal with given constraints. </td></tr>
+<tr>
+<td>Reflexxes Type IV </td><td>Current Position, Velocity, Acceleration&lt;br&gt;<br />
+Target Position, Velocity&lt;br&gt;<br />
+Max Velocity, Acceleration, Jerk </td><td>Closed-source and expensive for non-academic licenses.<br />
+Time-optimal with given constraints. </td></tr>
+</table>
 <h2>Documentation</h2>
 <p>We have a generated documentation at <a href="https://pantor.github.io/frankx/">https://pantor.github.io/frankx/</a>. Moreover, you can find multiple examples for both C++ and Python in the <a href="https://github.com/pantor/frankx/tree/master/examples">examples</a> directory. We will add a more detailed documentation once frankx reaches v1.0.</p>
 <h2>Development</h2>

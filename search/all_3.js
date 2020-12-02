@@ -9,6 +9,7 @@ var searchData=
   ['clamp',['clamp',['../classfrankx_1_1_gripper.html#a49dcb096bf0f4d02ec6575261d159875',1,'frankx::Gripper::clamp()'],['../classfrankx_1_1_gripper.html#a8d72dc91da3955a604798c118f765a3d',1,'frankx::Gripper::clamp(double min_clamping_width)']]],
   ['client',['client',['../classfrankx_1_1robot_1_1_robot.html#ad370c4c4b2da01c1b4fed805c41eda02',1,'frankx::robot::Robot']]],
   ['complex',['Complex',['../namespacemovex.html#ad43e9c7bfc8b60f40191732ea91ffb45',1,'movex']]],
+  ['complexlong',['ComplexLong',['../namespacemovex.html#a696bb4395286e1b643ed8107b19d8aa4',1,'movex']]],
   ['condition',['Condition',['../classfrankx_1_1_condition.html',1,'frankx::Condition'],['../classfrankx_1_1_condition.html#a2001278a1e8c1f24cf8e1bf1c0a41de5',1,'frankx::Condition::Condition()'],['../structfrankx_1_1_reaction.html#abf4eff0e325b75491e001e2de8ccdc21',1,'frankx::Reaction::condition()']]],
   ['control_5frate',['control_rate',['../classfrankx_1_1_robot.html#a57985cecbaf10441242a7bd40d2859c9',1,'frankx::Robot']]],
   ['controller_5fmode',['controller_mode',['../classfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057',1,'frankx::Robot']]],

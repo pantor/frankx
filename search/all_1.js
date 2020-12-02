@@ -3,6 +3,7 @@ var searchData=
   ['a',['a',['../structmovex_1_1_profile.html#ad994fa4711f8cdf1f08782632bbcc442',1,'movex::Profile::a()'],['../structmovex_1_1_affine.html#a2bcf8b4931cd9f281da8ae3705f89d15',1,'movex::Affine::a()']]],
   ['a_5fbrakes',['a_brakes',['../structmovex_1_1_profile.html#a76a3487600b5d697200fa64603e748f8',1,'movex::Profile']]],
   ['abs',['Abs',['../namespacemovex.html#afc82eb811a6e27fd5502ab6164dcd982',1,'movex']]],
+  ['abslong',['AbsLong',['../namespacemovex.html#abdb3e28a27b83ecec850b8529eea4fbc',1,'movex']]],
   ['absolute',['Absolute',['../structmovex_1_1_waypoint.html#a47e011a3f2d8f352f69ce4bc924ad60cab51ca26c6c89cfc9bec338f7a0d3e0c8',1,'movex::Waypoint']]],
   ['acceleration_5frel',['acceleration_rel',['../structfrankx_1_1_motion_data.html#a5d60c493b936a0bb7e5df5e499c89f54',1,'frankx::MotionData::acceleration_rel()'],['../classfrankx_1_1_robot.html#a91372496935af473aa8f143499f1c5fe',1,'frankx::Robot::acceleration_rel()']]],
   ['addforceconstraint',['addForceConstraint',['../structfrankx_1_1_impedance_motion.html#a925c9f32ad29c959a698b3a003e5b084',1,'frankx::ImpedanceMotion::addForceConstraint(Axis axis, double value)'],['../structfrankx_1_1_impedance_motion.html#a42fdb528aa615b3bfe91f7b5592eee08',1,'frankx::ImpedanceMotion::addForceConstraint(std::optional&lt; double &gt; x=std::nullopt, std::optional&lt; double &gt; y=std::nullopt, std::optional&lt; double &gt; z=std::nullopt)']]],

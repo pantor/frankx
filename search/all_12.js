@@ -27,6 +27,8 @@ var searchData=
   ['spiraltargetmotion',['SpiralTargetMotion',['../structfrankx_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'frankx::ImpedanceMotion']]],
   ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
   ['sqrtcomplex',['SqrtComplex',['../namespacemovex.html#a21fd68c25a6e5b5e95707d22f7822271',1,'movex::SqrtComplex(double v)'],['../namespacemovex.html#a45c666a4243bec9f8f76ea980d03bea8',1,'movex::SqrtComplex(std::complex&lt; double &gt; v)']]],
+  ['sqrtcomplexlong',['SqrtComplexLong',['../namespacemovex.html#ad1ce12941e01799a3f2edcd59944c97c',1,'movex::SqrtComplexLong(long double v)'],['../namespacemovex.html#a99dd6fafe1196106761ed604b6633b8a',1,'movex::SqrtComplexLong(std::complex&lt; long double &gt; v)']]],
+  ['sqrtlong',['SqrtLong',['../namespacemovex.html#aacd313872f4e73a2c83ba9b033dc6f7c',1,'movex']]],
   ['start',['start',['../classmovex_1_1_line_segment.html#a8b805b122d4fe451ed1a05d58aa33036',1,'movex::LineSegment']]],
   ['start_5ftask',['start_task',['../classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198',1,'frankx::robot::Robot']]],
   ['stop_5fat_5fpython_5fsignal',['stop_at_python_signal',['../classfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12',1,'frankx::Robot']]],
