@@ -1,6 +1,5 @@
 #define CATCH_CONFIG_MAIN
 #include <random>
-#include <optional>
 
 #include <catch2/catch.hpp>
 #include <Eigen/Core>
@@ -34,7 +33,7 @@ void check(OTGType& otg, InputParameter<DOFs>& input, double time) {
 
 
 template<size_t DOFs, class OTGType>
-void check_calculation(OTGType& otg, InputParameter<DOFs>& input, std::optional<double> time = std::nullopt) {
+void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
     OutputParameter<DOFs> output;
 
     CAPTURE( input.current_position );
@@ -55,10 +54,6 @@ void check_calculation(OTGType& otg, InputParameter<DOFs>& input, std::optional<
         CHECK_FALSE( std::isnan(output.new_position[dof]) );
         CHECK_FALSE( std::isnan(output.new_velocity[dof]) );
         CHECK_FALSE( std::isnan(output.new_acceleration[dof]) );
-    }
-
-    if (time.has_value()) {
-        CHECK( output.duration == Approx(time.value()).margin(0.005) );
     }
 }
 
@@ -217,6 +212,19 @@ TEST_CASE("Ruckig") {
             input.current_acceleration = dist(gen) < 0.85 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.target_position = Vec1::Random();
             input.max_velocity = 10 * Vec1::Random().array().abs() + 0.1;
+            input.max_acceleration = 10 * Vec1::Random().array().abs() + 0.1;
+            input.max_jerk = 10 * Vec1::Random().array().abs() + 0.1;
+
+            check_comparison(otg, input, rflx);
+        }
+
+        for (size_t i = 0; i < 128; i += 1) {
+            input.current_position = Vec1::Random();
+            input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.target_position = Vec1::Random();
+            input.target_velocity = Vec1::Random();
+            input.max_velocity = 10 * Vec1::Random().array().abs() + input.target_velocity.array().abs(); // Target velocity needs to be smaller than max velocity
             input.max_acceleration = 10 * Vec1::Random().array().abs() + 0.1;
             input.max_jerk = 10 * Vec1::Random().array().abs() + 0.1;
 

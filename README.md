@@ -166,7 +166,7 @@ m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))
 m5 = WaypointMotion([
   Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),
   # The following waypoint is relative to the prior one
-  Waypoint(Affine(0.0, 0.1, 0.0, Waypoint.ReferenceType.Relative))
+  Waypoint(Affine(0.0, 0.1, 0.0), Waypoint.ReferenceType.Relative)
 ])
 
 # Hold the position for [s]
@@ -280,7 +280,7 @@ The Python API should be very straight-forward for the Gripper class.
 
 ## Movex
 
-We seperated some essential algorithms for robot motions into a standalone library *movex*.
+We seperated some essential algorithms for robot motions into a standalone C++ library *movex*.
 
 
 ### Online Trajectory Generators

@@ -75,8 +75,18 @@ class Ruckig {
             return false;
         }
 
-        if ((input.target_velocity.array() != 0.0).any() || (input.target_acceleration.array() != 0.0).any()) {
-            std::cerr << "Ruckig does not support a target velocity or acceleration." << std::endl;
+        if (DOFs > 1 && (input.target_velocity.array() != 0.0).any()) {
+            std::cerr << "Ruckig does not support a target velocity for multiple DoFs." << std::endl;
+            return false;
+        }
+
+        if ((input.target_velocity.array().abs() > input.max_velocity.array()).any()) {
+            std::cerr << "Target velocity exceeds maximal velocity." << std::endl;
+            return false;
+        }
+
+        if ((input.target_acceleration.array() != 0.0).any()) {
+            std::cerr << "Ruckig does not support a target acceleration." << std::endl;
             return false;
         }
 
@@ -124,7 +134,7 @@ class Ruckig {
                 }
             }
 
-            if (!RuckigEquation::get_profile(profiles[dof], p0, v0, a0, input.target_position[dof], 0.0, input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof])) {
+            if (!RuckigEquation::get_profile(profiles[dof], p0, v0, a0, input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof])) {
                 throw std::runtime_error("Error while calculating an online trajectory for: "
                     + std::to_string(input.current_position[dof]) + ", " + std::to_string(input.current_velocity[dof]) + ", " + std::to_string(input.current_acceleration[dof])
                     + " targets: " + std::to_string(input.target_position[dof])

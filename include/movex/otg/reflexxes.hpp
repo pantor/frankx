@@ -44,7 +44,7 @@ public:
             }
 
             if (input.minimum_duration.has_value()) {
-                input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value()); 
+                input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
             }
 
             input_parameters->SetSelectionVector(input.enabled.data());
@@ -69,7 +69,7 @@ public:
 
         if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
             return Result::Finished;
-        } else if (result_value == ReflexxesAPI::RML_ERROR) {
+        } else if (result_value < 0) {
             return Result::Error;
         }
         return Result::Working;
