@@ -326,6 +326,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def("recover_from_errors", &Robot::recoverFromErrors)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
+        // .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
+        // .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "frame"_a = Affine())
         .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())

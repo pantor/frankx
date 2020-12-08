@@ -11,21 +11,31 @@
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
-#include <frankx/motion_data.hpp>
-#include <frankx/motion_impedance.hpp>
-#include <frankx/motion_joint.hpp>
-#include <frankx/motion_path.hpp>
-#include <frankx/motion_waypoint.hpp>
-
 #include <movex/otg/parameter.hpp>
+#include <movex/robot/motion_data.hpp>
+#include <movex/robot/robot_state.hpp>
+#include <movex/motion/motion_impedance.hpp>
+#include <movex/motion/motion_joint.hpp>
+#include <movex/motion/motion_path.hpp>
+#include <movex/motion/motion_waypoint.hpp>
+#include <movex/otg/quintic.hpp>
+#include <movex/otg/smoothie.hpp>
+#include <movex/otg/ruckig.hpp>
 
+#ifdef WITH_REFLEXXES
+#include <movex/otg/reflexxes.hpp>
+#endif
+
+
+namespace movex {
+    class ImpedanceMotion;
+    class JointMotion;
+    class PathMotion;
+    class WaypointMotion;
+}
 
 namespace frankx {
-
-class JointMotion;
-class ImpedanceMotion;
-class PathMotion;
-class WaypointMotion;
+    using namespace movex;
 
 class Robot: public franka::Robot {
     void setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data);
@@ -47,6 +57,24 @@ class Robot: public franka::Robot {
     inline void setCartRotElbowVector(Vector7d& vector, double cart, double rot, double elbow) {
         const std::array<double, 7> data = VectorCartRotElbow(cart, rot, elbow);
         vector = Eigen::Map<const Vector7d>(data.data(), data.size());
+    }
+
+    movex::RobotState<7> convertState(const franka::RobotState& franka) {
+        movex::RobotState<7> movex;
+        movex.q = franka.q;
+        movex.q_d = franka.q_d;
+        movex.dq = franka.dq;
+
+        movex.O_T_EE = franka.O_T_EE;
+        movex.O_T_EE_c = franka.O_T_EE_c;
+        movex.O_dP_EE_c = franka.O_dP_EE_c;
+
+        movex.elbow = franka.elbow;
+        movex.elbow_c = franka.elbow_c;
+        movex.elbow_d = franka.elbow_d;
+
+        movex.O_F_ext_hat_K = franka.O_F_ext_hat_K;
+        return movex;
     }
 
 public:
@@ -93,6 +121,8 @@ public:
     bool recoverFromErrors();
 
     Affine currentPose(const Affine& frame = Affine());
+    // Affine forwardKinematics(const std::array<double, 7>& q);
+    // std::array<double, 7> inverseKinematics(const Affine& target, const Affine& frame = Affine());
 
     bool move(ImpedanceMotion& motion);
     bool move(ImpedanceMotion& motion, MotionData& data);

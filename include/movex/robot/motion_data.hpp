@@ -1,11 +1,11 @@
 #pragma once
 
-#include <frankx/reaction.hpp>
+#include <movex/robot/reaction.hpp>
 
 
-namespace frankx {
+namespace movex {
 
-struct MotionData {
+struct MotionData {    
     double velocity_rel {1.0}, acceleration_rel {1.0}, jerk_rel {1.0};
     bool max_dynamics {false};
 
@@ -20,11 +20,13 @@ struct MotionData {
         return *this;
     }
 
+    //! Use maximal possible dynamic of the robot
     MotionData& withMaxDynamics() {
         max_dynamics = true;
         return *this;
     }
 
+    //! Add a reaction to the motion
     MotionData& withReaction(const Reaction& reaction) {
         reactions.push_back(reaction);
         return *this;
@@ -36,4 +38,4 @@ struct MotionData {
     }
 };
 
-} // namespace frankx
+} // namespace movex

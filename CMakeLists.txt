@@ -39,8 +39,11 @@ target_link_libraries(movex PUBLIC Eigen3::Eigen)
 
 add_library(frankx SHARED
   src/frankx/gripper.cpp
-  src/frankx/motion_impedance.cpp
   src/frankx/robot.cpp
+  src/frankx/robot_impedance_motion.cpp
+  src/frankx/robot_joint_motion.cpp
+  src/frankx/robot_path_motion.cpp
+  src/frankx/robot_waypoint_motion.cpp
 )
 target_compile_features(frankx PUBLIC cxx_std_17)
 target_include_directories(frankx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

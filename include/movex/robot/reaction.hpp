@@ -6,16 +6,15 @@
 #include <memory>
 #include <optional>
 
-#include <franka/robot_state.h>
-#include <frankx/measure.hpp>
+#include <movex/robot/measure.hpp>
 
 
-namespace frankx {
+namespace movex {
 
 class WaypointMotion;
 
 struct Reaction {
-    using WaypointAction = std::function<WaypointMotion(const franka::RobotState&, double)>;
+    using WaypointAction = std::function<WaypointMotion(const RobotState<7>&, double)>;
     std::optional<WaypointAction> waypoint_action;
     std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion;
 
@@ -31,4 +30,4 @@ struct Reaction {
     explicit Reaction(Condition condition, std::optional<WaypointAction> waypoint_action): condition(condition), waypoint_action(waypoint_action) { }
 };
 
-} // namespace frankx
+} // namespace movex

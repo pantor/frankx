@@ -74,21 +74,21 @@ def plot_trajectory(t_list, out_list):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-0.7]
-    inp.current_velocity = [0.0]
-    inp.current_acceleration = [0.0]
-    inp.target_position = [-0.35]
-    inp.target_velocity = [-0.5] * inp.degrees_of_freedom
+    inp.current_position = [-0.7, 0.2, 0.4]
+    inp.current_velocity = [0.0, 0.4, 0.01]
+    inp.current_acceleration = [0.0] * inp.degrees_of_freedom
+    inp.target_position = [-0.35, 0.0, 0.0]
+    inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [8.4]
-    inp.max_acceleration = [2.5]
-    inp.max_jerk = [6.3]
+    inp.max_velocity = [8.4, 3.2, 5.4]
+    inp.max_acceleration = [2.5, 3.2, 6.4]
+    inp.max_jerk = [6.3, 3.2, 7.7]
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    otg = Reflexxes(0.005)
+    # otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

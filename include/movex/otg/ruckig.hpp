@@ -54,9 +54,9 @@ struct RuckigEquation {
 
     static bool get_profile(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
-    static double jerk_to_reach_target_with_times(const std::array<double, 7>& t, double p0, double v0, double a0, double pf);
-
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
+
+    static double jerk_to_reach_target_with_times(const std::array<double, 7>& t, double p0, double v0, double a0, double pf);
 };
 
 
@@ -154,9 +154,8 @@ class Ruckig {
                 continue;
             }
 
-            double new_jerk = RuckigEquation::jerk_to_reach_target_with_times(profiles[limiting_dof].t, input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof]);
-
             // ToDo: Synchronize multiple DoFs
+            // double new_jerk = RuckigEquation::jerk_to_reach_target_with_times(profiles[limiting_dof].t, input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof]);
             // profiles[dof].t = profiles[limiting_dof].t;
             // profiles[dof].reset(input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], new_jerk);
         }

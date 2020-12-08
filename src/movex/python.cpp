@@ -10,6 +10,8 @@
 #include <movex/otg/ruckig.hpp>
 #include <movex/otg/smoothie.hpp>
 #include <movex/path/path.hpp>
+#include <movex/path/time_parametrization.hpp>
+#include <movex/path/trajectory.hpp>
 
 #ifdef WITH_REFLEXXES
     #include <movex/otg/reflexxes.hpp>
@@ -24,7 +26,7 @@ using namespace movex;
 PYBIND11_MODULE(_movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {3};
 
     py::class_<Affine>(m, "Affine")
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
@@ -113,6 +115,24 @@ PYBIND11_MODULE(_movex, m) {
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
         .def("pdddq", &Path::pdddq, "s"_a)
+        .def("dq", &Path::dq, "s"_a, "ds"_a)
+        .def("ddq", &Path::ddq, "s"_a, "ds"_a, "dds"_a)
+        .def("dddq", &Path::dddq, "s"_a, "ds"_a, "dds"_a, "ddds"_a)
         .def("max_pddq", &Path::max_pddq)
         .def("max_pdddq", &Path::max_pdddq);
+
+    py::class_<Trajectory::State>(m, "TrajectoryState")
+        .def_readwrite("t", &Trajectory::State::t)
+        .def_readwrite("s", &Trajectory::State::s)
+        .def_readwrite("ds", &Trajectory::State::ds)
+        .def_readwrite("dds", &Trajectory::State::dds)
+        .def_readwrite("ddds", &Trajectory::State::ddds);
+
+    py::class_<Trajectory>(m, "Trajectory")
+        .def_readwrite("path", &Trajectory::path)
+        .def_readwrite("states", &Trajectory::states);
+
+    py::class_<TimeParametrization>(m, "TimeParametrization")
+        .def(py::init<double>(), "delta_time"_a)
+        .def("parametrize", &TimeParametrization::parametrize, "path"_a, "max_velocity"_a, "max_accleration"_a, "max_jerk"_a);
 }

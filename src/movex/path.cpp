@@ -3,11 +3,14 @@
 
 namespace movex {
 
-std::tuple<std::shared_ptr<Segment>, double> Path::get_local(double s) const {
+size_t Path::get_index(double s) const {
     auto ptr = std::lower_bound(cumulative_lengths.begin(), cumulative_lengths.end(), s);
     size_t index = std::distance(cumulative_lengths.begin(), ptr);
-    index = std::min(index, segments.size() - 1);
+    return std::min(index, segments.size() - 1);
+}
 
+std::tuple<std::shared_ptr<Segment>, double> Path::get_local(double s) const {
+    size_t index = get_index(s);
     auto segment = segments.at(index);
     double s_local = (index == 0) ? s : s - cumulative_lengths[index - 1];
     return {segment, s_local};
@@ -100,6 +103,21 @@ Vector7d Path::pddq(double s) const {
 Vector7d Path::pdddq(double s) const {
     auto [segment, s_local] = get_local(s);
     return segment->pddq(s_local);
+}
+
+Vector7d Path::dq(double s, double ds) const {
+    auto [segment, s_local] = get_local(s);
+    return segment->dq(s_local, ds);
+}
+
+Vector7d Path::ddq(double s, double ds, double dds) const {
+    auto [segment, s_local] = get_local(s);
+    return segment->ddq(s_local, ds, dds);
+}
+
+Vector7d Path::dddq(double s, double ds, double dds, double ddds) const {
+    auto [segment, s_local] = get_local(s);
+    return segment->dddq(s_local, ds, dds, ddds);
 }
 
 Vector7d Path::max_pddq() const {

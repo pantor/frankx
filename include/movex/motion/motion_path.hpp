@@ -1,12 +1,11 @@
 #pragma once
 
+#include <Eigen/Core>
+
 #include <movex/path/path.hpp>
 
 
-#include <Eigen/Core>
-
-
-namespace frankx {
+namespace movex {
 
 struct PathMotion {
     const std::vector<Affine> waypoints;
@@ -17,4 +16,7 @@ struct PathMotion {
     explicit PathMotion(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0): waypoints(waypoints), blend_max_distance(blend_max_distance) { }
 };
 
-} // namespace frankx
+// struct LinearMotion
+// struct LinearRelativeMotion
+
+} // namespace movex
