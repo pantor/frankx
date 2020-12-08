@@ -10,6 +10,5 @@ var searchData=
   ['up_5fnone',['UP_NONE',['../structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8fafa59791802ca17dcdb7c0e6fc5208948',1,'movex::Profile']]],
   ['up_5fvel',['UP_VEL',['../structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8faf55227ab131f39801055483b54bf7a0d',1,'movex::Profile']]],
   ['update',['update',['../classmovex_1_1_quintic.html#af1bfdaee1cf1e3d8ee1e53e24e19c0cf',1,'movex::Quintic::update()'],['../classmovex_1_1_reflexxes.html#aa09e764ac174cffdc9df779aec9d99c9',1,'movex::Reflexxes::update()'],['../classmovex_1_1_ruckig.html#a0730fdb327151269ba89971b4a426143',1,'movex::Ruckig::update()'],['../classmovex_1_1_smoothie.html#a2e20cd43b99f2338d3dfbc2ab629acf4',1,'movex::Smoothie::update()']]],
-  ['user',['user',['../classfrankx_1_1robot_1_1_robot.html#a02d03bf0206ac640d4e2259f34928844',1,'frankx::robot::Robot']]],
-  ['utils_2ehpp',['utils.hpp',['../utils_8hpp.html',1,'']]]
+  ['user',['user',['../classfrankx_1_1robot_1_1_robot.html#a02d03bf0206ac640d4e2259f34928844',1,'frankx::robot::Robot']]]
 ];

@@ -66,6 +66,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classmovex_1_1_path-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -77,6 +78,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a072054237f6664c5fc90aba419571728"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a072054237f6664c5fc90aba419571728">get_index</a> (double s) const</td></tr>
+<tr class="separator:a072054237f6664c5fc90aba419571728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3683103c3319c23a7d98eedfd694ef0"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; std::shared_ptr&lt; <a class="el" href="structmovex_1_1_segment.html">Segment</a> &gt;, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#aa3683103c3319c23a7d98eedfd694ef0">get_local</a> (double s) const</td></tr>
+<tr class="separator:aa3683103c3319c23a7d98eedfd694ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d1af063ca099903fe943d8ac318f1df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6d1af063ca099903fe943d8ac318f1df">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt; &amp;waypoints)</td></tr>
 <tr class="separator:a6d1af063ca099903fe943d8ac318f1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9e85d87c16fbc2cb636bb489945834"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#adc9e85d87c16fbc2cb636bb489945834">Path</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;waypoints, double blend_max_distance=0.0)</td></tr>
@@ -91,10 +96,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2299da1a96871d19968d945a6d96c24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b56e3dbc43d2586872ec8fae9cc835b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6b56e3dbc43d2586872ec8fae9cc835b">pdddq</a> (double s) const</td></tr>
 <tr class="separator:a6b56e3dbc43d2586872ec8fae9cc835b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3978f8ed64b699744ac5ef1b11cd7464"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a3978f8ed64b699744ac5ef1b11cd7464">dq</a> (double s, double ds) const</td></tr>
+<tr class="separator:a3978f8ed64b699744ac5ef1b11cd7464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a398f0d1b8094f7a4eab2b30f33b298ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a398f0d1b8094f7a4eab2b30f33b298ad">ddq</a> (double s, double ds, double dds) const</td></tr>
+<tr class="separator:a398f0d1b8094f7a4eab2b30f33b298ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb9b8ad2a1133394974b93ac3c916609"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#aeb9b8ad2a1133394974b93ac3c916609">dddq</a> (double s, double ds, double dds, double ddds) const</td></tr>
+<tr class="separator:aeb9b8ad2a1133394974b93ac3c916609"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c4f086e6a21daa190a8e406ddaad15a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a6c4f086e6a21daa190a8e406ddaad15a">max_pddq</a> () const</td></tr>
 <tr class="separator:a6c4f086e6a21daa190a8e406ddaad15a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ffc12706ddca56aef2c86120485f8b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a5ffc12706ddca56aef2c86120485f8b1">max_pdddq</a> () const</td></tr>
 <tr class="separator:a5ffc12706ddca56aef2c86120485f8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a266fd3bb3e62f20a41c075fac4a98ce8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="structmovex_1_1_segment.html">Segment</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_path.html#a266fd3bb3e62f20a41c075fac4a98ce8">segments</a></td></tr>
+<tr class="separator:a266fd3bb3e62f20a41c075fac4a98ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -165,6 +181,126 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aeb9b8ad2a1133394974b93ac3c916609"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb9b8ad2a1133394974b93ac3c916609">&#9670;&nbsp;</a></span>dddq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::dddq </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>dds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ddds</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a398f0d1b8094f7a4eab2b30f33b298ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a398f0d1b8094f7a4eab2b30f33b298ad">&#9670;&nbsp;</a></span>ddq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::ddq </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>dds</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3978f8ed64b699744ac5ef1b11cd7464"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3978f8ed64b699744ac5ef1b11cd7464">&#9670;&nbsp;</a></span>dq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacemovex.html#a8387f0aac406d33b0e17961950983c6b">Vector7d</a> movex::Path::dq </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ds</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a072054237f6664c5fc90aba419571728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a072054237f6664c5fc90aba419571728">&#9670;&nbsp;</a></span>get_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t movex::Path::get_index </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afbaec66435a26e5a4a28da14ca715af9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afbaec66435a26e5a4a28da14ca715af9">&#9670;&nbsp;</a></span>get_length()</h2>
 
@@ -175,6 +311,24 @@ Static Public Attributes</h2></td></tr>
           <td class="memname">double movex::Path::get_length </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3683103c3319c23a7d98eedfd694ef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3683103c3319c23a7d98eedfd694ef0">&#9670;&nbsp;</a></span>get_local()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt; std::shared_ptr&lt; <a class="el" href="structmovex_1_1_segment.html">Segment</a> &gt;, double &gt; movex::Path::get_local </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -307,6 +461,20 @@ Static Public Attributes</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a266fd3bb3e62f20a41c075fac4a98ce8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a266fd3bb3e62f20a41c075fac4a98ce8">&#9670;&nbsp;</a></span>segments</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="structmovex_1_1_segment.html">Segment</a>&gt; &gt; movex::Path::segments</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

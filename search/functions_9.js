@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jointmotion',['JointMotion',['../structfrankx_1_1_joint_motion.html#aa8af7c17d70628ded282a25ddd702089',1,'frankx::JointMotion']]]
+  ['jointmotion',['JointMotion',['../structmovex_1_1_joint_motion.html#a3695d29ad728ae75fe1f93713e834b19',1,'movex::JointMotion']]]
 ];

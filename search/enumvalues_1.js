@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cartesian',['Cartesian',['../structfrankx_1_1_impedance_motion.html#a13d1f4d4e45dc2994bba59ede1e39708ac62cd6a7dfc8d04ae078b2b3d6293b9c',1,'frankx::ImpedanceMotion']]]
+  ['cartesian',['Cartesian',['../structmovex_1_1_impedance_motion.html#a73acaeccf4b5bf11dbcc57d585484ef7ac62cd6a7dfc8d04ae078b2b3d6293b9c',1,'movex::ImpedanceMotion']]]
 ];

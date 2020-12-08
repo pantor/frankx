@@ -10,11 +10,11 @@ var searchData=
   ['set_5fz',['set_z',['../structmovex_1_1_affine.html#a670e6a4cd226017c3abef23675afa512',1,'movex::Affine']]],
   ['setdefaultbehavior',['setDefaultBehavior',['../classfrankx_1_1_robot.html#a2727e8748fe3fe59a12023e0e51d4c68',1,'frankx::Robot']]],
   ['setdynamicrel',['setDynamicRel',['../classfrankx_1_1_robot.html#a55149f60409d653ad890637a18cb1aa0',1,'frankx::Robot']]],
-  ['setlinearrelativetargetmotion',['setLinearRelativeTargetMotion',['../structfrankx_1_1_impedance_motion.html#a06ae6a3fc2cd8cf1ee0b582a4485260a',1,'frankx::ImpedanceMotion']]],
-  ['setnextwaypoint',['setNextWaypoint',['../structfrankx_1_1_waypoint_motion.html#a69d9f5ae14d5d76926ef2192c9a3ed20',1,'frankx::WaypointMotion']]],
-  ['setnextwaypoints',['setNextWaypoints',['../structfrankx_1_1_waypoint_motion.html#ae80393b2a3e9f4eefb48708bda1417d7',1,'frankx::WaypointMotion']]],
-  ['setspiraltargetmotion',['setSpiralTargetMotion',['../structfrankx_1_1_impedance_motion.html#ae36372e93b3a3a5f28057737f9e38fcb',1,'frankx::ImpedanceMotion']]],
-  ['settarget',['setTarget',['../structfrankx_1_1_impedance_motion.html#abb67409350ce90cf2c0498ab683b1a1a',1,'frankx::ImpedanceMotion']]],
+  ['setlinearrelativetargetmotion',['setLinearRelativeTargetMotion',['../structmovex_1_1_impedance_motion.html#a7a4ea324a6c7ffbc04ca15fbece4ab1c',1,'movex::ImpedanceMotion']]],
+  ['setnextwaypoint',['setNextWaypoint',['../structmovex_1_1_waypoint_motion.html#ad7a5f863d165fb947db2da9f0e75b599',1,'movex::WaypointMotion']]],
+  ['setnextwaypoints',['setNextWaypoints',['../structmovex_1_1_waypoint_motion.html#ac00771939e3216b341ebe866badc0187',1,'movex::WaypointMotion']]],
+  ['setspiraltargetmotion',['setSpiralTargetMotion',['../structmovex_1_1_impedance_motion.html#a5b7f185e2a60f1e741064206ab52bb6e',1,'movex::ImpedanceMotion']]],
+  ['settarget',['setTarget',['../structmovex_1_1_impedance_motion.html#a458a7b77010a3543fc2bc0532bf40075',1,'movex::ImpedanceMotion']]],
   ['slerp',['slerp',['../structmovex_1_1_affine.html#ac23d9f49c02cfa7dd5e3503be482e013',1,'movex::Affine']]],
   ['smoothie',['Smoothie',['../classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c',1,'movex::Smoothie']]],
   ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
@@ -22,5 +22,5 @@ var searchData=
   ['sqrtcomplexlong',['SqrtComplexLong',['../namespacemovex.html#ad1ce12941e01799a3f2edcd59944c97c',1,'movex::SqrtComplexLong(long double v)'],['../namespacemovex.html#a99dd6fafe1196106761ed604b6633b8a',1,'movex::SqrtComplexLong(std::complex&lt; long double &gt; v)']]],
   ['sqrtlong',['SqrtLong',['../namespacemovex.html#aacd313872f4e73a2c83ba9b033dc6f7c',1,'movex']]],
   ['start_5ftask',['start_task',['../classfrankx_1_1robot_1_1_robot.html#ae29a8fb98b294fe8b1d19ed458b8f198',1,'frankx::robot::Robot']]],
-  ['stopmotion',['StopMotion',['../structfrankx_1_1_stop_motion.html#a1153f620a2f801e3b4fc1dd5c0a8946e',1,'frankx::StopMotion::StopMotion()'],['../structfrankx_1_1_stop_motion.html#a6010a774989b5691d8dbae144285a666',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine)'],['../structfrankx_1_1_stop_motion.html#a64285fad0093eca859b62b0ca4016b6c',1,'frankx::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
+  ['stopmotion',['StopMotion',['../structmovex_1_1_stop_motion.html#a001194cda49a91bada628ca60f8770d0',1,'movex::StopMotion::StopMotion()'],['../structmovex_1_1_stop_motion.html#a459438ace36158df98fb02f5d42fc2f1',1,'movex::StopMotion::StopMotion(const Affine &amp;affine)'],['../structmovex_1_1_stop_motion.html#af233f08999776c1a0c0a2b4f3734f3db',1,'movex::StopMotion::StopMotion(const Affine &amp;affine, double elbow)']]]
 ];

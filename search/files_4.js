@@ -2,7 +2,6 @@ var searchData=
 [
   ['measure_2ehpp',['measure.hpp',['../measure_8hpp.html',1,'']]],
   ['motion_5fdata_2ehpp',['motion_data.hpp',['../motion__data_8hpp.html',1,'']]],
-  ['motion_5fimpedance_2ecpp',['motion_impedance.cpp',['../motion__impedance_8cpp.html',1,'']]],
   ['motion_5fimpedance_2ehpp',['motion_impedance.hpp',['../motion__impedance_8hpp.html',1,'']]],
   ['motion_5fjoint_2ehpp',['motion_joint.hpp',['../motion__joint_8hpp.html',1,'']]],
   ['motion_5fpath_2ehpp',['motion_path.hpp',['../motion__path_8hpp.html',1,'']]],

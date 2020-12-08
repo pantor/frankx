@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['s_5flength',['s_length',['../classmovex_1_1_quartic_blend_segment.html#a119435750713c3b733b6ea46fa91cfd8',1,'movex::QuarticBlendSegment']]],
-  ['should_5ffinish',['should_finish',['../structfrankx_1_1_impedance_motion.html#a79bb9b73a2b8e169e53f61e17eea438c',1,'frankx::ImpedanceMotion']]],
-  ['spiral_5fmotion',['spiral_motion',['../structfrankx_1_1_impedance_motion.html#a016840ea1dd65bee2c16dd5898b432af',1,'frankx::ImpedanceMotion']]],
-  ['start',['start',['../classmovex_1_1_line_segment.html#a8b805b122d4fe451ed1a05d58aa33036',1,'movex::LineSegment']]],
-  ['stop_5fat_5fpython_5fsignal',['stop_at_python_signal',['../classfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12',1,'frankx::Robot']]]
+  ['q',['q',['../structmovex_1_1_robot_state.html#ad06cdea2fcde31c84700503cb96b184b',1,'movex::RobotState']]],
+  ['q_5fd',['q_d',['../structmovex_1_1_robot_state.html#a689a7258cf8c77c3aa72428bedce9f5a',1,'movex::RobotState']]]
 ];

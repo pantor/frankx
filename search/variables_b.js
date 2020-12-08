@@ -1,7 +1,7 @@
 var searchData=
 [
   ['max_5facceleration',['max_acceleration',['../structmovex_1_1_input_parameter.html#aaaaafdf2f3b0be28ff795abc77533e57',1,'movex::InputParameter']]],
-  ['max_5fdynamics',['max_dynamics',['../structfrankx_1_1_motion_data.html#a4fa5ddd26b420cd7ea9f224be6ed3f86',1,'frankx::MotionData::max_dynamics()'],['../structmovex_1_1_waypoint.html#a2906a388e673e95c670169cb7b380cf0',1,'movex::Waypoint::max_dynamics()']]],
+  ['max_5fdynamics',['max_dynamics',['../structmovex_1_1_motion_data.html#ad5e79b5da46f43f9525f270250920578',1,'movex::MotionData::max_dynamics()'],['../structmovex_1_1_waypoint.html#a2906a388e673e95c670169cb7b380cf0',1,'movex::Waypoint::max_dynamics()']]],
   ['max_5felbow_5facceleration',['max_elbow_acceleration',['../classfrankx_1_1_robot.html#a567a162f7c626b7da1234911edb323f0',1,'frankx::Robot']]],
   ['max_5felbow_5fjerk',['max_elbow_jerk',['../classfrankx_1_1_robot.html#a9bb6c1ec1604d3f3c7b99c8dabd5589f',1,'frankx::Robot']]],
   ['max_5felbow_5fvelocity',['max_elbow_velocity',['../classfrankx_1_1_robot.html#adb8934c142109119bc152600089dc2db',1,'frankx::Robot']]],
