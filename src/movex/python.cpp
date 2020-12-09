@@ -26,7 +26,7 @@ using namespace movex;
 PYBIND11_MODULE(_movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {3};
+    constexpr size_t DOFs {1};
 
     py::class_<Affine>(m, "Affine")
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
@@ -111,7 +111,8 @@ PYBIND11_MODULE(_movex, m) {
         .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
         .def_property_readonly("length", &Path::get_length)
-        .def("q", &Path::q, "s"_a)
+        .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
+        .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
         .def("pdddq", &Path::pdddq, "s"_a)

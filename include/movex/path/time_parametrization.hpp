@@ -26,12 +26,16 @@ public:
     }
 
     //! Returns list of path positions s at delta time
-    Trajectory parametrize(const Path& path, double max_velocity, double max_acceleration, double max_jerk) {
+    Trajectory parametrize(const Path& path, const std::array<double, 7>& max_velocity, const std::array<double, 7>& max_acceleration, const std::array<double, 7>& max_jerk) {
         Trajectory trajectory {path};
 
         // For linear segments: accelerate as fast as possible
         // For blend segments: Constant path velocity ds
         // Check continuous, and go back to zero velocity otherwise
+
+        Vector7d max_velocity_v = Eigen::Map<const Vector7d>(max_velocity.data(), max_velocity.size());
+        Vector7d max_accleration_v = Eigen::Map<const Vector7d>(max_acceleration.data(), max_acceleration.size());
+        Vector7d max_jerk_v = Eigen::Map<const Vector7d>(max_jerk.data(), max_jerk.size());
 
         std::vector<std::tuple<double, double, double>> max_path_dynamics;
         for (auto segment: path.segments) {
@@ -43,16 +47,16 @@ public:
             // Linear segments
             if ((max_pddq.array().abs() < 1e-16).any() && (max_pdddq.array().abs() < 1e-16).any()) {
                 auto constant_pdq = segment->pdq(0.0);
-                
-                max_ds = (max_velocity / constant_pdq.array().abs()).minCoeff();
-                max_dds = (max_acceleration / constant_pdq.array().abs()).minCoeff();
-                max_ddds = (max_jerk / constant_pdq.array().abs()).minCoeff();
-            
+
+                max_ds = (max_velocity_v.array() / constant_pdq.array().abs()).minCoeff();
+                max_dds = (max_accleration_v.array() / constant_pdq.array().abs()).minCoeff();
+                max_ddds = (max_jerk_v.array() / constant_pdq.array().abs()).minCoeff();
+
             // Other segments
             } else {
-                // ds = max_velocity / pdq(s)  // pdq will always be between two linear segments...
-                double ds_acc = (max_acceleration / max_pddq.array().abs()).sqrt().minCoeff();
-                double ds_jerk = (max_jerk / max_pdddq.array().abs()).pow(1./3).minCoeff();
+                // ds = max_velocity_v.array() / pdq(s)  // pdq will always be between two linear segments...
+                double ds_acc = (max_accleration_v.array() / max_pddq.array().abs()).sqrt().minCoeff();
+                double ds_jerk = (max_jerk_v.array() / max_pdddq.array().abs()).pow(1./3).minCoeff();
                 max_ds = std::min(ds_acc, ds_jerk);
                 max_dds = 0.0;
                 max_ddds = 0.0;
@@ -98,9 +102,9 @@ public:
             // New segment
             if (index_new > index_current) {
                 index_current = index_new;
-                
+
                 // std::tie(segment_new, s_local_new) = path.get_local(s_new);
-                std::tie(input.max_velocity(0), input.max_acceleration(0), input.max_jerk(0)) = max_path_dynamics[index_current];
+                // std::tie(input.max_velocity(0), input.max_acceleration(0), input.max_jerk(0)) = max_path_dynamics[index_current];
             }
 
             current_state = {time, s_new, ds_new, dds_new, 0.0};

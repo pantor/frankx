@@ -41,7 +41,7 @@ struct Waypoint {
     explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type, bool max_dynamics): affine(affine), elbow(elbow), reference_type(reference_type), max_dynamics(max_dynamics) {}
 
     // explicit Waypoint(const Affine& affine, double blend_max_distance): affine(affine), blend_max_distance(blend_max_distance) {}
-    explicit Waypoint(const Affine& affine, double elbow, double blend_max_distance): affine(affine), elbow(elbow), blend_max_distance(blend_max_distance) {}
+    explicit Waypoint(const Affine& affine, std::optional<double> elbow, double blend_max_distance): affine(affine), elbow(elbow), blend_max_distance(blend_max_distance), reference_type(ReferenceType::Absolute) {}
 
     Affine getTargetAffine(const Affine& frame, const Affine& old_affine) const {
         switch (reference_type) {
@@ -52,18 +52,18 @@ struct Waypoint {
         }
     }
 
+    Vector7d getTargetVector(const Affine& old_affine, double old_elbow) const {
+        return getTargetVector(Affine(), old_affine, old_elbow);
+    }
+
     Vector7d getTargetVector(const Affine& frame, const Affine& old_affine, double old_elbow) const {
         double new_elbow;
         if (reference_type == ReferenceType::Relative) {
-            new_elbow = elbow.has_value() ? elbow.value() + old_elbow : old_elbow;
+            new_elbow = elbow.value_or(0.0) + old_elbow;
         } else {
-            new_elbow = elbow.has_value() ? elbow.value() : old_elbow;
+            new_elbow = elbow.value_or(old_elbow);
         }
         return getTargetAffine(frame, old_affine).vector_with_elbow(new_elbow);
-    }
-
-    Vector7d getVector(double alt_elbow) const {
-        return affine.vector_with_elbow(elbow.value_or(alt_elbow));
     }
 };
 

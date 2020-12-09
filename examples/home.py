@@ -18,7 +18,7 @@ if __name__ == '__main__':
     robot.move(JointMotion([-1.811944, 1.179108, 1.757100, -2.14162, -1.143369, 1.633046, -0.432171]))
 
     # Define and move forwards
-    camera = Affine(y=0.05)
-    home = Affine(0.480, -0.05, 0.40)
+    camera_frame = Affine(y=0.05)
+    home_pose = Affine(0.480, 0.0, 0.40)
 
-    robot.move(camera, LinearMotion(home, 1.75))
+    robot.move(camera_frame, LinearMotion(home_pose, 1.75))

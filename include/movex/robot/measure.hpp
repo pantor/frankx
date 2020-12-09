@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <movex/robot/robot_state.hpp>
 
 
@@ -9,7 +11,7 @@ class Condition {
     using RobotState_ = RobotState<7>;
 public:
     using CallbackType = std::function<bool(const RobotState_&, double)>;
-    
+
     explicit Condition(CallbackType callback): callback(callback) { }
 
     Condition& operator&&(const Condition& rhs) {

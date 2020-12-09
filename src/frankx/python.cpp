@@ -127,9 +127,17 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("target", &JointMotion::target);
 
     py::class_<PathMotion>(m, "PathMotion")
+        .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
         .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
-        .def_readonly("waypoints", &PathMotion::waypoints)
-        .def_readonly("blend_max_distance", &PathMotion::blend_max_distance);
+        .def_readonly("waypoints", &PathMotion::waypoints);
+
+    // py::class_<LinearMotion, PathMotion>(m, "LinearMotion")
+    //     .def(py::init<const Affine&>(), "target"_a)
+    //     .def(py::init<const Affine&, double>(), "target"_a, "elbow"_a);
+
+    // py::class_<LinearRelativeMotion, PathMotion>(m, "LinearRelativeMotion")
+    //     .def(py::init<const Affine&>(), "affine"_a)
+    //     .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a);
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)

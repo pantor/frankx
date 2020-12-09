@@ -1,5 +1,7 @@
 from _frankx import (
     Affine,
+    # DirectMotion,
+    # DirectRelativeMotion,
     Duration,
     Errors,
     GripperState,

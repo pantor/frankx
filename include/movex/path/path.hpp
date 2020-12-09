@@ -32,6 +32,7 @@ public:
     double get_length() const;
 
     Vector7d q(double s) const;
+    Vector7d q(double s, const Affine& frame) const;
     Vector7d pdq(double s) const;
     Vector7d pddq(double s) const;
     Vector7d pdddq(double s) const;

@@ -38,8 +38,10 @@ namespace frankx {
     using namespace movex;
 
 class Robot: public franka::Robot {
-    void setInputLimits(movex::InputParameter<7>& input_parameters, const MotionData& data);
-    void setInputLimits(movex::InputParameter<7>& input_parameters, const movex::Waypoint& waypoint, const MotionData& data);
+    std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(const MotionData& data);
+    std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(const Waypoint& waypoint, const MotionData& data);
+    void setInputLimits(InputParameter<7>& input_parameters, const MotionData& data);
+    void setInputLimits(InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data);
 
     inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {
         auto affine = Affine(vector);

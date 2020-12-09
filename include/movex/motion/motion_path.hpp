@@ -3,20 +3,33 @@
 #include <Eigen/Core>
 
 #include <movex/path/path.hpp>
+#include <movex/waypoint.hpp>
 
 
 namespace movex {
 
 struct PathMotion {
-    const std::vector<Affine> waypoints;
+    std::vector<Waypoint> waypoints;
 
-    //! The maximal distance of polynomial blending between two linear segments regarding their true path
-    double blend_max_distance {0.0}; // [m]
-
-    explicit PathMotion(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0): waypoints(waypoints), blend_max_distance(blend_max_distance) { }
+    explicit PathMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) { }
+    explicit PathMotion(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0) {
+        this->waypoints.resize(waypoints.size());
+        for (size_t i = 0; i < waypoints.size(); i += 1) {
+            this->waypoints[i] = Waypoint(waypoints[i], std::nullopt, blend_max_distance);
+        }
+    }
 };
 
-// struct LinearMotion
-// struct LinearRelativeMotion
+
+struct LinearPathMotion: public PathMotion {
+    explicit LinearPathMotion(const Affine& target): PathMotion({ Waypoint(target) }) { }
+    explicit LinearPathMotion(const Affine& target, double elbow): PathMotion({ Waypoint(target, elbow) }) { }
+};
+
+
+struct LinearRelativePathMotion: public PathMotion {
+    explicit LinearRelativePathMotion(const Affine& affine): PathMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative) }) { }
+    explicit LinearRelativePathMotion(const Affine& affine, double elbow): PathMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
+};
 
 } // namespace movex

@@ -19,10 +19,16 @@ std::tuple<std::shared_ptr<Segment>, double> Path::get_local(double s) const {
 void Path::init_path_points(const std::vector<Waypoint>& waypoints) {
     std::vector<std::shared_ptr<LineSegment>> line_segments;
 
-    Vector7d vector_current = waypoints[0].getVector(0.0);
+    double elbow_current = waypoints[0].elbow.value_or(0.0);
+    Affine affine_current = waypoints[0].affine;
+
+    Vector7d vector_current = waypoints[0].getTargetVector(affine_current, elbow_current);
     Vector7d vector_next;
+
     for (size_t i = 1; i < waypoints.size(); i += 1) {
-        vector_next = waypoints[i].getVector(0.0);
+        vector_next = waypoints[i].getTargetVector(affine_current, elbow_current);
+        affine_current = Affine(vector_next);
+        elbow_current = vector_next(6);
 
         auto segment = std::make_shared<LineSegment>(vector_current, vector_next);
         line_segments.emplace_back(segment);
@@ -76,7 +82,7 @@ Path::Path(const std::vector<Waypoint>& waypoints) {
 Path::Path(const std::vector<Affine>& waypoints, double blend_max_distance) {
     std::vector<Waypoint> converted(waypoints.size());
     for (size_t i = 0; i < waypoints.size(); i += 1) {
-        converted[i] = Waypoint(waypoints[i], 0.0, blend_max_distance);
+        converted[i] = Waypoint(waypoints[i], std::nullopt, blend_max_distance);
     }
     init_path_points(converted);
 }
@@ -88,6 +94,11 @@ double Path::get_length() const {
 Vector7d Path::q(double s) const {
     auto [segment, s_local] = get_local(s);
     return segment->q(s_local);
+}
+
+Vector7d Path::q(double s, const Affine& frame) const {
+    Vector7d init {q(s)};
+    return (Affine(init) * frame.inverse()).vector_with_elbow(init(6));
 }
 
 Vector7d Path::pdq(double s) const {
