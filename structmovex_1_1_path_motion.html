@@ -74,23 +74,58 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="motion__path_8hpp_source.html">motion_path.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for movex::PathMotion:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structmovex_1_1_path_motion.png" usemap="#movex::PathMotion_map" alt=""/>
+  <map id="movex::PathMotion_map" name="movex::PathMotion_map">
+<area href="structmovex_1_1_linear_path_motion.html" alt="movex::LinearPathMotion" shape="rect" coords="0,56,198,80"/>
+<area href="structmovex_1_1_linear_relative_path_motion.html" alt="movex::LinearRelativePathMotion" shape="rect" coords="208,56,406,80"/>
+</map>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9196ff4901f640e0a3cfca027a01a270"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a9196ff4901f640e0a3cfca027a01a270">PathMotion</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;<a class="el" href="structmovex_1_1_path_motion.html#a5a3711504ae6386c7e680781ec9fd85c">waypoints</a>, double <a class="el" href="structmovex_1_1_path_motion.html#a220f4a32f1cff228e9658c95a9a9fbbc">blend_max_distance</a>=0.0)</td></tr>
+<tr class="memitem:a003e6b26ebbb5d1cb6d4d7678fc61129"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a003e6b26ebbb5d1cb6d4d7678fc61129">PathMotion</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt; &amp;<a class="el" href="structmovex_1_1_path_motion.html#a1ac82f97f1efeb20c7425136ef418c04">waypoints</a>)</td></tr>
+<tr class="separator:a003e6b26ebbb5d1cb6d4d7678fc61129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9196ff4901f640e0a3cfca027a01a270"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a9196ff4901f640e0a3cfca027a01a270">PathMotion</a> (const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt; &amp;<a class="el" href="structmovex_1_1_path_motion.html#a1ac82f97f1efeb20c7425136ef418c04">waypoints</a>, double blend_max_distance=0.0)</td></tr>
 <tr class="separator:a9196ff4901f640e0a3cfca027a01a270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a5a3711504ae6386c7e680781ec9fd85c"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="structmovex_1_1_affine.html">Affine</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a5a3711504ae6386c7e680781ec9fd85c">waypoints</a></td></tr>
-<tr class="separator:a5a3711504ae6386c7e680781ec9fd85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a220f4a32f1cff228e9658c95a9a9fbbc"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a220f4a32f1cff228e9658c95a9a9fbbc">blend_max_distance</a> {0.0}</td></tr>
-<tr class="memdesc:a220f4a32f1cff228e9658c95a9a9fbbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximal distance of polynomial blending between two linear segments regarding their true path.  <a href="#a220f4a32f1cff228e9658c95a9a9fbbc">More...</a><br /></td></tr>
-<tr class="separator:a220f4a32f1cff228e9658c95a9a9fbbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ac82f97f1efeb20c7425136ef418c04"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_path_motion.html#a1ac82f97f1efeb20c7425136ef418c04">waypoints</a></td></tr>
+<tr class="separator:a1ac82f97f1efeb20c7425136ef418c04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a003e6b26ebbb5d1cb6d4d7678fc61129"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a003e6b26ebbb5d1cb6d4d7678fc61129">&#9670;&nbsp;</a></span>PathMotion() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">movex::PathMotion::PathMotion </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>waypoints</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9196ff4901f640e0a3cfca027a01a270"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9196ff4901f640e0a3cfca027a01a270">&#9670;&nbsp;</a></span>PathMotion()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9196ff4901f640e0a3cfca027a01a270">&#9670;&nbsp;</a></span>PathMotion() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,30 +161,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a220f4a32f1cff228e9658c95a9a9fbbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a220f4a32f1cff228e9658c95a9a9fbbc">&#9670;&nbsp;</a></span>blend_max_distance</h2>
+<a id="a1ac82f97f1efeb20c7425136ef418c04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ac82f97f1efeb20c7425136ef418c04">&#9670;&nbsp;</a></span>waypoints</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double movex::PathMotion::blend_max_distance {0.0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The maximal distance of polynomial blending between two linear segments regarding their true path. </p>
-
-</div>
-</div>
-<a id="a5a3711504ae6386c7e680781ec9fd85c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a3711504ae6386c7e680781ec9fd85c">&#9670;&nbsp;</a></span>waypoints</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt;<a class="el" href="structmovex_1_1_affine.html">Affine</a>&gt; movex::PathMotion::waypoints</td>
+          <td class="memname">std::vector&lt;<a class="el" href="structmovex_1_1_waypoint.html">Waypoint</a>&gt; movex::PathMotion::waypoints</td>
         </tr>
       </table>
 </div><div class="memdoc">

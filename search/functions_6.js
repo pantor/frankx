@@ -7,7 +7,6 @@ var searchData=
   ['getinnerrandom',['getInnerRandom',['../structmovex_1_1_affine.html#a56c171e227e190f9f0c85225aeb76c97',1,'movex::Affine']]],
   ['gettarget',['getTarget',['../structmovex_1_1_impedance_motion.html#ac92bb3ec693761931e633a3887000673',1,'movex::ImpedanceMotion']]],
   ['gettargetaffine',['getTargetAffine',['../structmovex_1_1_waypoint.html#a6097aa1ea326195e6019ece7ac42bdf6',1,'movex::Waypoint']]],
-  ['gettargetvector',['getTargetVector',['../structmovex_1_1_waypoint.html#a83a1a0ac43c02b8035b81b62f40883d1',1,'movex::Waypoint']]],
-  ['getvector',['getVector',['../structmovex_1_1_waypoint.html#a558afc852e998fc7110e53a470ca6fb5',1,'movex::Waypoint']]],
+  ['gettargetvector',['getTargetVector',['../structmovex_1_1_waypoint.html#a4c62b9b210991538de36701645bc4294',1,'movex::Waypoint::getTargetVector(const Affine &amp;old_affine, double old_elbow) const'],['../structmovex_1_1_waypoint.html#a83a1a0ac43c02b8035b81b62f40883d1',1,'movex::Waypoint::getTargetVector(const Affine &amp;frame, const Affine &amp;old_affine, double old_elbow) const']]],
   ['gripper',['Gripper',['../classfrankx_1_1_gripper.html#afff4b563f041efafb86af903acf6fa40',1,'frankx::Gripper']]]
 ];
