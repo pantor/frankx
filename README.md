@@ -30,14 +30,10 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
-<!-- <div align="center">
-  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/example.png"></div></center>
-</div> -->
-
 
 ## Installation
 
-For using frankx with Python, you can start by
+To start using frankx with Python, you can use pip via
 ```bash
 pip install frankx
 ```
@@ -280,7 +276,7 @@ The Python API should be very straight-forward for the Gripper class.
 
 ## Movex
 
-We seperated some essential algorithms for robot motions into a standalone C++ library *movex*.
+We seperated some essential algorithms for robot motions into the standalone C++ library *movex*.
 
 
 ### Online Trajectory Generators
@@ -302,7 +298,7 @@ All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs 
 
 ## Path
 
-The path library is able to define paths from waypoints and blend them for a smooth second derivative.
+The path library is able to define paths from waypoints and blend them for a smooth second derivative. We are working on a third-order time-parametrization algorithm.
 
 
 ## Documentation

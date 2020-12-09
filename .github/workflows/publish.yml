@@ -20,6 +20,8 @@ jobs:
 
         /opt/python/cp36-cp36m/bin/pip install cmake setuptools wheel --user
         /opt/python/cp37-cp37m/bin/pip install cmake setuptools wheel --user
+        /opt/python/cp38-cp38/bin/pip install cmake setuptools wheel --user
+        /opt/python/cp39-cp39/bin/pip install cmake setuptools wheel --user
 
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
@@ -66,7 +68,7 @@ jobs:
 
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
@@ -78,7 +80,7 @@ jobs:
 
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi
