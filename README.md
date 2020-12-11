@@ -55,6 +55,33 @@ cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TY
 
 To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
 
+### Using Docker
+
+#### Building the Image
+
+To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
+
+```bash
+git clone https://github.com/pantor/frankx.git
+cd frankx/
+docker build -t pantor/frankx -f docker/Dockerfile .
+```
+
+To use another version of libfranka than default (v.0.7.0) simply add the build arg to the command, e.g.:
+
+```bash
+docker build -t pantor/frankx --build-arg libfranka_version=0.7.1 -f docker/Dockerfile .
+```
+
+#### Running the Containers
+
+To run the container simply:
+
+```bash
+docker run -it --rm --network=host --privileged pantor/frankx
+```
+
+The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
 
 ## Tutorial
 
