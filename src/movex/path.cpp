@@ -17,6 +17,10 @@ std::tuple<std::shared_ptr<Segment>, double> Path::get_local(double s) const {
 }
 
 void Path::init_path_points(const std::vector<Waypoint>& waypoints) {
+    if (waypoints.size() < 2) {
+        throw std::runtime_error("Path needs at least 2 waypoints as input, but has only " + std::to_string(waypoints.size()) + ".");
+    }
+
     std::vector<std::shared_ptr<LineSegment>> line_segments;
 
     double elbow_current = waypoints[0].elbow.value_or(0.0);

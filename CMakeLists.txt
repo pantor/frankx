@@ -98,13 +98,13 @@ if(BUILD_TESTS)
 
   find_package(Catch2 REQUIRED)
 
-  foreach(test IN ITEMS unit-test otg-test)
+  foreach(test IN ITEMS unit-test otg-test path-test)
     add_executable(${test} "test/${test}.cpp")
     if(Reflexxes)
       target_compile_definitions(${test} PUBLIC WITH_REFLEXXES)
     endif()
     target_link_libraries(${test} PRIVATE frankx Catch2::Catch2)
-    add_test(${test} COMMAND ${test})
+    add_test(NAME ${test} COMMAND ${test})
   endforeach()
 endif()
 
