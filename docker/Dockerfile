@@ -1,4 +1,14 @@
+# Copyright (c) 2020, Danish Technological Institute.
+# All rights reserved.
+#
+# This source code is licensed under the GNU-style license found in the
+# LICENSE file in the root directory of this source tree.
+# 
+# Original author: Nicolai Anton Lynnerup <nily@dti.dk>
+
 FROM ubuntu:20.04
+
+LABEL maintainer="Nicolai Anton Lynnerup <nily@dti.dk> & Lars Berscheid <lars.berscheid@kit.edu>"
 
 # Set working directory
 
