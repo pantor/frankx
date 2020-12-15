@@ -9,12 +9,17 @@
 
 namespace movex {
 
+/**
+* A motion following multiple waypoints (with intermediate zero velocity) in a time-optimal way.
+* Works with aribtrary initial conditions.
+*/
 struct WaypointMotion {
     bool reload {false};
     bool return_when_finished {true};
 
     std::vector<Waypoint> waypoints;
 
+    explicit WaypointMotion() {}
     explicit WaypointMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) {}
     explicit WaypointMotion(const std::vector<Waypoint>& waypoints, bool return_when_finished): waypoints(waypoints), return_when_finished(return_when_finished) {}
 

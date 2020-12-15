@@ -1,47 +1,67 @@
-#include <frankx/robot.hpp>
+#pragma once
+
+#include <franka/duration.h>
+#include <franka/robot_state.h>
+
+#include <movex/robot/motion_data.hpp>
+#include <movex/robot/robot_state.hpp>
+#include <movex/motion/motion_impedance.hpp>
 
 
 namespace frankx {
+    using namespace movex;
 
-bool Robot::move(ImpedanceMotion& motion) {
-    return move(Affine(), motion);
-}
+template<class RobotType>
+struct ImpedanceMotionGenerator: public MotionGenerator {
+    double time {0.0}, motion_init_time {0.0};
+    RobotType* robot;
 
-bool Robot::move(ImpedanceMotion& motion, MotionData& data) {
-    return move(Affine(), motion, data);
-}
+    Eigen::Matrix<double, 6, 6> stiffness, damping;
+    Affine initial_affine;
+    Eigen::Vector3d position_d;
+    Eigen::Quaterniond orientation_d;
 
-bool Robot::move(const Affine& frame, ImpedanceMotion& motion) {
-    auto data = MotionData();
-    return move(frame, motion, data);
-}
+    franka::RobotState initial_state;
+    franka::Model* model;
 
-bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data) {
-    if (motion.type == ImpedanceMotion::Type::Joint) {
-        throw std::runtime_error("joint impedance is not implemented yet.");
+    Affine frame;
+    ImpedanceMotion motion;
+    MotionData& data;
+
+    explicit ImpedanceMotionGenerator(RobotType* robot, const Affine& frame, ImpedanceMotion motion, MotionData& data): robot(robot), frame(frame), motion(motion), data(data) {
+        if (motion.type == ImpedanceMotion::Type::Joint) {
+            throw std::runtime_error("joint impedance is not implemented yet.");
+        }
+
+        stiffness.setZero();
+        stiffness.topLeftCorner(3, 3) << motion.translational_stiffness * Eigen::MatrixXd::Identity(3, 3);
+        stiffness.bottomRightCorner(3, 3) << motion.rotational_stiffness * Eigen::MatrixXd::Identity(3, 3);
+        damping.setZero();
+        damping.topLeftCorner(3, 3) << 2.0 * sqrt(motion.translational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
+        damping.bottomRightCorner(3, 3) << 2.0 * sqrt(motion.rotational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
+
+        initial_state = robot->readOnce();
+        *model = robot->loadModel();
+
+        initial_affine = Affine(initial_state.O_T_EE);
+        position_d = Eigen::Vector3d(initial_affine.translation());
+        orientation_d = Eigen::Quaterniond(initial_affine.quaternion());
     }
 
-    Eigen::MatrixXd stiffness(6, 6), damping(6, 6);
-    stiffness.setZero();
-    stiffness.topLeftCorner(3, 3) << motion.translational_stiffness * Eigen::MatrixXd::Identity(3, 3);
-    stiffness.bottomRightCorner(3, 3) << motion.rotational_stiffness * Eigen::MatrixXd::Identity(3, 3);
-    damping.setZero();
-    damping.topLeftCorner(3, 3) << 2.0 * sqrt(motion.translational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
-    damping.bottomRightCorner(3, 3) << 2.0 * sqrt(motion.rotational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
+    void init(const franka::RobotState& robot_state, franka::Duration period) {
+        Eigen::Affine3d transform(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
+        motion.target = Affine(transform);
+        motion.is_active = true;
+    }
 
-    franka::Model model = loadModel();
-    franka::RobotState initial_state = readOnce();
-
-    Affine initial_affine = Affine(initial_state.O_T_EE);
-    Eigen::Vector3d position_d(initial_affine.translation());
-    Eigen::Quaterniond orientation_d(initial_affine.quaternion());
-
-    double time {0.0}, motion_init_time {0.0};
-    auto impedance_callback = [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::Torques {
+    franka::Torques operator()(const franka::RobotState& robot_state, franka::Duration period) {
         time += period.toSec();
+        if (time == 0.0) {
+            init(robot_state, period);
+        }
 
-        std::array<double, 7> coriolis_array = model.coriolis(robot_state);
-        std::array<double, 42> jacobian_array = model.zeroJacobian(franka::Frame::kEndEffector, robot_state);
+        std::array<double, 7> coriolis_array = model->coriolis(robot_state);
+        std::array<double, 42> jacobian_array = model->zeroJacobian(franka::Frame::kEndEffector, robot_state);
 
         Eigen::Map<const Eigen::Matrix<double, 7, 1>> coriolis(coriolis_array.data());
         Eigen::Map<const Eigen::Matrix<double, 6, 7>> jacobian(jacobian_array.data());
@@ -50,11 +70,6 @@ bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data)
         Eigen::Affine3d transform(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
         Eigen::Vector3d position(transform.translation());
         Eigen::Quaterniond orientation(transform.linear());
-
-        if (time == 0.0) {
-            motion.target = Affine(transform);
-            motion.is_active = true;
-        }
 
         Eigen::Matrix<double, 6, 1> error;
         error.head(3) << position - position_d;
@@ -92,7 +107,7 @@ bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data)
         Eigen::VectorXd::Map(&tau_d_array[0], 7) = tau_d;
 
 #ifdef WITH_PYTHON
-        if (stop_at_python_signal && Py_IsInitialized() && PyErr_CheckSignals() == -1) {
+        if (robot->stop_at_python_signal && Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             motion.is_active = false;
             return franka::MotionFinished(franka::Torques(tau_d_array));
         }
@@ -139,18 +154,7 @@ bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data)
         }
 
         return franka::Torques(tau_d_array);
-    };
-
-    try {
-        control(impedance_callback);
-        motion.is_active = false;
-
-    } catch (const franka::Exception& exception) {
-        std::cout << exception.what() << std::endl;
-        motion.is_active = false;
-        return false;
     }
-    return true;
-}
+};
 
 } // namespace frankx

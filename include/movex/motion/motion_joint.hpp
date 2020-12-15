@@ -5,7 +5,9 @@
 
 namespace movex {
 
-//! A motion in the joint space
+/**
+* A motion in the joint space
+*/
 struct JointMotion {
     const Vector7d target;
 

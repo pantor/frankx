@@ -97,6 +97,6 @@ RUN mkdir -p frankx
 #  && cmake .. \
 #  && make -j$(nproc) \
 #  && make install \
-#  && ./unit-test
+#  && make test
 
 ENV PYTHONPATH=$PYTHONPATH:/code/frankx/build/ 

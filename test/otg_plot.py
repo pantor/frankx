@@ -74,15 +74,15 @@ def plot_trajectory(t_list, out_list):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.023505]
-    inp.current_velocity = [0.053]
+    inp.current_position = [0.0, 0.2]
+    inp.current_velocity = [0.0, 0.1]
     inp.current_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.target_position = [0.743424]
+    inp.target_position = [0.5, 0.2]
     inp.target_velocity = [0.0] * inp.degrees_of_freedom
     inp.target_acceleration = [0.0] * inp.degrees_of_freedom
-    inp.max_velocity = [0.053071]
-    inp.max_acceleration = [1.061424]
-    inp.max_jerk = [2.122848]
+    inp.max_velocity = [0.7, 0.2]
+    inp.max_acceleration = [1.0, 0.8]
+    inp.max_jerk = [2.5, 2.0]
     inp.minimum_duration = None
 
     # otg = Quintic(0.005)

@@ -113,6 +113,7 @@ PYBIND11_MODULE(_frankx, m) {
         .export_values();
 
     waypoint.def(py::init<>())
+        .def(py::init<bool>(), "zero_velocity"_a)
         .def(py::init<double>(), "minimum_time"_a)
         .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)

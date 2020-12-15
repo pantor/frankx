@@ -12,7 +12,6 @@ Affine::Affine(const Type& data) {
 }
 
 Affine::Affine(double x, double y, double z, double a, double b, double c) {
-    // data = Eigen::Translation<double, 3>(x, y, z) * Euler(a, b, c).toRotationMatrix();
     data.translation() = Eigen::Vector3d(x, y, z);
     data.linear() = Euler(a, b, c).toRotationMatrix();
 }
@@ -135,8 +134,7 @@ Affine::Type::LinearMatrixType Affine::rotation() const {
 }
 
 Eigen::Quaterniond Affine::quaternion() const {
-    Eigen::Quaterniond q(data.rotation());
-    return q;
+    return Eigen::Quaterniond(data.rotation());
 }
 
 double Affine::a() const {
@@ -215,4 +213,4 @@ std::string Affine::toString() const {
       + ", " + std::to_string(v(3)) + ", " + std::to_string(v(4)) + ", " + std::to_string(v(5)) + "]";
 }
 
-} // namespace frankx
+} // namespace movex

@@ -13,6 +13,9 @@ if __name__ == '__main__':
     robot.set_default_behavior()
 
     while True:
-        print('Pose: ', robot.current_pose())
-        print('Elbow: ', robot.read_once().elbow)
+        state = robot.read_once()
+        print('\nPose: ', robot.current_pose())
+        print('O_TT_E: ', state.O_T_EE)
+        print('Joints: ', state.q)
+        print('Elbow: ', state.elbow)
         sleep(0.05)

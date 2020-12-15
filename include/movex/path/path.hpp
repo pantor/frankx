@@ -26,6 +26,7 @@ public:
     size_t get_index(double s) const;
     std::tuple<std::shared_ptr<Segment>, double> get_local(double s) const;
 
+    explicit Path() { }
     explicit Path(const std::vector<Waypoint>& waypoints);
     explicit Path(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0);
 

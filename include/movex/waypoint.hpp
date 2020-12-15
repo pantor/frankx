@@ -24,6 +24,9 @@ struct Waypoint {
     //! Dynamic Waypoint: Use maximal dynamics of the robot independent on other parameters
     bool max_dynamics {false};
 
+    //! Zero velocity Waypoint: Stop to zero velocity
+    bool zero_velocity {false};
+
     //! Dynamic Waypoint: Minimum time to get to next waypoint
     std::optional<double> minimum_time;
 
@@ -35,6 +38,7 @@ struct Waypoint {
     explicit Waypoint(const Affine& affine, ReferenceType reference_type = ReferenceType::Absolute): affine(affine), reference_type(reference_type) {}
     explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute): affine(affine), reference_type(reference_type), elbow(elbow) {}
 
+    explicit Waypoint(bool zero_velocity): affine(Affine()), reference_type(ReferenceType::Relative), zero_velocity(zero_velocity) {}
     explicit Waypoint(double minimum_time): affine(Affine()), reference_type(ReferenceType::Relative), minimum_time(minimum_time) {}
     explicit Waypoint(const Affine& affine, ReferenceType reference_type, double velocity_rel): affine(affine), reference_type(reference_type), velocity_rel(velocity_rel) {}
     explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type, double velocity_rel): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(velocity_rel) {}
@@ -42,6 +46,7 @@ struct Waypoint {
 
     // explicit Waypoint(const Affine& affine, double blend_max_distance): affine(affine), blend_max_distance(blend_max_distance) {}
     explicit Waypoint(const Affine& affine, std::optional<double> elbow, double blend_max_distance): affine(affine), elbow(elbow), blend_max_distance(blend_max_distance), reference_type(ReferenceType::Absolute) {}
+
 
     Affine getTargetAffine(const Affine& frame, const Affine& old_affine) const {
         switch (reference_type) {
@@ -67,4 +72,4 @@ struct Waypoint {
     }
 };
 
-} // namespace frankx
+} // namespace movex

@@ -19,6 +19,7 @@ struct Trajectory {
     //! The trajectory state for each consecutive time step (with delta_time difference of the time parametrization)
     std::vector<State> states;
 
+    explicit Trajectory() { }
     explicit Trajectory(const Path& path): path(path) { }
 };
 

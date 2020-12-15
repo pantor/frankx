@@ -8,6 +8,10 @@
 
 namespace movex {
 
+/**
+* A motion following a pre-defined path.
+* Needs zero velocity and acceleration at start time.
+*/
 struct PathMotion {
     std::vector<Waypoint> waypoints;
 

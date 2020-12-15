@@ -33,7 +33,7 @@ struct Profile {
 };
 
 
-struct RuckigEquation {
+struct RuckigStep1 {
     static bool time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
@@ -57,6 +57,17 @@ struct RuckigEquation {
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 
     static double jerk_to_reach_target_with_times(const std::array<double, 7>& t, double p0, double v0, double a0, double pf);
+};
+
+
+struct RuckigStep2 {
+    static bool time_up_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+
+    static bool time_down_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+
+    static bool get_profile(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 };
 
 
@@ -103,43 +114,45 @@ class Ruckig {
                 continue;
             }
 
-            RuckigEquation::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            RuckigStep1::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
             profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
 
             // std::cout << dof << ": " << t_brakes_[dof][0] << " " << t_brakes_[dof][1] << std::endl;
         }
 
-        std::array<double, DOFs> tfs;
+        std::array<double, DOFs> tfs; // Profile duration
+        std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
         for (size_t dof = 0; dof < DOFs; dof += 1) {
             if (!input.enabled[dof]) {
                 tfs[dof] = 0.0;
                 continue;
             }
 
-            double p0 = input.current_position[dof];
-            double v0 = input.current_velocity[dof];
-            double a0 = input.current_acceleration[dof];
+            p0s[dof] = input.current_position[dof];
+            v0s[dof] = input.current_velocity[dof];
+            a0s[dof] = input.current_acceleration[dof];
 
             if (profiles[dof].t_brakes[0] > 0.0) {
-                profiles[dof].p_brakes[0] = p0;
-                profiles[dof].v_brakes[0] = v0;
-                profiles[dof].a_brakes[0] = a0;
-                std::tie(p0, v0, a0) = Profile::integrate(profiles[dof].t_brakes[0], p0, v0, a0, profiles[dof].j_brakes[0]);
+                profiles[dof].p_brakes[0] = p0s[dof];
+                profiles[dof].v_brakes[0] = v0s[dof];
+                profiles[dof].a_brakes[0] = a0s[dof];
+                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(profiles[dof].t_brakes[0], p0s[dof], v0s[dof], a0s[dof], profiles[dof].j_brakes[0]);
 
                 if (profiles[dof].t_brakes[1] > 0.0) {
-                    profiles[dof].p_brakes[1] = p0;
-                    profiles[dof].v_brakes[1] = v0;
-                    profiles[dof].a_brakes[1] = a0;
-                    std::tie(p0, v0, a0) = Profile::integrate(profiles[dof].t_brakes[1], p0, v0, a0, profiles[dof].j_brakes[1]);
+                    profiles[dof].p_brakes[1] = p0s[dof];
+                    profiles[dof].v_brakes[1] = v0s[dof];
+                    profiles[dof].a_brakes[1] = a0s[dof];
+                    std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(profiles[dof].t_brakes[1], p0s[dof], v0s[dof], a0s[dof], profiles[dof].j_brakes[1]);
                 }
             }
 
-            if (!RuckigEquation::get_profile(profiles[dof], p0, v0, a0, input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof])) {
-                throw std::runtime_error("Error while calculating an online trajectory for: "
+            bool found_profile = RuckigStep1::get_profile(profiles[dof], p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+            if (!found_profile) {
+                throw std::runtime_error("Error in Step 1 while calculating an online trajectory for: "
                     + std::to_string(input.current_position[dof]) + ", " + std::to_string(input.current_velocity[dof]) + ", " + std::to_string(input.current_acceleration[dof])
                     + " targets: " + std::to_string(input.target_position[dof])
                     + " limits: " + std::to_string(input.max_velocity[dof]) + ", " + std::to_string(input.max_acceleration[dof]) + ", " + std::to_string(input.max_jerk[dof])
-                    + " profile input: " + std::to_string(p0) + ", " + std::to_string(v0) + ", " + std::to_string(a0)
+                    + " profile input: " + std::to_string(p0s[dof]) + ", " + std::to_string(v0s[dof]) + ", " + std::to_string(a0s[dof])
                 );
             }
             tfs[dof] = profiles[dof].t_sum[6] + profiles[dof].t_brake.value_or(0.0);
@@ -154,10 +167,15 @@ class Ruckig {
                 continue;
             }
 
-            // ToDo: Synchronize multiple DoFs
-            // double new_jerk = RuckigEquation::jerk_to_reach_target_with_times(profiles[limiting_dof].t, input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], input.target_position[dof]);
-            // profiles[dof].t = profiles[limiting_dof].t;
-            // profiles[dof].reset(input.current_position[dof], input.current_velocity[dof], input.current_acceleration[dof], new_jerk);
+            double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
+
+            const Profile old_profile = profiles[dof]; // Save profile to reset without time synchronization
+            bool found_time_synchronization = RuckigStep2::get_profile(profiles[dof], t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+            
+            // Currently only for target velocity == 0, should be an error otherwise.
+            if (!found_time_synchronization) {
+                profiles[dof] = old_profile;
+            }
         }
 
         auto stop = std::chrono::high_resolution_clock::now();
