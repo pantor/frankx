@@ -10,5 +10,6 @@ var searchData=
   ['quaternion',['quaternion',['../structmovex_1_1_affine.html#afa1a8ce32fc5511ba10375dbf0d09fc2',1,'movex::Affine']]],
   ['quintic',['Quintic',['../classmovex_1_1_quintic.html',1,'movex::Quintic&lt; DOFs &gt;'],['../classmovex_1_1_quintic.html#a66a473d32252272096503bc27c6e5cde',1,'movex::Quintic::Quintic()']]],
   ['quintic_2ehpp',['quintic.hpp',['../quintic_8hpp.html',1,'']]],
+  ['quintic_3c_20robottype_3a_3adegrees_5fof_5ffreedoms_20_3e',['Quintic&lt; RobotType::degrees_of_freedoms &gt;',['../classmovex_1_1_quintic.html',1,'movex']]],
   ['quinticsegment',['QuinticSegment',['../classmovex_1_1_quintic_segment.html',1,'movex']]]
 ];

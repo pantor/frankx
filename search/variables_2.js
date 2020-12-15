@@ -7,6 +7,7 @@ var searchData=
   ['control_5frate',['control_rate',['../classfrankx_1_1_robot.html#a57985cecbaf10441242a7bd40d2859c9',1,'frankx::Robot']]],
   ['controller_5fmode',['controller_mode',['../classfrankx_1_1_robot.html#ac948d9620b4be02b97df44e35dea4057',1,'frankx::Robot']]],
   ['current_5facceleration',['current_acceleration',['../structmovex_1_1_input_parameter.html#ab1bfa3a2ae9f2e1570f87c0e787513ce',1,'movex::InputParameter']]],
+  ['current_5fmotion',['current_motion',['../structfrankx_1_1_waypoint_motion_generator.html#add6dd8277e8033f6b29b23203e7d4c51',1,'frankx::WaypointMotionGenerator']]],
   ['current_5fposition',['current_position',['../structmovex_1_1_input_parameter.html#a2a30f8ff34d3f188d1d4c83e0286b0bf',1,'movex::InputParameter']]],
   ['current_5fvelocity',['current_velocity',['../structmovex_1_1_input_parameter.html#ad498e1180dba0f127598b644fd04eca7',1,'movex::InputParameter']]]
 ];

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['data',['data',['../structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6',1,'movex::Affine']]],
+  ['damping',['damping',['../structfrankx_1_1_impedance_motion_generator.html#a6bf0566fec9d17ff9db2beb1ef720631',1,'frankx::ImpedanceMotionGenerator']]],
+  ['data',['data',['../structfrankx_1_1_impedance_motion_generator.html#a0dd864d8548df6d0b40d5bb29505f703',1,'frankx::ImpedanceMotionGenerator::data()'],['../structfrankx_1_1_joint_motion_generator.html#add39dfe66815682db18ea393138ebad2',1,'frankx::JointMotionGenerator::data()'],['../structfrankx_1_1_path_motion_generator.html#a56585875a3805bc27d7e94589187aa4a',1,'frankx::PathMotionGenerator::data()'],['../structfrankx_1_1_waypoint_motion_generator.html#a9bcf2a5e168ed13f6d726f7d141a5bce',1,'frankx::WaypointMotionGenerator::data()'],['../structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6',1,'movex::Affine::data()']]],
   ['dddq',['dddq',['../classmovex_1_1_path.html#aeb9b8ad2a1133394974b93ac3c916609',1,'movex::Path::dddq()'],['../structmovex_1_1_segment.html#aff3479bc167e3ba387ed2f46d4bb133b',1,'movex::Segment::dddq()']]],
   ['ddds',['ddds',['../structmovex_1_1_trajectory_1_1_state.html#afd555ae243eadaa0a89e6a3cfde1160e',1,'movex::Trajectory::State']]],
   ['ddq',['ddq',['../classmovex_1_1_path.html#a398f0d1b8094f7a4eab2b30f33b298ad',1,'movex::Path::ddq()'],['../structmovex_1_1_segment.html#a1cecf26591324925c6a5ed2191a04f37',1,'movex::Segment::ddq()']]],

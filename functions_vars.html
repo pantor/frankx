@@ -111,6 +111,9 @@ $(function() {
 <li>current_acceleration
 : <a class="el" href="structmovex_1_1_input_parameter.html#ab1bfa3a2ae9f2e1570f87c0e787513ce">movex::InputParameter&lt; DOFs &gt;</a>
 </li>
+<li>current_motion
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#add6dd8277e8033f6b29b23203e7d4c51">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>current_position
 : <a class="el" href="structmovex_1_1_input_parameter.html#a2a30f8ff34d3f188d1d4c83e0286b0bf">movex::InputParameter&lt; DOFs &gt;</a>
 </li>
@@ -121,8 +124,15 @@ $(function() {
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
+<li>damping
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a6bf0566fec9d17ff9db2beb1ef720631">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>data
-: <a class="el" href="structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6">movex::Affine</a>
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a0dd864d8548df6d0b40d5bb29505f703">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_joint_motion_generator.html#add39dfe66815682db18ea393138ebad2">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_path_motion_generator.html#a56585875a3805bc27d7e94589187aa4a">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a9bcf2a5e168ed13f6d726f7d141a5bce">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structmovex_1_1_affine.html#ac7063918cd1f986dc402777925a790d6">movex::Affine</a>
 </li>
 <li>ddds
 : <a class="el" href="structmovex_1_1_trajectory_1_1_state.html#afd555ae243eadaa0a89e6a3cfde1160e">movex::Trajectory::State</a>
@@ -198,6 +208,11 @@ $(function() {
 <li>force_constraints
 : <a class="el" href="structmovex_1_1_impedance_motion.html#a04ea20efb7d6089e38a9253a961e4d17">movex::ImpedanceMotion</a>
 </li>
+<li>frame
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a5b89ed133dc084c4c8ac7467ae7e3139">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_path_motion_generator.html#a1a5bdc2961beadc9f490638006e7cba0">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a85019e579077f6f4ffd1a6ef5d586d2e">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 </ul>
 
 
@@ -225,9 +240,19 @@ $(function() {
 
 
 <h3><a id="index_i"></a>- i -</h3><ul>
+<li>initial_affine
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#ad0b9b9c55afb93fcf360b799b6d7d3b9">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>initial_state
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#abcbf2100d425543926ac07e0a5bc2686">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>initialized
 : <a class="el" href="structmovex_1_1_impedance_motion_1_1_linear_target_motion.html#abebdc18dd29efe8903fa9a07d8578f26">movex::ImpedanceMotion::LinearTargetMotion</a>
 , <a class="el" href="structmovex_1_1_impedance_motion_1_1_spiral_target_motion.html#ab890b72da49c1738451e00c7849ec4ac">movex::ImpedanceMotion::SpiralTargetMotion</a>
+</li>
+<li>input_para
+: <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a947e06a360623e172265b08feee9e7e7">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a8481187f42e9c2a9005858abc86f980b">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>is_active
 : <a class="el" href="structmovex_1_1_impedance_motion.html#aab12181b9715bf10232da9215f7d29db">movex::ImpedanceMotion</a>
@@ -245,6 +270,9 @@ $(function() {
 <li>jerk_rel
 : <a class="el" href="classfrankx_1_1_robot.html#acad76f1aa3952698b6c861e20a44bf25">frankx::Robot</a>
 , <a class="el" href="structmovex_1_1_motion_data.html#adefb7f5ec27b5e9730e91a2c861f88c9">movex::MotionData</a>
+</li>
+<li>joint_positions
+: <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a01d96c3305e14cf01087b809d3e1baca">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>joint_stiffness
 : <a class="el" href="structmovex_1_1_impedance_motion.html#ab5ab4c23bb931cddf5d9664e86ccc545">movex::ImpedanceMotion</a>
@@ -294,6 +322,9 @@ $(function() {
 <li>max_joint_acceleration
 : <a class="el" href="classfrankx_1_1_robot.html#a06372773798b061d6fbec9f58dd295db">frankx::Robot</a>
 </li>
+<li>max_joint_jerk
+: <a class="el" href="classfrankx_1_1_robot.html#a1fec3c3624cadc471e4aeb888dedd68c">frankx::Robot</a>
+</li>
 <li>max_joint_velocity
 : <a class="el" href="classfrankx_1_1_robot.html#a993f27dfdacd3c65e5b72fa9fbeee6bf">frankx::Robot</a>
 </li>
@@ -330,6 +361,18 @@ $(function() {
 <li>minimum_time
 : <a class="el" href="structmovex_1_1_waypoint.html#ab8a11bab51f621104fe9129badecf208">movex::Waypoint</a>
 </li>
+<li>model
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a061a7f9c282b3615ff83323faf617392">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>motion
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a398dfd3ce9140acd237b1a46ff69d17b">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_joint_motion_generator.html#acf8ae32520a0c3f9749ffa2c5a621f00">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_path_motion_generator.html#a8a68aa28a42e4dfb94ec0203940b5990">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#aa29082423c8985a58f53ae8a502a78b4">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>motion_init_time
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#aca517f03b3d8a4b7e4427ea8cb055366">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
 </ul>
 
 
@@ -359,6 +402,22 @@ $(function() {
 <li>O_T_EE_c
 : <a class="el" href="structmovex_1_1_robot_state.html#a35af658985387e159c6969854c25ca17">movex::RobotState&lt; DoFs, has_elbow, has_force_sensor &gt;</a>
 </li>
+<li>old_affine
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a900b0362eaa33a4b864b09cddcc74248">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>old_elbow
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a7bead35a8694ee3ecc8fb70beb70d9d5">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>old_vector
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#aa496f6cd2bffbd02d3da854266be54f5">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>orientation_d
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#abb9f6868ab64bae3c27c7e2b93c207fc">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>output_para
+: <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a390d14909fa99eb2e0abeb61b555e295">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a5a5ae2767b1b879863bbd7d624874e3b">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 </ul>
 
 
@@ -374,6 +433,9 @@ $(function() {
 </li>
 <li>path
 : <a class="el" href="structmovex_1_1_trajectory.html#a42cbd7f1c7ed728c6da97bfa9cf0cb9f">movex::Trajectory</a>
+</li>
+<li>position_d
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#ac6c25f84ea1a51474a36a305cedb25e1">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
 </li>
 </ul>
 
@@ -410,6 +472,10 @@ $(function() {
 <li>repeat_on_error
 : <a class="el" href="classfrankx_1_1_robot.html#af27224338975377ed4177f2107627e22">frankx::Robot</a>
 </li>
+<li>result
+: <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a0a2274aae526b6cc91ed168f206f87d2">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#ac03b1db1a7b68d3b6b407d0d1c0c1491">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>return_when_finished
 : <a class="el" href="structmovex_1_1_waypoint_motion.html#ad1c624eb9d8ddc09d03b751a06f4a0b1">movex::WaypointMotion</a>
 </li>
@@ -418,6 +484,12 @@ $(function() {
 </li>
 <li>rm
 : <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a2564b4489016fda72aa7284d014e0503">movex::QuarticBlendSegment</a>
+</li>
+<li>robot
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#ae7331e772d7c881250f61fc64ed37e15">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a76a0a1f2986abb7a68fe27a9035def72">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_path_motion_generator.html#a19bb3696ea9b71c8d56f2f89852f1769">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a2aef06d811366eb220e6754b5c8aa8bd">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>rotational_stiffness
 : <a class="el" href="structmovex_1_1_impedance_motion.html#a8607364f426c5ae938221cd25843b852">movex::ImpedanceMotion</a>
@@ -428,6 +500,9 @@ $(function() {
 <h3><a id="index_s"></a>- s -</h3><ul>
 <li>s
 : <a class="el" href="structmovex_1_1_trajectory_1_1_state.html#aeea987cc2b630019419a958fb41c4fcf">movex::Trajectory::State</a>
+</li>
+<li>s_current
+: <a class="el" href="structfrankx_1_1_path_motion_generator.html#aff1162b9094da592bf90eabbec0ceae3">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>s_length
 : <a class="el" href="classmovex_1_1_quartic_blend_segment.html#a119435750713c3b733b6ea46fa91cfd8">movex::QuarticBlendSegment</a>
@@ -446,6 +521,9 @@ $(function() {
 </li>
 <li>states
 : <a class="el" href="structmovex_1_1_trajectory.html#ad68e7c54f1c2559349d6484a9158f425">movex::Trajectory</a>
+</li>
+<li>stiffness
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#a73c87e95ee29afc5a364b296aa4c54a4">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>stop_at_python_signal
 : <a class="el" href="classfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12">frankx::Robot</a>
@@ -483,20 +561,40 @@ $(function() {
 <li>target_velocity
 : <a class="el" href="structmovex_1_1_input_parameter.html#ad700dabcb1daf79765ba0896944fe48e">movex::InputParameter&lt; DOFs &gt;</a>
 </li>
+<li>time
+: <a class="el" href="structfrankx_1_1_impedance_motion_generator.html#af6ea97ce586a657da12bbed9f50b4758">frankx::ImpedanceMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a28deb845b95fd8c87d950311377156e0">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_path_motion_generator.html#aa89c245b42d645771a9a52908dd95f78">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a1a442a724abcffeb711f5313b55ea515">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>token
 : <a class="el" href="classfrankx_1_1robot_1_1_robot.html#ab9855cafe89a427caed1e151944bd8fe">frankx.robot.Robot</a>
+</li>
+<li>trajectory
+: <a class="el" href="structfrankx_1_1_path_motion_generator.html#a94ea677928d998438e7d0d70c28ed850">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>trajectory_generator
+: <a class="el" href="structfrankx_1_1_joint_motion_generator.html#a65cbf917734408179bb966c17819f00b">frankx::JointMotionGenerator&lt; RobotType &gt;</a>
+, <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a6f9df78d6e9b6cdb329f16d6539270b3">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>trajectory_index
+: <a class="el" href="structfrankx_1_1_path_motion_generator.html#ab25bdc286fded79e11bdbf95c73a04f5">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
 </li>
 <li>translational_stiffness
 : <a class="el" href="structmovex_1_1_impedance_motion.html#a5a624668ac5f3b42c063f79638a02f66">movex::ImpedanceMotion</a>
 </li>
 <li>type
 : <a class="el" href="structmovex_1_1_impedance_motion.html#af859f1de6fc9c03c54cb8a05c0f7f98a">movex::ImpedanceMotion</a>
+, <a class="el" href="structmovex_1_1_input_parameter.html#a7d48534e4a2bd6b7528d941e3d59b383">movex::InputParameter&lt; DOFs &gt;</a>
 , <a class="el" href="structmovex_1_1_profile.html#a568f67119fc1d47d5436271009bab54c">movex::Profile</a>
 </li>
 </ul>
 
 
 <h3><a id="index_u"></a>- u -</h3><ul>
+<li>use_elbow
+: <a class="el" href="structfrankx_1_1_path_motion_generator.html#a9888ea3ce8b423cfc5c499a2ccf34868">frankx::PathMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>user
 : <a class="el" href="classfrankx_1_1robot_1_1_robot.html#a02d03bf0206ac640d4e2259f34928844">frankx.robot.Robot</a>
 </li>
@@ -522,12 +620,25 @@ $(function() {
 <li>waypoint_action
 : <a class="el" href="structmovex_1_1_reaction.html#ac202113c27856185afe51c5e2924d213">movex::Reaction</a>
 </li>
+<li>waypoint_has_elbow
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a8520e477f71fdd044d7c8a011a3a8036">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
+<li>waypoint_iterator
+: <a class="el" href="structfrankx_1_1_waypoint_motion_generator.html#a25013c503885649527eb8c1a1fab7c52">frankx::WaypointMotionGenerator&lt; RobotType &gt;</a>
+</li>
 <li>waypoint_motion
 : <a class="el" href="structmovex_1_1_reaction.html#ac66f6fcdcc1a122694e040eced1f6676">movex::Reaction</a>
 </li>
 <li>waypoints
 : <a class="el" href="structmovex_1_1_path_motion.html#a1ac82f97f1efeb20c7425136ef418c04">movex::PathMotion</a>
 , <a class="el" href="structmovex_1_1_waypoint_motion.html#ac301a50104fc2b005f0b74d20ed513ac">movex::WaypointMotion</a>
+</li>
+</ul>
+
+
+<h3><a id="index_z"></a>- z -</h3><ul>
+<li>zero_velocity
+: <a class="el" href="structmovex_1_1_waypoint.html#a60b5aba7fa5a772655f9b5d949411d41">movex::Waypoint</a>
 </li>
 </ul>
 </div><!-- contents -->

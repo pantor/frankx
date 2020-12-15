@@ -83,7 +83,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_input_parameter.html">InputParameter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_joint_motion.html">JointMotion</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A motion in the joint space.  <a href="structmovex_1_1_joint_motion.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_linear_motion.html">LinearMotion</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,7 +123,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovex_1_1_ruckig.html">Ruckig</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>RuckigEquation</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_step1.html">RuckigStep1</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_ruckig_step2.html">RuckigStep2</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_segment.html">Segment</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +193,8 @@ Functions</h2></td></tr>
 <tr class="separator:a99dd6fafe1196106761ed604b6633b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6d15f0d3fca4196ac508ce05f22c4ea"><td class="memItemLeft" align="right" valign="top">std::complex&lt; long double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#ab6d15f0d3fca4196ac508ce05f22c4ea">PowerComplexLong</a> (std::complex&lt; long double &gt; v, double e)</td></tr>
 <tr class="separator:ab6d15f0d3fca4196ac508ce05f22c4ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac99f916d0cb0610b58d943523505dd5b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#ac99f916d0cb0610b58d943523505dd5b">eval</a> (std::array&lt; double, 6 &gt; polynom, double t)</td></tr>
+<tr class="separator:ac99f916d0cb0610b58d943523505dd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a493dbc5644c652892274fc0363d387d7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemovex.html#a493dbc5644c652892274fc0363d387d7">v_at_t</a> (double v0, double a0, double j, double t)</td></tr>
 <tr class="separator:a493dbc5644c652892274fc0363d387d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -361,6 +364,42 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac99f916d0cb0610b58d943523505dd5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac99f916d0cb0610b58d943523505dd5b">&#9670;&nbsp;</a></span>eval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double movex::eval </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; double, 6 &gt;&#160;</td>
+          <td class="paramname"><em>polynom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
