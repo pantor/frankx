@@ -10,6 +10,7 @@
 namespace movex {
 
 struct Profile {
+    //! Profile names indicate which limits are reached.
     enum class Type {
         UP_ACC0_ACC1_VEL, UP_VEL, UP_ACC0, UP_ACC1, UP_ACC0_ACC1, UP_ACC0_VEL, UP_ACC1_VEL, UP_NONE,
         DOWN_ACC0_ACC1_VEL, DOWN_VEL, DOWN_ACC0, DOWN_ACC1, DOWN_ACC0_ACC1, DOWN_ACC0_VEL, DOWN_ACC1_VEL, DOWN_NONE
@@ -26,46 +27,56 @@ struct Profile {
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
     void set(double p0, double v0, double a0, std::array<double, 7> j);
-    void reset(double p0, double v0, double a0, double base_jerk);
     bool check(double pf, double vf, double vMax, double aMax) const;
 
+    //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j);
 };
 
 
 struct RuckigStep1 {
     static bool time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
     static bool time_down_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_down_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_down_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
     static bool get_profile(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-
-    static double jerk_to_reach_target_with_times(const std::array<double, 7>& t, double p0, double v0, double a0, double pf);
 };
 
 
 struct RuckigStep2 {
     static bool time_up_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_up_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
     static bool time_down_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
     static bool time_down_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 
     static bool get_profile(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
 };
@@ -162,19 +173,27 @@ class Ruckig {
         size_t limiting_dof = std::distance(tfs.begin(), tf_max_pointer);
         tf = *tf_max_pointer;
 
-        for (size_t dof = 0; dof < DOFs; dof += 1) {
-            if (!input.enabled[dof] || dof == limiting_dof) {
-                continue;
-            }
+        if (tf > 0.0) {
+            for (size_t dof = 0; dof < DOFs; dof += 1) {
+                if (!input.enabled[dof] || dof == limiting_dof) {
+                    continue;
+                }
 
-            double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
+                double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
-            const Profile old_profile = profiles[dof]; // Save profile to reset without time synchronization
-            bool found_time_synchronization = RuckigStep2::get_profile(profiles[dof], t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
-            
-            // Currently only for target velocity == 0, should be an error otherwise.
-            if (!found_time_synchronization) {
-                profiles[dof] = old_profile;
+                const Profile old_profile = profiles[dof]; // Save profile to reset without time synchronization
+                bool found_time_synchronization = RuckigStep2::get_profile(profiles[dof], t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+                
+                // Currently only for target velocity == 0, should be an error otherwise.
+                if (!found_time_synchronization) {
+                    profiles[dof] = old_profile;
+                    throw std::runtime_error("Error in Step 2 while calculating an online trajectory for: "
+                        + std::to_string(input.current_position[dof]) + ", " + std::to_string(input.current_velocity[dof]) + ", " + std::to_string(input.current_acceleration[dof])
+                        + " targets: " + std::to_string(input.target_position[dof])
+                        + " limits: " + std::to_string(input.max_velocity[dof]) + ", " + std::to_string(input.max_acceleration[dof]) + ", " + std::to_string(input.max_jerk[dof])
+                        + " profile input: " + std::to_string(p0s[dof]) + ", " + std::to_string(v0s[dof]) + ", " + std::to_string(a0s[dof])
+                    );
+                }
             }
         }
 
@@ -202,23 +221,35 @@ public:
             return Result::Error;
         }
 
+        atTime(t, output);
         if (t + delta_time > tf) {
-            output.new_position = input.target_position;
-            output.new_velocity = input.target_velocity;
-            output.new_acceleration = input.target_acceleration;
             return Result::Finished;
         }
 
+        current_input.current_position = output.new_position;
+        current_input.current_velocity = output.new_velocity;
+        current_input.current_acceleration = output.new_acceleration;
+        return Result::Working;
+    }
+
+    void atTime(double time, OutputParameter<DOFs>& output) {
+        if (time + delta_time > tf) {
+            output.new_position = current_input.target_position;
+            output.new_velocity = current_input.target_velocity;
+            output.new_acceleration = current_input.target_acceleration;
+            return;
+        }
+
         for (size_t dof = 0; dof < DOFs; dof += 1) {
-            if (!input.enabled[dof]) {
-                output.new_acceleration[dof] = input.current_acceleration[dof];
-                output.new_velocity[dof] = input.current_velocity[dof];
-                output.new_position[dof] = input.current_position[dof];
+            if (!current_input.enabled[dof]) {
+                output.new_acceleration[dof] = current_input.current_acceleration[dof];
+                output.new_velocity[dof] = current_input.current_velocity[dof];
+                output.new_position[dof] = current_input.current_position[dof];
             }
 
             auto& p = profiles[dof];
 
-            double t_diff = t;
+            double t_diff = time;
             if (p.t_brake.has_value()) {
                 if (t_diff < p.t_brake.value()) {
                     size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
@@ -249,11 +280,6 @@ public:
 
             std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
         }
-
-        current_input.current_position = output.new_position;
-        current_input.current_velocity = output.new_velocity;
-        current_input.current_acceleration = output.new_acceleration;
-        return Result::Working;
     }
 };
 

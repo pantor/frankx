@@ -15,6 +15,7 @@
 
 using namespace movex;
 using Vec1 = InputParameter<1>::Vector;
+using Vec2 = InputParameter<2>::Vector;
 using Vec = InputParameter<3>::Vector;
 
 
@@ -77,6 +78,22 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
     OutputParameter<DOFs> output_comparison;
     auto result_comparison = otg_comparison.update(input, output_comparison);
     CHECK( output.duration == Approx(output_comparison.duration) );
+
+    double half_duration = output.duration / 2;
+    otg.atTime(half_duration, output);
+    otg_comparison.atTime(half_duration, output_comparison);
+
+    for (size_t dof = 0; dof < DOFs; dof += 1) {
+        CHECK_FALSE( std::isnan(output.new_position[dof]) );
+        CHECK_FALSE( std::isnan(output.new_velocity[dof]) );
+        CHECK_FALSE( std::isnan(output.new_acceleration[dof]) );
+
+        if constexpr (DOFs <= 2) {
+            CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-7) );
+            CHECK( output.new_velocity[dof] == Approx(output_comparison.new_velocity[dof]).margin(1e-7) );
+            CHECK( output.new_acceleration[dof] == Approx(output_comparison.new_acceleration[dof]).margin(1e-7) );
+        }
+    }
 }
 
 
@@ -232,7 +249,29 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    SECTION("Comparison with Reflexxes with 3 DoF") {
+    SECTION("Comparison with Reflexxes with 2 DoF") {
+        Ruckig<2> otg {0.005};
+        Reflexxes<2> rflx {0.005};
+        InputParameter<2> input;
+
+        srand(48);
+        std::default_random_engine gen;
+        std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+        for (size_t i = 0; i < 0; i += 1) {
+            input.current_position = Vec2::Random();
+            input.current_velocity = dist(gen) < 0.9 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();
+            input.current_acceleration = dist(gen) < 0.8 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();
+            input.target_position = Vec2::Random();
+            input.max_velocity = 10 * Vec2::Random().array().abs() + 0.1;
+            input.max_acceleration = 10 * Vec2::Random().array().abs() + 0.1;
+            input.max_jerk = 10 * Vec2::Random().array().abs() + 0.1;
+
+            check_comparison(otg, input, rflx);
+        }
+    }
+
+    /* SECTION("Comparison with Reflexxes with 3 DoF") {
         Ruckig<3> otg {0.005};
         Reflexxes<3> rflx {0.005};
         InputParameter<3> input;
@@ -252,6 +291,6 @@ TEST_CASE("Ruckig") {
 
             check_comparison(otg, input, rflx);
         }
-    }
+    } */
 #endif
 }

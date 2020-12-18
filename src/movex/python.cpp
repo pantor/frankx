@@ -97,13 +97,15 @@ PYBIND11_MODULE(_movex, m) {
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
         .def_readonly("last_calculation_duration", &Ruckig<DOFs>::last_calculation_duration)
-        .def("update", &Ruckig<DOFs>::update);
+        .def("update", &Ruckig<DOFs>::update)
+        .def("at_time", &Ruckig<DOFs>::atTime);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
-        .def("update", &Reflexxes<DOFs>::update);
+        .def("update", &Reflexxes<DOFs>::update)
+        .def("at_time", &Reflexxes<DOFs>::atTime);
 #endif
 
     py::class_<Path>(m, "Path")

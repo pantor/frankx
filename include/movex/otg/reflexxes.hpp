@@ -111,6 +111,29 @@ public:
         }
         return Result::Working;
     }
+
+    void atTime(double time, OutputParameter<DOFs>& output) {
+        switch (current_input.type) {
+        case InputParameter<DOFs>::Type::Position: {
+            rml->RMLPositionAtAGivenSampleTime(time, output_parameters.get());
+
+            for (size_t i = 0; i < DOFs; i += 1) {
+                output.new_position(i) = output_parameters->NewPositionVector->VecData[i];
+                output.new_velocity(i) = output_parameters->NewVelocityVector->VecData[i];
+                output.new_acceleration(i) = output_parameters->NewAccelerationVector->VecData[i];
+            }
+        } break;
+        case InputParameter<DOFs>::Type::Velocity: {
+            rml->RMLVelocityAtAGivenSampleTime(time, output_vel_parameters.get());
+
+            for (size_t i = 0; i < DOFs; i += 1) {
+                output.new_position(i) = output_vel_parameters->NewPositionVector->VecData[i];
+                output.new_velocity(i) = output_vel_parameters->NewVelocityVector->VecData[i];
+                output.new_acceleration(i) = output_vel_parameters->NewAccelerationVector->VecData[i];
+            }
+        } break;
+        }
+    }
 };
 
 } // namespace movex
