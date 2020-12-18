@@ -12,5 +12,6 @@ var searchData=
   ['affine_2ehpp',['affine.hpp',['../affine_8hpp.html',1,'']]],
   ['angles',['angles',['../structmovex_1_1_affine.html#a6ec17ad546581b34136b2f3e2c5ef88a',1,'movex::Affine']]],
   ['array',['array',['../structmovex_1_1_affine.html#a5ed486db5614942086637173f48cb359',1,'movex::Affine']]],
+  ['attime',['atTime',['../classmovex_1_1_reflexxes.html#abf61d6c30078ed3714d5400c105973fc',1,'movex::Reflexxes::atTime()'],['../classmovex_1_1_ruckig.html#a74822c453503223306f8adada44bf096',1,'movex::Ruckig::atTime()']]],
   ['axis',['Axis',['../structmovex_1_1_impedance_motion.html#ad06da29c114d8b2ad1cd8888097a2f4f',1,'movex::ImpedanceMotion']]]
 ];

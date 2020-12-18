@@ -8,7 +8,7 @@ var searchData=
   ['end',['end',['../classmovex_1_1_line_segment.html#a59ac4efd523620ba142a74c8db858a22',1,'movex::LineSegment']]],
   ['error',['Error',['../namespacemovex.html#a6fd778bb7e86cd4c8b7e52584c82b1d7a902b0d55fddef6f8d651fe1035b7d4bd',1,'movex']]],
   ['euler',['Euler',['../structmovex_1_1_affine.html#abfe70202e371d76c1f9b4f077f34cb5e',1,'movex::Affine']]],
-  ['eval',['eval',['../namespacemovex.html#ac99f916d0cb0610b58d943523505dd5b',1,'movex']]],
+  ['eval',['eval',['../namespacemovex.html#ac99f916d0cb0610b58d943523505dd5b',1,'movex::eval(std::array&lt; double, 6 &gt; polynom, double t)'],['../namespacemovex.html#a8e74b1ced687ccbc7fec6ea5e3fefc3b',1,'movex::eval(std::array&lt; double, 7 &gt; polynom, double t)']]],
   ['exponential',['Exponential',['../structmovex_1_1_impedance_motion.html#a196ee9598086b9739a4aac92758143e2ac1e19c09f700938f0ff7f1fd4722a3ac',1,'movex::ImpedanceMotion']]],
   ['exponential_5fdecay',['exponential_decay',['../structmovex_1_1_impedance_motion.html#a5cb0ff49bf44e50b40ceeaa8e6f188fc',1,'movex::ImpedanceMotion']]]
 ];

@@ -100,21 +100,21 @@ Public Types</h2></td></tr>
 <a class="el" href="structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8fa258e964b0f83e37cff9cbc68cd27d74c">Type::DOWN_ACC1_VEL</a>, 
 <a class="el" href="structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8fa781b87e8744e6e178bf0f002a3b86475">Type::DOWN_NONE</a>
 <br />
- }</td></tr>
+ }<tr class="memdesc:a5be3a4e670b6fa1d186fba5ae757ca8f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structmovex_1_1_profile.html">Profile</a> names indicate which limits are reached.  <a href="structmovex_1_1_profile.html#a5be3a4e670b6fa1d186fba5ae757ca8f">More...</a><br /></td></tr>
+</td></tr>
 <tr class="separator:a5be3a4e670b6fa1d186fba5ae757ca8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae6eef75a155cabd5c9ed200fc8bf4bbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_profile.html#ae6eef75a155cabd5c9ed200fc8bf4bbd">set</a> (double p0, double v0, double a0, std::array&lt; double, 7 &gt; <a class="el" href="structmovex_1_1_profile.html#a3908c1f63c15a0cc228ad0387e8153e6">j</a>)</td></tr>
 <tr class="separator:ae6eef75a155cabd5c9ed200fc8bf4bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60418dab018987c9a5051e6182ec44f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_profile.html#a60418dab018987c9a5051e6182ec44f8">reset</a> (double p0, double v0, double a0, double base_jerk)</td></tr>
-<tr class="separator:a60418dab018987c9a5051e6182ec44f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04ff99fcf428b8a7b77175b9401e7626"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_profile.html#a04ff99fcf428b8a7b77175b9401e7626">check</a> (double pf, double vf, double vMax, double aMax) const</td></tr>
 <tr class="separator:a04ff99fcf428b8a7b77175b9401e7626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:accb313ecb57a083c614622996941a075"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; double, double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmovex_1_1_profile.html#accb313ecb57a083c614622996941a075">integrate</a> (double <a class="el" href="structmovex_1_1_profile.html#ab6ae45c2f780e36519581ff0612ce2ac">t</a>, double p0, double v0, double a0, double <a class="el" href="structmovex_1_1_profile.html#a3908c1f63c15a0cc228ad0387e8153e6">j</a>)</td></tr>
+<tr class="memdesc:accb313ecb57a083c614622996941a075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.  <a href="#accb313ecb57a083c614622996941a075">More...</a><br /></td></tr>
 <tr class="separator:accb313ecb57a083c614622996941a075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -168,6 +168,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="structmovex_1_1_profile.html">Profile</a> names indicate which limits are reached. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5be3a4e670b6fa1d186fba5ae757ca8fa4bde973659171e4ae31cc7ed813250f6"></a>UP_ACC0_ACC1_VEL&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a5be3a4e670b6fa1d186fba5ae757ca8faf55227ab131f39801055483b54bf7a0d"></a>UP_VEL&#160;</td><td class="fielddoc"></td></tr>
@@ -282,45 +284,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a60418dab018987c9a5051e6182ec44f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60418dab018987c9a5051e6182ec44f8">&#9670;&nbsp;</a></span>reset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void movex::Profile::reset </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>p0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>v0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>a0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>base_jerk</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration. </p>
 
 </div>
 </div>

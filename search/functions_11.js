@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['safenewton',['safeNewton',['../namespace_roots.html#ac113c00ce73f1b9bdc12a1eb0278fb9a',1,'Roots']]],
   ['set',['set',['../structmovex_1_1_profile.html#ae6eef75a155cabd5c9ed200fc8bf4bbd',1,'movex::Profile']]],
   ['set_5fa',['set_a',['../structmovex_1_1_affine.html#aa4899f2fc9d778c227303c6476cf92f2',1,'movex::Affine']]],
   ['set_5fb',['set_b',['../structmovex_1_1_affine.html#a1045b15e156f121af974305d2fd152b4',1,'movex::Affine']]],
@@ -17,8 +18,13 @@ var searchData=
   ['setnextwaypoints',['setNextWaypoints',['../structmovex_1_1_waypoint_motion.html#ac00771939e3216b341ebe866badc0187',1,'movex::WaypointMotion']]],
   ['setspiraltargetmotion',['setSpiralTargetMotion',['../structmovex_1_1_impedance_motion.html#a5b7f185e2a60f1e741064206ab52bb6e',1,'movex::ImpedanceMotion']]],
   ['settarget',['setTarget',['../structmovex_1_1_impedance_motion.html#a458a7b77010a3543fc2bc0532bf40075',1,'movex::ImpedanceMotion']]],
+  ['shrinkinterval',['shrinkInterval',['../namespace_roots.html#a7fe9b92397de2b39e92db42ff6795aa9',1,'Roots']]],
   ['slerp',['slerp',['../structmovex_1_1_affine.html#ac23d9f49c02cfa7dd5e3503be482e013',1,'movex::Affine']]],
   ['smoothie',['Smoothie',['../classmovex_1_1_smoothie.html#a634c1ddd1e017994eaeb6f2e25e5094c',1,'movex::Smoothie']]],
+  ['solvecub',['solveCub',['../namespace_roots.html#a6938c41d3e6a631965c7425049f89425',1,'Roots']]],
+  ['solvequart',['solveQuart',['../namespace_roots.html#a6c9033fa461cd5a448227d6b591e8607',1,'Roots::solveQuart(double a, double b, double c, double d, double e)'],['../namespace_roots.html#a63c64de550a8e37b48c31c45df5e3008',1,'Roots::solveQuart(const std::array&lt; double, 5 &gt; &amp;polynom)']]],
+  ['solvequartmonic',['solveQuartMonic',['../namespace_roots.html#a5765290107032cd45feb1735845032e3',1,'Roots']]],
+  ['solveresolvent',['solveResolvent',['../namespace_roots.html#a667459f4b47b151b3114ed626c11d491',1,'Roots']]],
   ['sqrt',['Sqrt',['../namespacemovex.html#ab2857ac4f73df66bc40a1fc347564662',1,'movex']]],
   ['sqrtcomplex',['SqrtComplex',['../namespacemovex.html#a21fd68c25a6e5b5e95707d22f7822271',1,'movex::SqrtComplex(double v)'],['../namespacemovex.html#a45c666a4243bec9f8f76ea980d03bea8',1,'movex::SqrtComplex(std::complex&lt; double &gt; v)']]],
   ['sqrtcomplexlong',['SqrtComplexLong',['../namespacemovex.html#ad1ce12941e01799a3f2edcd59944c97c',1,'movex::SqrtComplexLong(long double v)'],['../namespacemovex.html#a99dd6fafe1196106761ed604b6633b8a',1,'movex::SqrtComplexLong(std::complex&lt; long double &gt; v)']]],

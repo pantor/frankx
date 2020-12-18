@@ -7,6 +7,7 @@ var searchData=
   ['robot_2ehpp',['robot.hpp',['../robot_8hpp.html',1,'']]],
   ['robot_2epy',['robot.py',['../robot_8py.html',1,'']]],
   ['robot_5fstate_2ehpp',['robot_state.hpp',['../robot__state_8hpp.html',1,'']]],
+  ['roots_2ehpp',['roots.hpp',['../roots_8hpp.html',1,'']]],
   ['ruckig_2ecpp',['ruckig.cpp',['../ruckig_8cpp.html',1,'']]],
   ['ruckig_2ehpp',['ruckig.hpp',['../ruckig_8hpp.html',1,'']]]
 ];
