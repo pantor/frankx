@@ -10,6 +10,8 @@
 #include <movex/otg/ruckig.hpp>
 #include <movex/otg/smoothie.hpp>
 #include <movex/path/path.hpp>
+#include <movex/path/time_parametrization.hpp>
+#include <movex/path/trajectory.hpp>
 
 #ifdef WITH_REFLEXXES
     #include <movex/otg/reflexxes.hpp>
@@ -21,10 +23,10 @@ using namespace pybind11::literals; // to bring in the `_a` literal
 using namespace movex;
 
 
-PYBIND11_MODULE(movex, m) {
+PYBIND11_MODULE(_movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {2};
 
     py::class_<Affine>(m, "Affine")
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
@@ -109,10 +111,29 @@ PYBIND11_MODULE(movex, m) {
         .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
         .def_property_readonly("length", &Path::get_length)
-        .def("q", &Path::q, "s"_a)
+        .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
+        .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
         .def("pdddq", &Path::pdddq, "s"_a)
+        .def("dq", &Path::dq, "s"_a, "ds"_a)
+        .def("ddq", &Path::ddq, "s"_a, "ds"_a, "dds"_a)
+        .def("dddq", &Path::dddq, "s"_a, "ds"_a, "dds"_a, "ddds"_a)
         .def("max_pddq", &Path::max_pddq)
         .def("max_pdddq", &Path::max_pdddq);
+
+    py::class_<Trajectory::State>(m, "TrajectoryState")
+        .def_readwrite("t", &Trajectory::State::t)
+        .def_readwrite("s", &Trajectory::State::s)
+        .def_readwrite("ds", &Trajectory::State::ds)
+        .def_readwrite("dds", &Trajectory::State::dds)
+        .def_readwrite("ddds", &Trajectory::State::ddds);
+
+    py::class_<Trajectory>(m, "Trajectory")
+        .def_readwrite("path", &Trajectory::path)
+        .def_readwrite("states", &Trajectory::states);
+
+    py::class_<TimeParametrization>(m, "TimeParametrization")
+        .def(py::init<double>(), "delta_time"_a)
+        .def("parametrize", &TimeParametrization::parametrize, "path"_a, "max_velocity"_a, "max_accleration"_a, "max_jerk"_a);
 }

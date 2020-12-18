@@ -113,6 +113,7 @@ PYBIND11_MODULE(_frankx, m) {
         .export_values();
 
     waypoint.def(py::init<>())
+        .def(py::init<bool>(), "zero_velocity"_a)
         .def(py::init<double>(), "minimum_time"_a)
         .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
@@ -127,9 +128,17 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("target", &JointMotion::target);
 
     py::class_<PathMotion>(m, "PathMotion")
+        .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
         .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
-        .def_readonly("waypoints", &PathMotion::waypoints)
-        .def_readonly("blend_max_distance", &PathMotion::blend_max_distance);
+        .def_readonly("waypoints", &PathMotion::waypoints);
+
+    // py::class_<LinearMotion, PathMotion>(m, "LinearMotion")
+    //     .def(py::init<const Affine&>(), "target"_a)
+    //     .def(py::init<const Affine&, double>(), "target"_a, "elbow"_a);
+
+    // py::class_<LinearRelativeMotion, PathMotion>(m, "LinearRelativeMotion")
+    //     .def(py::init<const Affine&>(), "affine"_a)
+    //     .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a);
 
     py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
         .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)
@@ -326,6 +335,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def("recover_from_errors", &Robot::recoverFromErrors)
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
+        // .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
+        // .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "frame"_a = Affine())
         .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())

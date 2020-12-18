@@ -30,14 +30,10 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
-<!-- <div align="center">
-  <center><img width="220" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/example.png"></div></center>
-</div> -->
-
 
 ## Installation
 
-For using frankx with Python, you can start by
+To start using frankx with Python, you can use pip via
 ```bash
 pip install frankx
 ```
@@ -59,6 +55,33 @@ cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TY
 
 To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
 
+### Using Docker
+
+#### Building the Image
+
+To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
+
+```bash
+git clone https://github.com/pantor/frankx.git
+cd frankx/
+docker build -t pantor/frankx -f docker/Dockerfile .
+```
+
+To use another version of libfranka than default (v.0.7.0) simply add the build arg to the command, e.g.:
+
+```bash
+docker build -t pantor/frankx --build-arg libfranka_version=0.7.1 -f docker/Dockerfile .
+```
+
+#### Running the Containers
+
+To run the container simply:
+
+```bash
+docker run -it --rm --network=host --privileged pantor/frankx
+```
+
+The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
 
 ## Tutorial
 
@@ -166,7 +189,7 @@ m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))
 m5 = WaypointMotion([
   Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),
   # The following waypoint is relative to the prior one
-  Waypoint(Affine(0.0, 0.1, 0.0, Waypoint.ReferenceType.Relative))
+  Waypoint(Affine(0.0, 0.1, 0.0), Waypoint.ReferenceType.Relative)
 ])
 
 # Hold the position for [s]
@@ -278,9 +301,36 @@ if (is_grasping) {
 The Python API should be very straight-forward for the Gripper class.
 
 
+## Movex
+
+We seperated some essential algorithms for robot motions into the standalone C++ library *movex*.
+
+
+### Online Trajectory Generators
+
+All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:
+
+
+| Name              | Input                                                                                                                                  | Details                                                                                        |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, *(Velocity for 1 DoF)*<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
+| Smoothie          | Current Position<br>Target Position<br>Dynamic Scaling                                                                                      | Used by Franka in [examples](https://github.com/frankaemika/libfranka/blob/master/examples/examples_common.h).                                                                    |
+| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds.<br>Quite slow.                                      |
+| [Reflexxes](http://reflexxes.ws/)<br> Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
+| [Reflexxes](http://reflexxes.ws/)<br> Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and costly for non-academic licenses.<br>Time-optimal with given constraints. |
+
+
+**Ruckig** is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from *any* current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.
+
+
+## Path
+
+The path library is able to define paths from waypoints and blend them for a smooth second derivative. We are working on a third-order time-parametrization algorithm.
+
+
 ## Documentation
 
-We have a generated documentation at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, you can find multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
+An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
 
 
 ## Development

@@ -3,7 +3,7 @@ from pathlib import Path as Pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-from movex import Affine, Path
+from _movex import Affine, Path
 
 
 def walk_through_path(path, s_diff=0.001):
@@ -16,16 +16,7 @@ def walk_through_path(path, s_diff=0.001):
     return np.array(s_list), np.array(q_list), np.array(pdq_list), np.array(pddq_list)
 
 
-if __name__ == '__main__':
-    p = Path([
-        Affine(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-        Affine(1.0, 0.0, 0.5, 0.0, 0.0, 0.0),
-        Affine(1.0, 1.0, 1.0, 0.0, 0.0, -3.0),
-    ], blend_max_distance=0.06)
-
-    print(p.max_pddq())
-    print(p.max_pdddq())
-
+def plot_path(p: Path):
     s_list, qaxis, pdqaxis, pddqaxis = walk_through_path(p)
     plt.figure(figsize=(8.0, 2.0 + 3.0 * p.degrees_of_freedom), dpi=120)
 
@@ -42,3 +33,16 @@ if __name__ == '__main__':
 
     # plt.show()
     plt.savefig(Pathlib(__file__).parent.parent / 'build' / 'path.png')
+
+
+if __name__ == '__main__':
+    p = Path([
+        Affine(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+        Affine(1.0, 0.0, 0.5, 0.0, 0.0, 0.0),
+        Affine(1.0, 1.0, 1.0, 0.0, 0.0, -3.0),
+    ], blend_max_distance=0.06)
+
+    print(p.max_pddq())
+    print(p.max_pdddq())
+    plot_path(p)
+    

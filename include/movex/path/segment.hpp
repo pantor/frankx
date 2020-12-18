@@ -18,6 +18,18 @@ struct Segment {
     virtual Vector7d pddq(double s) const = 0;
     virtual Vector7d pdddq(double s) const = 0;
 
+    Vector7d dq(double s, double ds) const {
+        return pdq(s) * ds;
+    }
+
+    Vector7d ddq(double s, double ds, double dds) const {
+        return pddq(s) * std::pow(ds, 2) + pdq(s) * dds;
+    }
+
+    Vector7d dddq(double s, double ds, double dds, double ddds) const {
+        return 3 * ds * pddq(s) * dds + std::pow(ds, 3) * pdddq(s) + pdq(s) * ddds;
+    }
+
     virtual Vector7d max_pddq() const = 0;
     virtual Vector7d max_pdddq() const = 0;
 };
@@ -64,7 +76,7 @@ public:
 
 
 class CircleSegment: public Segment {
-    
+
 };
 
 

@@ -19,25 +19,25 @@ class Grasping:
         self.gripper = self.robot.get_gripper()
 
         self.robot.set_default_behavior()
-        self.robot.set_dynamic_rel(0.03)
+        self.robot.set_dynamic_rel(0.2)
         self.robot.recover_from_errors()
 
         joint_motion = JointMotion([-1.811944, 1.179108, 1.757100, -2.14162, -1.143369, 1.633046, -0.432171])
-        self.robot.move(joint_motion, MotionData(0.5))
+        self.robot.move(joint_motion)
 
-        self.gripper.move(self.gripper.max_width)
+        # self.gripper.move(self.gripper.max_width)
 
-        self.robot.move(LinearMotion(self.get_base(0, 0, 0), 1.75), MotionData(0.5))
+        self.robot.move(LinearMotion(self.get_base(0, 0, 0), 1.75))
 
     @staticmethod
     def get_base(x, y, z, a=0.0, b=0.0, c=0.0):
-        return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c)
+        return Affine(0.48 + x, -0.204 + y, 0.37 + z, a, b, c)
 
     def grasp(self, grasp: Grasp):
-        data_down = MotionData(0.5).with_reaction(Reaction(Measure.ForceZ < -7.0, LinearRelativeMotion(Affine(0, 0, 0))))
+        data_down = MotionData(0.6).with_reaction(Reaction(Measure.ForceZ < -7.0, LinearRelativeMotion(Affine(0, 0, 0))))
         data_up = MotionData(0.8)
 
-        self.gripper.move_async(grasp.d)
+        # self.gripper.move_async(grasp.d)
 
         motion_down = WaypointMotion([
             Waypoint(self.get_base(grasp.x, grasp.y, -0.04, grasp.a), 1.6),

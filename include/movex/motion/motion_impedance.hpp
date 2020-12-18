@@ -6,25 +6,11 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include <Eigen/Core>
-#ifdef WITH_PYTHON
-    #include <Python.h>
-#endif
-
-#include <franka/duration.h>
-#include <franka/exception.h>
-#include <franka/robot_state.h>
-
 #include <movex/affine.hpp>
-#include <frankx/measure.hpp>
-#include <frankx/motion_data.hpp>
-#include <frankx/utils.hpp>
-#include <frankx/robot.hpp>
+#include <movex/robot/motion_data.hpp>
 
 
-namespace frankx {
-
-class Robot;
+namespace movex {
 
 struct ImpedanceMotion {
     enum class Axis { X, Y, Z };
@@ -77,17 +63,59 @@ public:
     explicit ImpedanceMotion(double joint_stiffness): joint_stiffness(joint_stiffness), type(Type::Joint) { }
     explicit ImpedanceMotion(double translational_stiffness, double rotational_stiffness): translational_stiffness(translational_stiffness), rotational_stiffness(rotational_stiffness), type(Type::Cartesian) { }
 
-    Affine getTarget() const;
-    void setTarget(const Affine& new_target);
-    void setLinearRelativeTargetMotion(const Affine& relative_target, double duration);
-    void setSpiralTargetMotion(const Affine& center, double revolutions_per_second, double radius_per_revolution);
 
-    void addForceConstraint(Axis axis, double value);
-    void addForceConstraint(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt);
-    bool isActive() const;
-    void finish();
+    Affine getTarget() const {
+        return target;
+    }
 
-    bool move(Robot* robot, const Affine& frame, MotionData& data);
+    void setTarget(const Affine& new_target) {
+        if (is_active) {
+            target = new_target;
+        }
+        target_motion = ImpedanceMotion::TargetMotion::Exponential;
+    }
+
+    void setLinearRelativeTargetMotion(const Affine& relative_target, double duration) {
+        linear_motion = {relative_target, duration};
+        target_motion = ImpedanceMotion::TargetMotion::Linear;
+    }
+
+    void setSpiralTargetMotion(const Affine& center, double revolutions_per_second, double radius_per_revolution) {
+        spiral_motion = {center, revolutions_per_second, radius_per_revolution};
+        target_motion = ImpedanceMotion::TargetMotion::Spiral;
+    }
+
+    void addForceConstraint(Axis axis, double value) {
+        if (is_active) {
+            return;
+        }
+
+        force_constraints[axis] = value;
+    }
+
+    void addForceConstraint(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt) {
+        if (is_active) {
+            return;
+        }
+
+        if (x) {
+            force_constraints[Axis::X] = x.value();
+        }
+        if (y) {
+            force_constraints[Axis::Y] = y.value();
+        }
+        if (z) {
+            force_constraints[Axis::Z] = z.value();
+        }
+    }
+
+    bool isActive() const {
+        return is_active;
+    }
+
+    void finish() {
+        should_finish = true;
+    }
 };
 
-} // namespace frankx
+} // namespace movex

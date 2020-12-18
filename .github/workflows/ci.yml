@@ -60,4 +60,4 @@ jobs:
         make
 
     - name: test
-      run: ./build/unit-test
+      run: make test
