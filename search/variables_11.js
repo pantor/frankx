@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['s',['s',['../structmovex_1_1_trajectory_1_1_state.html#aeea987cc2b630019419a958fb41c4fcf',1,'movex::Trajectory::State']]],
-  ['s_5fcurrent',['s_current',['../structfrankx_1_1_path_motion_generator.html#aff1162b9094da592bf90eabbec0ceae3',1,'frankx::PathMotionGenerator']]],
-  ['s_5flength',['s_length',['../classmovex_1_1_quartic_blend_segment.html#a119435750713c3b733b6ea46fa91cfd8',1,'movex::QuarticBlendSegment']]],
-  ['segments',['segments',['../classmovex_1_1_path.html#a266fd3bb3e62f20a41c075fac4a98ce8',1,'movex::Path']]],
-  ['should_5ffinish',['should_finish',['../structmovex_1_1_impedance_motion.html#a44874948caf9dd527a21f3ce4e177809',1,'movex::ImpedanceMotion']]],
-  ['spiral_5fmotion',['spiral_motion',['../structmovex_1_1_impedance_motion.html#a441bd26f2b00ec5eb8eeafb1438c2311',1,'movex::ImpedanceMotion']]],
-  ['start',['start',['../classmovex_1_1_line_segment.html#a8b805b122d4fe451ed1a05d58aa33036',1,'movex::LineSegment']]],
-  ['states',['states',['../structmovex_1_1_trajectory.html#ad68e7c54f1c2559349d6484a9158f425',1,'movex::Trajectory']]],
-  ['stiffness',['stiffness',['../structfrankx_1_1_impedance_motion_generator.html#a73c87e95ee29afc5a364b296aa4c54a4',1,'frankx::ImpedanceMotionGenerator']]],
-  ['stop_5fat_5fpython_5fsignal',['stop_at_python_signal',['../classfrankx_1_1_robot.html#ae1b26bc35836181686dd6db50e9aec12',1,'frankx::Robot']]]
+  ['t',['t',['../structmovex_1_1_trajectory_1_1_state.html#a9f73de4fdd9150ad7f3894d7a11951f1',1,'movex::Trajectory::State']]],
+  ['target',['target',['../structmovex_1_1_impedance_motion.html#a091a433a873c7ee4bf92080425c23291',1,'movex::ImpedanceMotion::target()'],['../structmovex_1_1_joint_motion.html#a439a4cb9d4873192694f1d9e6633951d',1,'movex::JointMotion::target()']]],
+  ['target_5fmotion',['target_motion',['../structmovex_1_1_impedance_motion.html#a6fd3cd46897f5f4f1ee6f5d62577d58a',1,'movex::ImpedanceMotion']]],
+  ['time',['time',['../structfrankx_1_1_impedance_motion_generator.html#af6ea97ce586a657da12bbed9f50b4758',1,'frankx::ImpedanceMotionGenerator::time()'],['../structfrankx_1_1_joint_motion_generator.html#a28deb845b95fd8c87d950311377156e0',1,'frankx::JointMotionGenerator::time()'],['../structfrankx_1_1_path_motion_generator.html#aa89c245b42d645771a9a52908dd95f78',1,'frankx::PathMotionGenerator::time()'],['../structfrankx_1_1_waypoint_motion_generator.html#a1a442a724abcffeb711f5313b55ea515',1,'frankx::WaypointMotionGenerator::time()']]],
+  ['token',['token',['../classfrankx_1_1robot_1_1_robot.html#ab9855cafe89a427caed1e151944bd8fe',1,'frankx::robot::Robot']]],
+  ['trajectory',['trajectory',['../structfrankx_1_1_path_motion_generator.html#a94ea677928d998438e7d0d70c28ed850',1,'frankx::PathMotionGenerator']]],
+  ['trajectory_5fgenerator',['trajectory_generator',['../structfrankx_1_1_joint_motion_generator.html#a3094ae4d239d7c9873f5fcb0efe3abb6',1,'frankx::JointMotionGenerator::trajectory_generator()'],['../structfrankx_1_1_waypoint_motion_generator.html#a409fed906557f748a50394d8fb15dda5',1,'frankx::WaypointMotionGenerator::trajectory_generator()']]],
+  ['trajectory_5findex',['trajectory_index',['../structfrankx_1_1_path_motion_generator.html#ab25bdc286fded79e11bdbf95c73a04f5',1,'frankx::PathMotionGenerator']]],
+  ['translational_5fstiffness',['translational_stiffness',['../structmovex_1_1_impedance_motion.html#a5a624668ac5f3b42c063f79638a02f66',1,'movex::ImpedanceMotion']]],
+  ['type',['type',['../structmovex_1_1_impedance_motion.html#af859f1de6fc9c03c54cb8a05c0f7f98a',1,'movex::ImpedanceMotion']]]
 ];
