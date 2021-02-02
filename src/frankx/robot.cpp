@@ -1,12 +1,7 @@
 #include <frankx/robot.hpp>
 
-#include <movex/otg/quintic.hpp>
-#include <movex/otg/smoothie.hpp>
-
-
-#ifdef WITH_REFLEXXES
-#include <movex/otg/reflexxes.hpp>
-#endif
+#include <ruckig/ruckig.hpp>
+#include <ruckig/alternative/smoothie.hpp>
 
 
 namespace frankx {

@@ -38,19 +38,16 @@ To start using frankx with Python, you can use pip via
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx implements its own Online Trajectory Generator (OTG), but you can optionally use the battle-tested [Reflexxes](http://reflexxes.ws) library. As the Franka is quite sensitive to acceleration discontinuities, make sure to use *Reflexxes Type IV*. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://github.com/pantor/ruckig) library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
 
 ```bash
+git clone --recurse-submodules git@github.com:pantor/frankx.git
+cd frankx
 mkdir -p build
 cd build
 cmake -DBUILD_TYPE=Release ..
 make
 make install
-```
-
-If you want to use Reflexxes, make sure that it can be found by CMake by setting the `Reflexxes_ROOT_DIR`and `REFLEXXES_TYPE` argument:
-```bash
-cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV ..
 ```
 
 To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
@@ -315,7 +312,6 @@ All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs 
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
 | **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, *(Velocity for 1 DoF)*<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
 | Smoothie          | Current Position<br>Target Position<br>Dynamic Scaling                                                                                      | Used by Franka in [examples](https://github.com/frankaemika/libfranka/blob/master/examples/examples_common.h).                                                                    |
-| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds.<br>Quite slow.                                      |
 | [Reflexxes](http://reflexxes.ws/)<br> Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
 | [Reflexxes](http://reflexxes.ws/)<br> Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and costly for non-academic licenses.<br>Time-optimal with given constraints. |
 
@@ -339,8 +335,7 @@ Frankx is written in C++17 and Python3.7. It is currently tested against followi
 
 - Eigen v3.3.7
 - Libfranka v0.7.1
-- Pybind11 v2.6.0
-- Reflexxes v1.2.7 (optional)
+- Pybind11 v2.6
 - Catch2 v2.9 (only for testing)
 
 

@@ -1,0 +1,3 @@
+[submodule "ruckig"]
+	path = ruckig
+	url = git@github.com:pantor/ruckig.git

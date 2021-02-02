@@ -23,6 +23,8 @@ struct Affine {
     explicit Affine(double x, double y, double z, double q_w, double q_x, double q_y, double q_z);
     explicit Affine(const Vector6d& v);
     explicit Affine(const Vector7d& v);
+    explicit Affine(const std::array<double, 6>& v);
+    explicit Affine(const std::array<double, 7>& v);
     explicit Affine(const std::array<double, 16>& array);
 
     Affine operator*(const Affine &a) const;

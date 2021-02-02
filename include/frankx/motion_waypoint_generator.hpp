@@ -6,12 +6,7 @@
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
 #include <movex/motion/motion_waypoint.hpp>
-#include <movex/otg/quintic.hpp>
-#include <movex/otg/ruckig.hpp>
-
-#ifdef WITH_REFLEXXES
-#include <movex/otg/reflexxes.hpp>
-#endif
+#include <ruckig/ruckig.hpp>
 
 
 namespace frankx {
@@ -19,15 +14,10 @@ namespace frankx {
 
 template<class RobotType>
 struct WaypointMotionGenerator: public MotionGenerator {
-#ifdef WITH_REFLEXXES
-    movex::Reflexxes<RobotType::degrees_of_freedoms> trajectory_generator {RobotType::control_rate};
-#else
-    movex::Quintic<RobotType::degrees_of_freedoms> trajectory_generator {RobotType::control_rate};
-#endif
-
-    movex::InputParameter<RobotType::degrees_of_freedoms> input_para;
-    movex::OutputParameter<RobotType::degrees_of_freedoms> output_para;
-    movex::Result result;
+    ruckig::Ruckig<RobotType::degrees_of_freedoms> trajectory_generator {RobotType::control_rate};
+    ruckig::InputParameter<RobotType::degrees_of_freedoms> input_para;
+    ruckig::OutputParameter<RobotType::degrees_of_freedoms> output_para;
+    ruckig::Result result;
 
     WaypointMotion current_motion;
     std::vector<Waypoint>::iterator waypoint_iterator;
@@ -65,17 +55,17 @@ struct WaypointMotionGenerator: public MotionGenerator {
         old_vector = initial_vector;
         old_elbow = old_vector(6);
 
-        input_para.current_position = initial_vector;
-        input_para.current_velocity = initial_velocity;
-        input_para.current_acceleration = Vector7d::Zero();
+        input_para.current_position = toStd(initial_vector);
+        input_para.current_velocity = toStd(initial_velocity);
+        input_para.current_acceleration = toStd(Vector7d::Zero());
 
         const auto current_waypoint = *waypoint_iterator;
         waypoint_has_elbow = current_waypoint.elbow.has_value();
         auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
 
         input_para.enabled = {true, true, true, true, true, true, waypoint_has_elbow};
-        input_para.target_position = target_position_vector;
-        input_para.target_velocity = Vector7d::Zero();
+        input_para.target_position = toStd(target_position_vector);
+        input_para.target_velocity = toStd(Vector7d::Zero());
         setInputLimits(input_para, robot, current_waypoint, data);
 
         old_affine = current_waypoint.getTargetAffine(frame, old_affine);
@@ -125,8 +115,8 @@ struct WaypointMotionGenerator: public MotionGenerator {
                     auto target_position_vector = current_waypoint.getTargetVector(Affine(), old_affine, old_elbow);
 
                     input_para.enabled = {true, true, true, true, true, true, waypoint_has_elbow};
-                    input_para.target_position = target_position_vector;
-                    input_para.target_velocity = Vector7d::Zero();
+                    input_para.target_position = toStd(target_position_vector);
+                    input_para.target_velocity = toStd(Vector7d::Zero());
                     setInputLimits(input_para, robot, current_waypoint, data);
 
                     old_affine = current_waypoint.getTargetAffine(Affine(), old_affine);
@@ -148,7 +138,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
         for (int i = 0; i < steps; i++) {
             result = trajectory_generator.update(input_para, output_para);
 
-            if (motion.reload || result == movex::Result::Finished) {
+            if (motion.reload || result == ruckig::Result::Finished) {
                 bool has_new_waypoint {false};
 
                 if (waypoint_iterator != current_motion.waypoints.end()) {
@@ -173,8 +163,8 @@ struct WaypointMotionGenerator: public MotionGenerator {
                     auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
 
                     input_para.enabled = {true, true, true, true, true, true, waypoint_has_elbow};
-                    input_para.target_position = target_position_vector;
-                    input_para.target_velocity = Vector7d::Zero();
+                    input_para.target_position = toStd(target_position_vector);
+                    input_para.target_velocity = toStd(Vector7d::Zero());
                     setInputLimits<RobotType>(input_para, robot, current_waypoint, data);
 
                     old_affine = current_waypoint.getTargetAffine(frame, old_affine);
@@ -182,7 +172,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
                     old_elbow = old_vector(6);
                 }
 
-            } else if (result == movex::Result::Error) {
+            } else if (result == ruckig::Result::Error) {
                 std::cout << "[frankx robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(MotionGenerator::CartesianPose(input_para.current_position, waypoint_has_elbow));
             }

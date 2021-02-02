@@ -3,7 +3,7 @@
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
-#include <movex/otg/parameter.hpp>
+#include <ruckig/parameter.hpp>
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
 #include <movex/waypoint.hpp>
@@ -16,7 +16,15 @@ struct MotionGenerator {
     static inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {
         auto affine = Affine(vector);
         if (include_elbow) {
-            return franka::CartesianPose(affine.array(), {vector(6), -1});
+            return franka::CartesianPose(affine.array(), {vector[6], -1});
+        }
+        return franka::CartesianPose(affine.array());
+    }
+
+    static inline franka::CartesianPose CartesianPose(const std::array<double, 7>& vector, bool include_elbow = true) {
+        auto affine = Affine(vector);
+        if (include_elbow) {
+            return franka::CartesianPose(affine.array(), {vector[6], -1});
         }
         return franka::CartesianPose(affine.array());
     }
@@ -29,6 +37,12 @@ struct MotionGenerator {
     static inline void setCartRotElbowVector(Vector7d& vector, double cart, double rot, double elbow) {
         const std::array<double, 7> data = VectorCartRotElbow(cart, rot, elbow);
         vector = Eigen::Map<const Vector7d>(data.data(), data.size());
+    }
+
+    static inline std::array<double, 7> toStd(const Vector7d& vector) {
+        std::array<double, 7> result;
+        Vector7d::Map(result.data()) = vector;
+        return result;
     }
 
     static inline movex::RobotState<7> convertState(const franka::RobotState& franka) {
@@ -98,16 +112,13 @@ struct MotionGenerator {
     }
 
     template<class RobotType>
-    static void setInputLimits(InputParameter<7>& input_parameters, RobotType* robot, const MotionData& data) {
+    static void setInputLimits(ruckig::InputParameter<7>& input_parameters, RobotType* robot, const MotionData& data) {
         setInputLimits(input_parameters, robot, Waypoint(), data);
     }
 
     template<class RobotType>
-    static void setInputLimits(InputParameter<7>& input_parameters, RobotType* robot, const Waypoint& waypoint, const MotionData& data) {
-        const auto [max_velocity, max_acceleration, max_jerk] = getInputLimits(robot, data);
-        input_parameters.max_velocity = Eigen::Map<const Vector7d>(max_velocity.data(), max_velocity.size());
-        input_parameters.max_acceleration = Eigen::Map<const Vector7d>(max_acceleration.data(), max_acceleration.size());
-        input_parameters.max_jerk = Eigen::Map<const Vector7d>(max_jerk.data(), max_jerk.size());
+    static void setInputLimits(ruckig::InputParameter<7>& input_parameters, RobotType* robot, const Waypoint& waypoint, const MotionData& data) {
+        std::tie(input_parameters.max_velocity, input_parameters.max_acceleration, input_parameters.max_jerk) = getInputLimits(robot, data);
 
         if (!(waypoint.max_dynamics || data.max_dynamics) && waypoint.minimum_time.has_value()) {
             input_parameters.minimum_duration = waypoint.minimum_time.value();

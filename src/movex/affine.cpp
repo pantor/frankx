@@ -21,9 +21,13 @@ Affine::Affine(double x, double y, double z, double q_w, double q_x, double q_y,
     data.linear() = Eigen::Quaterniond(q_w, q_x, q_y, q_z).toRotationMatrix();
 }
 
-Affine::Affine(const Vector6d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
+Affine::Affine(const Vector6d& v): Affine(v[0], v[1], v[2], v[3], v[4], v[5]) { }
 
-Affine::Affine(const Vector7d& v): Affine(v(0), v(1), v(2), v(3), v(4), v(5)) { }
+Affine::Affine(const Vector7d& v): Affine(v[0], v[1], v[2], v[3], v[4], v[5]) { }
+
+Affine::Affine(const std::array<double, 6>& v): Affine(v[0], v[1], v[2], v[3], v[4], v[5]) { }
+
+Affine::Affine(const std::array<double, 7>& v): Affine(v[0], v[1], v[2], v[3], v[4], v[5]) { }
 
 Affine::Affine(const std::array<double, 16>& array) {
     Type affine(Eigen::Matrix4d::Map(array.data()));
