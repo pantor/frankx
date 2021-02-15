@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['vector',['vector',['../structmovex_1_1_affine.html#a9aeb7d6333346c37e47c3d432cc4a321',1,'movex::Affine']]],
-  ['vector_5fwith_5felbow',['vector_with_elbow',['../structmovex_1_1_affine.html#a88a39aeb229d98d323a1f9a4a12645dd',1,'movex::Affine']]],
-  ['vectorcartrotelbow',['VectorCartRotElbow',['../structfrankx_1_1_motion_generator.html#ab70793e5d327b2e38eb1eb967d2bc759',1,'frankx::MotionGenerator']]]
+  ['unlock_5fbrakes',['unlock_brakes',['../classfrankx_1_1robot_1_1_robot.html#ab4e4c9908b9640f23492ac502cd798c2',1,'frankx::robot::Robot']]]
 ];

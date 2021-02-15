@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['reaction',['Reaction',['../structmovex_1_1_reaction.html',1,'movex']]],
-  ['robot',['Robot',['../classfrankx_1_1_robot.html',1,'frankx::Robot'],['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot']]],
-  ['robotstate',['RobotState',['../structmovex_1_1_robot_state.html',1,'movex']]]
+  ['quarticblendsegment',['QuarticBlendSegment',['../classmovex_1_1_quartic_blend_segment.html',1,'movex']]],
+  ['quinticsegment',['QuinticSegment',['../classmovex_1_1_quintic_segment.html',1,'movex']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['z',['z',['../structmovex_1_1_affine.html#a197092b6422c7ed6b5a8982b3f56bafc',1,'movex::Affine::z()'],['../structmovex_1_1_impedance_motion.html#ad06da29c114d8b2ad1cd8888097a2f4fa21c2e59531c8710156d34a3c30ac81d5',1,'movex::ImpedanceMotion::Z()']]],
-  ['zero_5fvelocity',['zero_velocity',['../structmovex_1_1_waypoint.html#a60b5aba7fa5a772655f9b5d949411d41',1,'movex::Waypoint']]]
+  ['y',['y',['../structmovex_1_1_affine.html#aa6f86195d8454ee3d4de577b0db4516e',1,'movex::Affine::y()'],['../structmovex_1_1_impedance_motion.html#ad06da29c114d8b2ad1cd8888097a2f4fa57cec4137b614c87cb4e24a3d003a3e0',1,'movex::ImpedanceMotion::Y()']]]
 ];
