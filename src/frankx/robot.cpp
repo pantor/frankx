@@ -164,7 +164,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
 
     } catch (franka::Exception exception) {
         auto errors = readOnce().last_motion_errors;
-        if (repeat_on_error && errors.cartesian_motion_generator_joint_acceleration_discontinuity || errors.cartesian_motion_generator_joint_velocity_discontinuity || errors.cartesian_motion_generator_velocity_discontinuity || errors.cartesian_motion_generator_acceleration_discontinuity) {
+        if (repeat_on_error && (errors.cartesian_motion_generator_joint_acceleration_discontinuity || errors.cartesian_motion_generator_joint_velocity_discontinuity || errors.cartesian_motion_generator_velocity_discontinuity || errors.cartesian_motion_generator_acceleration_discontinuity)) {
             std::cout << "[frankx robot] continue motion" << std::endl;
             automaticErrorRecovery();
 
