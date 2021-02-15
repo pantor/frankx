@@ -13,6 +13,7 @@
 
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
+#include <movex/robot/kinematics.hpp>
 
 #include <frankx/motion_generator.hpp>
 #include <frankx/motion_impedance_generator.hpp>
@@ -25,6 +26,12 @@ namespace frankx {
     using namespace movex;
 
 class Robot: public franka::Robot {
+    // Modified DH-parameters: alpha, d, a
+    const Kinematics<7> kinematics = Kinematics<7>(
+        {{{0.0, 0.333, 0.0}, {-M_PI/2, 0.0, 0.0}, {M_PI/2, 0.316, 0.0}, {M_PI/2, 0.0, 0.0825}, {-M_PI/2, 0.384, -0.0825}, {M_PI/2, 0.0, 0.0}, {M_PI/2, 0.0, 0.088}}},
+        Affine(0, 0, 0.107, M_PI/4, 0, M_PI)
+    );
+
 public:
     //! The robot's hostname / IP address
     std::string fci_ip;
@@ -68,7 +75,7 @@ public:
     bool recoverFromErrors();
 
     Affine currentPose(const Affine& frame = Affine());
-    // Affine forwardKinematics(const std::array<double, 7>& q);
+    Affine forwardKinematics(const std::array<double, 7>& q);
     // std::array<double, 7> inverseKinematics(const Affine& target, const Affine& frame = Affine());
 
     bool move(ImpedanceMotion& motion);

@@ -45,21 +45,9 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
-// Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
-//     Affine result;
-
-//     control([&](const franka::RobotState& robot_state, franka::Duration period) -> franka::Torques {
-//         franka::CartesianPose cartesian_target(robot_state.O_T_EE_c, robot_state.elbow_c);
-//         result = Affine(cartesian_target.O_T_EE);
-//         return franka::MotionFinished(franka::Torques({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
-
-//     }, [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::JointPositions {
-
-//         return franka::JointPositions(q);
-//     });
-
-//     return result;
-// }
+Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
+    return kinematics.forward_chain(q);
+}
 
 // std::array<double, 7> Robot::inverseKinematics(const Affine& target, const Affine& frame) {
 //     std::array<double, 7> result;
