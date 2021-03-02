@@ -15,6 +15,7 @@
 #include <movex/robot/robot_state.hpp>
 #include <movex/robot/kinematics.hpp>
 
+#include <frankx/kinematics.hpp>
 #include <frankx/motion_generator.hpp>
 #include <frankx/motion_impedance_generator.hpp>
 #include <frankx/motion_joint_generator.hpp>
@@ -27,7 +28,7 @@ namespace frankx {
 
 class Robot: public franka::Robot {
     // Modified DH-parameters: alpha, d, a
-    const Kinematics<7> kinematics = Kinematics<7>(
+    const KinematicChain<7> kinematics = KinematicChain<7>(
         {{{0.0, 0.333, 0.0}, {-M_PI/2, 0.0, 0.0}, {M_PI/2, 0.316, 0.0}, {M_PI/2, 0.0, 0.0825}, {-M_PI/2, 0.384, -0.0825}, {M_PI/2, 0.0, 0.0}, {M_PI/2, 0.0, 0.088}}},
         Affine(0, 0, 0.107, M_PI/4, 0, M_PI)
     );
@@ -76,7 +77,7 @@ public:
 
     Affine currentPose(const Affine& frame = Affine());
     Affine forwardKinematics(const std::array<double, 7>& q);
-    // std::array<double, 7> inverseKinematics(const Affine& target, const Affine& frame = Affine());
+    std::array<double, 7> inverseKinematics(const Affine& target, const std::array<double, 7>& q0);
 
     bool move(ImpedanceMotion& motion);
     bool move(ImpedanceMotion& motion, MotionData& data);

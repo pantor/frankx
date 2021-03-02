@@ -46,15 +46,19 @@ Affine Robot::currentPose(const Affine& frame) {
 }
 
 Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
-    return kinematics.forward_chain(q);
+    const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
+    return Affine(Kinematics::forward(q_current));
 }
 
-// std::array<double, 7> Robot::inverseKinematics(const Affine& target, const Affine& frame) {
-//     std::array<double, 7> result;
-//     return result;
-// }
+std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::array<double, 7>& q0) {
+    std::array<double, 7> result;
 
+    Eigen::Matrix<double, 6, 1> x_target = target.vector();
+    const Eigen::Matrix<double, 7, 1> q0_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q0.data(), q0.size());
 
+    Eigen::Matrix<double, 7, 1>::Map(result.data()) = Kinematics::inverse(x_target, q0_current);
+    return result;
+}
 
 bool Robot::move(ImpedanceMotion& motion) {
     return move(Affine(), motion);
@@ -152,8 +156,13 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
 
     } catch (franka::Exception exception) {
         auto errors = readOnce().last_motion_errors;
-        if (repeat_on_error && (errors.cartesian_motion_generator_joint_acceleration_discontinuity || errors.cartesian_motion_generator_joint_velocity_discontinuity || errors.cartesian_motion_generator_velocity_discontinuity || errors.cartesian_motion_generator_acceleration_discontinuity)) {
-            std::cout << "[frankx robot] continue motion" << std::endl;
+        if (repeat_on_error
+            && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
+            || errors.cartesian_motion_generator_joint_velocity_discontinuity
+            || errors.cartesian_motion_generator_velocity_discontinuity
+            || errors.cartesian_motion_generator_acceleration_discontinuity
+        )) {
+            std::cout << "[frankx robot] continue motion after exception: " << exception.what() << std::endl;
             automaticErrorRecovery();
 
             data.velocity_rel *= 0.4;

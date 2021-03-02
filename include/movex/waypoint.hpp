@@ -42,7 +42,6 @@ struct Waypoint {
     explicit Waypoint(double minimum_time): affine(Affine()), reference_type(ReferenceType::Relative), minimum_time(minimum_time) {}
     explicit Waypoint(const Affine& affine, ReferenceType reference_type, double velocity_rel): affine(affine), reference_type(reference_type), velocity_rel(velocity_rel) {}
     explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type, double velocity_rel): affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(velocity_rel) {}
-    explicit Waypoint(const Affine& affine, double elbow, ReferenceType reference_type, bool max_dynamics): affine(affine), elbow(elbow), reference_type(reference_type), max_dynamics(max_dynamics) {}
 
     // explicit Waypoint(const Affine& affine, double blend_max_distance): affine(affine), blend_max_distance(blend_max_distance) {}
     explicit Waypoint(const Affine& affine, std::optional<double> elbow, double blend_max_distance): affine(affine), elbow(elbow), blend_max_distance(blend_max_distance), reference_type(ReferenceType::Absolute) {}

@@ -74,6 +74,17 @@ PYBIND11_MODULE(_frankx, m) {
             return d;
         });
 
+    py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
+        .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
+        .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
+        .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
+
+    py::class_<Kinematics>(m, "Kinematics")
+        .def_static("forward", &Kinematics::forward, "q"_a)
+        .def_static("forwardEuler", &Kinematics::forwardEuler, "q"_a)
+        .def_static("jacobian", &Kinematics::jacobian, "q"_a)
+        .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a=std::nullopt);
+
     py::class_<Condition>(m, "Condition");
 
     py::class_<Measure>(m, "Measure")
@@ -336,7 +347,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def("read_once", &Robot::readOnce)
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
         .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
-        // .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "frame"_a = Affine())
+        .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "q0"_a)
         .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())

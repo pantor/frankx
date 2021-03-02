@@ -6,7 +6,7 @@
 namespace movex {
 
 template<size_t DoFs>
-class Kinematics {
+class KinematicChain {
     struct DenavitHartenbergParameter {
         double alpha; // [rad]
         double d, a; // [m]
@@ -24,7 +24,7 @@ class Kinematics {
     Affine base;
 
 public:
-    explicit Kinematics(const std::array<DenavitHartenbergParameter, DoFs>& parameters, const Affine& base): parameters(parameters), base(base) { }
+    explicit KinematicChain(const std::array<DenavitHartenbergParameter, DoFs>& parameters, const Affine& base): parameters(parameters), base(base) { }
 
     Affine forward_chain(const std::array<double, DoFs>& q) const {
         Affine result;

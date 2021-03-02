@@ -33,10 +33,14 @@ struct WaypointMotionGenerator: public MotionGenerator {
     WaypointMotion& motion;
     MotionData& data;
 
+    const size_t cooldown_iterations {4};
+    size_t current_cooldown_iteration {0};
+
     explicit WaypointMotionGenerator(RobotType* robot, const Affine& frame, WaypointMotion& motion, MotionData& data): robot(robot), frame(frame), motion(motion), current_motion(motion), data(data) { }
 
     void reset() {
         time = 0.0;
+        current_cooldown_iteration = 0;
     }
 
     void init(const franka::RobotState& robot_state, franka::Duration period) {
@@ -147,6 +151,12 @@ struct WaypointMotionGenerator: public MotionGenerator {
                 }
 
                 if (motion.return_when_finished && waypoint_iterator >= current_motion.waypoints.end()) {
+                    // Allow cooldown of motion, so that the low-pass filter has time to adjust to target values
+                    if (current_cooldown_iteration < cooldown_iterations) {
+                        current_cooldown_iteration += 1;
+                        return MotionGenerator::CartesianPose(input_para.target_position, waypoint_has_elbow);
+                    }
+
                     return franka::MotionFinished(MotionGenerator::CartesianPose(input_para.target_position, waypoint_has_elbow));
 
                 } else if (motion.reload) {

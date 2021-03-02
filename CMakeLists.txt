@@ -31,6 +31,7 @@ target_link_libraries(movex PUBLIC Eigen3::Eigen ruckig)
 
 add_library(frankx SHARED
   src/frankx/gripper.cpp
+  src/frankx/kinematics.cpp
   src/frankx/robot.cpp
 )
 target_compile_features(frankx PUBLIC cxx_std_17)
@@ -76,7 +77,7 @@ if(BUILD_TESTS)
 
   find_package(Catch2 REQUIRED)
 
-  foreach(test IN ITEMS unit-test path-test)
+  foreach(test IN ITEMS kinematics-test unit-test path-test)
     add_executable(${test} "test/${test}.cpp")
     target_link_libraries(${test} PRIVATE frankx Catch2::Catch2)
     add_test(NAME ${test} COMMAND ${test})

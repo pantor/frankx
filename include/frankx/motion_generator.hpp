@@ -77,18 +77,18 @@ struct MotionGenerator {
         if (waypoint.max_dynamics || data.max_dynamics) {
             auto max_velocity = MotionGenerator::VectorCartRotElbow(
                 0.8 * translation_factor * robot->max_translation_velocity,
-                robot->max_rotation_velocity,
-                0.5 * elbow_factor * robot->max_elbow_velocity
+                0.8 * robot->max_rotation_velocity,
+                0.8 * robot->max_elbow_velocity
             );
             auto max_acceleration = MotionGenerator::VectorCartRotElbow(
-                translation_factor * derivative_factor * robot->max_translation_acceleration,
-                derivative_factor * robot->max_rotation_acceleration,
-                elbow_factor * derivative_factor * robot->max_elbow_acceleration
+                0.8 * translation_factor * derivative_factor * robot->max_translation_acceleration,
+                0.8 * derivative_factor * robot->max_rotation_acceleration,
+                0.8 * derivative_factor * robot->max_elbow_acceleration
             );
             auto max_jerk = MotionGenerator::VectorCartRotElbow(
-                translation_factor * derivative_factor * robot->max_translation_jerk,
-                derivative_factor * robot->max_rotation_jerk,
-                elbow_factor * derivative_factor * robot->max_elbow_jerk
+                0.8 * translation_factor * derivative_factor * robot->max_translation_jerk,
+                0.8 * derivative_factor * robot->max_rotation_jerk,
+                0.8 * derivative_factor * robot->max_elbow_jerk
             );
             return {max_velocity, max_acceleration, max_jerk};
         }
@@ -118,10 +118,16 @@ struct MotionGenerator {
 
     template<class RobotType>
     static void setInputLimits(ruckig::InputParameter<7>& input_parameters, RobotType* robot, const Waypoint& waypoint, const MotionData& data) {
-        std::tie(input_parameters.max_velocity, input_parameters.max_acceleration, input_parameters.max_jerk) = getInputLimits(robot, data);
+        std::tie(input_parameters.max_velocity, input_parameters.max_acceleration, input_parameters.max_jerk) = getInputLimits(robot, waypoint, data);
 
         if (!(waypoint.max_dynamics || data.max_dynamics) && waypoint.minimum_time.has_value()) {
             input_parameters.minimum_duration = waypoint.minimum_time.value();
+        }
+
+        if (waypoint.max_dynamics) {
+            input_parameters.synchronization = ruckig::InputParameter<7>::Synchronization::TimeIfNecessary;
+        } else {
+            input_parameters.synchronization = ruckig::InputParameter<7>::Synchronization::TimeAlways;
         }
     }
 };
