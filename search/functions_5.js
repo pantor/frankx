@@ -6,6 +6,8 @@ var searchData=
   ['forcexyznorm',['ForceXYZNorm',['../classmovex_1_1_measure.html#a2011e5a144fc2817338f852e9d2e3dab',1,'movex::Measure']]],
   ['forcey',['ForceY',['../classmovex_1_1_measure.html#a56f0bcab11b20bd9c29533361956ab9c',1,'movex::Measure']]],
   ['forcez',['ForceZ',['../classmovex_1_1_measure.html#ab82a55be32a8d8ac29cb1fd21efaf3af',1,'movex::Measure']]],
-  ['forward_5fchain',['forward_chain',['../classmovex_1_1_kinematics.html#a4adc55a2e553efc6b639d33cfd43657e',1,'movex::Kinematics']]],
+  ['forward',['forward',['../structfrankx_1_1_kinematics.html#a5f92d49f0a874359f88a5a1f50ad3ba0',1,'frankx::Kinematics']]],
+  ['forward_5fchain',['forward_chain',['../classmovex_1_1_kinematic_chain.html#a0d5998fff0183b9d6ed36a985b29e475',1,'movex::KinematicChain']]],
+  ['forwardeuler',['forwardEuler',['../structfrankx_1_1_kinematics.html#ad42354b86342ed905c80852402bf4e83',1,'frankx::Kinematics']]],
   ['forwardkinematics',['forwardKinematics',['../classfrankx_1_1_robot.html#a7d3fc0014f71e126ef8c7794bd1dfada',1,'frankx::Robot']]]
 ];
