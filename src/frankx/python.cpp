@@ -81,6 +81,7 @@ PYBIND11_MODULE(_frankx, m) {
 
     py::class_<Kinematics>(m, "Kinematics")
         .def_static("forward", &Kinematics::forward, "q"_a)
+        .def_static("forwardElbow", &Kinematics::forwardElbow, "q"_a)
         .def_static("forwardEuler", &Kinematics::forwardEuler, "q"_a)
         .def_static("jacobian", &Kinematics::jacobian, "q"_a)
         .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a=std::nullopt);

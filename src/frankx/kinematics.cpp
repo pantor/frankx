@@ -61,6 +61,30 @@ std::array<double, 16> Kinematics::forward(const Eigen::Matrix<double, 7, 1>& q)
     };
 }
 
+std::array<double, 16> Kinematics::forwardElbow(const Eigen::Matrix<double, 7, 1>& q) {
+    const double s0 = std::sin(q[0]), c0 = std::cos(q[0]);
+    const double s1 = std::sin(q[1]), c1 = std::cos(q[1]);
+    const double s2 = std::sin(q[2]), c2 = std::cos(q[2]);
+
+    return {
+        c0*c1*c2 - s0*s2,
+        c1*c2*s0 + c0*s2,
+        -c2*s1,
+        0,
+        c0*s1,
+        s0*s1,
+        c1,
+        0,
+        c2*s0 + c0*c1*s2,
+        -(c0*c2) + c1*s0*s2,
+        -s1*s2,
+        0,
+        c0*(0.0825*c1*c2 + 0.316*s1) - 0.0825*s0*s2,
+        s0*(0.0825*c1*c2 + 0.316*s1) + 0.0825*c0*s2,
+        0.333 + 0.316*c1 - 0.0825*c2*s1,
+        1,
+    };
+}
 
 Eigen::Matrix<double, 6, 1> Kinematics::forwardEuler(const Eigen::Matrix<double, 7, 1>& q) {
     const double s0 = std::sin(q[0]), c0 = std::cos(q[0]);

@@ -71,7 +71,7 @@ struct MotionGenerator {
     template<class RobotType>
     static std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(RobotType* robot, const Waypoint& waypoint, const MotionData& data) {
         constexpr double translation_factor {0.5};
-        constexpr double elbow_factor {0.32};
+        constexpr double elbow_factor {0.36};
         constexpr double derivative_factor {0.4};
 
         if (waypoint.max_dynamics || data.max_dynamics) {
@@ -86,9 +86,9 @@ struct MotionGenerator {
                 0.8 * derivative_factor * robot->max_elbow_acceleration
             );
             auto max_jerk = MotionGenerator::VectorCartRotElbow(
-                0.8 * translation_factor * derivative_factor * robot->max_translation_jerk,
-                0.8 * derivative_factor * robot->max_rotation_jerk,
-                0.8 * derivative_factor * robot->max_elbow_jerk
+                0.8 * translation_factor * std::pow(derivative_factor, 2) * robot->max_translation_jerk,
+                0.8 * std::pow(derivative_factor, 2) * robot->max_rotation_jerk,
+                0.8 * std::pow(derivative_factor, 2) * robot->max_elbow_jerk
             );
             return {max_velocity, max_acceleration, max_jerk};
         }

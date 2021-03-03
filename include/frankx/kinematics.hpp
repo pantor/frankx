@@ -35,6 +35,7 @@ struct Kinematics {
     };
 
     static std::array<double, 16> forward(const Eigen::Matrix<double, 7, 1>& q);
+    static std::array<double, 16> forwardElbow(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 6, 1> forwardEuler(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 6, 7> jacobian(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 7, 1> inverse(const Eigen::Matrix<double, 6, 1>& x_target, const Eigen::Matrix<double, 7, 1>& q0, std::optional<NullSpaceHandling> null_space = std::nullopt);
