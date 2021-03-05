@@ -45,6 +45,11 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
+std::array<double, 7> Robot::currentJointPositions() {
+    auto state = readOnce();
+    return state.q;
+}
+
 Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
     const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
     return Affine(Kinematics::forward(q_current));
