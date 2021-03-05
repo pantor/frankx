@@ -1,15 +1,19 @@
 #pragma once
 
 #include <movex/robot/reaction.hpp>
+#include <movex/affine.hpp>
 
+#include <mutex>
 
 namespace movex {
 
-struct MotionData {    
+struct MotionData {
     double velocity_rel {1.0}, acceleration_rel {1.0}, jerk_rel {1.0};
     bool max_dynamics {false};
 
     std::vector<Reaction> reactions {};
+    std::shared_ptr<std::mutex> last_pose_lock {nullptr};
+    Affine last_pose {};
 
     explicit MotionData(double dynamic_rel = 1.0): velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel) { }
 

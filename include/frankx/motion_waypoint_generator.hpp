@@ -83,6 +83,14 @@ struct WaypointMotionGenerator: public MotionGenerator {
             init(robot_state, period);
         }
 
+        if(data.last_pose_lock) {
+            const std::lock_guard<std::mutex> lock(*(data.last_pose_lock));
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+        else {
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+
         for (auto& reaction : data.reactions) {
             if (reaction.has_fired) {
                 continue;

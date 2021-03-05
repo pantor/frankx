@@ -50,6 +50,14 @@ struct PathMotionGenerator: public MotionGenerator {
     franka::CartesianPose operator()(const franka::RobotState& robot_state, franka::Duration period) {
         time += period.toSec();
 
+        if(data.last_pose_lock) {
+            const std::lock_guard<std::mutex> lock(*(data.last_pose_lock));
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+        else {
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+
 #ifdef WITH_PYTHON
         if (robot->stop_at_python_signal && Py_IsInitialized() && PyErr_CheckSignals() == -1) {
             robot->stop();
