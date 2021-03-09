@@ -33,7 +33,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
     WaypointMotion& motion;
     MotionData& data;
 
-    const size_t cooldown_iterations {4};
+    const size_t cooldown_iterations {5};
     size_t current_cooldown_iteration {0};
 
     explicit WaypointMotionGenerator(RobotType* robot, const Affine& frame, WaypointMotion& motion, MotionData& data): robot(robot), frame(frame), motion(motion), current_motion(motion), data(data) { }

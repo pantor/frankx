@@ -247,6 +247,10 @@ Eigen::Matrix<double, 7, 1> Kinematics::inverse(const Eigen::Matrix<double, 6, 1
             auto x_new = forwardEuler(q_current + alpha * dq);
             double new_dis = (x_target - x_new).squaredNorm();
 
+            if (null_space) {
+                new_dis += std::pow(null_space->value - q_current(null_space->joint_index), 2);
+            }
+
             if (new_dis < dis_min) {
                 dis_min = new_dis;
                 alpha_min = alpha;
@@ -258,7 +262,7 @@ Eigen::Matrix<double, 7, 1> Kinematics::inverse(const Eigen::Matrix<double, 6, 1
             break;
         }
 
-        // std::cout << i << " dis_min: " << dis_min << " " << (q0 - q_current).squaredNorm() << std::endl;
+        // std::cout << i << " dis_min: " << dis_min << " " << (null_space->value - q_current).squaredNorm() << std::endl;
     }
     return q_current;
 }

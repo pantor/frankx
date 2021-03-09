@@ -165,20 +165,30 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
             std::cout << "[frankx robot] continue motion after exception: " << exception.what() << std::endl;
             automaticErrorRecovery();
 
-            data.velocity_rel *= 0.4;
-            data.acceleration_rel *= 0.4;
-            data.jerk_rel *= 0.4;
+            data.velocity_rel *= 0.5;
+            data.acceleration_rel *= 0.5;
+            data.jerk_rel *= 0.5;
             mg.reset();
+
+            bool success {false};
 
             try {
                 control(mg, controller_mode);
+                success = true;
+
             } catch (franka::Exception exception) {
                 std::cout << exception.what() << std::endl;
-                return false;
             }
-            return true;
+            data.velocity_rel *= 2;
+            data.acceleration_rel *= 2;
+            data.jerk_rel *= 2;
+
+            return success;
+
+        } else {
+            std::cout << exception.what() << std::endl;
         }
-        std::cout << exception.what() << std::endl;
+
         return false;
     }
     return true;

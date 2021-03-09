@@ -3,7 +3,7 @@
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
-#include <ruckig/parameter.hpp>
+#include <ruckig/input_parameter.hpp>
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
 #include <movex/waypoint.hpp>
@@ -70,8 +70,7 @@ struct MotionGenerator {
 
     template<class RobotType>
     static std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(RobotType* robot, const Waypoint& waypoint, const MotionData& data) {
-        constexpr double translation_factor {0.5};
-        constexpr double elbow_factor {0.36};
+        constexpr double translation_factor {0.4};
         constexpr double derivative_factor {0.4};
 
         if (waypoint.max_dynamics || data.max_dynamics) {
@@ -96,17 +95,17 @@ struct MotionGenerator {
         auto max_velocity = MotionGenerator::VectorCartRotElbow(
             translation_factor * waypoint.velocity_rel * data.velocity_rel * robot->velocity_rel * robot->max_translation_velocity,
             waypoint.velocity_rel * data.velocity_rel * robot->velocity_rel * robot->max_rotation_velocity,
-            elbow_factor * waypoint.velocity_rel * data.velocity_rel * robot->velocity_rel * robot->max_elbow_velocity
+            waypoint.velocity_rel * data.velocity_rel * robot->velocity_rel * robot->max_elbow_velocity
         );
         auto max_acceleration = MotionGenerator::VectorCartRotElbow(
             translation_factor * derivative_factor * data.acceleration_rel * robot->acceleration_rel * robot->max_translation_acceleration,
             derivative_factor * data.acceleration_rel * robot->acceleration_rel * robot->max_rotation_acceleration,
-            elbow_factor * derivative_factor * data.acceleration_rel * robot->acceleration_rel * robot->max_elbow_acceleration
+            derivative_factor * data.acceleration_rel * robot->acceleration_rel * robot->max_elbow_acceleration
         );
         auto max_jerk = MotionGenerator::VectorCartRotElbow(
             translation_factor * std::pow(derivative_factor, 2) * data.jerk_rel * robot->jerk_rel * robot->max_translation_jerk,
             std::pow(derivative_factor, 2) * data.jerk_rel * robot->jerk_rel * robot->max_rotation_jerk,
-            elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * robot->jerk_rel * robot->max_elbow_jerk
+            std::pow(derivative_factor, 2) * data.jerk_rel * robot->jerk_rel * robot->max_elbow_jerk
         );
         return {max_velocity, max_acceleration, max_jerk};
     }
@@ -125,9 +124,9 @@ struct MotionGenerator {
         }
 
         if (waypoint.max_dynamics) {
-            input_parameters.synchronization = ruckig::InputParameter<7>::Synchronization::TimeIfNecessary;
+            input_parameters.synchronization = ruckig::Synchronization::TimeIfNecessary;
         } else {
-            input_parameters.synchronization = ruckig::InputParameter<7>::Synchronization::TimeAlways;
+            input_parameters.synchronization = ruckig::Synchronization::Time;
         }
     }
 };
