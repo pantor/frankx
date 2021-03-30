@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['impedancemotion_332',['ImpedanceMotion',['../structmovex_1_1_impedance_motion.html',1,'movex']]],
-  ['impedancemotiongenerator_333',['ImpedanceMotionGenerator',['../structfrankx_1_1_impedance_motion_generator.html',1,'frankx']]]
+  ['jointmotion_301',['JointMotion',['../structmovex_1_1_joint_motion.html',1,'movex']]],
+  ['jointmotiongenerator_302',['JointMotionGenerator',['../structfrankx_1_1_joint_motion_generator.html',1,'frankx']]]
 ];

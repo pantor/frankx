@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['measure_345',['Measure',['../classmovex_1_1_measure.html',1,'movex']]],
-  ['motiondata_346',['MotionData',['../structmovex_1_1_motion_data.html',1,'movex']]],
-  ['motiongenerator_347',['MotionGenerator',['../structfrankx_1_1_motion_generator.html',1,'frankx']]]
+  ['nullspacehandling_315',['NullSpaceHandling',['../structfrankx_1_1_kinematics_1_1_null_space_handling.html',1,'frankx::Kinematics']]]
 ];

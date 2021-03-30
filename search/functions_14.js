@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unlock_5fbrakes_537',['unlock_brakes',['../classfrankx_1_1robot_1_1_robot.html#ab4e4c9908b9640f23492ac502cd798c2',1,'frankx::robot::Robot']]]
+  ['vectorcartrotelbow_473',['VectorCartRotElbow',['../structfrankx_1_1_motion_generator.html#ab70793e5d327b2e38eb1eb967d2bc759',1,'frankx::MotionGenerator']]]
 ];

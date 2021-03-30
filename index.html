@@ -109,7 +109,7 @@ $(function() {
 <div class="line">robot.setDynamicRel(0.05);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Move the end-effector 20cm in positive x-direction</span></div>
-<div class="line"><span class="keyword">auto</span> motion = <a class="code" href="structmovex_1_1_linear_relative_motion.html">LinearRelativeMotion</a>(Affine(0.2, 0.0, 0.0));</div>
+<div class="line"><span class="keyword">auto</span> motion = <a class="code" href="structmovex_1_1_linear_relative_motion.html">LinearRelativeMotion</a>(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.2, 0.0, 0.0));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Finally move the robot</span></div>
 <div class="line">robot.move(motion);</div>
@@ -118,15 +118,15 @@ $(function() {
 <div class="line">robot = Robot(<span class="stringliteral">&quot;172.16.0.2&quot;</span>)</div>
 <div class="line">robot.set_dynamic_rel(0.05)</div>
 <div class="line"> </div>
-<div class="line">motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0))</div>
+<div class="line">motion = LinearRelativeMotion(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.2, 0.0, 0.0))</div>
 <div class="line">robot.move(motion)</div>
 </div><!-- fragment --><p>Furthermore, we will introduce methods for geometric calculations, for moving the robot according to different motion types, how to implement real-time reactions and changing waypoints in real time as well as controlling the gripper.</p>
 <h3>Geometry</h3>
-<p><code>frankx::Affine</code> is a thin wrapper around <a href="https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html">Eigen::Affine3d</a>. It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention). </p><div class="fragment"><div class="line"><span class="comment">// Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation</span></div>
-<div class="line">Affine z_translation = Affine(0.0, 0.0, 0.5);</div>
+<p><code><a class="el" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">frankx::Affine</a></code> is a thin wrapper around <a href="https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html">Eigen::Affine3d</a>. It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention). </p><div class="fragment"><div class="line"><span class="comment">// Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation</span></div>
+<div class="line"><a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a> z_translation = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.5);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Define a rotation transformation using the (x, y, z, a, b, c) parameter list</span></div>
-<div class="line">Affine z_rotation = Affine(0.0, 0.0, 0.0, M_PI / 3, 0.0, 0.0);</div>
+<div class="line"><a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a> z_rotation = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.0, M_PI / 3, 0.0, 0.0);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Make use of the wonderful Eigen library</span></div>
 <div class="line"><span class="keyword">auto</span> combined_transformation = z_translation * z_rotation;</div>
@@ -135,9 +135,9 @@ $(function() {
 <div class="line">Eigen::Vector3d euler_angles = combined_transformation.angles();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Get the vector representation (x, y, z, a, b, c) of an affine transformation</span></div>
-<div class="line"><a class="code" href="namespacemovex.html#a4673c86a5b4656131071252aba314494">frankx::Vector6d</a> pose = combined_transformation.vector();</div>
-</div><!-- fragment --><p>In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects. In python, this translates into </p><div class="fragment"><div class="line">z_translation = Affine(0.0, 0.0, 0.5)</div>
-<div class="line">z_rotation = Affine(0.0, 0.0, 0.0, math.pi / 3, 0.0, 0.0)</div>
+<div class="line"><a class="code" href="namespacefrankx.html#a3ff5f45e0788c6347b020256df16ae42">frankx::Vector6d</a> pose = combined_transformation.vector();</div>
+</div><!-- fragment --><p>In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects. In python, this translates into </p><div class="fragment"><div class="line">z_translation = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.5)</div>
+<div class="line">z_rotation = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.0, math.pi / 3, 0.0, 0.0)</div>
 <div class="line">combined_transformation = z_translation * z_rotation</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># These two are now numpy arrays</span></div>
@@ -162,17 +162,17 @@ $(function() {
 <div class="line">m1 = JointMotion([-1.81194, 1.17910, 1.75710, -2.1416, -1.14336, 1.63304, -0.43217])</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># A linear motion in cartesian space</span></div>
-<div class="line">m2 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0))</div>
-<div class="line">m3 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0), elbow=1.7)  <span class="comment"># With target elbow angle</span></div>
+<div class="line">m2 = LinearMotion(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0))</div>
+<div class="line">m3 = LinearMotion(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0), elbow=1.7)  <span class="comment"># With target elbow angle</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># A linear motion in cartesian space relative to the initial position</span></div>
-<div class="line">m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))</div>
+<div class="line">m4 = LinearRelativeMotion(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.1, 0.0))</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># A more complex motion by defining multiple waypoints</span></div>
 <div class="line">m5 = WaypointMotion([</div>
-<div class="line">  Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),</div>
+<div class="line">  Waypoint(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),</div>
 <div class="line">  <span class="comment"># The following waypoint is relative to the prior one</span></div>
-<div class="line">  Waypoint(Affine(0.0, 0.1, 0.0), Waypoint.ReferenceType.Relative)</div>
+<div class="line">  Waypoint(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.1, 0.0), Waypoint.ReferenceType.Relative)</div>
 <div class="line">])</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># Hold the position for [s]</span></div>
@@ -181,7 +181,7 @@ $(function() {
 <div class="line">robot.move(m2)</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># To use a given frame relative to the end effector</span></div>
-<div class="line">camera_frame = Affine(0.1, 0.0, 0.1)</div>
+<div class="line">camera_frame = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.1, 0.0, 0.1)</div>
 <div class="line">robot.move(camera_frame, m3)</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># To change the dynamics of the motion, use MotionData</span></div>
@@ -190,7 +190,7 @@ $(function() {
 </div><!-- fragment --><p>Using MotionData, you can adapt the dynamics (velocity, acceleration and jerk) of a specific motion. </p><div class="fragment"><div class="line">data.velocity_rel = 1.0</div>
 <div class="line">data.jerk_rel = 0.2</div>
 </div><!-- fragment --><h3>Real-Time Reactions</h3>
-<p>By adding reactions to the motion data, the robot can react to unforeseen events. In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. If the threshold is exceeded, the reaction fires. Following comparisons are currently implemented </p><div class="fragment"><div class="line">reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.01))  <span class="comment"># Move up for 1cm</span></div>
+<p>By adding reactions to the motion data, the robot can react to unforeseen events. In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. If the threshold is exceeded, the reaction fires. Following comparisons are currently implemented </p><div class="fragment"><div class="line">reaction_motion = LinearRelativeMotion(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.01))  <span class="comment"># Move up for 1cm</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># Stop motion if the overall force is greater than 30N</span></div>
 <div class="line">d1 = MotionData().with_reaction(Reaction(Measure.ForceXYZNorm() &gt; 30.0))</div>
@@ -227,7 +227,7 @@ $(function() {
 <div class="line"><span class="comment">// Wait for key input from user</span></div>
 <div class="line">std::cin.get();</div>
 <div class="line"> </div>
-<div class="line">motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);</div>
+<div class="line">motion_hold.setNextWaypoint(Waypoint(<a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);</div>
 </div><!-- fragment --><h3>Gripper</h3>
 <p>In the <code><a class="el" href="classfrankx_1_1_gripper.html">frankx::Gripper</a></code> class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> gripper = Gripper(<span class="stringliteral">&quot;172.16.0.2&quot;</span>);</div>
@@ -297,10 +297,11 @@ Time-optimal with given constraints.  </td></tr>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <div class="ttc" id="anamespacefrankx_html"><div class="ttname"><a href="namespacefrankx.html">frankx</a></div><div class="ttdef"><b>Definition:</b> __init__.py:1</div></div>
-<div class="ttc" id="astructmovex_1_1_linear_relative_motion_html"><div class="ttname"><a href="structmovex_1_1_linear_relative_motion.html">movex::LinearRelativeMotion</a></div><div class="ttdef"><b>Definition:</b> motion_waypoint.hpp:49</div></div>
-<div class="ttc" id="aclassfrankx_1_1_robot_html"><div class="ttname"><a href="classfrankx_1_1_robot.html">frankx::Robot</a></div><div class="ttdef"><b>Definition:</b> robot.hpp:29</div></div>
+<div class="ttc" id="astructmovex_1_1_linear_relative_motion_html"><div class="ttname"><a href="structmovex_1_1_linear_relative_motion.html">movex::LinearRelativeMotion</a></div><div class="ttdef"><b>Definition:</b> motion_waypoint.hpp:51</div></div>
+<div class="ttc" id="aclassfrankx_1_1_robot_html"><div class="ttname"><a href="classfrankx_1_1_robot.html">frankx::Robot</a></div><div class="ttdef"><b>Definition:</b> robot.hpp:31</div></div>
+<div class="ttc" id="anamespacefrankx_html_a3ff5f45e0788c6347b020256df16ae42"><div class="ttname"><a href="namespacefrankx.html#a3ff5f45e0788c6347b020256df16ae42">frankx::Vector6d</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, 1 &gt; Vector6d</div><div class="ttdef"><b>Definition:</b> motion_generator.hpp:16</div></div>
+<div class="ttc" id="anamespacefrankx_html_a369e24cda80ac20b1945fb2625035fb3"><div class="ttname"><a href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">frankx::Affine</a></div><div class="ttdeci">affx::Affine Affine</div><div class="ttdef"><b>Definition:</b> motion_generator.hpp:15</div></div>
 <div class="ttc" id="afrankx_8hpp_html"><div class="ttname"><a href="frankx_8hpp.html">frankx.hpp</a></div></div>
-<div class="ttc" id="anamespacemovex_html_a4673c86a5b4656131071252aba314494"><div class="ttname"><a href="namespacemovex.html#a4673c86a5b4656131071252aba314494">movex::Vector6d</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, 1 &gt; Vector6d</div><div class="ttdef"><b>Definition:</b> affine.hpp:11</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

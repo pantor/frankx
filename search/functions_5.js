@@ -1,14 +1,12 @@
 var searchData=
 [
-  ['finish_423',['finish',['../structmovex_1_1_impedance_motion.html#a56b311189a75b574ceeb23d16ac2b98b',1,'movex::ImpedanceMotion::finish()'],['../structmovex_1_1_waypoint_motion.html#a50bc757993457db56a601f62791d2beb',1,'movex::WaypointMotion::finish()']]],
-  ['forcex_424',['ForceX',['../classmovex_1_1_measure.html#a0356de45f3fce83a83291229af3569b1',1,'movex::Measure']]],
-  ['forcexynorm_425',['ForceXYNorm',['../classmovex_1_1_measure.html#a38cfaa3f925b8fac59c4d0fcdb3866c0',1,'movex::Measure']]],
-  ['forcexyznorm_426',['ForceXYZNorm',['../classmovex_1_1_measure.html#a2011e5a144fc2817338f852e9d2e3dab',1,'movex::Measure']]],
-  ['forcey_427',['ForceY',['../classmovex_1_1_measure.html#a56f0bcab11b20bd9c29533361956ab9c',1,'movex::Measure']]],
-  ['forcez_428',['ForceZ',['../classmovex_1_1_measure.html#ab82a55be32a8d8ac29cb1fd21efaf3af',1,'movex::Measure']]],
-  ['forward_429',['forward',['../structfrankx_1_1_kinematics.html#a5f92d49f0a874359f88a5a1f50ad3ba0',1,'frankx::Kinematics']]],
-  ['forward_5fchain_430',['forward_chain',['../classmovex_1_1_kinematic_chain.html#a0d5998fff0183b9d6ed36a985b29e475',1,'movex::KinematicChain']]],
-  ['forwardelbow_431',['forwardElbow',['../structfrankx_1_1_kinematics.html#a80ec427382445d3776fc9d704867dbdd',1,'frankx::Kinematics']]],
-  ['forwardeuler_432',['forwardEuler',['../structfrankx_1_1_kinematics.html#ad42354b86342ed905c80852402bf4e83',1,'frankx::Kinematics']]],
-  ['forwardkinematics_433',['forwardKinematics',['../classfrankx_1_1_robot.html#a7d3fc0014f71e126ef8c7794bd1dfada',1,'frankx::Robot']]]
+  ['get_5fgripper_393',['get_gripper',['../classfrankx_1_1robot_1_1_robot.html#aeda50ea6f233388ec441d9e190f20674',1,'frankx::robot::Robot']]],
+  ['get_5findex_394',['get_index',['../classmovex_1_1_path.html#a072054237f6664c5fc90aba419571728',1,'movex::Path']]],
+  ['get_5flength_395',['get_length',['../classmovex_1_1_path.html#afbaec66435a26e5a4a28da14ca715af9',1,'movex::Path::get_length()'],['../structmovex_1_1_segment.html#abb9acc93bdffe6cf748b1cba7ade0177',1,'movex::Segment::get_length()'],['../classmovex_1_1_line_segment.html#ac9d311c5096a6fd8efb9e078caf39a94',1,'movex::LineSegment::get_length()'],['../classmovex_1_1_quartic_blend_segment.html#a0707ba9e32eb1ae2ae0f2763170a2ee3',1,'movex::QuarticBlendSegment::get_length()']]],
+  ['get_5flocal_396',['get_local',['../classmovex_1_1_path.html#aa3683103c3319c23a7d98eedfd694ef0',1,'movex::Path']]],
+  ['getinputlimits_397',['getInputLimits',['../structfrankx_1_1_motion_generator.html#aefe880383f7f248d84f0ac61ccd73c45',1,'frankx::MotionGenerator::getInputLimits(RobotType *robot, const MotionData &amp;data)'],['../structfrankx_1_1_motion_generator.html#a10fd05c62a446a7b965c3ac70e3c23d7',1,'frankx::MotionGenerator::getInputLimits(RobotType *robot, const Waypoint &amp;waypoint, const MotionData &amp;data)']]],
+  ['gettarget_398',['getTarget',['../structmovex_1_1_impedance_motion.html#ac92bb3ec693761931e633a3887000673',1,'movex::ImpedanceMotion']]],
+  ['gettargetaffine_399',['getTargetAffine',['../structmovex_1_1_waypoint.html#a6097aa1ea326195e6019ece7ac42bdf6',1,'movex::Waypoint']]],
+  ['gettargetvector_400',['getTargetVector',['../structmovex_1_1_waypoint.html#a4c62b9b210991538de36701645bc4294',1,'movex::Waypoint::getTargetVector(const Affine &amp;old_affine, double old_elbow) const'],['../structmovex_1_1_waypoint.html#a83a1a0ac43c02b8035b81b62f40883d1',1,'movex::Waypoint::getTargetVector(const Affine &amp;frame, const Affine &amp;old_affine, double old_elbow) const']]],
+  ['gripper_401',['Gripper',['../classfrankx_1_1_gripper.html#afff4b563f041efafb86af903acf6fa40',1,'frankx::Gripper']]]
 ];

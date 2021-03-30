@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['reaction_355',['Reaction',['../structmovex_1_1_reaction.html',1,'movex']]],
-  ['robot_356',['Robot',['../classfrankx_1_1robot_1_1_robot.html',1,'frankx.robot.Robot'],['../classfrankx_1_1_robot.html',1,'frankx::Robot']]],
-  ['robotstate_357',['RobotState',['../structmovex_1_1_robot_state.html',1,'movex']]]
+  ['segment_325',['Segment',['../structmovex_1_1_segment.html',1,'movex']]],
+  ['spiraltargetmotion_326',['SpiralTargetMotion',['../structmovex_1_1_impedance_motion_1_1_spiral_target_motion.html',1,'movex::ImpedanceMotion']]],
+  ['state_327',['State',['../structmovex_1_1_trajectory_1_1_state.html',1,'movex::Trajectory']]],
+  ['stopmotion_328',['StopMotion',['../structmovex_1_1_stop_motion.html',1,'movex']]]
 ];
