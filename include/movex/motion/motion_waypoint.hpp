@@ -3,7 +3,7 @@
 #include <atomic>
 #include <optional>
 
-#include <movex/affine.hpp>
+#include <affx/affine.hpp>
 #include <movex/waypoint.hpp>
 
 
@@ -14,6 +14,8 @@ namespace movex {
 * Works with aribtrary initial conditions.
 */
 struct WaypointMotion {
+    using Affine = affx::Affine;
+
     bool reload {false};
     bool return_when_finished {true};
 

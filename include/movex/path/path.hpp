@@ -5,7 +5,7 @@
 
 #include <Eigen/Core>
 
-#include <movex/affine.hpp>
+#include <affx/affine.hpp>
 #include <movex/waypoint.hpp>
 #include <movex/path/segment.hpp>
 
@@ -13,6 +13,8 @@
 namespace movex {
 
 class Path {
+    using Affine = affx::Affine;
+
     std::vector<double> cumulative_lengths;
 
     double length {0.0};

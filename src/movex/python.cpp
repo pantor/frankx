@@ -6,6 +6,7 @@
 #include <pybind11/eigen.h>
 #include <pybind11/operators.h>
 
+#include <affx/affine.hpp>
 #include <movex/path/path.hpp>
 #include <movex/path/time_parametrization.hpp>
 #include <movex/path/trajectory.hpp>
@@ -21,7 +22,7 @@ PYBIND11_MODULE(_movex, m) {
 
     constexpr size_t DOFs {2};
 
-    py::class_<Affine>(m, "Affine")
+    /* py::class_<Affine>(m, "Affine")
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
@@ -44,15 +45,15 @@ PYBIND11_MODULE(_movex, m) {
         .def_property("b", &Affine::b, &Affine::set_b)
         .def_property("c", &Affine::c, &Affine::set_c)
         .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
-        .def("__repr__", &Affine::toString);
+        .def("__repr__", &Affine::toString); */
 
     py::class_<Path>(m, "Path")
         .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
-        .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
+        .def(py::init<const std::vector<affx::Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
         .def_property_readonly("length", &Path::get_length)
         .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
-        .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
+        .def("q", (Vector7d (Path::*)(double, const affx::Affine&) const)&Path::q, "s"_a, "frame"_a)
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
         .def("pdddq", &Path::pdddq, "s"_a)

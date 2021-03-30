@@ -2,12 +2,18 @@
 
 #include <optional>
 
-#include <movex/affine.hpp>
+#include <Eigen/Geometry>
+
+#include <affx/affine.hpp>
 
 
 namespace movex {
 
 struct Waypoint {
+    using Affine = affx::Affine;
+    using Vector6d = Eigen::Matrix<double, 6, 1>;
+    using Vector7d = Eigen::Matrix<double, 7, 1>;
+
     enum class ReferenceType {
         Absolute,
         Relative

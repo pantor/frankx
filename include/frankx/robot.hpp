@@ -11,6 +11,7 @@
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
+#include <affx/affine.hpp>
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
 #include <movex/robot/kinematics.hpp>
@@ -25,6 +26,7 @@
 
 namespace frankx {
     using namespace movex;
+    using Affine = affx::Affine;
 
 class Robot: public franka::Robot {
     // Modified DH-parameters: alpha, d, a

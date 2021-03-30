@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Eigen/Core>
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
@@ -11,6 +12,9 @@
 
 namespace frankx {
     using namespace movex;
+    using Affine = affx::Affine;
+    using Vector6d = Eigen::Matrix<double, 6, 1>;
+    using Vector7d = Eigen::Matrix<double, 7, 1>;
 
 struct MotionGenerator {
     static inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {

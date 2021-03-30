@@ -17,63 +17,6 @@ using namespace frankx;
 PYBIND11_MODULE(_frankx, m) {
     m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
-    py::class_<Affine>(m, "Affine")
-        .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
-        .def(py::init<double, double, double, double, double, double, double>(), "x"_a, "y"_a, "z"_a, "q_w"_a, "q_x"_a, "q_y"_a, "q_z"_a)
-        .def(py::init<Vector6d>())
-        .def(py::init<Vector7d>())
-        .def(py::init<const std::array<double, 16>&>(), "data"_a)
-        .def(py::init<const Affine &>(), "affine"_a) // Copy constructor
-        .def(py::init([](py::dict d) {
-            if (d.contains("q_x")) { // Prefer quaternion construction
-                return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
-            }
-            return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
-        }))
-        .def(py::self * py::self)
-        .def("matrix", &Affine::matrix)
-        .def("inverse", &Affine::inverse)
-        .def("is_approx", &Affine::isApprox)
-        .def("translate", &Affine::translate)
-        .def("pretranslate", &Affine::pretranslate)
-        .def("translation", &Affine::translation)
-        .def_property("x", &Affine::x, &Affine::set_x)
-        .def_property("y", &Affine::y, &Affine::set_y)
-        .def_property("z", &Affine::z, &Affine::set_z)
-        .def("rotate", &Affine::rotate)
-        .def("prerotate", &Affine::prerotate)
-        .def("rotation", &Affine::rotation)
-        .def("quaternion", &Affine::quaternion)
-        .def_property("a", &Affine::a, &Affine::set_a)
-        .def_property("b", &Affine::b, &Affine::set_b)
-        .def_property("c", &Affine::c, &Affine::set_c)
-        .def_property_readonly("q_w", &Affine::q_w)
-        .def_property_readonly("q_x", &Affine::q_x)
-        .def_property_readonly("q_y", &Affine::q_y)
-        .def_property_readonly("q_z", &Affine::q_z)
-        .def("vector", &Affine::vector)
-        .def("vector_with_elbow", &Affine::vector_with_elbow, "elbow"_a)
-        .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
-        .def("get_inner_random", &Affine::getInnerRandom)
-        .def("__repr__", &Affine::toString)
-        .def("as_dict", [](Affine self) {
-            auto translation = self.translation();
-            auto quaternion = self.quaternion();
-
-            py::dict d;
-            d["x"] = translation.x();
-            d["y"] = translation.y();
-            d["z"] = translation.z();
-            d["a"] = self.a();
-            d["b"] = self.b();
-            d["c"] = self.c();
-            d["q_w"] = quaternion.w();
-            d["q_x"] = quaternion.x();
-            d["q_y"] = quaternion.y();
-            d["q_z"] = quaternion.z();
-            return d;
-        });
-
     py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
         .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
         .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
@@ -336,6 +279,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readwrite("stop_at_python_signal", &Robot::stop_at_python_signal)
         .def("server_version", &Robot::serverVersion)
         .def("set_default_behavior", &Robot::setDefaultBehavior)
+        .def("set_joint_impedance", &Robot::setJointImpedance)
         .def("set_cartesian_impedance", &Robot::setCartesianImpedance)
         .def("set_K", &Robot::setK)
         .def("set_EE", &Robot::setEE)

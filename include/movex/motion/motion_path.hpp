@@ -13,6 +13,8 @@ namespace movex {
 * Needs zero velocity and acceleration at start time.
 */
 struct PathMotion {
+    using Affine = affx::Affine;
+
     std::vector<Waypoint> waypoints;
 
     explicit PathMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) { }

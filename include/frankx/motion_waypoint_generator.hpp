@@ -11,6 +11,7 @@
 
 namespace frankx {
     using namespace movex;
+    using Affine = affx::Affine;
 
 template<class RobotType>
 struct WaypointMotionGenerator: public MotionGenerator {

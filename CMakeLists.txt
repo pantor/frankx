@@ -17,16 +17,16 @@ message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 
 
+add_subdirectory(affx)
 add_subdirectory(ruckig)
 
 
 add_library(movex SHARED
-  src/movex/affine.cpp
   src/movex/path.cpp
 )
 target_compile_features(movex PUBLIC cxx_std_17)
 target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(movex PUBLIC Eigen3::Eigen ruckig)
+target_link_libraries(movex PUBLIC affx ruckig)
 
 
 add_library(frankx SHARED

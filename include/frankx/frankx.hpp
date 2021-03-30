@@ -1,6 +1,6 @@
 #pragma once
 
-#include <movex/affine.hpp>
+#include <affx/affine.hpp>
 #include <movex/robot/measure.hpp>
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/reaction.hpp>
