@@ -92,11 +92,8 @@ $(function() {
 <p>To use frankx within Docker we have supplied a <a href="docker/Dockerfile">Dockerfile</a> which you currently need to build yourself:</p>
 <div class="fragment"><div class="line">git clone https://github.com/pantor/frankx.git</div>
 <div class="line">cd frankx/</div>
-<div class="line">docker build -t pantor/frankx -f docker/Dockerfile .</div>
-</div><!-- fragment --><p>To use another version of libfranka than default (v.0.7.0) simply add the build arg to the command, e.g.:</p>
-<div class="fragment"><div class="line">docker build -t pantor/frankx --build-arg libfranka_version=0.7.1 -f docker/Dockerfile .</div>
-</div><!-- fragment --><h4>Running the Containers</h4>
-<p>To run the container simply:</p>
+<div class="line">docker build -t pantor/frankx --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .</div>
+</div><!-- fragment --><p>To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:</p>
 <div class="fragment"><div class="line">docker run -it --rm --network=host --privileged pantor/frankx</div>
 </div><!-- fragment --><p>The container requires access to the host machines network <em>and</em> elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.</p>
 <h2>Tutorial</h2>
@@ -159,6 +156,9 @@ $(function() {
 <div class="line">robot.velocity_rel = 0.2</div>
 <div class="line">robot.acceleration_rel = 0.1</div>
 <div class="line">robot.jerk_rel = 0.01</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Get the current pose</span></div>
+<div class="line">current_pose = robot.current_pose()</div>
 </div><!-- fragment --><h3>Motion Types</h3>
 <p>Frankx defines five different motion types. In python, you can use them as follows: </p><div class="fragment"><div class="line"><span class="comment"># A point-to-point motion in the joint space</span></div>
 <div class="line">m1 = JointMotion([-1.81194, 1.17910, 1.75710, -2.1416, -1.14336, 1.63304, -0.43217])</div>
