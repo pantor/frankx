@@ -331,32 +331,6 @@ print('New joints: ', q_new)
 ```
 
 
-## Movex
-
-We seperated some essential algorithms for robot motions into the standalone C++ library *movex*.
-
-
-### Online Trajectory Generators
-
-All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:
-
-
-| Name              | Input                                                                                                                                  | Details                                                                                        |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
-| Smoothie          | Current Position<br>Target Position<br>Dynamic Scaling                                                                                      | Used by Franka in [examples](https://github.com/frankaemika/libfranka/blob/master/examples/examples_common.h).                                                                    |
-| [Reflexxes](http://reflexxes.ws/)<br> Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
-| [Reflexxes](http://reflexxes.ws/)<br> Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and costly for non-academic licenses.<br>Time-optimal with given constraints. |
-
-
-**Ruckig** is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from *any* current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.
-
-
-## Path
-
-The path library is able to define paths from waypoints and blend them for a smooth second derivative. We are working on a third-order time-parametrization algorithm.
-
-
 ## Documentation
 
 An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
@@ -367,8 +341,8 @@ An auto-generated documentation can be found at [https://pantor.github.io/frankx
 Frankx is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
-- Libfranka v0.7.1
-- Pybind11 v2.6
+- Libfranka v0.7.1  (sorry, our robot doesn't support 0.8)
+- Pybind11 v2.6.0
 - Catch2 v2.9 (only for testing)
 
 
