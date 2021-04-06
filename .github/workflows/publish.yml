@@ -57,7 +57,7 @@ jobs:
         mkdir build && cd build
         cmake -DPYBIND11_TEST=OFF ..
         make -j2
-        sudo make install
+        make install
 
     - name: Install Catch2
       run: |
