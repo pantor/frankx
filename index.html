@@ -76,7 +76,7 @@ $(function() {
 <p>Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around <a href="https://frankaemika.github.io/docs/libfranka.html">libfranka</a>, while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.</p>
 <h2>Installation</h2>
 <p>To start using frankx with Python, you can use pip via </p><div class="fragment"><div class="line">pip install frankx</div>
-</div><!-- fragment --><p>Frankx is based on <a href="https://github.com/frankaemika/libfranka">libfranka</a>, <a href="https://eigen.tuxfamily.org">Eigen</a> for transformation calculations and <a href="https://github.com/pybind/pybind11">pybind11</a> for the Python bindings. Frankx uses the <a href="https://github.com/pantor/ruckig">Ruckig</a> library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk. After installing the dependencies (the exact versions can be found below), you can build and install frankx via</p>
+</div><!-- fragment --><p>Frankx is based on <a href="https://github.com/frankaemika/libfranka">libfranka</a>, <a href="https://eigen.tuxfamily.org">Eigen</a> for transformation calculations and <a href="https://github.com/pybind/pybind11">pybind11</a> for the Python bindings. Frankx uses the <a href="https://github.com/pantor/ruckig">Ruckig</a> library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via</p>
 <div class="fragment"><div class="line">git clone --recurse-submodules git@github.com:pantor/frankx.git</div>
 <div class="line">cd frankx</div>
 <div class="line">mkdir -p build</div>
@@ -84,7 +84,9 @@ $(function() {
 <div class="line">cmake -DBUILD_TYPE=Release ..</div>
 <div class="line">make</div>
 <div class="line">make install</div>
-</div><!-- fragment --><p>To use frankx, you can also include it as a subproject in your parent CMake via <code>add_subdirectory(frankx)</code> and then <code>target_link_libraries(&lt;target&gt; libfrankx)</code>. Make sure that the built library can be found from Python by adapting your Python Path.</p>
+</div><!-- fragment --><p>To use frankx, you can also include it as a subproject in your parent CMake via <code>add_subdirectory(frankx)</code> and then <code>target_link_libraries(&lt;target&gt; libfrankx)</code>. If you need only the Python module, you can install frankx via</p>
+<div class="fragment"><div class="line">pip install .</div>
+</div><!-- fragment --><p>Make sure that the built library can be found from Python by adapting your Python Path.</p>
 <h3>Using Docker</h3>
 <h4>Building the Image</h4>
 <p>To use frankx within Docker we have supplied a <a href="docker/Dockerfile">Dockerfile</a> which you currently need to build yourself:</p>
@@ -250,7 +252,27 @@ $(function() {
 <div class="line">  gripper.release(50.0);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>The Python API should be very straight-forward for the Gripper class.</p>
-<h2>Movex</h2>
+<h3>Kinematics</h3>
+<p>Frankx includes a rudimentary, non-realtime-capable forward and inverse kinematics.</p>
+<div class="fragment"><div class="line"><span class="comment"># Some initial joint configuration</span></div>
+<div class="line">q = [-1.45549, 1.15401, 1.50061, -2.30909, -1.3141, 1.9391, 0.02815]</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Calculate the forward kinematics</span></div>
+<div class="line">x = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(Kinematics.forward(q))</div>
+<div class="line">print(<span class="stringliteral">&#39;Current end effector position: &#39;</span>, x)</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Define new target position</span></div>
+<div class="line">x_new = <a class="code" href="namespacefrankx.html#a369e24cda80ac20b1945fb2625035fb3">Affine</a>(x=0.1, y=0.0, z=0.0) * x</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Franka has 7 DoFs, so what to do with the remaining Null space?</span></div>
+<div class="line">null_space = NullSpaceHandling(2, 1.4) <span class="comment"># Set elbow joint to 1.4</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Inverse kinematic with target, initial joint angles, and Null space configuration</span></div>
+<div class="line">q_new = Kinematics.inverse(x_new.vector(), q, null_space)</div>
+<div class="line"> </div>
+<div class="line">print(<span class="stringliteral">&#39;New position: &#39;</span>, x_new)</div>
+<div class="line">print(<span class="stringliteral">&#39;New joints: &#39;</span>, q_new)</div>
+</div><!-- fragment --><h2>Movex</h2>
 <p>We seperated some essential algorithms for robot motions into the standalone C++ library <em>movex</em>.</p>
 <h3>Online Trajectory Generators</h3>
 <p>All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:</p>
