@@ -272,46 +272,14 @@ $(function() {
 <div class="line"> </div>
 <div class="line">print(<span class="stringliteral">&#39;New position: &#39;</span>, x_new)</div>
 <div class="line">print(<span class="stringliteral">&#39;New joints: &#39;</span>, q_new)</div>
-</div><!-- fragment --><h2>Movex</h2>
-<p>We seperated some essential algorithms for robot motions into the standalone C++ library <em>movex</em>.</p>
-<h3>Online Trajectory Generators</h3>
-<p>All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Name </th><th class="markdownTableHeadNone">Input </th><th class="markdownTableHeadNone">Details  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Ruckig</b> </td><td class="markdownTableBodyNone">Current Position, Velocity, Acceleration<br  />
-Target Position, Velocity, Acceleration<br  />
-Max Velocity, Acceleration, Jerk </td><td class="markdownTableBodyNone">Time-optimal with given constraints.<br  />
-Default OTG of Frankx.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Smoothie </td><td class="markdownTableBodyNone">Current Position<br  />
-Target Position<br  />
-Dynamic Scaling </td><td class="markdownTableBodyNone">Used by Franka in <a href="https://github.com/frankaemika/libfranka/blob/master/examples/examples_common.h">examples</a>.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a href="http://reflexxes.ws/">Reflexxes</a><br  />
- Type II </td><td class="markdownTableBodyNone">Current Position, Velocity<br  />
-Target Position, Velocity<br  />
-Max Velocity, Acceleration </td><td class="markdownTableBodyNone">Non-constrained Jerk.<br  />
-Time-optimal with given constraints.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="http://reflexxes.ws/">Reflexxes</a><br  />
- Type IV </td><td class="markdownTableBodyNone">Current Position, Velocity, Acceleration<br  />
-Target Position, Velocity<br  />
-Max Velocity, Acceleration, Jerk </td><td class="markdownTableBodyNone">Closed-source and costly for non-academic licenses.<br  />
-Time-optimal with given constraints.  </td></tr>
-</table>
-<p><b>Ruckig</b> is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from <em>any</em> current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.</p>
-<h2>Path</h2>
-<p>The path library is able to define paths from waypoints and blend them for a smooth second derivative. We are working on a third-order time-parametrization algorithm.</p>
-<h2>Documentation</h2>
+</div><!-- fragment --><h2>Documentation</h2>
 <p>An auto-generated documentation can be found at <a href="https://pantor.github.io/frankx/">https://pantor.github.io/frankx/</a>. Moreover, there are multiple examples for both C++ and Python in the <a href="https://github.com/pantor/frankx/tree/master/examples">examples</a> directory. We will add a more detailed documentation once frankx reaches v1.0.</p>
 <h2>Development</h2>
 <p>Frankx is written in C++17 and Python3.7. It is currently tested against following versions</p>
 <ul>
 <li>Eigen v3.3.7</li>
-<li>Libfranka v0.7.1</li>
-<li>Pybind11 v2.6</li>
+<li>Libfranka v0.7.1 (sorry, our robot doesn't support 0.8)</li>
+<li>Pybind11 v2.6.0</li>
 <li>Catch2 v2.9 (only for testing)</li>
 </ul>
 <h2>License</h2>
