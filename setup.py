@@ -1,8 +1,7 @@
 import os
 import re
-import sys
-import platform
 import subprocess
+import sys
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
@@ -30,38 +29,35 @@ class CMakeBuild(build_ext):
             )
 
         cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
-        if cmake_version < LooseVersion('3.11.0'):
-            raise RuntimeError('CMake >= 3.11.0 is required')
+        if cmake_version < LooseVersion('3.10.0'):
+            raise RuntimeError('CMake >= 3.10.0 is required')
 
         for ext in self.extensions:
             self.build_extension(ext)
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
-        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir]
+
 
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
-        # CI
-        cmake_args += ['-DCMAKE_CXX_FLAGS_RELEASE=-O3']
-        cmake_args += ['-DBUILD_PYBIND11=ON']
-        cmake_args += ['-DUSE_PYTHON_EXTENSION=OFF']
-        cmake_args += ['-DPYBIND11_TEST=OFF']
+        cmake_args = [
+            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+            '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
+            '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
+            '-DCMAKE_BUILD_TYPE=' + build_type,
+            '-DUSE_PYTHON_EXTENSION=OFF',
+            '-DBUILD_SHARED_LIBS=OFF',
+            '-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
+            '-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN'),
+            '-DCMAKE_POSITION_INDEPENDENT_CODE=ON',
+        ]
 
-        # Pile all .so in one place and use $ORIGIN as RPATH
-        cmake_args += ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE']
-        cmake_args += ['-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN')]
-
-        cmake_args += ['-DCMAKE_BUILD_TYPE=' + build_type]
-        build_args += ['--', '-j2']
-
-        env = os.environ.copy()
-        env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
-                                                              self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+
+        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
         subprocess.check_call(['cmake', '--build', '.', '--target', ext.name] + build_args, cwd=self.build_temp)
 
 
@@ -82,9 +78,10 @@ setup(
     classifiers=[
         'Development Status :: 2 - Pre-Beta',
         'Intended Audience :: Science/Research',
-        'Topic :: Software Development :: Build Tools',
+        'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Programming Language :: C++',
     ],
     python_requires='>=3.6',
+    zip_safe=False,
 )

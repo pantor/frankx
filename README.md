@@ -30,7 +30,6 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
-
 ## Installation
 
 To start using frankx with Python, you can use pip via
@@ -38,7 +37,7 @@ To start using frankx with Python, you can use pip via
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://github.com/pantor/ruckig) library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://github.com/pantor/ruckig) library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
 
 ```bash
 git clone --recurse-submodules git@github.com:pantor/frankx.git
@@ -50,7 +49,14 @@ make
 make install
 ```
 
-To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
+To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. If you need only the Python module, you can install frankx via
+
+```bash
+pip install .
+```
+
+Make sure that the built library can be found from Python by adapting your Python Path.
+
 
 ### Using Docker
 
@@ -79,6 +85,7 @@ docker run -it --rm --network=host --privileged pantor/frankx
 ```
 
 The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
+
 
 ## Tutorial
 
@@ -296,6 +303,32 @@ if (is_grasping) {
 ```
 
 The Python API should be very straight-forward for the Gripper class.
+
+
+### Kinematics
+
+Frankx includes a rudimentary, non-realtime-capable forward and inverse kinematics.
+
+```.py
+# Some initial joint configuration
+q = [-1.45549, 1.15401, 1.50061, -2.30909, -1.3141, 1.9391, 0.02815]
+
+# Calculate the forward kinematics
+x = Affine(Kinematics.forward(q))
+print('Current end effector position: ', x)
+
+# Define new target position
+x_new = Affine(x=0.1, y=0.0, z=0.0) * x
+
+# Franka has 7 DoFs, so what to do with the remaining Null space?
+null_space = NullSpaceHandling(2, 1.4) # Set elbow joint to 1.4
+
+# Inverse kinematic with target, initial joint angles, and Null space configuration
+q_new = Kinematics.inverse(x_new.vector(), q, null_space)
+
+print('New position: ', x_new)
+print('New joints: ', q_new)
+```
 
 
 ## Movex
