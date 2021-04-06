@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.11)
 project(frankx VERSION 0.1.0 LANGUAGES CXX)
 
 
+include(GNUInstallDirs)
+
+
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
