@@ -58,9 +58,7 @@ pip install .
 Make sure that the built library can be found from Python by adapting your Python Path.
 
 
-### Using Docker
-
-#### Building the Image
+#### Using Docker
 
 To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
 
