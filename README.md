@@ -67,18 +67,10 @@ To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) w
 ```bash
 git clone https://github.com/pantor/frankx.git
 cd frankx/
-docker build -t pantor/frankx -f docker/Dockerfile .
+docker build -t pantor/frankx --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
 ```
 
-To use another version of libfranka than default (v.0.7.0) simply add the build arg to the command, e.g.:
-
-```bash
-docker build -t pantor/frankx --build-arg libfranka_version=0.7.1 -f docker/Dockerfile .
-```
-
-#### Running the Containers
-
-To run the container simply:
+To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:
 
 ```bash
 docker run -it --rm --network=host --privileged pantor/frankx
@@ -172,6 +164,9 @@ robot.set_dynamic_rel(0.05)
 robot.velocity_rel = 0.2
 robot.acceleration_rel = 0.1
 robot.jerk_rel = 0.01
+
+# Get the current pose
+current_pose = robot.current_pose()
 ```
 
 
