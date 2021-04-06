@@ -38,6 +38,9 @@ class CMakeBuild(build_ext):
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
+        # required for auto-detection of auxiliary "native" libs
+        if not extdir.endswith(os.path.sep):
+            extdir += os.path.sep
 
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
@@ -48,6 +51,8 @@ class CMakeBuild(build_ext):
             '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
             '-DCMAKE_BUILD_TYPE=' + build_type,
             '-DUSE_PYTHON_EXTENSION=OFF',
+            '-DBUILD_EXAMPLES=OFF',
+            '-DBUILD_TESTS=OFF',
             '-DBUILD_SHARED_LIBS=OFF',
             '-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
             '-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN'),
