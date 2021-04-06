@@ -92,11 +92,3 @@ install(TARGETS frankx
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
 )
-
-# if(BUILD_PYTHON_MODULE)
-#   execute_process(
-#     COMMAND python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
-#     OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE
-#   )
-# 	install(TARGETS _frankx LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
-# endif()
