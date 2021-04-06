@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 
-project(frankx VERSION 0.1.0 LANGUAGES CXX)
+project(frankx VERSION 0.1.1 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
