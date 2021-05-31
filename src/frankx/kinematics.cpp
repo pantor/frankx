@@ -225,7 +225,7 @@ Eigen::Matrix<double, 7, 1> Kinematics::inverse(const Eigen::Matrix<double, 6, 1
     Eigen::Matrix<double, 6, 1> x_current;
     Eigen::Matrix<double, 7, 1> q_current = q0;
 
-    for (size_t i = 0; i < 80; ++i) {
+    for (size_t i = 0; i < 100; ++i) {
         x_current = forwardEuler(q_current);
 
         auto j = jacobian(q_current);

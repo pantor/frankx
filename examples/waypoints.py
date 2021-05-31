@@ -22,8 +22,8 @@ if __name__ == '__main__':
     # Define and move forwards
     motion_down = WaypointMotion([
         Waypoint(Affine(0.0, 0.0, -0.12), -0.2, Waypoint.Relative),
-        Waypoint(Affine(0.05, 0.0, 0.0), 0.0, Waypoint.Relative),
-        Waypoint(Affine(0.0, 0.05, 0.0, 0.4), 0.0, Waypoint.Relative),
+        Waypoint(Affine(0.08, 0.0, 0.0), 0.0, Waypoint.Relative),
+        Waypoint(Affine(0.0, 0.1, 0.0, 0.0), 0.0, Waypoint.Relative),
     ])
 
     # You can try to block the robot now.
