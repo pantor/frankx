@@ -60,6 +60,14 @@ struct ImpedanceMotionGenerator: public MotionGenerator {
             init(robot_state, period);
         }
 
+        if(data.last_pose_lock) {
+            const std::lock_guard<std::mutex> lock(*(data.last_pose_lock));
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+        else {
+            data.last_pose = Affine(robot_state.O_T_EE);
+        }
+
         std::array<double, 7> coriolis_array = model->coriolis(robot_state);
         std::array<double, 42> jacobian_array = model->zeroJacobian(franka::Frame::kEndEffector, robot_state);
 
