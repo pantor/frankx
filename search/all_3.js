@@ -15,5 +15,6 @@ var searchData=
   ['cooldown_5fiterations_23',['cooldown_iterations',['../structfrankx_1_1_waypoint_motion_generator.html#a88d48505401a58e8878159faa4968699',1,'frankx::WaypointMotionGenerator']]],
   ['current_5fcooldown_5fiteration_24',['current_cooldown_iteration',['../structfrankx_1_1_waypoint_motion_generator.html#adaedadf743eea7d0558f0ca93c5be3cf',1,'frankx::WaypointMotionGenerator']]],
   ['current_5fmotion_25',['current_motion',['../structfrankx_1_1_waypoint_motion_generator.html#add6dd8277e8033f6b29b23203e7d4c51',1,'frankx::WaypointMotionGenerator']]],
-  ['currentpose_26',['currentPose',['../classfrankx_1_1_robot.html#af911d6c3909e1b911e50e907dcd37f64',1,'frankx::Robot']]]
+  ['currentjointpositions_26',['currentJointPositions',['../classfrankx_1_1_robot.html#a369800c7d74eb596b851e7d56b243691',1,'frankx::Robot']]],
+  ['currentpose_27',['currentPose',['../classfrankx_1_1_robot.html#af911d6c3909e1b911e50e907dcd37f64',1,'frankx::Robot']]]
 ];
