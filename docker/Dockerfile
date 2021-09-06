@@ -90,13 +90,11 @@ RUN git clone https://github.com/catchorg/Catch2.git \
 # Build frankx     #
 # ---------------- #
 
-RUN mkdir -p frankx
-
-#RUN git clone https://github.com/pantor/frankx.git \
-#  && mkdir -p frankx/build && cd frankx/build \
-#  && cmake .. \
-#  && make -j$(nproc) \
-#  && make install \
-#  && make test
+RUN git clone --recursive https://github.com/pantor/frankx.git \
+  && mkdir -p frankx/build && cd frankx/build \
+  && cmake .. \
+  && make -j$(nproc) \
+  && make install \
+  && ./unit-test
 
 ENV PYTHONPATH=$PYTHONPATH:/code/frankx/build/ 
