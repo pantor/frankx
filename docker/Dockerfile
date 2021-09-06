@@ -80,7 +80,7 @@ RUN git clone https://github.com/catchorg/Catch2.git \
 # Build frankx     #
 # ---------------- #
 
-RUN git clone https://github.com/pantor/frankx.git \
+RUN git clone --recursive https://github.com/pantor/frankx.git \
   && mkdir -p frankx/build && cd frankx/build \
   && cmake .. \
   && make -j$(nproc) \
