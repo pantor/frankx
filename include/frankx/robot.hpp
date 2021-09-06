@@ -11,73 +11,29 @@
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
-#include <movex/otg/parameter.hpp>
+#include <affx/affine.hpp>
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
-#include <movex/motion/motion_impedance.hpp>
-#include <movex/motion/motion_joint.hpp>
-#include <movex/motion/motion_path.hpp>
-#include <movex/motion/motion_waypoint.hpp>
-#include <movex/otg/quintic.hpp>
-#include <movex/otg/smoothie.hpp>
-#include <movex/otg/ruckig.hpp>
+#include <movex/robot/kinematics.hpp>
 
-#ifdef WITH_REFLEXXES
-#include <movex/otg/reflexxes.hpp>
-#endif
+#include <frankx/kinematics.hpp>
+#include <frankx/motion_generator.hpp>
+#include <frankx/motion_impedance_generator.hpp>
+#include <frankx/motion_joint_generator.hpp>
+#include <frankx/motion_path_generator.hpp>
+#include <frankx/motion_waypoint_generator.hpp>
 
-
-namespace movex {
-    class ImpedanceMotion;
-    class JointMotion;
-    class PathMotion;
-    class WaypointMotion;
-}
 
 namespace frankx {
     using namespace movex;
+    using Affine = affx::Affine;
 
 class Robot: public franka::Robot {
-    std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(const MotionData& data);
-    std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> getInputLimits(const Waypoint& waypoint, const MotionData& data);
-    void setInputLimits(InputParameter<7>& input_parameters, const MotionData& data);
-    void setInputLimits(InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data);
-
-    inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {
-        auto affine = Affine(vector);
-        if (include_elbow) {
-            return franka::CartesianPose(affine.array(), {vector(6), -1});
-        }
-        return franka::CartesianPose(affine.array());
-    }
-
-    template <class T = double>
-    inline std::array<T, 7> VectorCartRotElbow(T cart, T rot, T elbow) {
-        return {cart, cart, cart, rot, rot, rot, elbow};
-    }
-
-    inline void setCartRotElbowVector(Vector7d& vector, double cart, double rot, double elbow) {
-        const std::array<double, 7> data = VectorCartRotElbow(cart, rot, elbow);
-        vector = Eigen::Map<const Vector7d>(data.data(), data.size());
-    }
-
-    movex::RobotState<7> convertState(const franka::RobotState& franka) {
-        movex::RobotState<7> movex;
-        movex.q = franka.q;
-        movex.q_d = franka.q_d;
-        movex.dq = franka.dq;
-
-        movex.O_T_EE = franka.O_T_EE;
-        movex.O_T_EE_c = franka.O_T_EE_c;
-        movex.O_dP_EE_c = franka.O_dP_EE_c;
-
-        movex.elbow = franka.elbow;
-        movex.elbow_c = franka.elbow_c;
-        movex.elbow_d = franka.elbow_d;
-
-        movex.O_F_ext_hat_K = franka.O_F_ext_hat_K;
-        return movex;
-    }
+    // Modified DH-parameters: alpha, d, a
+    const KinematicChain<7> kinematics = KinematicChain<7>(
+        {{{0.0, 0.333, 0.0}, {-M_PI/2, 0.0, 0.0}, {M_PI/2, 0.316, 0.0}, {M_PI/2, 0.0, 0.0825}, {-M_PI/2, 0.384, -0.0825}, {M_PI/2, 0.0, 0.0}, {M_PI/2, 0.0, 0.088}}},
+        Affine(0, 0, 0.107, M_PI/4, 0, M_PI)
+    );
 
 public:
     //! The robot's hostname / IP address
@@ -97,13 +53,12 @@ public:
     // Joint constraints
     static constexpr std::array<double, 7> max_joint_velocity {{2.175, 2.175, 2.175, 2.175, 2.610, 2.610, 2.610}}; // [rad/s]
     static constexpr std::array<double, 7> max_joint_acceleration {{15.0, 7.5, 10.0, 12.5, 15.0, 20.0, 20.0}}; // [rad/s²]
-
-    double velocity_rel {1.0};
-    double acceleration_rel {1.0};
-    double jerk_rel {1.0};
+    static constexpr std::array<double, 7> max_joint_jerk {{7500.0, 3750.0, 5000.0, 6250.0, 7500.0, 10000.0, 10000.0}}; // [rad/s^3]
 
     static constexpr size_t degrees_of_freedoms {7};
     static constexpr double control_rate {0.001}; // [s]
+
+    double velocity_rel {1.0}, acceleration_rel {1.0}, jerk_rel {1.0};
 
     franka::ControllerMode controller_mode {franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
 
@@ -123,8 +78,8 @@ public:
     bool recoverFromErrors();
 
     Affine currentPose(const Affine& frame = Affine());
-    // Affine forwardKinematics(const std::array<double, 7>& q);
-    // std::array<double, 7> inverseKinematics(const Affine& target, const Affine& frame = Affine());
+    Affine forwardKinematics(const std::array<double, 7>& q);
+    std::array<double, 7> inverseKinematics(const Affine& target, const std::array<double, 7>& q0);
 
     bool move(ImpedanceMotion& motion);
     bool move(ImpedanceMotion& motion, MotionData& data);
@@ -133,8 +88,6 @@ public:
 
     bool move(JointMotion motion);
     bool move(JointMotion motion, MotionData& data);
-    bool move(const Affine& frame, JointMotion motion);
-    bool move(const Affine& frame, JointMotion motion, MotionData& data);
 
     bool move(PathMotion motion);
     bool move(PathMotion motion, MotionData& data);

@@ -30,7 +30,6 @@
 Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
-
 ## Installation
 
 To start using frankx with Python, you can use pip via
@@ -38,9 +37,11 @@ To start using frankx with Python, you can use pip via
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx implements its own Online Trajectory Generator (OTG), but you can optionally use the battle-tested [Reflexxes](http://reflexxes.ws) library. As the Franka is quite sensitive to acceleration discontinuities, make sure to use *Reflexxes Type IV*. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://github.com/pantor/ruckig) library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
 
 ```bash
+git clone --recurse-submodules git@github.com:pantor/frankx.git
+cd frankx
 mkdir -p build
 cd build
 cmake -DBUILD_TYPE=Release ..
@@ -48,12 +49,32 @@ make
 make install
 ```
 
-If you want to use Reflexxes, make sure that it can be found by CMake by setting the `Reflexxes_ROOT_DIR`and `REFLEXXES_TYPE` argument:
+To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. If you need only the Python module, you can install frankx via
+
 ```bash
-cmake -DBUILD_TYPE=Release -DReflexxes_ROOT_DIR=../libs/RMLTypeIV -DREFLEXXES_TYPE=ReflexxesTypeIV ..
+pip install .
 ```
 
-To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. Make sure that the built library can be found from Python by adapting your Python Path.
+Make sure that the built library can be found from Python by adapting your Python Path.
+
+
+#### Using Docker
+
+To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
+
+```bash
+git clone https://github.com/pantor/frankx.git
+cd frankx/
+docker build -t pantor/frankx --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
+```
+
+To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:
+
+```bash
+docker run -it --rm --network=host --privileged pantor/frankx
+```
+
+The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
 
 
 ## Tutorial
@@ -141,6 +162,9 @@ robot.set_dynamic_rel(0.05)
 robot.velocity_rel = 0.2
 robot.acceleration_rel = 0.1
 robot.jerk_rel = 0.01
+
+# Get the current pose
+current_pose = robot.current_pose()
 ```
 
 
@@ -274,31 +298,30 @@ if (is_grasping) {
 The Python API should be very straight-forward for the Gripper class.
 
 
-## Movex
+### Kinematics
 
-We seperated some essential algorithms for robot motions into the standalone C++ library *movex*.
+Frankx includes a rudimentary, non-realtime-capable forward and inverse kinematics.
 
+```.py
+# Some initial joint configuration
+q = [-1.45549, 1.15401, 1.50061, -2.30909, -1.3141, 1.9391, 0.02815]
 
-### Online Trajectory Generators
+# Calculate the forward kinematics
+x = Affine(Kinematics.forward(q))
+print('Current end effector position: ', x)
 
-All frankx motions are based on Online Trajectory Generators (OTGs) with 7 DoFs for joint motions, 6/7 DoFs for cartesian motions (with optional elbow) or 1 DoF for path motions. Movex implements or wraps several different OTG algorithms:
+# Define new target position
+x_new = Affine(x=0.1, y=0.0, z=0.0) * x
 
+# Franka has 7 DoFs, so what to do with the remaining Null space?
+null_space = NullSpaceHandling(2, 1.4) # Set elbow joint to 1.4
 
-| Name              | Input                                                                                                                                  | Details                                                                                        |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| **Ruckig**        | Current Position, Velocity, Acceleration<br>Target Position, *(Velocity for 1 DoF)*<br>Max Velocity, Acceleration, Jerk | Time-optimal with given constraints.<br>Default OTG of Frankx.                                 |
-| Smoothie          | Current Position<br>Target Position<br>Dynamic Scaling                                                                                      | Used by Franka in [examples](https://github.com/frankaemika/libfranka/blob/master/examples/examples_common.h).                                                                    |
-| Quintic           | Current Position, Velocity, Acceleration<br>Target Position, Velocity, Acceleration<br>Max Velocity, Acceleration, Jerk        | Dynamics are not guaranteed within bounds.<br>Quite slow.                                      |
-| [Reflexxes](http://reflexxes.ws/)<br> Type II | Current Position, Velocity<br>Target Position, Velocity<br>Max Velocity, Acceleration                                          | Non-constrained Jerk.<br>Time-optimal with given constraints.                                  |
-| [Reflexxes](http://reflexxes.ws/)<br> Type IV | Current Position, Velocity, Acceleration<br>Target Position, Velocity<br>Max Velocity, Acceleration, Jerk                      | Closed-source and costly for non-academic licenses.<br>Time-optimal with given constraints. |
+# Inverse kinematic with target, initial joint angles, and Null space configuration
+q_new = Kinematics.inverse(x_new.vector(), q, null_space)
 
-
-**Ruckig** is our own jerk-limited, time-optimal, real-time and open-source OTG. For every time step (e.g. the control cycle of the robot), Ruckig outputs the fastest trajectory within the dynamic constraints reaching a target position, from *any* current position, velocity and acceleration. For a single DoF, you can even specify a target velocity. We think that this could also be very useful outside of frankx.
-
-
-## Path
-
-The path library is able to define paths from waypoints and blend them for a smooth second derivative. We are working on a third-order time-parametrization algorithm.
+print('New position: ', x_new)
+print('New joints: ', q_new)
+```
 
 
 ## Documentation
@@ -311,9 +334,8 @@ An auto-generated documentation can be found at [https://pantor.github.io/frankx
 Frankx is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
-- Libfranka v0.7.1
+- Libfranka v0.7.1  (sorry, our robot doesn't support 0.8)
 - Pybind11 v2.6.0
-- Reflexxes v1.2.7 (optional)
 - Catch2 v2.9 (only for testing)
 
 

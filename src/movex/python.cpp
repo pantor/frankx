@@ -6,16 +6,10 @@
 #include <pybind11/eigen.h>
 #include <pybind11/operators.h>
 
-#include <movex/otg/quintic.hpp>
-#include <movex/otg/ruckig.hpp>
-#include <movex/otg/smoothie.hpp>
+#include <affx/affine.hpp>
 #include <movex/path/path.hpp>
 #include <movex/path/time_parametrization.hpp>
 #include <movex/path/trajectory.hpp>
-
-#ifdef WITH_REFLEXXES
-    #include <movex/otg/reflexxes.hpp>
-#endif
 
 
 namespace py = pybind11;
@@ -26,9 +20,9 @@ using namespace movex;
 PYBIND11_MODULE(_movex, m) {
     m.doc() = "Robot Motion Library with Focus on Online Trajectory Generation";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {2};
 
-    py::class_<Affine>(m, "Affine")
+    /* py::class_<Affine>(m, "Affine")
         .def(py::init<double, double, double, double, double, double>(), "x"_a=0.0, "y"_a=0.0, "z"_a=0.0, "a"_a=0.0, "b"_a=0.0, "c"_a=0.0)
         .def(py::init<Vector6d>())
         .def(py::init<Vector7d>())
@@ -51,68 +45,15 @@ PYBIND11_MODULE(_movex, m) {
         .def_property("b", &Affine::b, &Affine::set_b)
         .def_property("c", &Affine::c, &Affine::set_c)
         .def("slerp", &Affine::slerp, "affine"_a, "t"_a)
-        .def("__repr__", &Affine::toString);
-
-    py::class_<InputParameter<DOFs>>(m, "InputParameter")
-        .def(py::init<>())
-        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
-        .def_readwrite("current_position", &InputParameter<DOFs>::current_position)
-        .def_readwrite("current_velocity", &InputParameter<DOFs>::current_velocity)
-        .def_readwrite("current_acceleration", &InputParameter<DOFs>::current_acceleration)
-        .def_readwrite("target_position", &InputParameter<DOFs>::target_position)
-        .def_readwrite("target_velocity", &InputParameter<DOFs>::target_velocity)
-        .def_readwrite("target_acceleration", &InputParameter<DOFs>::target_acceleration)
-        .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
-        .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
-        .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
-        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration);
-
-    py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
-        .def(py::init<>())
-        .def_readwrite("new_position", &OutputParameter<DOFs>::new_position)
-        .def_readwrite("new_velocity", &OutputParameter<DOFs>::new_velocity)
-        .def_readwrite("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
-        .def_readwrite("duration", &OutputParameter<DOFs>::duration)
-        .def("__copy__",  [](const OutputParameter<DOFs> &self) {
-            return OutputParameter<DOFs>(self);
-        });
-
-    py::enum_<Result>(m, "Result")
-        .value("Working", Result::Working)
-        .value("Finished", Result::Finished)
-        .value("Error", Result::Error)
-        .export_values();
-
-    py::class_<Quintic<DOFs>>(m, "Quintic")
-        .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Quintic<DOFs>::delta_time)
-        .def("update", &Quintic<DOFs>::update);
-
-    py::class_<Smoothie<DOFs>>(m, "Smoothie")
-        .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
-        .def("update", &Smoothie<DOFs>::update);
-
-    py::class_<Ruckig<DOFs>>(m, "Ruckig")
-        .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
-        .def_readonly("last_calculation_duration", &Ruckig<DOFs>::last_calculation_duration)
-        .def("update", &Ruckig<DOFs>::update);
-
-#ifdef WITH_REFLEXXES
-    py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
-        .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
-        .def("update", &Reflexxes<DOFs>::update);
-#endif
+        .def("__repr__", &Affine::toString); */
 
     py::class_<Path>(m, "Path")
         .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
-        .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
+        .def(py::init<const std::vector<affx::Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
         .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
         .def_property_readonly("length", &Path::get_length)
         .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
-        .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
+        .def("q", (Vector7d (Path::*)(double, const affx::Affine&) const)&Path::q, "s"_a, "frame"_a)
         .def("pdq", &Path::pdq, "s"_a)
         .def("pddq", &Path::pddq, "s"_a)
         .def("pdddq", &Path::pdddq, "s"_a)

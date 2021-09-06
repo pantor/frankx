@@ -1,13 +1,13 @@
 #pragma once
 
-#include <movex/otg/ruckig.hpp>
+#include <ruckig/ruckig.hpp>
 #include <movex/path/trajectory.hpp>
 
 
 namespace movex {
 
 class TimeParametrization {
-    std::unique_ptr<Ruckig<1>> otg;
+    std::unique_ptr<ruckig::Ruckig<1>> otg;
 
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
@@ -22,7 +22,7 @@ class TimeParametrization {
 
 public:
     TimeParametrization(double delta_time): delta_time(delta_time) {
-        otg = std::make_unique<Ruckig<1>>(delta_time);
+        otg = std::make_unique<ruckig::Ruckig<1>>(delta_time);
     }
 
     //! Returns list of path positions s at delta time
@@ -70,9 +70,9 @@ public:
         // Get maximal possible velocity, acceleration
 
         // Calculate path at time steps
-        InputParameter<1> input;
-        OutputParameter<1> output;
-        Result otg_result {Result::Working};
+        ruckig::InputParameter<1> input;
+        ruckig::OutputParameter<1> output;
+        ruckig::Result otg_result {ruckig::Result::Working};
 
         double time {0.0};
         double s_new {0.0}, ds_new {0.0}, dds_new {0.0};
@@ -82,20 +82,20 @@ public:
         Trajectory::State current_state {time, s_new, ds_new, dds_new, 0.0};
         trajectory.states.push_back(current_state);
 
-        input.current_position(0) = s_new;
-        input.current_velocity(0) = ds_new;
-        input.current_acceleration(0) = dds_new;
-        input.target_position(0) = path.get_length();
-        input.target_velocity(0) = 0.0;
-        std::tie(input.max_velocity(0), input.max_acceleration(0), input.max_jerk(0)) = max_path_dynamics[index_current];
+        input.current_position[0] = s_new;
+        input.current_velocity[0] = ds_new;
+        input.current_acceleration[0] = dds_new;
+        input.target_position[0] = path.get_length();
+        input.target_velocity[0] = 0.0;
+        std::tie(input.max_velocity[0], input.max_acceleration[0], input.max_jerk[0]) = max_path_dynamics[index_current];
 
-        while (otg_result == Result::Working) {
+        while (otg_result == ruckig::Result::Working) {
             time += delta_time;
             otg_result = otg->update(input, output);
 
-            s_new = output.new_position(0);
-            ds_new = output.new_velocity(0);
-            dds_new = output.new_acceleration(0);
+            s_new = output.new_position[0];
+            ds_new = output.new_velocity[0];
+            dds_new = output.new_acceleration[0];
 
             size_t index_new = path.get_index(s_new);
 

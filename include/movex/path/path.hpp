@@ -5,7 +5,7 @@
 
 #include <Eigen/Core>
 
-#include <movex/affine.hpp>
+#include <affx/affine.hpp>
 #include <movex/waypoint.hpp>
 #include <movex/path/segment.hpp>
 
@@ -13,6 +13,8 @@
 namespace movex {
 
 class Path {
+    using Affine = affx::Affine;
+
     std::vector<double> cumulative_lengths;
 
     double length {0.0};
@@ -26,6 +28,7 @@ public:
     size_t get_index(double s) const;
     std::tuple<std::shared_ptr<Segment>, double> get_local(double s) const;
 
+    explicit Path() { }
     explicit Path(const std::vector<Waypoint>& waypoints);
     explicit Path(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0);
 

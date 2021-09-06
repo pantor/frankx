@@ -6,13 +6,15 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include <movex/affine.hpp>
+#include <affx/affine.hpp>
 #include <movex/robot/motion_data.hpp>
 
 
 namespace movex {
 
 struct ImpedanceMotion {
+    using Affine = affx::Affine;
+
     enum class Axis { X, Y, Z };
 
     enum class Type {

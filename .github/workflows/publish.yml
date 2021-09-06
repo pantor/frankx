@@ -12,9 +12,12 @@ jobs:
       image: quay.io/pypa/manylinux2014_x86_64
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
-    - name: install build essentials
+    - name: Install build essentials
       run: |
         yum -y install poco-devel*
 
@@ -25,7 +28,7 @@ jobs:
 
         ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
-    - name: install Eigen3
+    - name: Install Eigen3
       run: |
         echo $PATH
         git clone https://github.com/eigenteam/eigen-git-mirror.git
@@ -33,9 +36,9 @@ jobs:
         git checkout 3.3.7
         mkdir build && cd build
         cmake ..
-        make install
+        make install -j2
 
-    - name: install libfranka
+    - name: Install libfranka
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
@@ -43,16 +46,20 @@ jobs:
         git submodule update
         mkdir build && cd build
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
-        make
+        make -j2
         make install
 
-    - name: install pybind11
+    - name: Install pybind11
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.6.0
+        mkdir build && cd build
+        cmake -DPYBIND11_TEST=OFF ..
+        make -j2
+        make install
 
-    - name: install Catch2
+    - name: Install Catch2
       run: |
         git clone https://github.com/catchorg/Catch2.git
         cd Catch2
@@ -61,14 +68,14 @@ jobs:
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         make install
 
-    - name: python package
+    - name: Python package
       run: |
         mkdir -p wheels
         mkdir -p dist
 
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]] || [[ "${PYBIN}" == *"cp39"* ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
@@ -80,7 +87,7 @@ jobs:
 
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]]; then
+          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]] || [[ "${PYBIN}" == *"cp39"* ]]; then
             "${PYBIN}/pip" install frankx --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi
@@ -88,7 +95,7 @@ jobs:
 
         ls dist
 
-    - name: publish python package
+    - name: Publish python package
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: keNB2

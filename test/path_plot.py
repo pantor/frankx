@@ -45,4 +45,3 @@ if __name__ == '__main__':
     print(p.max_pddq())
     print(p.max_pdddq())
     plot_path(p)
-    

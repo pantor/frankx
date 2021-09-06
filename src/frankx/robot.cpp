@@ -1,12 +1,6 @@
 #include <frankx/robot.hpp>
 
-#include <movex/otg/quintic.hpp>
-#include <movex/otg/smoothie.hpp>
-
-
-#ifdef WITH_REFLEXXES
-#include <movex/otg/reflexxes.hpp>
-#endif
+#include <ruckig/ruckig.hpp>
 
 
 namespace frankx {
@@ -27,7 +21,17 @@ void Robot::setDefaultBehavior() {
 
     // setJointImpedance({{3000, 3000, 3000, 2500, 2500, 2000, 2000}});
     // setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
-    setEE({0.7071, 0.7071, 0.0, 0.0, 0.7071, -0.7071, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
+
+    // libfranka 0.8 split F_T_EE into F_T_NE (set in desk to value below) and NE_T_EE which defaults to identity
+    // set it anyway again.
+//    setEE({1, 0, 0, 0,
+//           0, 1, 0, 0,
+//           0, 0, 1, 0,
+//           0, 0, 0, 1});
+        setEE({1, 0, 0, 0,
+           0, -1, 0, 0,
+           0, 0, -1, 0,
+           0, 0, 0, 1});
 }
 
 void Robot::setDynamicRel(double dynamic_rel) {
@@ -50,86 +54,154 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
-// Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
-//     Affine result;
-
-//     control([&](const franka::RobotState& robot_state, franka::Duration period) -> franka::Torques {
-//         franka::CartesianPose cartesian_target(robot_state.O_T_EE_c, robot_state.elbow_c);
-//         result = Affine(cartesian_target.O_T_EE);
-//         return franka::MotionFinished(franka::Torques({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
-
-//     }, [&](const franka::RobotState& robot_state, franka::Duration period) -> franka::JointPositions {
-
-//         return franka::JointPositions(q);
-//     });
-
-//     return result;
-// }
-
-// std::array<double, 7> Robot::inverseKinematics(const Affine& target, const Affine& frame) {
-//     std::array<double, 7> result;
-//     return result;
-// }
-
-std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> Robot::getInputLimits(const MotionData& data) {
-    return getInputLimits(Waypoint(), data);
+Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
+    const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
+    return Affine(Kinematics::forward(q_current));
 }
 
-std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>> Robot::getInputLimits(const Waypoint& waypoint, const MotionData& data) {
-    constexpr double translation_factor {0.5};
-    constexpr double elbow_factor {0.32};
-    constexpr double derivative_factor {0.4};
+std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::array<double, 7>& q0) {
+    std::array<double, 7> result;
 
-    if (waypoint.max_dynamics || data.max_dynamics) {
-        auto max_velocity = VectorCartRotElbow(
-            0.8 * translation_factor * max_translation_velocity,
-            max_rotation_velocity,
-            0.5 * elbow_factor * max_elbow_velocity
-        );
-        auto max_acceleration = VectorCartRotElbow(
-            translation_factor * derivative_factor * max_translation_acceleration,
-            derivative_factor * max_rotation_acceleration,
-            elbow_factor * derivative_factor * max_elbow_acceleration
-        );
-        auto max_jerk = VectorCartRotElbow(
-            translation_factor * derivative_factor * max_translation_jerk,
-            derivative_factor * max_rotation_jerk,
-            elbow_factor * derivative_factor * max_elbow_jerk
-        );
-        return {max_velocity, max_acceleration, max_jerk};
+    Eigen::Matrix<double, 6, 1> x_target = target.vector();
+    const Eigen::Matrix<double, 7, 1> q0_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q0.data(), q0.size());
+
+    Eigen::Matrix<double, 7, 1>::Map(result.data()) = Kinematics::inverse(x_target, q0_current);
+    return result;
+}
+
+bool Robot::move(ImpedanceMotion& motion) {
+    return move(Affine(), motion);
+}
+
+bool Robot::move(ImpedanceMotion& motion, MotionData& data) {
+    return move(Affine(), motion, data);
+}
+
+bool Robot::move(const Affine& frame, ImpedanceMotion& motion) {
+    auto data = MotionData();
+    return move(frame, motion, data);
+}
+
+bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data) {
+    ImpedanceMotionGenerator<Robot> mg {this, frame, motion, data};
+
+    try {
+        control(stateful<franka::Torques>(mg));
+        motion.is_active = false;
+
+    } catch (const franka::Exception& exception) {
+        std::cout << exception.what() << std::endl;
+        motion.is_active = false;
+        return false;
     }
-
-    auto max_velocity = VectorCartRotElbow(
-        translation_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_translation_velocity,
-        waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_rotation_velocity,
-        elbow_factor * waypoint.velocity_rel * data.velocity_rel * velocity_rel * max_elbow_velocity
-    );
-    auto max_acceleration = VectorCartRotElbow(
-        translation_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_translation_acceleration,
-        derivative_factor * data.acceleration_rel * acceleration_rel * max_rotation_acceleration,
-        elbow_factor * derivative_factor * data.acceleration_rel * acceleration_rel * max_elbow_acceleration
-    );
-    auto max_jerk = VectorCartRotElbow(
-        translation_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_translation_jerk,
-        std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_rotation_jerk,
-        elbow_factor * std::pow(derivative_factor, 2) * data.jerk_rel * jerk_rel * max_elbow_jerk
-    );
-    return {max_velocity, max_acceleration, max_jerk};
+    return true;
 }
 
-void Robot::setInputLimits(InputParameter<7>& input_parameters, const MotionData& data) {
-    setInputLimits(input_parameters, Waypoint(), data);
+
+bool Robot::move(JointMotion motion) {
+    auto data = MotionData();
+    return move(motion, data);
 }
 
-void Robot::setInputLimits(InputParameter<7>& input_parameters, const Waypoint& waypoint, const MotionData& data) {
-    const auto [max_velocity, max_acceleration, max_jerk] = getInputLimits(data);
-    input_parameters.max_velocity = Eigen::Map<const Vector7d>(max_velocity.data(), max_velocity.size());
-    input_parameters.max_acceleration = Eigen::Map<const Vector7d>(max_acceleration.data(), max_acceleration.size());
-    input_parameters.max_jerk = Eigen::Map<const Vector7d>(max_jerk.data(), max_jerk.size());
+bool Robot::move(JointMotion motion, MotionData& data) {
+    JointMotionGenerator<Robot> mg {this, motion, data};
 
-    if (!(waypoint.max_dynamics || data.max_dynamics) && waypoint.minimum_time.has_value()) {
-        input_parameters.minimum_duration = waypoint.minimum_time.value();
+    try {
+        control(stateful<franka::JointPositions>(mg));
+
+    } catch (franka::Exception exception) {
+        std::cout << exception.what() << std::endl;
+        return false;
     }
+    return true;
+}
+
+
+bool Robot::move(PathMotion motion) {
+    return move(Affine(), motion);
+}
+
+bool Robot::move(PathMotion motion, MotionData& data) {
+    return move(Affine(), motion, data);
+}
+
+bool Robot::move(const Affine& frame, PathMotion motion) {
+    auto data = MotionData();
+    return move(frame, motion, data);
+}
+
+bool Robot::move(const Affine& frame, PathMotion motion, MotionData& data) {
+    PathMotionGenerator<Robot> mg {this, frame, motion, data};
+
+    try {
+        control(stateful<franka::CartesianPose>(mg), controller_mode);
+
+    } catch (franka::Exception exception) {
+        std::cout << exception.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
+
+bool Robot::move(WaypointMotion& motion) {
+    return move(Affine(), motion);
+}
+
+bool Robot::move(WaypointMotion& motion, MotionData& data) {
+    return move(Affine(), motion, data);
+}
+
+bool Robot::move(const Affine& frame, WaypointMotion& motion) {
+    auto data = MotionData();
+    return move(frame, motion, data);
+}
+
+bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) {
+    WaypointMotionGenerator<Robot> mg {this, frame, motion, data};
+    mg.input_para.target_position[0] = 0.01;
+
+    try {
+        control(stateful<franka::CartesianPose>(mg), controller_mode);
+
+    } catch (franka::Exception exception) {
+        auto errors = readOnce().last_motion_errors;
+        if (repeat_on_error
+            // && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
+            // || errors.cartesian_motion_generator_joint_velocity_discontinuity
+            // || errors.cartesian_motion_generator_velocity_discontinuity
+            // || errors.cartesian_motion_generator_acceleration_discontinuity)
+        ) {
+            std::cout << "[frankx robot] continue motion after exception: " << exception.what() << std::endl;
+            automaticErrorRecovery();
+
+            data.velocity_rel *= 0.5;
+            data.acceleration_rel *= 0.5;
+            data.jerk_rel *= 0.5;
+            mg.reset();
+
+            bool success {false};
+
+            try {
+                control(stateful<franka::CartesianPose>(mg), controller_mode);
+                success = true;
+
+            } catch (franka::Exception exception) {
+                std::cout << exception.what() << std::endl;
+            }
+            data.velocity_rel *= 2;
+            data.acceleration_rel *= 2;
+            data.jerk_rel *= 2;
+
+            return success;
+
+        } else {
+            std::cout << exception.what() << std::endl;
+        }
+
+        return false;
+    }
+    return true;
 }
 
 } // namepace frankx

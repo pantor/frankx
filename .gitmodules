@@ -1,0 +1,6 @@
+[submodule "ruckig"]
+	path = ruckig
+	url = ../ruckig.git
+[submodule "affx"]
+	path = affx
+	url = ../affx.git

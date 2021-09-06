@@ -1,7 +1,6 @@
+from pyaffx import Affine
+
 from _frankx import (
-    Affine,
-    # DirectMotion,
-    # DirectRelativeMotion,
     Duration,
     Errors,
     GripperState,
@@ -9,8 +8,10 @@ from _frankx import (
     JointMotion,
     LinearMotion,
     LinearRelativeMotion,
+    Kinematics,
     Measure,
     MotionData,
+    NullSpaceHandling,
     PathMotion,
     PositionHold,
     Reaction,
