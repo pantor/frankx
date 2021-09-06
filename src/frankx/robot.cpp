@@ -21,7 +21,17 @@ void Robot::setDefaultBehavior() {
 
     // setJointImpedance({{3000, 3000, 3000, 2500, 2500, 2000, 2000}});
     // setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
-    setEE({0.7071, 0.7071, 0.0, 0.0, 0.7071, -0.7071, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
+
+    // libfranka 0.8 split F_T_EE into F_T_NE (set in desk to value below) and NE_T_EE which defaults to identity
+    // set it anyway again.
+//    setEE({1, 0, 0, 0,
+//           0, 1, 0, 0,
+//           0, 0, 1, 0,
+//           0, 0, 0, 1});
+        setEE({1, 0, 0, 0,
+           0, -1, 0, 0,
+           0, 0, -1, 0,
+           0, 0, 0, 1});
 }
 
 void Robot::setDynamicRel(double dynamic_rel) {
