@@ -67,16 +67,16 @@ $(function() {
 <div class="title">Frankx Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div align="center"> <object type="image/svg+xml" data="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true" style="pointer-events: none;" width="340"></object> <h3 align="center">High-Level Motion Library for the Franka Panda Robot </h3>
+<div class="textblock"><div align="center"> <object type="image/svg+xml" data="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true" style="pointer-events: none;" width="340"></object> <h3 align="center">High-Level Motion Library for the Franka Emika Robot </h3>
 </div><div align="center"> </div> <p><a href="https://github.com/pantor/frankx/actions"><object type="image/svg+xml" data="https://github.com/pantor/frankx/workflows/CI/badge.svg" style="pointer-events: none;">CI</object> </a></p>
 <p><a href="https://github.com/pantor/frankx/actions"><object type="image/svg+xml" data="https://github.com/pantor/frankx/workflows/Publish/badge.svg" style="pointer-events: none;">Publish</object> </a></p>
 <p><a href="https://github.com/pantor/frankx/issues"><object type="image/svg+xml" data="https://img.shields.io/github/issues/pantor/frankx.svg" style="pointer-events: none;">Issues</object> </a></p>
 <p><a href="https://github.com/pantor/frankx/releases"><object type="image/svg+xml" data="https://img.shields.io/github/v/release/pantor/frankx.svg?include_prereleases&amp;sort=semver" style="pointer-events: none;">Releases</object> </a></p>
 <p><a href="https://github.com/pantor/frankx/blob/master/LICENSE"><object type="image/svg+xml" data="https://img.shields.io/badge/license-LGPL-green.svg" style="pointer-events: none;">LGPL</object> </a> </p>
-<p>Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around <a href="https://frankaemika.github.io/docs/libfranka.html">libfranka</a>, while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.</p>
+<p>Frankx is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around <a href="https://frankaemika.github.io/docs/libfranka.html">libfranka</a>, while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.</p>
 <h2>Installation</h2>
 <p>To start using frankx with Python, you can use pip via </p><div class="fragment"><div class="line">pip install frankx</div>
-</div><!-- fragment --><p>Frankx is based on <a href="https://github.com/frankaemika/libfranka">libfranka</a>, <a href="https://eigen.tuxfamily.org">Eigen</a> for transformation calculations and <a href="https://github.com/pybind/pybind11">pybind11</a> for the Python bindings. Frankx uses the <a href="https://github.com/pantor/ruckig">Ruckig</a> library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via</p>
+</div><!-- fragment --><p>Frankx is based on <a href="https://github.com/frankaemika/libfranka">libfranka</a>, <a href="https://eigen.tuxfamily.org">Eigen</a> for transformation calculations and <a href="https://github.com/pybind/pybind11">pybind11</a> for the Python bindings. Frankx uses the <a href="https://ruckig.com">Ruckig</a> Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via</p>
 <div class="fragment"><div class="line">git clone --recurse-submodules git@github.com:pantor/frankx.git</div>
 <div class="line">cd frankx</div>
 <div class="line">mkdir -p build</div>
@@ -143,7 +143,7 @@ $(function() {
 <div class="line">pose = combined_transformation.vector()</div>
 </div><!-- fragment --><p>As the trajectory generation works in the Euler space, please make sure to have continuous Euler angles around your working point. You can adapt this by setting the flange to end-effector transformation via <code>setEE(...)</code>.</p>
 <h3>Robot</h3>
-<p>We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The <code>rel</code> name denotes that this a factor of the maximum constraints of the Panda robot. </p><div class="fragment"><div class="line">robot = Robot(<span class="stringliteral">&quot;172.16.0.2&quot;</span>)</div>
+<p>We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The <code>rel</code> name denotes that this a factor of the maximum constraints of the robot. </p><div class="fragment"><div class="line">robot = Robot(<span class="stringliteral">&quot;172.16.0.2&quot;</span>)</div>
 <div class="line"> </div>
 <div class="line"><span class="comment"># Recover from errors</span></div>
 <div class="line">robot.recover_from_errors()</div>
