@@ -11,7 +11,7 @@ option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
-
+set(TEST_ROBOT_HOSTNAME "" CACHE STRING "Hostname of Franka Emika Panda to run tests on")
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka 0.8 REQUIRED)
@@ -77,12 +77,19 @@ if(BUILD_TESTS)
   enable_testing()
 
   find_package(Catch2 REQUIRED)
-
-  foreach(test IN ITEMS kinematics-test unit-test path-test)
+  set(FRANKX_TESTS "kinematics-test" "unit-test" "path-test")
+  string(COMPARE EQUAL TEST_ROBOT_HOSTNAME "" TEST_ROBOT_HOSTNAME_CMP)
+  if(NOT TEST_ROBOT_HOSTNAME_CMP)
+    set(FRANKX_TESTS ${FRANKX_TESTS} "function-test")
+  endif()
+  foreach(test IN ITEMS ${FRANKX_TESTS})
     add_executable(${test} "test/${test}.cpp")
     target_link_libraries(${test} PRIVATE frankx Catch2::Catch2)
     add_test(NAME ${test} COMMAND ${test})
   endforeach()
+  if(NOT TEST_ROBOT_HOSTNAME_CMP)
+    target_compile_definitions(function-test PUBLIC TEST_ROBOT_HOSTNAME="${TEST_ROBOT_HOSTNAME}")
+  endif()
 endif()
 
 
