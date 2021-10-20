@@ -4,7 +4,7 @@
 #include <Eigen/Core>
 
 #include <frankx/frankx.hpp>
-
+#include <catch2/catch.hpp>
 
 using namespace frankx;
 
