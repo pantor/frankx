@@ -7,6 +7,15 @@
 // this epsilon should be reflected, as Franka Emika is not perfect.
 constexpr double epsilon = 0.001;
 
+std::string AffineToString(affx::Affine a)
+{
+    std::stringstream  ss;
+    ss << " x: " << a.x() << " y: " << a.y() << " z: " << a.z()
+       << " q_w: " << a.qW() << " q_x: " << a.qX()
+       << " q_y: " << a.qY() << " q_z: " << a.qZ();
+    return ss.str();
+}
+
 void testAffineApprox(affx::Affine a, affx::Affine b)
 {
     REQUIRE(std::abs(a.x() - b.x()) < epsilon);
@@ -53,28 +62,18 @@ TEST_CASE("Test JointMotion")
     }
 }
 
-std::stringstream AffineToString(affx::Affine a)
-{
-    std::stringstream  ss;
-    ss << " x: " << a.x() << " y: " << a.y() << " z: " << a.z()
-       << " q_w: " << a.qW() << " q_x: " << a.qX()
-       << " q_y: " << a.qY() << " q_z: " << a.qZ();
-    return ss;
-}
 
 TEST_CASE("Test WaypointMotion")
 {
-//    x: 0.181861 y: -0.0318449 z: 0.835031 q_w: 0.557629 q_x: 0.316947 q_y: -0.235395 q_z: -0.730194
-
-    affx::Affine testAffine {0.182218, -0.032166, 0.834696, -1.752703, 0.200432, -2.349596};
+    affx::Affine testAffine {0.182016, -0.0320245, 0.834567, -0.236185, -0.382481, 0.0959011, 0.888104};
     try {
         frankx::Robot robot(TEST_ROBOT_HOSTNAME, 0.5);
         movex::Waypoint waypoint{testAffine};
         movex::WaypointMotion targetWaypointMotion({waypoint});
         robot.move(targetWaypointMotion);
         affx::Affine currentAffine = robot.currentPose();
-        std::cout << "testAffine: " << AffineToString(currentAffine).str() << std::endl;
-        std::cout << "currentAffine: " << AffineToString(currentAffine).str() << std::endl;
+        std::cout << "testAffine: " << AffineToString(currentAffine) << std::endl;
+        std::cout << "currentAffine: " << AffineToString(currentAffine) << std::endl;
         testAffineApprox(currentAffine, testAffine);
     }
     catch (...)
