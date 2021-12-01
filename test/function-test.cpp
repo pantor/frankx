@@ -47,6 +47,8 @@ TEST_CASE("Test JointMotion")
     std::array<double, 7> testJointPose {-0.01981415, -1.036409, -0.05556389, -2.023421, 0.01193091, 1.796796, 1.770148};
     try {
         frankx::Robot robot(TEST_ROBOT_HOSTNAME, 0.5);
+        if (robot.hasErrors())
+            robot.automaticErrorRecovery();
         movex::JointMotion targetJointMotion({testJointPose});
         robot.move(targetJointMotion);
         std::array<double, 7> current = robot.currentJointPositions();
@@ -69,6 +71,8 @@ TEST_CASE("Test WaypointMotion")
 
     try {
         frankx::Robot robot(TEST_ROBOT_HOSTNAME, 0.5);
+        if (robot.hasErrors())
+            robot.automaticErrorRecovery();
         movex::Waypoint waypoint{testAffine};
         movex::WaypointMotion targetWaypointMotion({waypoint});
         robot.move(targetWaypointMotion);
