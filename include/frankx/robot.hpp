@@ -31,8 +31,15 @@ namespace frankx {
 class Robot: public franka::Robot {
     // Modified DH-parameters: alpha, d, a
     const KinematicChain<7> kinematics = KinematicChain<7>(
-        {{{0.0, 0.333, 0.0}, {-M_PI/2, 0.0, 0.0}, {M_PI/2, 0.316, 0.0}, {M_PI/2, 0.0, 0.0825}, {-M_PI/2, 0.384, -0.0825}, {M_PI/2, 0.0, 0.0}, {M_PI/2, 0.0, 0.088}}},
-        Affine(0, 0, 0.107, M_PI/4, 0, M_PI)
+        {{
+                {0.0, 0.333, 0.0},
+                {-M_PI/2, 0.0, 0.0},
+                {M_PI/2, 0.316, 0.0},
+                {M_PI/2, 0.0, 0.0825},
+                {-M_PI/2, 0.384, -0.0825},
+                {M_PI/2, 0.0, 0.0},
+                {M_PI/2, 0.0, 0.088}}},
+        Affine(0, 0, 0.107, 0, 0, 0)
     );
 
 public:

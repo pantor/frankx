@@ -65,7 +65,8 @@ TEST_CASE("Test JointMotion")
 
 TEST_CASE("Test WaypointMotion")
 {
-    affx::Affine testAffine {0.182016, -0.0320245, 0.834567, -0.236185, -0.382481, 0.0959011, 0.888104};
+    affx::Affine testAffine {0.182078, -0.0319788, 0.8347213, 0.316669, -0.557494, 0.730278, -0.235824};
+
     try {
         frankx::Robot robot(TEST_ROBOT_HOSTNAME, 0.5);
         movex::Waypoint waypoint{testAffine};

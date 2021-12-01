@@ -58,6 +58,38 @@ TEST_CASE("Test Kinematics forward")
     }
 }
 
+TEST_CASE("Test Kinematics forward1")
+{
+    std::cout << "forward" << std::endl;
+    for (auto pose: test_poses)
+    {
+        Affine correct = Affine(
+                pose.first[0], pose.first[1],
+                pose.first[2],
+                pose.first[3], pose.first[4],
+                pose.first[5], pose.first[6]);
+        const Eigen::Matrix<double, 7, 1> q_current =
+                Eigen::Map<const Eigen::Matrix<double, 7, 1>>(pose.second.data(), pose.second.size());
+        const KinematicChain<7> kinematics = KinematicChain<7>(
+                {{
+                         {0.0, 0.333, 0.0},
+                         {-M_PI/2, 0.0, 0.0},
+                         {M_PI/2, 0.316, 0.0},
+                         {M_PI/2, 0.0, 0.0825},
+                         {-M_PI/2, 0.384, -0.0825},
+                         {M_PI/2, 0.0, 0.0},
+                         {M_PI/2, 0.0, 0.088}}},
+                Affine(0, 0, 0.107, 0, 0, 0)
+        );
+
+        Affine calc = kinematics.forward_chain(pose.second);
+        std::cout << "correct: " << affineToString(correct) << std::endl;
+        std::cout << "calc:    " << affineToString(calc) << std::endl;
+        std::cout << "angularDistance" << correct.quaternion().angularDistance(calc.quaternion()) << std::endl;
+//        REQUIRE(calc.isApprox(correct));
+    }
+}
+
 TEST_CASE("Test Kinematics forwardEuler")
 {
     std::cout << "forwardEuler" << std::endl;
