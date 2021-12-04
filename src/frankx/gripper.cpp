@@ -85,4 +85,8 @@ bool Gripper::releaseRelative(double width_relative) { // [m]
   return release(width() + width_relative);
 }
 
+::franka::GripperState Gripper::get_state() {
+    return readOnce();
+}
+
 } // namepace frankx
