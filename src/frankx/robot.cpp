@@ -74,6 +74,10 @@ std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::
     return result;
 }
 
+::franka::RobotState Robot::get_state() {
+    return readOnce();
+}
+
 bool Robot::move(ImpedanceMotion& motion) {
     return move(Affine(), motion);
 }

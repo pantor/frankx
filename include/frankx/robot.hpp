@@ -81,6 +81,8 @@ public:
     std::array<double, 7> currentJointPositions();
     Affine forwardKinematics(const std::array<double, 7>& q);
     std::array<double, 7> inverseKinematics(const Affine& target, const std::array<double, 7>& q0);
+    
+    ::franka::RobotState get_state();
 
     bool move(ImpedanceMotion& motion);
     bool move(ImpedanceMotion& motion, MotionData& data);

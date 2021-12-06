@@ -293,6 +293,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def("current_pose", &Robot::currentPose, "frame"_a = Affine())
         .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
         .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "q0"_a)
+        .def("get_state", &Robot::get_state)
         .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
         .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
@@ -336,7 +337,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def("clamp", (bool (Gripper::*)(double)) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
         .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
-        .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>());
+        .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>())
+        .def("get_state", &Gripper::get_state);
 
     py::register_exception<franka::CommandException>(m, "CommandException");
     py::register_exception<franka::ControlException>(m, "ControlException");
