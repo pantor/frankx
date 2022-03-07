@@ -22,5 +22,11 @@ from _frankx import (
     WaypointMotion,
 )
 
+from _movex import (
+    Path,
+    Trajectory,
+    TimeParametrization,
+)
+
 from .gripper import Gripper
 from .robot import Robot

@@ -14,7 +14,7 @@ option(USE_PYTHON_EXTENSION "Use python in frankx library" ON)
 
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
-find_package(Franka 0.7 REQUIRED)
+find_package(Franka 0.8 REQUIRED)
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
@@ -45,7 +45,7 @@ if(BUILD_PYTHON_MODULE)
   if(EXISTS pybind11)
     add_subdirectory(pybind11)
   else()
-    find_package(Python COMPONENTS Interpreter Development)
+    find_package(Python3 COMPONENTS Interpreter Development)
     find_package(pybind11 2.6 REQUIRED)
   endif()
 

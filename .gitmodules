@@ -4,3 +4,7 @@
 [submodule "affx"]
 	path = affx
 	url = git@github.com:pantor/affx.git
+[submodule "pybind11"]
+	path = pybind11
+	url = git@github.com:pybind/pybind11.git
+	branch = v2.6

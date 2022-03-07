@@ -3,7 +3,8 @@ from pathlib import Path as Pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-from _movex import Affine, Path, TimeParametrization
+from pyaffx import Affine
+from _movex import Path, TimeParametrization
 
 
 def walk_through_path(traj):

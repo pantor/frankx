@@ -77,7 +77,7 @@ setup(
     url='https://github.com/pantor/frankx',
     packages=find_packages(),
     license='LGPL',
-    ext_modules=[CMakeExtension('_frankx'), CMakeExtension('pyaffx')],
+    ext_modules=[CMakeExtension('_frankx'), CMakeExtension('pyaffx'), CMakeExtension('_movex')],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control'],
     classifiers=[
