@@ -6,7 +6,7 @@
 #include <movex/robot/motion_data.hpp>
 #include <movex/robot/robot_state.hpp>
 #include <movex/motion/motion_joint.hpp>
-#include <ruckig/alternative/smoothie.hpp>
+#include <ruckig/ruckig.hpp>
 
 
 namespace frankx {
@@ -14,7 +14,7 @@ namespace frankx {
 
 template<class RobotType>
 struct JointMotionGenerator: public MotionGenerator {
-    ruckig::Smoothie<RobotType::degrees_of_freedoms> trajectory_generator {RobotType::control_rate};
+    ruckig::Ruckig<RobotType::degrees_of_freedoms> trajectory_generator {RobotType::control_rate};
 
     ruckig::InputParameter<RobotType::degrees_of_freedoms> input_para;
     ruckig::OutputParameter<RobotType::degrees_of_freedoms> output_para;
@@ -41,6 +41,7 @@ struct JointMotionGenerator: public MotionGenerator {
         for (size_t dof = 0; dof < RobotType::degrees_of_freedoms; dof += 1) {
             input_para.max_velocity[dof] = RobotType::max_joint_velocity[dof] * robot->velocity_rel * data.velocity_rel;
             input_para.max_acceleration[dof] = 0.3 * RobotType::max_joint_acceleration[dof] * robot->acceleration_rel * data.acceleration_rel;
+            input_para.max_jerk[dof] = 0.3 * RobotType::max_joint_jerk[dof] * robot->jerk_rel * data.jerk_rel;
         }
     }
 

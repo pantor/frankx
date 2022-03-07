@@ -34,6 +34,8 @@ struct WaypointMotionGenerator: public MotionGenerator {
     WaypointMotion& motion;
     MotionData& data;
 
+    bool set_target_at_zero_time {true};
+
     const size_t cooldown_iterations {5};
     size_t current_cooldown_iteration {0};
 
@@ -42,14 +44,10 @@ struct WaypointMotionGenerator: public MotionGenerator {
     void reset() {
         time = 0.0;
         current_cooldown_iteration = 0;
+        set_target_at_zero_time = false;
     }
 
     void init(const franka::RobotState& robot_state, franka::Duration period) {
-        input_para.enabled = MotionGenerator::VectorCartRotElbow(true, true, true);
-        setInputLimits(input_para, robot, data);
-
-        waypoint_iterator = current_motion.waypoints.begin();
-
         franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
         Affine initial_pose(initial_cartesian_pose.O_T_EE);
 
@@ -64,18 +62,25 @@ struct WaypointMotionGenerator: public MotionGenerator {
         input_para.current_velocity = toStd(initial_velocity);
         input_para.current_acceleration = toStd(Vector7d::Zero());
 
-        const auto current_waypoint = *waypoint_iterator;
-        waypoint_has_elbow = current_waypoint.elbow.has_value();
-        auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
+        input_para.enabled = MotionGenerator::VectorCartRotElbow(true, true, true);
+        setInputLimits(input_para, robot, data);
 
-        input_para.enabled = {true, true, true, true, true, true, waypoint_has_elbow};
-        input_para.target_position = toStd(target_position_vector);
-        input_para.target_velocity = toStd(Vector7d::Zero());
-        setInputLimits(input_para, robot, current_waypoint, data);
+        if (set_target_at_zero_time) {
+            waypoint_iterator = current_motion.waypoints.begin();
 
-        old_affine = current_waypoint.getTargetAffine(frame, old_affine);
-        old_vector = target_position_vector;
-        old_elbow = old_vector(6);
+            const auto current_waypoint = *waypoint_iterator;
+            waypoint_has_elbow = current_waypoint.elbow.has_value();
+            auto target_position_vector = current_waypoint.getTargetVector(frame, old_affine, old_elbow);
+
+            input_para.enabled = {true, true, true, true, true, true, waypoint_has_elbow};
+            input_para.target_position = toStd(target_position_vector);
+            input_para.target_velocity = toStd(Vector7d::Zero());
+            setInputLimits(input_para, robot, current_waypoint, data);
+
+            old_affine = current_waypoint.getTargetAffine(frame, old_affine);
+            old_vector = target_position_vector;
+            old_elbow = old_vector(6);
+        }
     }
 
     franka::CartesianPose operator()(const franka::RobotState& robot_state, franka::Duration period) {

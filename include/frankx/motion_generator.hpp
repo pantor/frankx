@@ -135,4 +135,28 @@ struct MotionGenerator {
     }
 };
 
+
+// Stateful functor to get values after the control function
+template <typename OriginalFunctor, typename RType>
+class StatefulFunctor {
+    OriginalFunctor &fun;
+
+public:
+    StatefulFunctor() = delete;
+    StatefulFunctor(OriginalFunctor &orig) : fun(orig) {}
+    StatefulFunctor(StatefulFunctor const &other) : fun(other.fun) {}
+    StatefulFunctor(StatefulFunctor &&other) : fun(other.fun) {}
+
+    template <typename... Args>
+    RType operator() (Args&&... args) {
+        return fun(std::forward<Args>(args)...);
+    }
+};
+
+
+template <typename RT, typename OF>
+StatefulFunctor<OF, RT> stateful(OF &fun) {
+    return StatefulFunctor<OF, RT>(fun);
+}
+
 } // namespace frankx

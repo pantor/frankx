@@ -1,7 +1,6 @@
 #include <frankx/robot.hpp>
 
 #include <ruckig/ruckig.hpp>
-#include <ruckig/alternative/smoothie.hpp>
 
 
 namespace frankx {
@@ -49,6 +48,11 @@ Affine Robot::currentPose(const Affine& frame) {
     return Affine(state.O_T_EE) * frame;
 }
 
+std::array<double, 7> Robot::currentJointPositions() {
+    auto state = readOnce();
+    return state.q;
+}
+
 Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
     const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
     return Affine(Kinematics::forward(q_current));
@@ -62,6 +66,10 @@ std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::
 
     Eigen::Matrix<double, 7, 1>::Map(result.data()) = Kinematics::inverse(x_target, q0_current);
     return result;
+}
+
+::franka::RobotState Robot::get_state() {
+    return readOnce();
 }
 
 bool Robot::move(ImpedanceMotion& motion) {
@@ -81,7 +89,7 @@ bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data)
     ImpedanceMotionGenerator<Robot> mg {this, frame, motion, data};
 
     try {
-        control(mg);
+        control(stateful<franka::Torques>(mg));
         motion.is_active = false;
 
     } catch (const franka::Exception& exception) {
@@ -102,7 +110,7 @@ bool Robot::move(JointMotion motion, MotionData& data) {
     JointMotionGenerator<Robot> mg {this, motion, data};
 
     try {
-        control(mg);
+        control(stateful<franka::JointPositions>(mg));
 
     } catch (franka::Exception exception) {
         std::cout << exception.what() << std::endl;
@@ -129,7 +137,7 @@ bool Robot::move(const Affine& frame, PathMotion motion, MotionData& data) {
     PathMotionGenerator<Robot> mg {this, frame, motion, data};
 
     try {
-        control(mg, controller_mode);
+        control(stateful<franka::CartesianPose>(mg), controller_mode);
 
     } catch (franka::Exception exception) {
         std::cout << exception.what() << std::endl;
@@ -154,18 +162,19 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion) {
 
 bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) {
     WaypointMotionGenerator<Robot> mg {this, frame, motion, data};
+    mg.input_para.target_position[0] = 0.01;
 
     try {
-        control(mg, controller_mode);
+        control(stateful<franka::CartesianPose>(mg), controller_mode);
 
     } catch (franka::Exception exception) {
         auto errors = readOnce().last_motion_errors;
         if (repeat_on_error
-            && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
-            || errors.cartesian_motion_generator_joint_velocity_discontinuity
-            || errors.cartesian_motion_generator_velocity_discontinuity
-            || errors.cartesian_motion_generator_acceleration_discontinuity
-        )) {
+            // && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
+            // || errors.cartesian_motion_generator_joint_velocity_discontinuity
+            // || errors.cartesian_motion_generator_velocity_discontinuity
+            // || errors.cartesian_motion_generator_acceleration_discontinuity)
+        ) {
             std::cout << "[frankx robot] continue motion after exception: " << exception.what() << std::endl;
             automaticErrorRecovery();
 
@@ -177,7 +186,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
             bool success {false};
 
             try {
-                control(mg, controller_mode);
+                control(stateful<franka::CartesianPose>(mg), controller_mode);
                 success = true;
 
             } catch (franka::Exception exception) {

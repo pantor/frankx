@@ -46,6 +46,9 @@ public:
     bool release();
     bool release(double width); // [m]
     bool releaseRelative(double width); // [m]
+    
+    
+    ::franka::GripperState get_state();
 };
 
 } // namepace frankx

@@ -1,7 +1,7 @@
 <div align="center">
   <img width="340" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
-    High-Level Motion Library for the Franka Panda Robot
+    High-Level Motion Library for the Franka Emika Robot
   </h3>
 </div>
 <p align="center">
@@ -27,7 +27,7 @@
 </p>
 
 
-Frankx is a high-level motion library (both C++ and Python) for the Franka Emika Panda robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
+Frankx is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
 ## Installation
@@ -37,7 +37,7 @@ To start using frankx with Python, you can use pip via
 pip install frankx
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://github.com/pantor/ruckig) library for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
 
 ```bash
 git clone --recurse-submodules git@github.com:pantor/frankx.git
@@ -148,7 +148,7 @@ As the trajectory generation works in the Euler space, please make sure to have 
 
 ### Robot
 
-We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The `rel` name denotes that this a factor of the maximum constraints of the Panda robot.
+We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The `rel` name denotes that this a factor of the maximum constraints of the robot.
 ```.py
 robot = Robot("172.16.0.2")
 
