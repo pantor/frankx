@@ -71,9 +71,7 @@ struct JointMotionGenerator: public MotionGenerator {
                 return franka::MotionFinished(franka::JointPositions(joint_positions));
             }
 
-            input_para.current_position = output_para.new_position;
-            input_para.current_velocity = output_para.new_velocity;
-            input_para.current_acceleration = output_para.new_acceleration;
+            output_para.pass_to_input(input_para);
         }
 
         return franka::JointPositions(joint_positions);

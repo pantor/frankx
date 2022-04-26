@@ -42,7 +42,7 @@ jobs:
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
-        git checkout 0.7.1
+        git checkout 0.8.0
         git submodule update
         mkdir build && cd build
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
@@ -53,7 +53,7 @@ jobs:
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.6.0
+        git checkout v2.9.1
         mkdir build && cd build
         cmake -DPYBIND11_TEST=OFF ..
         make -j2

@@ -193,9 +193,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
                 return franka::MotionFinished(MotionGenerator::CartesianPose(input_para.current_position, waypoint_has_elbow));
             }
 
-            input_para.current_position = output_para.new_position;
-            input_para.current_velocity = output_para.new_velocity;
-            input_para.current_acceleration = output_para.new_acceleration;
+            output_para.pass_to_input(input_para);
         }
 
         return MotionGenerator::CartesianPose(output_para.new_position, waypoint_has_elbow);
