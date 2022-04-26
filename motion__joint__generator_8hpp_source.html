@@ -144,16 +144,14 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <span class="keywordflow">return</span> franka::MotionFinished(franka::JointPositions(joint_positions));</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            input_para.current_position = output_para.new_position;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            input_para.current_velocity = output_para.new_velocity;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            input_para.current_acceleration = output_para.new_acceleration;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> franka::JointPositions(joint_positions);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace frankx</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            output_para.pass_to_input(input_para);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> franka::JointPositions(joint_positions);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;};</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;} <span class="comment">// namespace frankx</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructmovex_1_1_motion_data_html_adefb7f5ec27b5e9730e91a2c861f88c9"><div class="ttname"><a href="structmovex_1_1_motion_data.html#adefb7f5ec27b5e9730e91a2c861f88c9">movex::MotionData::jerk_rel</a></div><div class="ttdeci">double jerk_rel</div><div class="ttdef"><b>Definition:</b> motion_data.hpp:9</div></div>
 <div class="ttc" id="astructfrankx_1_1_motion_generator_html"><div class="ttname"><a href="structfrankx_1_1_motion_generator.html">frankx::MotionGenerator</a></div><div class="ttdef"><b>Definition:</b> motion_generator.hpp:19</div></div>

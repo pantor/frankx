@@ -266,16 +266,14 @@ $(function() {
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                <span class="keywordflow">return</span> franka::MotionFinished(<a class="code" href="structfrankx_1_1_motion_generator.html#aae6eb522adeb0a5996b11540944dd360">MotionGenerator::CartesianPose</a>(input_para.current_position, waypoint_has_elbow));</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            }</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            input_para.current_position = output_para.new_position;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            input_para.current_velocity = output_para.new_velocity;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            input_para.current_acceleration = output_para.new_acceleration;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        }</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structfrankx_1_1_motion_generator.html#aae6eb522adeb0a5996b11540944dd360">MotionGenerator::CartesianPose</a>(output_para.new_position, waypoint_has_elbow);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;};</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;} <span class="comment">// namespace frankx</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            output_para.pass_to_input(input_para);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        }</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structfrankx_1_1_motion_generator.html#aae6eb522adeb0a5996b11540944dd360">MotionGenerator::CartesianPose</a>(output_para.new_position, waypoint_has_elbow);</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    }</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;};</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;} <span class="comment">// namespace frankx</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructfrankx_1_1_waypoint_motion_generator_html_aa496f6cd2bffbd02d3da854266be54f5"><div class="ttname"><a href="structfrankx_1_1_waypoint_motion_generator.html#aa496f6cd2bffbd02d3da854266be54f5">frankx::WaypointMotionGenerator::old_vector</a></div><div class="ttdeci">Vector7d old_vector</div><div class="ttdef"><b>Definition:</b> motion_waypoint_generator.hpp:27</div></div>
 <div class="ttc" id="astructfrankx_1_1_motion_generator_html"><div class="ttname"><a href="structfrankx_1_1_motion_generator.html">frankx::MotionGenerator</a></div><div class="ttdef"><b>Definition:</b> motion_generator.hpp:19</div></div>
