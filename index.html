@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Frankx
-   &#160;<span id="projectnumber">0.1.1</span>
+   &#160;<span id="projectnumber">0.2.0</span>
    </div>
    <div id="projectbrief">A High-Level Motion API for Franka</div>
   </td>
@@ -75,7 +75,7 @@ $(function() {
 <p><a href="https://github.com/pantor/frankx/blob/master/LICENSE"><object type="image/svg+xml" data="https://img.shields.io/badge/license-LGPL-green.svg" style="pointer-events: none;">LGPL</object> </a> </p>
 <p>Frankx is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around <a href="https://frankaemika.github.io/docs/libfranka.html">libfranka</a>, while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.</p>
 <h2>Installation</h2>
-<p>To start using frankx with Python, you can use pip via </p><div class="fragment"><div class="line">pip install frankx</div>
+<p>To start using frankx with Python and libfranka <em>0.9.0</em>, just install it via </p><div class="fragment"><div class="line">pip install frankx</div>
 </div><!-- fragment --><p>Frankx is based on <a href="https://github.com/frankaemika/libfranka">libfranka</a>, <a href="https://eigen.tuxfamily.org">Eigen</a> for transformation calculations and <a href="https://github.com/pybind/pybind11">pybind11</a> for the Python bindings. Frankx uses the <a href="https://ruckig.com">Ruckig</a> Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via</p>
 <div class="fragment"><div class="line">git clone --recurse-submodules git@github.com:pantor/frankx.git</div>
 <div class="line">cd frankx</div>
@@ -277,9 +277,9 @@ $(function() {
 <p>Frankx is written in C++17 and Python3.7. It is currently tested against following versions</p>
 <ul>
 <li>Eigen v3.3.7</li>
-<li>Libfranka v0.8.0</li>
-<li>Pybind11 v2.6.0</li>
-<li>Catch2 v2.9 (only for testing)</li>
+<li>Libfranka v0.9.0</li>
+<li>Pybind11 v2.9.1</li>
+<li>Catch2 v2.13 (only for testing)</li>
 </ul>
 <h2>License</h2>
 <p>For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements. </p>
