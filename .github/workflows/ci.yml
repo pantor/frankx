@@ -30,7 +30,7 @@ jobs:
       run: |
         git clone --recursive https://github.com/frankaemika/libfranka.git
         cd libfranka
-        git checkout 0.8.0
+        git checkout 0.9.0
         git submodule update
         mkdir build && cd build
         cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
@@ -51,7 +51,7 @@ jobs:
       run: |
         git clone https://github.com/catchorg/Catch2.git
         cd Catch2
-        git checkout v2.5.0
+        git checkout v2.13.0
         mkdir build && cd build
         cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         sudo make install

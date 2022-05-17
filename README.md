@@ -32,7 +32,7 @@ Frankx is a high-level motion library (both C++ and Python) for the Franka Emika
 
 ## Installation
 
-To start using frankx with Python, you can use pip via
+To start using frankx with Python and libfranka *0.9.0*, just install it via
 ```bash
 pip install frankx
 ```
@@ -334,9 +334,9 @@ An auto-generated documentation can be found at [https://pantor.github.io/frankx
 Frankx is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
-- Libfranka v0.8.0
-- Pybind11 v2.6.0
-- Catch2 v2.9 (only for testing)
+- Libfranka v0.9.0
+- Pybind11 v2.9.1
+- Catch2 v2.13 (only for testing)
 
 
 ## License
