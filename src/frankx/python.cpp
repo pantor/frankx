@@ -246,6 +246,8 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("joint_collision", &franka::RobotState::joint_collision)
         .def_readonly("cartesian_collision", &franka::RobotState::cartesian_collision)
         .def_readonly("tau_ext_hat_filtered", &franka::RobotState::tau_ext_hat_filtered)
+        .def_readonly("O_F_ext_hat_K", &franka::RobotState::O_F_ext_hat_K)
+        .def_readonly("K_F_ext_hat_K", &franka::RobotState::K_F_ext_hat_K)
         .def_readonly("O_T_EE_c", &franka::RobotState::O_T_EE_c)
         .def_readonly("O_dP_EE_c", &franka::RobotState::O_dP_EE_c)
         .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
