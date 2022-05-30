@@ -60,8 +60,7 @@ std::array<double, 7> Robot::currentJointPositions() {
 }
 
 Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
-    const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
-    return Affine(Kinematics::forward(q_current));
+    return kinematics.forward_chain(q);
 }
 
 std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::array<double, 7>& q0) {
