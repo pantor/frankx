@@ -101,6 +101,12 @@ public:
     bool move(WaypointMotion& motion, MotionData& data);
     bool move(const Affine& frame, WaypointMotion& motion);
     bool move(const Affine& frame, WaypointMotion& motion, MotionData& data);
+
+    //variable to save O_T_EE_async
+    std::array<double,16> * robot_O_T_EE_async = nullptr;
+
+    //getter for O_T_EE_async
+    std::array<double,16> get_O_T_EE_async();
 };
 
 } // namespace frankx

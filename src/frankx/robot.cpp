@@ -141,6 +141,8 @@ bool Robot::move(const Affine& frame, PathMotion motion) {
 
 bool Robot::move(const Affine& frame, PathMotion motion, MotionData& data) {
     PathMotionGenerator<Robot> mg {this, frame, motion, data};
+    
+    Robot::robot_O_T_EE_async = mg.path_O_T_EE_async;
 
     try {
         control(stateful<franka::CartesianPose>(mg), controller_mode);
@@ -211,6 +213,18 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
         return false;
     }
     return true;
+}
+
+std::array<double,16> Robot::get_O_T_EE_async(){
+
+    if(robot_O_T_EE_async == nullptr){
+        std::cout<<"It is not possible to get O_T_EE_async now" << std::endl;
+        return std::array<double,16>();
+    }
+
+    else{
+        return *robot_O_T_EE_async;
+    }
 }
 
 } // namepace frankx
