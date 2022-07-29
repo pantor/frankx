@@ -27,6 +27,10 @@ struct PathMotionGenerator: public MotionGenerator {
     Affine frame;
     PathMotion motion;
     MotionData& data;
+    
+    //variables to collect O_T_EE_async
+    std::array<double, 16> * path_O_T_EE_async = new std::array<double,16>();
+    std::array<double, 16> * temp_O_T_EE_async;
 
     explicit PathMotionGenerator(RobotType* robot, const Affine& frame, PathMotion motion, MotionData& data): robot(robot), frame(frame), motion(motion), data(data) {
         // Insert current pose into beginning of path
@@ -64,7 +68,15 @@ struct PathMotionGenerator: public MotionGenerator {
         }
 
         s_current = trajectory.states[trajectory_index].s;
-        return CartesianPose(trajectory.path.q(s_current, frame), use_elbow);
+
+        //determine the current CartesianPose
+        franka::CartesianPose current_cartesian_pose = CartesianPose(trajectory.path.q(s_current, frame), use_elbow);
+
+        temp_O_T_EE_async = new std::array<double,16>(current_cartesian_pose.O_T_EE);
+        *path_O_T_EE_async = *temp_O_T_EE_async;
+
+
+        return current_cartesian_pose;
     }
 };
 
