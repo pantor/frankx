@@ -72,6 +72,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def(py::init<double>(), "minimum_time"_a)
         .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
         .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+        .def(py::init<const Affine &, double, double, std::optional<double>>(), "affine"_a, "velocity_rel"_a, "blend_max_distance"_a, "elbow"_a = std::nullopt)
         .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
         .def_readonly("affine", &Waypoint::affine)
         .def_readonly("elbow", &Waypoint::elbow)
