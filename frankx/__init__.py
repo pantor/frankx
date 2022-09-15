@@ -20,6 +20,7 @@ from _frankx import (
     StopMotion,
     Waypoint,
     WaypointMotion,
+    InvalidOperationException,
 )
 
 from .gripper import Gripper
