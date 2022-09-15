@@ -193,21 +193,21 @@ robot = Robot("172.16.0.2")
 
 # Get the current state handling the read exception when the robot is in motion
 try:
-    robot_state = self.robot.get_state(read_once=True)
+    robot_state = robot.get_state(read_once=True)
 except frankx.InvalidOperationException:
-    robot_state = self.robot.get_state(read_once=False)
+    robot_state = robot.get_state(read_once=False)
 
 # Get the current pose handling the read exception when the robot is in motion
 try:
-    pose = self.robot.current_pose(read_once=True)
+    pose = robot.current_pose(read_once=True)
 except frankx.InvalidOperationException:
-    pose = self.robot.current_pose(read_once=False)
+    pose = robot.current_pose(read_once=False)
 
 # Get the current joint positions handling the read exception when the robot is in motion
 try:
-    joint_positions = self.robot.current_joint_positions(read_once=True)
+    joint_positions = robot.current_joint_positions(read_once=True)
 except frankx.InvalidOperationException:
-    joint_positions = self.robot.current_joint_positions(read_once=False)
+    joint_positions = robot.current_joint_positions(read_once=False)
 ```
 
 
