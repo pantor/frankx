@@ -27,6 +27,7 @@ struct ImpedanceMotionGenerator: public MotionGenerator {
     Affine frame;
     ImpedanceMotion& motion;
     MotionData& data;
+    franka::RobotState asynchronous_state;
 
     explicit ImpedanceMotionGenerator(RobotType* robot, const Affine& frame, ImpedanceMotion& motion, MotionData& data): robot(robot), frame(frame), motion(motion), data(data) {
         if (motion.type == ImpedanceMotion::Type::Joint) {
@@ -112,6 +113,8 @@ struct ImpedanceMotionGenerator: public MotionGenerator {
             return franka::MotionFinished(franka::Torques(tau_d_array));
         }
 #endif
+
+        asynchronous_state = franka::RobotState(robot_state);
 
         if (motion.should_finish) {
             motion.is_active = false;

@@ -49,13 +49,21 @@ bool Robot::recoverFromErrors() {
     return !hasErrors();
 }
 
-Affine Robot::currentPose(const Affine& frame) {
-    auto state = readOnce();
+Affine Robot::currentPose(const Affine& frame, const bool& read_once) {
+    ::franka::RobotState state;
+    if (read_once)
+        state = readOnce();
+    else
+        state = ::franka::RobotState(*asynchronous_state_ptr);
     return Affine(state.O_T_EE) * frame;
 }
 
-std::array<double, 7> Robot::currentJointPositions() {
-    auto state = readOnce();
+std::array<double, 7> Robot::currentJointPositions(const bool& read_once) {
+    ::franka::RobotState state;
+    if (read_once)
+        state = readOnce();
+    else
+        state = ::franka::RobotState(*asynchronous_state_ptr);
     return state.q;
 }
 
@@ -74,8 +82,11 @@ std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::
     return result;
 }
 
-::franka::RobotState Robot::get_state() {
-    return readOnce();
+::franka::RobotState Robot::get_state(const bool& read_once) {
+    if (read_once)
+        return readOnce();
+    else
+        return ::franka::RobotState(*asynchronous_state_ptr);
 }
 
 bool Robot::move(ImpedanceMotion& motion) {
@@ -93,6 +104,8 @@ bool Robot::move(const Affine& frame, ImpedanceMotion& motion) {
 
 bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data) {
     ImpedanceMotionGenerator<Robot> mg {this, frame, motion, data};
+
+    asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
         control(stateful<franka::Torques>(mg));
@@ -114,6 +127,8 @@ bool Robot::move(JointMotion motion) {
 
 bool Robot::move(JointMotion motion, MotionData& data) {
     JointMotionGenerator<Robot> mg {this, motion, data};
+
+    asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
         control(stateful<franka::JointPositions>(mg));
@@ -142,6 +157,8 @@ bool Robot::move(const Affine& frame, PathMotion motion) {
 bool Robot::move(const Affine& frame, PathMotion motion, MotionData& data) {
     PathMotionGenerator<Robot> mg {this, frame, motion, data};
 
+    asynchronous_state_ptr = &mg.asynchronous_state;
+
     try {
         control(stateful<franka::CartesianPose>(mg), controller_mode);
 
@@ -169,6 +186,8 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion) {
 bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) {
     WaypointMotionGenerator<Robot> mg {this, frame, motion, data};
     mg.input_para.target_position[0] = 0.01;
+
+    asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
         control(stateful<franka::CartesianPose>(mg), controller_mode);

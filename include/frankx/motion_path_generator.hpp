@@ -27,6 +27,7 @@ struct PathMotionGenerator: public MotionGenerator {
     Affine frame;
     PathMotion motion;
     MotionData& data;
+    franka::RobotState asynchronous_state;
 
     explicit PathMotionGenerator(RobotType* robot, const Affine& frame, PathMotion motion, MotionData& data): robot(robot), frame(frame), motion(motion), data(data) {
         // Insert current pose into beginning of path
@@ -55,6 +56,8 @@ struct PathMotionGenerator: public MotionGenerator {
             robot->stop();
         }
 #endif
+
+        asynchronous_state = franka::RobotState(robot_state);
 
         const int steps = std::max<int>(period.toMSec(), 1);
         trajectory_index += steps;

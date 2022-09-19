@@ -168,6 +168,49 @@ current_pose = robot.current_pose()
 ```
 
 
+### Robot State
+
+The robot state can be retrieved by calling the following methods:
+
+* `get_state`: Return an object of the `frankx.RobotState` class which contains most of the same attributes, under the same name, as the libfranka [franka::RobotState](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html) definition.
+
+* `current_pose`: Return a 3D Affine transformation object of the measured end effector pose in base frame (alias for [franka::RobotState::O_T_EE](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html#a193781d47722b32925e0ea7ac415f442)) affected or not by another Affine transformation.
+
+* `current_joint_positions`: Return a sequence of the manipulator arm's 7-joint positions (alias for [franka::RobotState::q](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html#ade3335d1ac2f6c44741a916d565f7091)).
+
+```.py
+robot = Robot("172.16.0.2")
+
+# Get the current state
+state = robot.get_state()
+pose = robot.current_pose()
+joint_positions = robot.current_joint_positions()
+```
+
+However, invoking these methods as-is throws an exception (`_frankx.InvalidOperationException: libfranka robot: Cannot perform this operation while another control or read operation is running`) when the robot is moving. In this case, the methods must be invoked by setting the `read_once` argument to False (default to True) to retrieve the state.
+```.py
+robot = Robot("172.16.0.2")
+
+# Get the current state handling the read exception when the robot is in motion
+try:
+    robot_state = robot.get_state(read_once=True)
+except frankx.InvalidOperationException:
+    robot_state = robot.get_state(read_once=False)
+
+# Get the current pose handling the read exception when the robot is in motion
+try:
+    pose = robot.current_pose(read_once=True)
+except frankx.InvalidOperationException:
+    pose = robot.current_pose(read_once=False)
+
+# Get the current joint positions handling the read exception when the robot is in motion
+try:
+    joint_positions = robot.current_joint_positions(read_once=True)
+except frankx.InvalidOperationException:
+    joint_positions = robot.current_joint_positions(read_once=False)
+```
+
+
 ### Motion Types
 
 Frankx defines five different motion types. In python, you can use them as follows:
