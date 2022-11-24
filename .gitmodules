@@ -1,6 +1,6 @@
 [submodule "ruckig"]
 	path = ruckig
-	url = ../ruckig.git
+	url = https://github.com/pantor/ruckig.git
 [submodule "affx"]
 	path = affx
-	url = ../affx.git
+	url = https://github.com/pantor/affx.git
