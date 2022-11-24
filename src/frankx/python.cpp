@@ -214,6 +214,11 @@ PYBIND11_MODULE(_frankx, m) {
         .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance)
         .export_values();
 
+    py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
+        .value("Enforce", franka::RealtimeConfig::kEnforce)
+        .value("Ignore", franka::RealtimeConfig::kIgnore)
+        .export_values();
+
     py::class_<franka::RobotState>(m, "RobotState")
         .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
         .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
@@ -260,7 +265,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def_readonly("time", &franka::RobotState::time);
 
     py::class_<Robot>(m, "Robot")
-        .def(py::init<const std::string &, double, bool, bool>(), "fci_ip"_a, "dynamic_rel"_a = 1.0, "repeat_on_error"_a = true, "stop_at_python_signal"_a = true)
+        .def(py::init<const std::string &, double, bool, bool, franka::RealtimeConfig &>(), "fci_ip"_a, "dynamic_rel"_a = 1.0, "repeat_on_error"_a = true, "stop_at_python_signal"_a = true, "realtime_config"_a = franka::RealtimeConfig::kEnforce)
         .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
         .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
         .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
