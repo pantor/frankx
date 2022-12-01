@@ -69,7 +69,7 @@ public:
     bool stop_at_python_signal {true};
 
     //! Connects to a robot at the given FCI IP address.
-    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0, bool repeat_on_error = true, bool stop_at_python_signal = true);
+    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0, bool repeat_on_error = true, bool stop_at_python_signal = true, franka::RealtimeConfig realtime_config = franka::RealtimeConfig::kEnforce);
 
     void setDefaultBehavior();
     void setDynamicRel(double dynamic_rel);
