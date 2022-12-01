@@ -51,7 +51,7 @@ struct Waypoint {
 
     // explicit Waypoint(const Affine& affine, double blend_max_distance): affine(affine), blend_max_distance(blend_max_distance) {}
     explicit Waypoint(const Affine& affine, std::optional<double> elbow, double blend_max_distance): affine(affine), elbow(elbow), blend_max_distance(blend_max_distance), reference_type(ReferenceType::Absolute) {}
-
+    explicit Waypoint(const Affine& affine, double velocity_rel, double blend_max_distance, std::optional<double> elbow): affine(affine), velocity_rel(velocity_rel), blend_max_distance(blend_max_distance), elbow(elbow), reference_type(ReferenceType::Absolute) {}
 
     Affine getTargetAffine(const Affine& frame, const Affine& old_affine) const {
         switch (reference_type) {
