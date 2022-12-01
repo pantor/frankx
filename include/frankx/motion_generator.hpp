@@ -17,16 +17,16 @@ namespace frankx {
     using Vector7d = Eigen::Matrix<double, 7, 1>;
 
 struct MotionGenerator {
-    static inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true) {
-        auto affine = Affine(vector);
+    static inline franka::CartesianPose CartesianPose(const Vector7d& vector, bool include_elbow = true, const Affine& base_frame = Affine()) {
+        auto affine = base_frame * Affine::fromPosRotVec(vector);
         if (include_elbow) {
             return franka::CartesianPose(affine.array(), {vector[6], -1});
         }
         return franka::CartesianPose(affine.array());
     }
 
-    static inline franka::CartesianPose CartesianPose(const std::array<double, 7>& vector, bool include_elbow = true) {
-        auto affine = Affine(vector);
+    static inline franka::CartesianPose CartesianPose(const std::array<double, 7>& vector, bool include_elbow = true, const Affine& base_frame = Affine()) {
+        auto affine = base_frame * Affine::fromPosRotVec(vector);
         if (include_elbow) {
             return franka::CartesianPose(affine.array(), {vector[6], -1});
         }

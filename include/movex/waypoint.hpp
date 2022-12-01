@@ -66,14 +66,14 @@ struct Waypoint {
         return getTargetVector(Affine(), old_affine, old_elbow);
     }
 
-    Vector7d getTargetVector(const Affine& frame, const Affine& old_affine, double old_elbow) const {
+    Vector7d getTargetVector(const Affine& frame, const Affine& old_affine, double old_elbow, const Affine& base_frame = Affine()) const {
         double new_elbow;
         if (reference_type == ReferenceType::Relative) {
             new_elbow = elbow.value_or(0.0) + old_elbow;
         } else {
             new_elbow = elbow.value_or(old_elbow);
         }
-        return getTargetAffine(frame, old_affine).vector_with_elbow(new_elbow);
+        return (base_frame * getTargetAffine(frame, old_affine)).vector_with_elbow(new_elbow);
     }
 };
 
