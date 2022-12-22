@@ -32,6 +32,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
     Affine frame;
     WaypointMotion& motion;
     MotionData& data;
+    franka::RobotState asynchronous_state;
 
     Affine initial_pose;
 
@@ -97,6 +98,8 @@ struct WaypointMotionGenerator: public MotionGenerator {
         if (time == 0.0) {
             init(robot_state, period);
         }
+
+        asynchronous_state = franka::RobotState(robot_state);
 
         for (auto& reaction : data.reactions) {
             if (reaction.has_fired) {

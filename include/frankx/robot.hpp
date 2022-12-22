@@ -77,12 +77,13 @@ public:
     bool hasErrors();
     bool recoverFromErrors();
 
-    Affine currentPose(const Affine& frame = Affine());
-    std::array<double, 7> currentJointPositions();
+    Affine currentPose(const Affine& frame = Affine(), const bool& read_once = true);
+    std::array<double, 7> currentJointPositions(const bool& read_once = true);
     Affine forwardKinematics(const std::array<double, 7>& q);
     std::array<double, 7> inverseKinematics(const Affine& target, const std::array<double, 7>& q0);
     
-    ::franka::RobotState get_state();
+    ::franka::RobotState* asynchronous_state_ptr;
+    ::franka::RobotState get_state(const bool& read_once = true);
 
     bool move(ImpedanceMotion& motion);
     bool move(ImpedanceMotion& motion, MotionData& data);

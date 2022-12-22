@@ -21,6 +21,7 @@ from _frankx import (
     Waypoint,
     WaypointMotion,
     RealtimeConfig,
+    InvalidOperationException,
 )
 
 from .gripper import Gripper

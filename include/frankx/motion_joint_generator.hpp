@@ -26,6 +26,7 @@ struct JointMotionGenerator: public MotionGenerator {
 
     JointMotion motion;
     MotionData& data;
+    franka::RobotState asynchronous_state;
 
     explicit JointMotionGenerator(RobotType* robot, JointMotion motion, MotionData& data): robot(robot), motion(motion), data(data) { }
 
@@ -56,6 +57,8 @@ struct JointMotionGenerator: public MotionGenerator {
             robot->stop();
         }
 #endif
+
+        asynchronous_state = franka::RobotState(robot_state);
 
         const int steps = std::max<int>(period.toMSec(), 1);
         for (int i = 0; i < steps; i++) {
