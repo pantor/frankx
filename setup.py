@@ -74,7 +74,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
     author_email='lars.berscheid@kit.edu',
-    url='https://github.com/pantor/frankx',
+    url='https://github.com/TimSchneider42/franky',
     packages=find_packages(),
     license='LGPL',
     ext_modules=[CMakeExtension('_frankx'), CMakeExtension('pyaffx')],
