@@ -3,4 +3,4 @@
 	url = https://github.com/pantor/ruckig.git
 [submodule "affx"]
 	path = affx
-	url = https://github.com/pantor/affx.git
+	url = ../affx.git
