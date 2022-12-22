@@ -297,7 +297,7 @@ PYBIND11_MODULE(_frankx, m) {
         .def("has_errors", &Robot::hasErrors)
         .def("recover_from_errors", &Robot::recoverFromErrors)
         .def("read_once", &Robot::readOnce)
-        .def("current_pose", &Robot::currentPose, "frame"_a = Affine(), "read_once"_a = true)
+        .def("current_pose", &Robot::currentPose, "read_once"_a = true)
         .def("current_joint_positions", &Robot::currentJointPositions, "read_once"_a = true)
         .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
         .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "q0"_a)

@@ -49,13 +49,13 @@ bool Robot::recoverFromErrors() {
     return !hasErrors();
 }
 
-Affine Robot::currentPose(const Affine& frame, const bool& read_once) {
+Affine Robot::currentPose(const bool& read_once) {
     ::franka::RobotState state;
     if (read_once)
         state = readOnce();
     else
         state = ::franka::RobotState(*asynchronous_state_ptr);
-    return Affine(state.O_T_EE) * frame;
+    return Affine(state.O_T_EE);
 }
 
 std::array<double, 7> Robot::currentJointPositions(const bool& read_once) {

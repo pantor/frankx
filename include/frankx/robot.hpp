@@ -77,7 +77,7 @@ public:
     bool hasErrors();
     bool recoverFromErrors();
 
-    Affine currentPose(const Affine& frame = Affine(), const bool& read_once = true);
+    Affine currentPose(const bool& read_once = true);
     std::array<double, 7> currentJointPositions(const bool& read_once = true);
     Affine forwardKinematics(const std::array<double, 7>& q);
     std::array<double, 7> inverseKinematics(const Affine& target, const std::array<double, 7>& q0);
