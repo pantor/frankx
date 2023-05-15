@@ -67,7 +67,7 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name='frankx',
+    name='franky',
     version='0.2.0',
     description='High-Level Motion Library for the Franka Panda Robot',
     long_description=long_description,
@@ -77,7 +77,7 @@ setup(
     url='https://github.com/TimSchneider42/franky',
     packages=find_packages(),
     license='LGPL',
-    ext_modules=[CMakeExtension('_frankx'), CMakeExtension('pyaffx')],
+    ext_modules=[CMakeExtension('_franky'), CMakeExtension('pyaffx')],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control'],
     classifiers=[

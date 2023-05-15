@@ -6,15 +6,15 @@
 #include <pybind11/eigen.h>
 #include <pybind11/operators.h>
 
-#include <frankx/gripper.hpp>
-#include <frankx/robot.hpp>
+#include <franky/gripper.hpp>
+#include <franky/robot.hpp>
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal
-using namespace frankx;
+using namespace franky;
 
 
-PYBIND11_MODULE(_frankx, m) {
+PYBIND11_MODULE(_franky, m) {
     m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
     py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")

@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include <frankx/kinematics.hpp>
+#include <franky/kinematics.hpp>
 
 
-namespace frankx {
+namespace franky {
 
 std::array<double, 16> Kinematics::forward(const Eigen::Matrix<double, 7, 1>& q) {
     const double s0 = std::sin(q[0]), c0 = std::cos(q[0]);

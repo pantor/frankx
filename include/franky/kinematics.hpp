@@ -6,7 +6,7 @@
 #include <Eigen/Dense>
 
 
-namespace frankx {
+namespace franky {
 
 struct Kinematics {
     template <class MatT>

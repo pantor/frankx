@@ -88,7 +88,7 @@ jobs:
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
           if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]] || [[ "${PYBIN}" == *"cp39"* ]]; then
-            "${PYBIN}/pip" install frankx --no-index -f dist
+            "${PYBIN}/pip" install franky --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi
         done

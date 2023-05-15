@@ -1,5 +1,5 @@
 from time import sleep
-from frankx import Affine, JointMotion, ImpedanceMotion, Robot
+from franky import Affine, JointMotion, ImpedanceMotion, Robot
 
 
 if __name__ == '__main__':

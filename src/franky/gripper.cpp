@@ -1,7 +1,7 @@
-#include <frankx/gripper.hpp>
+#include <franky/gripper.hpp>
 
 
-namespace frankx {
+namespace franky {
 
 Gripper::Gripper(const std::string& fci_ip, double speed, double force): franka::Gripper(fci_ip), gripper_speed(speed), gripper_force(force) { }
 
@@ -89,4 +89,4 @@ bool Gripper::releaseRelative(double width_relative) { // [m]
     return readOnce();
 }
 
-} // namepace frankx
+} // namepace franky

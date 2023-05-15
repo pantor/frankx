@@ -16,15 +16,15 @@
 #include <movex/robot/robot_state.hpp>
 #include <movex/robot/kinematics.hpp>
 
-#include <frankx/kinematics.hpp>
-#include <frankx/motion_generator.hpp>
-#include <frankx/motion_impedance_generator.hpp>
-#include <frankx/motion_joint_generator.hpp>
-#include <frankx/motion_path_generator.hpp>
-#include <frankx/motion_waypoint_generator.hpp>
+#include <franky/kinematics.hpp>
+#include <franky/motion_generator.hpp>
+#include <franky/motion_impedance_generator.hpp>
+#include <franky/motion_joint_generator.hpp>
+#include <franky/motion_path_generator.hpp>
+#include <franky/motion_waypoint_generator.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
     using Affine = affx::Affine;
 
@@ -104,4 +104,4 @@ public:
     bool move(const Affine& frame, WaypointMotion& motion, MotionData& data);
 };
 
-} // namespace frankx
+} // namespace franky

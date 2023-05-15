@@ -9,7 +9,7 @@
 #include <ruckig/ruckig.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
 
 template<class RobotType>
@@ -70,7 +70,7 @@ struct JointMotionGenerator: public MotionGenerator {
                 return franka::MotionFinished(franka::JointPositions(joint_positions));
 
             } else if (result == ruckig::Result::Error) {
-                std::cout << "[frankx robot] Invalid inputs:" << std::endl;
+                std::cout << "[franky robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(franka::JointPositions(joint_positions));
             }
 
@@ -81,4 +81,4 @@ struct JointMotionGenerator: public MotionGenerator {
     }
 };
 
-} // namespace frankx
+} // namespace franky

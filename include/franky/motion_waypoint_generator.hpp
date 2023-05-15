@@ -9,7 +9,7 @@
 #include <ruckig/ruckig.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
     using Affine = affx::Affine;
 
@@ -107,7 +107,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
             }
 
             if (reaction.condition(MotionGenerator::convertState(robot_state), time)) {
-                std::cout << "[frankx] reaction fired." << std::endl;
+                std::cout << "[franky] reaction fired." << std::endl;
                 reaction.has_fired = true;
 
                 bool new_motion = false;
@@ -202,7 +202,7 @@ struct WaypointMotionGenerator: public MotionGenerator {
                 }
 
             } else if (result == ruckig::Result::Error) {
-                std::cout << "[frankx robot] Invalid inputs:" << std::endl;
+                std::cout << "[franky robot] Invalid inputs:" << std::endl;
                 return franka::MotionFinished(MotionGenerator::CartesianPose(
                         input_para.current_position, waypoint_has_elbow, initial_pose));
             }
@@ -214,4 +214,4 @@ struct WaypointMotionGenerator: public MotionGenerator {
     }
 };
 
-} // namespace frankx
+} // namespace franky

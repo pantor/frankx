@@ -8,7 +8,7 @@
 #include <franka/gripper.h>
 
 
-namespace frankx {
+namespace franky {
 
 class Gripper: public franka::Gripper {
     const double width_calibration {0.004}; // [m], Difference from gripper jaws
@@ -51,4 +51,4 @@ public:
     ::franka::GripperState get_state();
 };
 
-} // namepace frankx
+} // namepace franky

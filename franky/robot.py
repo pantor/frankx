@@ -7,8 +7,8 @@ import ssl
 from time import sleep
 from threading import Thread
 
-from _frankx import Robot as _Robot
-from _frankx import RealtimeConfig as _RealtimeConfig
+from _franky import Robot as _Robot
+from _franky import RealtimeConfig as _RealtimeConfig
 from .gripper import Gripper as _Gripper
 
 

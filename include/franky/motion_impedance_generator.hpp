@@ -8,7 +8,7 @@
 #include <movex/motion/motion_impedance.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
 
 template<class RobotType>
@@ -160,4 +160,4 @@ struct ImpedanceMotionGenerator: public MotionGenerator {
     }
 };
 
-} // namespace frankx
+} // namespace franky

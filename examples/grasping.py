@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from frankx import *
+from franky import *
 
 
 @dataclass

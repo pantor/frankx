@@ -3,10 +3,10 @@
 
 #include <catch2/catch.hpp>
 
-#include <frankx/frankx.hpp>
+#include <franky/franky.hpp>
 
 
-using namespace frankx;
+using namespace franky;
 
 
 inline Affine getRelativeBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {

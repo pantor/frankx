@@ -1,6 +1,6 @@
 from pyaffx import Affine
 
-from _frankx import (
+from _franky import (
     Duration,
     Errors,
     GripperState,

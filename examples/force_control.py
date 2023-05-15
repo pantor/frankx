@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
 from time import sleep
-from frankx import Affine, JointMotion, LinearRelativeMotion, ImpedanceMotion, Robot, Measure, MotionData, Reaction, StopMotion
+from franky import Affine, JointMotion, LinearRelativeMotion, ImpedanceMotion, Robot, Measure, MotionData, Reaction, StopMotion
 
 
 if __name__ == '__main__':

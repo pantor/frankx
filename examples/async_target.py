@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from frankx import Affine, Robot, WaypointMotion, Waypoint
+from franky import Affine, Robot, WaypointMotion, Waypoint
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
-#include <frankx/frankx.hpp>
+#include <franky/franky.hpp>
 
 
-using namespace frankx;
+using namespace franky;
 
 
 int main(int argc, char *argv[]) {

@@ -1,4 +1,4 @@
-from frankx import Affine, Kinematics, NullSpaceHandling
+from franky import Affine, Kinematics, NullSpaceHandling
 
 
 if __name__ == '__main__':

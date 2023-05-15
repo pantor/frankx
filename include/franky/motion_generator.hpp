@@ -10,7 +10,7 @@
 #include <movex/waypoint.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
     using Affine = affx::Affine;
     using Vector6d = Eigen::Matrix<double, 6, 1>;
@@ -159,4 +159,4 @@ StatefulFunctor<OF, RT> stateful(OF &fun) {
     return StatefulFunctor<OF, RT>(fun);
 }
 
-} // namespace frankx
+} // namespace franky

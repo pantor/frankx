@@ -11,7 +11,7 @@
 #include <movex/path/trajectory.hpp>
 
 
-namespace frankx {
+namespace franky {
     using namespace movex;
 
 template<class RobotType>
@@ -71,4 +71,4 @@ struct PathMotionGenerator: public MotionGenerator {
     }
 };
 
-} // namespace frankx
+} // namespace franky

@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from time import sleep
 
-from frankx import Affine, Robot
+from franky import Affine, Robot
 
 
 if __name__ == '__main__':

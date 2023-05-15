@@ -1,9 +1,9 @@
-#include <frankx/robot.hpp>
+#include <franky/robot.hpp>
 
 #include <ruckig/ruckig.hpp>
 
 
-namespace frankx {
+namespace franky {
 
 Robot::Robot(std::string fci_ip, double dynamic_rel, bool repeat_on_error, bool stop_at_python_signal, franka::RealtimeConfig realtime_config): franka::Robot(fci_ip,realtime_config), fci_ip(fci_ip), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel), repeat_on_error(repeat_on_error), stop_at_python_signal(stop_at_python_signal) { }
 
@@ -200,7 +200,7 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
             // || errors.cartesian_motion_generator_velocity_discontinuity
             // || errors.cartesian_motion_generator_acceleration_discontinuity)
         ) {
-            std::cout << "[frankx robot] continue motion after exception: " << exception.what() << std::endl;
+            std::cout << "[franky robot] continue motion after exception: " << exception.what() << std::endl;
             automaticErrorRecovery();
 
             data.velocity_rel *= 0.5;
@@ -232,4 +232,4 @@ bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) 
     return true;
 }
 
-} // namepace frankx
+} // namepace franky

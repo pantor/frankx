@@ -1,47 +1,47 @@
 <div align="center">
-  <img width="340" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
+  <img width="340" src="https://raw.githubusercontent.com/pantor/franky/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
     High-Level Motion Library for the Franka Emika Robot
   </h3>
 </div>
 <p align="center">
-  <a href="https://github.com/pantor/frankx/actions">
-    <img src="https://github.com/pantor/frankx/workflows/CI/badge.svg" alt="CI">
+  <a href="https://github.com/pantor/franky/actions">
+    <img src="https://github.com/pantor/franky/workflows/CI/badge.svg" alt="CI">
   </a>
 
-  <a href="https://github.com/pantor/frankx/actions">
-    <img src="https://github.com/pantor/frankx/workflows/Publish/badge.svg" alt="Publish">
+  <a href="https://github.com/pantor/franky/actions">
+    <img src="https://github.com/pantor/franky/workflows/Publish/badge.svg" alt="Publish">
   </a>
 
-  <a href="https://github.com/pantor/frankx/issues">
-    <img src="https://img.shields.io/github/issues/pantor/frankx.svg" alt="Issues">
+  <a href="https://github.com/pantor/franky/issues">
+    <img src="https://img.shields.io/github/issues/pantor/franky.svg" alt="Issues">
   </a>
 
-  <a href="https://github.com/pantor/frankx/releases">
-    <img src="https://img.shields.io/github/v/release/pantor/frankx.svg?include_prereleases&sort=semver" alt="Releases">
+  <a href="https://github.com/pantor/franky/releases">
+    <img src="https://img.shields.io/github/v/release/pantor/franky.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
 
-  <a href="https://github.com/pantor/frankx/blob/master/LICENSE">
+  <a href="https://github.com/pantor/franky/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-LGPL-green.svg" alt="LGPL">
   </a>
 </p>
 
 
-Frankx is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
+Franky is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As franky focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
 
 ## Installation
 
-To start using frankx with Python and libfranka *0.9.0*, just install it via
+To start using franky with Python and libfranka *0.9.0*, just install it via
 ```bash
-pip install frankx
+pip install franky
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Franky is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Franky uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install franky via
 
 ```bash
-git clone --recurse-submodules git@github.com:pantor/frankx.git
-cd frankx
+git clone --recurse-submodules git@github.com:pantor/franky.git
+cd franky
 mkdir -p build
 cd build
 cmake -DBUILD_TYPE=Release ..
@@ -49,7 +49,7 @@ make
 make install
 ```
 
-To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. If you need only the Python module, you can install frankx via
+To use franky, you can also include it as a subproject in your parent CMake via `add_subdirectory(franky)` and then `target_link_libraries(<target> libfranky)`. If you need only the Python module, you can install franky via
 
 ```bash
 pip install .
@@ -60,18 +60,18 @@ Make sure that the built library can be found from Python by adapting your Pytho
 
 #### Using Docker
 
-To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
+To use franky within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
 
 ```bash
-git clone https://github.com/pantor/frankx.git
-cd frankx/
-docker build -t pantor/frankx --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
+git clone https://github.com/pantor/franky.git
+cd franky/
+docker build -t pantor/franky --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
 ```
 
 To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:
 
 ```bash
-docker run -it --rm --network=host --privileged pantor/frankx
+docker run -it --rm --network=host --privileged pantor/franky
 ```
 
 The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
@@ -79,11 +79,11 @@ The container requires access to the host machines network *and* elevated user r
 
 ## Tutorial
 
-Frankx comes with both a C++ and Python API that differ only regarding real-time capability. We will introduce both languages next to each other. In your C++ project, just include `include <frankx/frankx.hpp>` and link the library. For Python, just `import frankx`. As a first example, only four lines of code are needed for simple robotic motions.
+Franky comes with both a C++ and Python API that differ only regarding real-time capability. We will introduce both languages next to each other. In your C++ project, just include `include <franky/franky.hpp>` and link the library. For Python, just `import franky`. As a first example, only four lines of code are needed for simple robotic motions.
 
 ```.cpp
-#include <frankx/frankx.hpp>
-using namespace frankx;
+#include <franky/franky.hpp>
+using namespace franky;
 
 // Connect to the robot with the FCI IP address
 Robot robot("172.16.0.2");
@@ -100,7 +100,7 @@ robot.move(motion);
 
 The corresponding program in Python is
 ```.py
-from frankx import Affine, LinearRelativeMotion, Robot
+from franky import Affine, LinearRelativeMotion, Robot
 
 robot = Robot("172.16.0.2")
 robot.set_dynamic_rel(0.05)
@@ -114,7 +114,7 @@ Furthermore, we will introduce methods for geometric calculations, for moving th
 
 ### Geometry
 
-`frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
+`franky::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Franky simplifies the usage of Euler angles (default ZYX-convention).
 ```.cpp
 // Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation
 Affine z_translation = Affine(0.0, 0.0, 0.5);
@@ -129,7 +129,7 @@ auto combined_transformation = z_translation * z_rotation;
 Eigen::Vector3d euler_angles = combined_transformation.angles();
 
 // Get the vector representation (x, y, z, a, b, c) of an affine transformation
-frankx::Vector6d pose = combined_transformation.vector();
+franky::Vector6d pose = combined_transformation.vector();
 ```
 
 In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects. In python, this translates into
@@ -172,7 +172,7 @@ current_pose = robot.current_pose()
 
 The robot state can be retrieved by calling the following methods:
 
-* `get_state`: Return an object of the `frankx.RobotState` class which contains most of the same attributes, under the same name, as the libfranka [franka::RobotState](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html) definition.
+* `get_state`: Return an object of the `franky.RobotState` class which contains most of the same attributes, under the same name, as the libfranka [franka::RobotState](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html) definition.
 
 * `current_pose`: Return a 3D Affine transformation object of the measured end effector pose in base frame (alias for [franka::RobotState::O_T_EE](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html#a193781d47722b32925e0ea7ac415f442)) affected or not by another Affine transformation.
 
@@ -187,33 +187,33 @@ pose = robot.current_pose()
 joint_positions = robot.current_joint_positions()
 ```
 
-However, invoking these methods as-is throws an exception (`_frankx.InvalidOperationException: libfranka robot: Cannot perform this operation while another control or read operation is running`) when the robot is moving. In this case, the methods must be invoked by setting the `read_once` argument to False (default to True) to retrieve the state.
+However, invoking these methods as-is throws an exception (`_franky.InvalidOperationException: libfranka robot: Cannot perform this operation while another control or read operation is running`) when the robot is moving. In this case, the methods must be invoked by setting the `read_once` argument to False (default to True) to retrieve the state.
 ```.py
 robot = Robot("172.16.0.2")
 
 # Get the current state handling the read exception when the robot is in motion
 try:
     robot_state = robot.get_state(read_once=True)
-except frankx.InvalidOperationException:
+except franky.InvalidOperationException:
     robot_state = robot.get_state(read_once=False)
 
 # Get the current pose handling the read exception when the robot is in motion
 try:
     pose = robot.current_pose(read_once=True)
-except frankx.InvalidOperationException:
+except franky.InvalidOperationException:
     pose = robot.current_pose(read_once=False)
 
 # Get the current joint positions handling the read exception when the robot is in motion
 try:
     joint_positions = robot.current_joint_positions(read_once=True)
-except frankx.InvalidOperationException:
+except franky.InvalidOperationException:
     joint_positions = robot.current_joint_positions(read_once=False)
 ```
 
 
 ### Motion Types
 
-Frankx defines five different motion types. In python, you can use them as follows:
+Franky defines five different motion types. In python, you can use them as follows:
 ```.py
 # A point-to-point motion in the joint space
 m1 = JointMotion([-1.81194, 1.17910, 1.75710, -2.1416, -1.14336, 1.63304, -0.43217])
@@ -314,7 +314,7 @@ motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceT
 
 ### Gripper
 
-In the `frankx::Gripper` class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:
+In the `franky::Gripper` class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:
 
 ```.cpp
 auto gripper = Gripper("172.16.0.2");
@@ -343,7 +343,7 @@ The Python API should be very straight-forward for the Gripper class.
 
 ### Kinematics
 
-Frankx includes a rudimentary, non-realtime-capable forward and inverse kinematics.
+Franky includes a rudimentary, non-realtime-capable forward and inverse kinematics.
 
 ```.py
 # Some initial joint configuration
@@ -369,12 +369,12 @@ print('New joints: ', q_new)
 
 ## Documentation
 
-An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
+An auto-generated documentation can be found at [https://pantor.github.io/franky/](https://pantor.github.io/franky/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/franky/tree/master/examples) directory. We will add a more detailed documentation once franky reaches v1.0.
 
 
 ## Development
 
-Frankx is written in C++17 and Python3.7. It is currently tested against following versions
+Franky is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
 - Libfranka v0.9.0
@@ -384,4 +384,4 @@ Frankx is written in C++17 and Python3.7. It is currently tested against followi
 
 ## License
 
-For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements.
+For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use franky within commercial applications or under a different license, please contact us for individual agreements.

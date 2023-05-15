@@ -9,5 +9,5 @@
 #include <movex/motion/motion_path.hpp>
 #include <movex/motion/motion_waypoint.hpp>
 
-#include <frankx/gripper.hpp>
-#include <frankx/robot.hpp>
+#include <franky/gripper.hpp>
+#include <franky/robot.hpp>
