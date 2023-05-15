@@ -4,15 +4,15 @@
 #include <catch2/catch.hpp>
 #include <Eigen/Core>
 
-#include <affx/affine.hpp>
-#include <movex/path/path.hpp>
-#include <movex/path/time_parametrization.hpp>
+#include <franky/affine.hpp>
+#include <franky/path/path.hpp>
+#include <franky/path/time_parametrization.hpp>
 
 
-using namespace movex;
+using namespace franky;
 
 
-void check_path(const std::vector<affx::Affine>& waypoints, double blend_max_distance) {
+void check_path(const std::vector<franky::Affine>& waypoints, double blend_max_distance) {
     CAPTURE( waypoints );
     CAPTURE( blend_max_distance );
 
@@ -45,9 +45,9 @@ TEST_CASE("Path from affines and blending") {
             n = i;
         }
 
-        std::vector<affx::Affine> waypoints(n);
+        std::vector<franky::Affine> waypoints(n);
         for (size_t j = 0; j < n; j += 1) {
-            waypoints[j] = affx::Affine((Vector7d)Vector7d::Random());
+            waypoints[j] = Affine((Vector7d)Vector7d::Random());
         }
         double blend_max = 0.1 * dist(gen);
 

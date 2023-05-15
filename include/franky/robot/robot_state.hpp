@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace movex {
+namespace franky {
 
 //! The overall state of the robot.
 template<size_t DoFs, bool has_elbow = true, bool has_force_sensor = true>
@@ -21,4 +21,4 @@ struct RobotState {
     std::array<double, 6> O_F_ext_hat_K;
 };
 
-} // namespace movex
+} // namespace franky

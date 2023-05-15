@@ -19,25 +19,18 @@ find_package(Franka 0.8 REQUIRED)
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 
-
-add_subdirectory(affx)
 add_subdirectory(ruckig)
 
-
-add_library(movex src/movex/path.cpp)
-target_compile_features(movex PUBLIC cxx_std_17)
-target_include_directories(movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(movex PUBLIC affx ruckig)
-
-
 add_library(franky
-  src/franky/gripper.cpp
-  src/franky/kinematics.cpp
-  src/franky/robot.cpp
+  src/affine.cpp
+  src/gripper.cpp
+  src/kinematics.cpp
+  src/path.cpp
+  src/robot.cpp
 )
 target_compile_features(franky PUBLIC cxx_std_17)
 target_include_directories(franky PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(franky PUBLIC Franka::Franka Eigen3::Eigen movex)
+target_link_libraries(franky PUBLIC Franka::Franka Eigen3::Eigen ruckig)
 
 
 if(BUILD_PYTHON_MODULE)
@@ -54,14 +47,8 @@ if(BUILD_PYTHON_MODULE)
     target_link_libraries(franky PUBLIC pybind11::embed)
   endif()
 
-  pybind11_add_module(_franky src/franky/python.cpp)
+  pybind11_add_module(_franky src/python.cpp)
   target_link_libraries(_franky PUBLIC franky)
-
-  # Movex python package for development
-  pybind11_add_module(_movex src/movex/python.cpp)
-  target_compile_features(_movex PUBLIC cxx_std_17)
-  target_include_directories(_movex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include pybind11::embed)
-  target_link_libraries(_movex PUBLIC Eigen3::Eigen movex)
 endif()
 
 

@@ -3,13 +3,12 @@
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
-#include <movex/robot/motion_data.hpp>
-#include <movex/robot/robot_state.hpp>
-#include <movex/motion/motion_impedance.hpp>
+#include <franky/robot/motion_data.hpp>
+#include <franky/robot/robot_state.hpp>
+#include <franky/motion/motion_impedance.hpp>
 
 
 namespace franky {
-    using namespace movex;
 
 template<class RobotType>
 struct ImpedanceMotionGenerator: public MotionGenerator {

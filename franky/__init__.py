@@ -1,5 +1,3 @@
-from pyaffx import Affine
-
 from _franky import (
     Duration,
     Errors,
@@ -22,6 +20,7 @@ from _franky import (
     WaypointMotion,
     RealtimeConfig,
     InvalidOperationException,
+    Affine
 )
 
 from .gripper import Gripper

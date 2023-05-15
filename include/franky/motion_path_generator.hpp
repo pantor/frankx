@@ -3,16 +3,15 @@
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
-#include <movex/robot/motion_data.hpp>
-#include <movex/robot/robot_state.hpp>
-#include <movex/motion/motion_path.hpp>
-#include <movex/path/path.hpp>
-#include <movex/path/time_parametrization.hpp>
-#include <movex/path/trajectory.hpp>
+#include <franky/robot/motion_data.hpp>
+#include <franky/robot/robot_state.hpp>
+#include <franky/motion/motion_path.hpp>
+#include <franky/path/path.hpp>
+#include <franky/path/time_parametrization.hpp>
+#include <franky/path/trajectory.hpp>
 
 
 namespace franky {
-    using namespace movex;
 
 template<class RobotType>
 struct PathMotionGenerator: public MotionGenerator {

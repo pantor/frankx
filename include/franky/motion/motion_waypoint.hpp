@@ -3,19 +3,17 @@
 #include <atomic>
 #include <optional>
 
-#include <affx/affine.hpp>
-#include <movex/waypoint.hpp>
+#include <franky/affine.hpp>
+#include <franky/waypoint.hpp>
 
 
-namespace movex {
+namespace franky {
 
 /**
 * A motion following multiple waypoints (with intermediate zero velocity) in a time-optimal way.
 * Works with aribtrary initial conditions.
 */
 struct WaypointMotion {
-    using Affine = affx::Affine;
-
     bool reload {false};
     bool return_when_finished {true};
 
@@ -80,4 +78,4 @@ struct PositionHold: public WaypointMotion {
     explicit PositionHold(double duration): WaypointMotion({ Waypoint(duration) }) { }
 };
 
-} // namespace movex
+} // namespace franky

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <movex/path/path.hpp>
+#include <franky/path/path.hpp>
 
 
-namespace movex {
+namespace franky {
 
 struct Trajectory {
     struct State {
@@ -23,4 +23,4 @@ struct Trajectory {
     explicit Trajectory(const Path& path): path(path) { }
 };
 
-} // namespace movex
+} // namespace franky

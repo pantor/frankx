@@ -5,14 +5,12 @@
 #include <franka/robot_state.h>
 
 #include <ruckig/input_parameter.hpp>
-#include <movex/robot/motion_data.hpp>
-#include <movex/robot/robot_state.hpp>
-#include <movex/waypoint.hpp>
+#include <franky/robot/motion_data.hpp>
+#include <franky/robot/robot_state.hpp>
+#include "waypoint.hpp"
 
 
 namespace franky {
-    using namespace movex;
-    using Affine = affx::Affine;
     using Vector6d = Eigen::Matrix<double, 6, 1>;
     using Vector7d = Eigen::Matrix<double, 7, 1>;
 
@@ -49,8 +47,8 @@ struct MotionGenerator {
         return result;
     }
 
-    static inline movex::RobotState<7> convertState(const franka::RobotState& franka) {
-        movex::RobotState<7> movex;
+    static inline RobotState<7> convertState(const franka::RobotState& franka) {
+        RobotState<7> movex;
         movex.q = franka.q;
         movex.q_d = franka.q_d;
         movex.dq = franka.dq;

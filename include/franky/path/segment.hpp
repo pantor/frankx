@@ -5,7 +5,7 @@
 #include <Eigen/Core>
 
 
-namespace movex {
+namespace franky {
 
 using Vector7d = Eigen::Matrix<double, 7, 1>;
 
@@ -147,4 +147,4 @@ public:
     }
 };
 
-} // namespace movex
+} // namespace franky

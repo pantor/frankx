@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include <movex/robot/robot_state.hpp>
+#include <franky/robot/robot_state.hpp>
 
 
-namespace movex {
+namespace franky {
 
 class Condition {
     using RobotState_ = RobotState<7>;
@@ -119,4 +119,4 @@ public:
     }
 };
 
-} // namespace movex
+} // namespace franky

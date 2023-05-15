@@ -1,14 +1,12 @@
 #pragma once
 
-#include <affx/affine.hpp>
+#include <franky/affine.hpp>
 
 
-namespace movex {
+namespace franky {
 
 template<size_t DoFs>
 class KinematicChain {
-    using Affine = affx::Affine;
-
     struct DenavitHartenbergParameter {
         double alpha; // [rad]
         double d, a; // [m]
@@ -37,4 +35,4 @@ public:
     }
 };
 
-} // namespace movex
+} // namespace franky

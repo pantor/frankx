@@ -77,7 +77,7 @@ setup(
     url='https://github.com/TimSchneider42/franky',
     packages=find_packages(),
     license='LGPL',
-    ext_modules=[CMakeExtension('_franky'), CMakeExtension('pyaffx')],
+    ext_modules=[CMakeExtension('_franky')],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robot', 'robotics', 'trajectory-generation', 'motion-control'],
     classifiers=[

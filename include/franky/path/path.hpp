@@ -5,16 +5,14 @@
 
 #include <Eigen/Core>
 
-#include <affx/affine.hpp>
-#include <movex/waypoint.hpp>
-#include <movex/path/segment.hpp>
+#include <franky/affine.hpp>
+#include <franky/waypoint.hpp>
+#include <franky/path/segment.hpp>
 
 
-namespace movex {
+namespace franky {
 
 class Path {
-    using Affine = affx::Affine;
-
     std::vector<double> cumulative_lengths;
 
     double length {0.0};
@@ -48,4 +46,4 @@ public:
     Vector7d max_pdddq() const;
 };
 
-} // namespace movex
+} // namespace franky

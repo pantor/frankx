@@ -1,5 +1,4 @@
 import base64
-import imp
 import json
 import hashlib
 from http.client import HTTPSConnection

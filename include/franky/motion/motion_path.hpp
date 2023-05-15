@@ -2,19 +2,17 @@
 
 #include <Eigen/Core>
 
-#include <movex/path/path.hpp>
-#include <movex/waypoint.hpp>
+#include <franky/path/path.hpp>
+#include <franky/waypoint.hpp>
 
 
-namespace movex {
+namespace franky {
 
 /**
 * A motion following a pre-defined path.
 * Needs zero velocity and acceleration at start time.
 */
 struct PathMotion {
-    using Affine = affx::Affine;
-
     std::vector<Waypoint> waypoints;
 
     explicit PathMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) { }
@@ -38,4 +36,4 @@ struct LinearRelativePathMotion: public PathMotion {
     explicit LinearRelativePathMotion(const Affine& affine, double elbow): PathMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
 };
 
-} // namespace movex
+} // namespace franky

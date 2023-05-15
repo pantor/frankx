@@ -1,7 +1,7 @@
-#include <movex/path/path.hpp>
+#include <franky/path/path.hpp>
 
 
-namespace movex {
+namespace franky {
 
 size_t Path::get_index(double s) const {
     auto ptr = std::lower_bound(cumulative_lengths.begin(), cumulative_lengths.end(), s);
@@ -157,4 +157,4 @@ Vector7d Path::max_pdddq() const {
     return result;
 }
 
-} // namespace movex
+} // namespace franky

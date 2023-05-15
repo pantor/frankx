@@ -1,9 +1,9 @@
 #pragma once
 
-#include <movex/robot/reaction.hpp>
+#include <franky/robot/reaction.hpp>
 
 
-namespace movex {
+namespace franky {
 
 struct MotionData {    
     double velocity_rel {1.0}, acceleration_rel {1.0}, jerk_rel {1.0};
@@ -38,4 +38,4 @@ struct MotionData {
     }
 };
 
-} // namespace movex
+} // namespace franky

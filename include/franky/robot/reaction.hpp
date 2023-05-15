@@ -6,10 +6,10 @@
 #include <memory>
 #include <optional>
 
-#include <movex/robot/measure.hpp>
+#include <franky/robot/measure.hpp>
 
 
-namespace movex {
+namespace franky {
 
 class WaypointMotion;
 
@@ -30,4 +30,4 @@ struct Reaction {
     explicit Reaction(Condition condition, std::optional<WaypointAction> waypoint_action): condition(condition), waypoint_action(waypoint_action) { }
 };
 
-} // namespace movex
+} // namespace franky

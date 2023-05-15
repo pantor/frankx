@@ -3,7 +3,7 @@
 #include <Eigen/Core>
 
 
-namespace movex {
+namespace franky {
 
 /**
 * A motion in the joint space
@@ -16,4 +16,4 @@ struct JointMotion {
     explicit JointMotion(const std::array<double, 7> target): target(target.data()) { }
 };
 
-} // namespace movex
+} // namespace franky

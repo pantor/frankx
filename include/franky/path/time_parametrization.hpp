@@ -1,10 +1,10 @@
 #pragma once
 
 #include <ruckig/ruckig.hpp>
-#include <movex/path/trajectory.hpp>
+#include <franky/path/trajectory.hpp>
 
 
-namespace movex {
+namespace franky {
 
 class TimeParametrization {
     std::unique_ptr<ruckig::Ruckig<1>> otg;
@@ -119,4 +119,4 @@ public:
     }
 };
 
-} // namespace movex
+} // namespace franky
