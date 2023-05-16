@@ -22,60 +22,59 @@ message("Found Franka Version: ${Franka_VERSION}")
 add_subdirectory(ruckig)
 
 add_library(franky
-  src/affine.cpp
-  src/gripper.cpp
-  src/kinematics.cpp
-  src/path.cpp
-  src/robot.cpp
-)
+        src/gripper.cpp
+        src/kinematics.cpp
+        src/path.cpp
+        src/robot.cpp
+        )
 target_compile_features(franky PUBLIC cxx_std_17)
 target_include_directories(franky PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(franky PUBLIC Franka::Franka Eigen3::Eigen ruckig)
 
 
-if(BUILD_PYTHON_MODULE)
-  # Check if pybind11 exists as a subdirectory
-  if(EXISTS pybind11)
-    add_subdirectory(pybind11)
-  else()
-    find_package(Python COMPONENTS Interpreter Development)
-    find_package(pybind11 2.6 REQUIRED)
-  endif()
+if (BUILD_PYTHON_MODULE)
+    # Check if pybind11 exists as a subdirectory
+    if (EXISTS pybind11)
+        add_subdirectory(pybind11)
+    else ()
+        find_package(Python COMPONENTS Interpreter Development)
+        find_package(pybind11 2.6 REQUIRED)
+    endif ()
 
-  if(USE_PYTHON_EXTENSION)
-    target_compile_definitions(franky PUBLIC WITH_PYTHON)
-    target_link_libraries(franky PUBLIC pybind11::embed)
-  endif()
+    if (USE_PYTHON_EXTENSION)
+        target_compile_definitions(franky PUBLIC WITH_PYTHON)
+        target_link_libraries(franky PUBLIC pybind11::embed)
+    endif ()
 
-  pybind11_add_module(_franky src/python.cpp)
-  target_link_libraries(_franky PUBLIC franky)
-endif()
-
-
-if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS linear grasping linear_non_rt)
-    add_executable(${example} "examples/${example}.cpp")
-    target_link_libraries(${example} PRIVATE franky)
-  endforeach()
-endif()
+    pybind11_add_module(_franky src/python.cpp)
+    target_link_libraries(_franky PUBLIC franky)
+endif ()
 
 
-if(BUILD_TESTS)
-  enable_testing()
+if (BUILD_EXAMPLES)
+    foreach (example IN ITEMS linear grasping linear_non_rt)
+        add_executable(${example} "examples/${example}.cpp")
+        target_link_libraries(${example} PRIVATE franky)
+    endforeach ()
+endif ()
 
-  find_package(Catch2 REQUIRED)
 
-  foreach(test IN ITEMS kinematics-test unit-test path-test)
-    add_executable(${test} "test/${test}.cpp")
-    target_link_libraries(${test} PRIVATE franky Catch2::Catch2)
-    add_test(NAME ${test} COMMAND ${test})
-  endforeach()
-endif()
+if (BUILD_TESTS)
+    enable_testing()
+
+    find_package(Catch2 REQUIRED)
+
+    foreach (test IN ITEMS kinematics-test unit-test path-test)
+        add_executable(${test} "test/${test}.cpp")
+        target_link_libraries(${test} PRIVATE franky Catch2::Catch2)
+        add_test(NAME ${test} COMMAND ${test})
+    endforeach ()
+endif ()
 
 
 install(TARGETS franky
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
-)
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+        )

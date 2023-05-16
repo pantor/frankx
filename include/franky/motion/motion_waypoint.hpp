@@ -3,7 +3,7 @@
 #include <atomic>
 #include <optional>
 
-#include <franky/affine.hpp>
+#include <franky/robot_pose.hpp>
 #include <franky/waypoint.hpp>
 
 
@@ -55,7 +55,7 @@ struct LinearRelativeMotion: public WaypointMotion {
 
 struct StopMotion: public WaypointMotion {
     explicit StopMotion(): WaypointMotion() {
-        Waypoint stop_waypoint(Affine(), 0.0, Waypoint::ReferenceType::Relative);
+        Waypoint stop_waypoint(Affine::Identity(), 0.0, Waypoint::ReferenceType::Relative);
         stop_waypoint.max_dynamics = true;
         waypoints = { stop_waypoint };
     }

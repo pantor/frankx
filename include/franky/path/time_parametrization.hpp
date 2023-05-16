@@ -12,14 +12,6 @@ class TimeParametrization {
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
-    double intersection(double s1, double ds1, double s2, double ds2, double max_ds, double max_dds, double max_ddds) {
-
-    }
-
-    std::tuple<double, double> max_dynamics(double s_start, double ds_start, double max_ds, double max_dds, double max_ddds) {
-
-    }
-
 public:
     TimeParametrization(double delta_time): delta_time(delta_time) {
         otg = std::make_unique<ruckig::Ruckig<1>>(delta_time);
@@ -65,7 +57,6 @@ public:
             max_path_dynamics.push_back({max_ds, max_dds, max_ddds});
         }
 
-        double current_s, current_ds, current_dds;
         // Integrate forward and (if necessary) backward
         // Get maximal possible velocity, acceleration
 

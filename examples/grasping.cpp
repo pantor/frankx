@@ -1,10 +1,11 @@
 #include <franky/franky.hpp>
+#include "util.cpp"
 
 
 using namespace franky;
 
 inline Affine getBase(double x = 0.0, double y = 0.0, double z = 0.0, double a = 0.0, double b = 0.0, double c = 0.0) {
-    return Affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
+    return mk_affine(0.48 + x, -0.204 + y, 0.267 + z, a, b, c);
 }
 
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
 
     auto data = MotionData().withDynamicRel(0.5).withReaction(Reaction(
         Measure::ForceZ() < -7.0,
-        std::make_shared<LinearRelativeMotion>(Affine(0.0, 0.0, 0.001))
+        std::make_shared<LinearRelativeMotion>(mk_affine(0.0, 0.0, 0.001))
     ));
 
     WaypointMotion waypoint_motion({

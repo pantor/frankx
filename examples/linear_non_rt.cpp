@@ -1,4 +1,5 @@
 #include <franky/franky.hpp>
+#include "util.cpp"
 
 
 using namespace franky;
@@ -18,7 +19,7 @@ int main(int argc, char *argv[]) {
     robot.setDynamicRel(0.15);
 
     // Define and move forwards
-    auto way = Affine(0.0, 0.2, 0.0);
+    auto way = mk_affine(0.0, 0.2, 0.0);
     auto motion_forward = LinearRelativeMotion(way);
     robot.move(motion_forward);
 

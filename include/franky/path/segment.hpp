@@ -4,10 +4,10 @@
 
 #include <Eigen/Core>
 
+#include <franky/types.hpp>
+
 
 namespace franky {
-
-using Vector7d = Eigen::Matrix<double, 7, 1>;
 
 struct Segment {
     double length;

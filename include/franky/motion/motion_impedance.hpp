@@ -6,7 +6,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include <franky/affine.hpp>
+#include <franky/robot_pose.hpp>
 #include <franky/robot/motion_data.hpp>
 
 

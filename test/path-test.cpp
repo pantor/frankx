@@ -4,7 +4,7 @@
 #include <catch2/catch.hpp>
 #include <Eigen/Core>
 
-#include <franky/affine.hpp>
+#include <franky/robot_pose.hpp>
 #include <franky/path/path.hpp>
 #include <franky/path/time_parametrization.hpp>
 

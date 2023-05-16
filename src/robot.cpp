@@ -4,10 +4,15 @@
 
 
 namespace franky {
+  using Affine = Eigen::Affine3d;
 
-Robot::Robot(std::string fci_ip, double dynamic_rel, bool repeat_on_error, bool stop_at_python_signal, franka::RealtimeConfig realtime_config): franka::Robot(fci_ip,realtime_config), fci_ip(fci_ip), velocity_rel(dynamic_rel), acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel), repeat_on_error(repeat_on_error), stop_at_python_signal(stop_at_python_signal) { }
+  Robot::Robot(std::string fci_ip, double dynamic_rel, bool repeat_on_error, bool stop_at_python_signal,
+               franka::RealtimeConfig realtime_config)
+      : franka::Robot(fci_ip, realtime_config), fci_ip(fci_ip), velocity_rel(dynamic_rel),
+        acceleration_rel(dynamic_rel), jerk_rel(dynamic_rel), repeat_on_error(repeat_on_error),
+        stop_at_python_signal(stop_at_python_signal) {}
 
-void Robot::setDefaultBehavior() {
+  void Robot::setDefaultBehavior() {
     setCollisionBehavior(
         {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
         {{20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0}},
@@ -24,212 +29,229 @@ void Robot::setDefaultBehavior() {
 
     // libfranka 0.8 split F_T_EE into F_T_NE (set in desk to value below) and NE_T_EE which defaults to identity
     // set it anyway again.
-//    setEE({1, 0, 0, 0,
-//           0, 1, 0, 0,
-//           0, 0, 1, 0,
-//           0, 0, 0, 1});
-        setEE({1, 0, 0, 0,
-           0, -1, 0, 0,
-           0, 0, -1, 0,
-           0, 0, 0, 1});
-}
+    //    setEE({1, 0, 0, 0,
+    //           0, 1, 0, 0,
+    //           0, 0, 1, 0,
+    //           0, 0, 0, 1});
+    setEE({1, 0, 0, 0,
+                   0, -1, 0, 0,
+                   0, 0, -1, 0,
+                   0, 0, 0, 1});
+  }
 
-void Robot::setDynamicRel(double dynamic_rel) {
+  void Robot::setDynamicRel(double dynamic_rel) {
     velocity_rel = dynamic_rel;
     acceleration_rel = dynamic_rel;
     jerk_rel = dynamic_rel;
-}
+  }
 
-bool Robot::hasErrors() {
+  bool Robot::hasErrors() {
     return bool(readOnce().current_errors);
-}
+  }
 
-bool Robot::recoverFromErrors() {
+  bool Robot::recoverFromErrors() {
     automaticErrorRecovery();
     return !hasErrors();
-}
+  }
 
-Affine Robot::currentPose(const bool& read_once) {
+  Affine Robot::currentPose(const bool &read_once) {
     ::franka::RobotState state;
     if (read_once)
-        state = readOnce();
+      state = readOnce();
     else
-        state = ::franka::RobotState(*asynchronous_state_ptr);
-    return Affine(state.O_T_EE);
-}
+      state = ::franka::RobotState(*asynchronous_state_ptr);
+    return Affine(Eigen::Matrix4d::Map(state.O_T_EE.data()));
+  }
 
-std::array<double, 7> Robot::currentJointPositions(const bool& read_once) {
+  std::array<double, 7> Robot::currentJointPositions(const bool &read_once) {
     ::franka::RobotState state;
     if (read_once)
-        state = readOnce();
+      state = readOnce();
     else
-        state = ::franka::RobotState(*asynchronous_state_ptr);
+      state = ::franka::RobotState(*asynchronous_state_ptr);
     return state.q;
-}
+  }
 
-Affine Robot::forwardKinematics(const std::array<double, 7>& q) {
+  Affine Robot::forwardKinematics(const std::array<double, 7> &q) {
     const Eigen::Matrix<double, 7, 1> q_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q.data(), q.size());
-    return Affine(Kinematics::forward(q_current));
-}
+    return Kinematics::forward(q_current);
+  }
 
-std::array<double, 7> Robot::inverseKinematics(const Affine& target, const std::array<double, 7>& q0) {
+  std::array<double, 7> Robot::inverseKinematics(const Affine &target, const std::array<double, 7> &q0) {
     std::array<double, 7> result;
 
-    Eigen::Matrix<double, 6, 1> x_target = target.vector();
+    Eigen::Vector3d angles = Euler(target.rotation()).angles();
+    Eigen::Vector3d angles_norm;
+    angles_norm << angles[0] - M_PI, M_PI - angles[1], angles[2] - M_PI;
+
+    if (angles_norm[1] > M_PI) {
+      angles_norm[1] -= 2 * M_PI;
+    }
+    if (angles_norm[2] < -M_PI) {
+      angles_norm[2] += 2 * M_PI;
+    }
+
+    if (angles.norm() < angles_norm.norm()) {
+      angles_norm = angles;
+    }
+
+    Eigen::Matrix<double, 6, 1> x_target;
+    x_target << target.translation(), angles;
     const Eigen::Matrix<double, 7, 1> q0_current = Eigen::Map<const Eigen::Matrix<double, 7, 1>>(q0.data(), q0.size());
 
     Eigen::Matrix<double, 7, 1>::Map(result.data()) = Kinematics::inverse(x_target, q0_current);
     return result;
-}
+  }
 
-::franka::RobotState Robot::get_state(const bool& read_once) {
+  ::franka::RobotState Robot::get_state(const bool &read_once) {
     if (read_once)
-        return readOnce();
+      return readOnce();
     else
-        return ::franka::RobotState(*asynchronous_state_ptr);
-}
+      return {*asynchronous_state_ptr};
+  }
 
-bool Robot::move(ImpedanceMotion& motion) {
-    return move(Affine(), motion);
-}
+  bool Robot::move(ImpedanceMotion &motion) {
+    return move(Affine::Identity(), motion);
+  }
 
-bool Robot::move(ImpedanceMotion& motion, MotionData& data) {
-    return move(Affine(), motion, data);
-}
+  bool Robot::move(ImpedanceMotion &motion, MotionData &data) {
+    return move(Affine::Identity(), motion, data);
+  }
 
-bool Robot::move(const Affine& frame, ImpedanceMotion& motion) {
+  bool Robot::move(const Affine &frame, ImpedanceMotion &motion) {
     auto data = MotionData();
     return move(frame, motion, data);
-}
+  }
 
-bool Robot::move(const Affine& frame, ImpedanceMotion& motion, MotionData& data) {
-    ImpedanceMotionGenerator<Robot> mg {this, frame, motion, data};
+  bool Robot::move(const Affine &frame, ImpedanceMotion &motion, MotionData &data) {
+    ImpedanceMotionGenerator<Robot> mg{this, frame, motion, data};
 
     asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
-        control(stateful<franka::Torques>(mg));
-        motion.is_active = false;
+      control(stateful<franka::Torques>(mg));
+      motion.is_active = false;
 
-    } catch (const franka::Exception& exception) {
-        std::cout << exception.what() << std::endl;
-        motion.is_active = false;
-        return false;
+    } catch (const franka::Exception &exception) {
+      std::cout << exception.what() << std::endl;
+      motion.is_active = false;
+      return false;
     }
     return true;
-}
+  }
 
 
-bool Robot::move(JointMotion motion) {
+  bool Robot::move(JointMotion motion) {
     auto data = MotionData();
     return move(motion, data);
-}
+  }
 
-bool Robot::move(JointMotion motion, MotionData& data) {
-    JointMotionGenerator<Robot> mg {this, motion, data};
-
-    asynchronous_state_ptr = &mg.asynchronous_state;
-
-    try {
-        control(stateful<franka::JointPositions>(mg));
-
-    } catch (franka::Exception exception) {
-        std::cout << exception.what() << std::endl;
-        return false;
-    }
-    return true;
-}
-
-
-bool Robot::move(PathMotion motion) {
-    return move(Affine(), motion);
-}
-
-bool Robot::move(PathMotion motion, MotionData& data) {
-    return move(Affine(), motion, data);
-}
-
-bool Robot::move(const Affine& frame, PathMotion motion) {
-    auto data = MotionData();
-    return move(frame, motion, data);
-}
-
-bool Robot::move(const Affine& frame, PathMotion motion, MotionData& data) {
-    PathMotionGenerator<Robot> mg {this, frame, motion, data};
+  bool Robot::move(JointMotion motion, MotionData &data) {
+    JointMotionGenerator<Robot> mg{this, motion, data};
 
     asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
-        control(stateful<franka::CartesianPose>(mg), controller_mode);
+      control(stateful<franka::JointPositions>(mg));
 
     } catch (franka::Exception exception) {
-        std::cout << exception.what() << std::endl;
-        return false;
+      std::cout << exception.what() << std::endl;
+      return false;
     }
     return true;
-}
+  }
 
 
-bool Robot::move(WaypointMotion& motion) {
-    return move(Affine(), motion);
-}
+  bool Robot::move(PathMotion motion) {
+    return move(Affine::Identity(), motion);
+  }
 
-bool Robot::move(WaypointMotion& motion, MotionData& data) {
-    return move(Affine(), motion, data);
-}
+  bool Robot::move(PathMotion motion, MotionData &data) {
+    return move(Affine::Identity(), motion, data);
+  }
 
-bool Robot::move(const Affine& frame, WaypointMotion& motion) {
+  bool Robot::move(const Affine &frame, PathMotion motion) {
     auto data = MotionData();
     return move(frame, motion, data);
-}
+  }
 
-bool Robot::move(const Affine& frame, WaypointMotion& motion, MotionData& data) {
-    WaypointMotionGenerator<Robot> mg {this, frame, motion, data};
+  bool Robot::move(const Affine &frame, PathMotion motion, MotionData &data) {
+    PathMotionGenerator<Robot> mg(this, frame, motion, data);
+
+    asynchronous_state_ptr = &mg.asynchronous_state;
+
+    try {
+      control(stateful<franka::CartesianPose>(mg), controller_mode);
+
+    } catch (franka::Exception exception) {
+      std::cout << exception.what() << std::endl;
+      return false;
+    }
+    return true;
+  }
+
+
+  bool Robot::move(WaypointMotion &motion) {
+    return move(Affine::Identity(), motion);
+  }
+
+  bool Robot::move(WaypointMotion &motion, MotionData &data) {
+    return move(Affine::Identity(), motion, data);
+  }
+
+  bool Robot::move(const Affine &frame, WaypointMotion &motion) {
+    auto data = MotionData();
+    return move(frame, motion, data);
+  }
+
+  bool Robot::move(const Affine &frame, WaypointMotion &motion, MotionData &data) {
+    WaypointMotionGenerator<Robot> mg{this, frame, motion, data};
     mg.input_para.target_position[0] = 0.01;
 
     asynchronous_state_ptr = &mg.asynchronous_state;
 
     try {
-        control(stateful<franka::CartesianPose>(mg), controller_mode);
-
+      control(mg, controller_mode);
+//      control(stateful<franka::CartesianPose>(mg), controller_mode);
     } catch (franka::Exception exception) {
-        auto errors = readOnce().last_motion_errors;
-        if (repeat_on_error
-            // && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
-            // || errors.cartesian_motion_generator_joint_velocity_discontinuity
-            // || errors.cartesian_motion_generator_velocity_discontinuity
-            // || errors.cartesian_motion_generator_acceleration_discontinuity)
-        ) {
-            std::cout << "[franky robot] continue motion after exception: " << exception.what() << std::endl;
-            automaticErrorRecovery();
+      auto errors = readOnce().last_motion_errors;
+      if (repeat_on_error
+        // && (errors.cartesian_motion_generator_joint_acceleration_discontinuity
+        // || errors.cartesian_motion_generator_joint_velocity_discontinuity
+        // || errors.cartesian_motion_generator_velocity_discontinuity
+        // || errors.cartesian_motion_generator_acceleration_discontinuity)
+          ) {
+        std::cout << "[franky robot] continue motion after exception: " << exception.what() << std::endl;
+        automaticErrorRecovery();
 
-            data.velocity_rel *= 0.5;
-            data.acceleration_rel *= 0.5;
-            data.jerk_rel *= 0.5;
-            mg.reset();
+        data.velocity_rel *= 0.5;
+        data.acceleration_rel *= 0.5;
+        data.jerk_rel *= 0.5;
+        mg.reset();
 
-            bool success {false};
+        bool success{false};
 
-            try {
-                control(stateful<franka::CartesianPose>(mg), controller_mode);
-                success = true;
+        try {
+          control(mg, controller_mode);
+          // control(stateful<franka::CartesianPose>(mg), controller_mode);
+          success = true;
 
-            } catch (franka::Exception exception) {
-                std::cout << exception.what() << std::endl;
-            }
-            data.velocity_rel *= 2;
-            data.acceleration_rel *= 2;
-            data.jerk_rel *= 2;
-
-            return success;
-
-        } else {
-            std::cout << exception.what() << std::endl;
+        } catch (franka::Exception exception) {
+          std::cout << exception.what() << std::endl;
         }
+        data.velocity_rel *= 2;
+        data.acceleration_rel *= 2;
+        data.jerk_rel *= 2;
 
-        return false;
+        return success;
+
+      } else {
+        std::cout << exception.what() << std::endl;
+      }
+
+      return false;
     }
     return true;
-}
+  }
 
 } // namepace franky

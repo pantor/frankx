@@ -1,6 +1,7 @@
 #pragma once
 
-#include <franky/affine.hpp>
+#include <franky/types.hpp>
+#include <franky/robot_pose.hpp>
 #include <franky/robot/measure.hpp>
 #include <franky/robot/motion_data.hpp>
 #include <franky/robot/reaction.hpp>

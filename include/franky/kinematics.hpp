@@ -5,6 +5,8 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
+#include <franky/types.hpp>
+
 
 namespace franky {
 
@@ -34,8 +36,8 @@ struct Kinematics {
         explicit NullSpaceHandling(size_t joint_index, double value): joint_index(joint_index), value(value) {}
     };
 
-    static std::array<double, 16> forward(const Eigen::Matrix<double, 7, 1>& q);
-    static std::array<double, 16> forwardElbow(const Eigen::Matrix<double, 7, 1>& q);
+    static Affine forward(const Eigen::Matrix<double, 7, 1>& q);
+    static Affine forwardElbow(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 6, 1> forwardEuler(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 6, 7> jacobian(const Eigen::Matrix<double, 7, 1>& q);
     static Eigen::Matrix<double, 7, 1> inverse(const Eigen::Matrix<double, 6, 1>& x_target, const Eigen::Matrix<double, 7, 1>& q0, std::optional<NullSpaceHandling> null_space = std::nullopt);

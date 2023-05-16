@@ -5,7 +5,8 @@
 
 #include <Eigen/Core>
 
-#include <franky/affine.hpp>
+#include <franky/types.hpp>
+#include <franky/robot_pose.hpp>
 #include <franky/waypoint.hpp>
 #include <franky/path/segment.hpp>
 
