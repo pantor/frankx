@@ -9,48 +9,40 @@ namespace franky {
 
   class RobotPose {
   public:
-    RobotPose() : end_effector_pose_(Eigen::Affine3d::Identity()), elbow_position_(0.0) {}
+    RobotPose() : end_effector_pose(Eigen::Affine3d::Identity()), elbow_position(0.0) {}
 
     RobotPose(const RobotPose &robot_pose_)
-        : end_effector_pose_(robot_pose_.end_effector_pose_), elbow_position_(robot_pose_.elbow_position_) {}
+        : end_effector_pose(robot_pose_.end_effector_pose), elbow_position(robot_pose_.elbow_position) {}
 
     RobotPose(const Eigen::Affine3d &end_effector_pose, double elbow_position)
-        : end_effector_pose_(end_effector_pose), elbow_position_(elbow_position) {}
+        : end_effector_pose(end_effector_pose), elbow_position(elbow_position) {}
 
-    RobotPose(const Vector7d &vector_repr) : elbow_position_(vector_repr[6]) {
-      end_effector_pose_.translation() = vector_repr.head<3>();
-      auto rot_vec = vector_repr.segment<3>(3);
-      end_effector_pose_.linear() = Eigen::AngleAxis(rot_vec.norm(), rot_vec.normalized()).toRotationMatrix();
-    }
+    RobotPose(const Vector7d &vector_repr)
+        : elbow_position(vector_repr[6]),
+          end_effector_pose(Affine().fromPositionOrientationScale(
+              vector_repr.head<3>(),
+                  Eigen::AngleAxis(vector_repr.segment<3>(3).norm(), vector_repr.segment<3>(3).normalized()),
+              Eigen::Vector3d::Ones())) { }
 
     Vector7d vector_repr() {
-      Eigen::AngleAxis<double> orientation(end_effector_pose_.rotation());
+      Eigen::AngleAxis<double> orientation(end_effector_pose.rotation());
       auto rotvec = orientation.axis() * orientation.angle();
       Vector7d result;
-      result << end_effector_pose_.translation(), rotvec, elbow_position_;
+      result << end_effector_pose.translation(), rotvec, elbow_position;
       return result;
     }
 
     franka::CartesianPose as_franka_pose(bool include_elbow = true) {
       std::array<double, 16> array;
-      std::copy(end_effector_pose_.data(), end_effector_pose_.data() + array.size(), array.begin());
+      std::copy(end_effector_pose.data(), end_effector_pose.data() + array.size(), array.begin());
       if (include_elbow) {
-        return franka::CartesianPose(array, {elbow_position_, -1});
+        return franka::CartesianPose(array, {elbow_position, -1});
       }
       return franka::CartesianPose(array);
     }
 
-    Eigen::Affine3d end_effector_pose() {
-      return end_effector_pose_;
-    }
-
-    double elbow_position() {
-      return elbow_position_;
-    }
-
-  private:
-    Eigen::Affine3d end_effector_pose_;
-    double elbow_position_;
+    const Eigen::Affine3d end_effector_pose;
+    const double elbow_position;
   };
 
 } // namespace franky

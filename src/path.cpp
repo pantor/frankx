@@ -34,8 +34,8 @@ namespace franky {
     for (size_t i = 1; i < waypoints.size(); i += 1) {
       vector_next = waypoints[i].getTargetVector(affine_current, elbow_current);
       RobotPose robot_pose(vector_next);
-      affine_current = robot_pose.end_effector_pose();
-      elbow_current = robot_pose.elbow_position();
+      affine_current = robot_pose.end_effector_pose;
+      elbow_current = robot_pose.elbow_position;
 
       auto segment = std::make_shared<LineSegment>(vector_current, vector_next);
       line_segments.emplace_back(segment);
@@ -107,7 +107,7 @@ namespace franky {
   Vector7d Path::q(double s, const Affine &frame) const {
     Vector7d init{q(s)};
     RobotPose robot_pose(init);
-    RobotPose robot_pose_absolute(robot_pose.end_effector_pose() * frame.inverse(), robot_pose.elbow_position());
+    RobotPose robot_pose_absolute(robot_pose.end_effector_pose * frame.inverse(), robot_pose.elbow_position);
     return robot_pose_absolute.vector_repr();
   }
 

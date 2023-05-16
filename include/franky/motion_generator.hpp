@@ -16,7 +16,7 @@ namespace franky {
     static inline franka::CartesianPose
     CartesianPose(const Vector7d &vector, bool include_elbow = true, const Affine &base_frame = Affine::Identity()) {
       RobotPose robot_pose(vector);
-      RobotPose robot_pose_absolute(base_frame * robot_pose.end_effector_pose(), robot_pose.elbow_position());
+      RobotPose robot_pose_absolute(base_frame * robot_pose.end_effector_pose, robot_pose.elbow_position);
       return robot_pose_absolute.as_franka_pose(include_elbow);
     }
 
