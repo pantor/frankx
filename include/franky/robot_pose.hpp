@@ -21,8 +21,8 @@ namespace franky {
         : elbow_position(vector_repr[6]),
           end_effector_pose(Affine().fromPositionOrientationScale(
               vector_repr.head<3>(),
-                  Eigen::AngleAxis(vector_repr.segment<3>(3).norm(), vector_repr.segment<3>(3).normalized()),
-              Eigen::Vector3d::Ones())) { }
+              Eigen::AngleAxis(vector_repr.segment<3>(3).norm(), vector_repr.segment<3>(3).normalized()),
+              Eigen::Vector3d::Ones())) {}
 
     Vector7d vector_repr() {
       Eigen::AngleAxis<double> orientation(end_effector_pose.rotation());
@@ -41,8 +41,23 @@ namespace franky {
       return franka::CartesianPose(array);
     }
 
-    const Eigen::Affine3d end_effector_pose;
+    RobotPose left_transform(const Affine &transform) const {
+      return RobotPose(transform * end_effector_pose, elbow_position);
+    }
+
+    RobotPose right_transform(const Affine &transform) const {
+      return RobotPose(end_effector_pose * transform, elbow_position);
+    }
+
+    const Affine end_effector_pose;
     const double elbow_position;
   };
 
+  RobotPose operator*(const RobotPose &robot_pose, const Affine &right_transform) {
+    return robot_pose.right_transform(right_transform);
+  }
+
+  RobotPose operator*(const Affine &left_transform, const RobotPose &robot_pose) {
+    return robot_pose.left_transform(left_transform);
+  }
 } // namespace franky
