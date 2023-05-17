@@ -17,19 +17,14 @@ namespace franky {
       Relative
     };
 
-    Affine affine;
-    std::optional<double> elbow;
+    RobotPose robot_pose;
     ReferenceType reference_type;
-
 
     //! Dynamic Waypoint: Relative velocity factor
     double velocity_rel{1.0};
 
     //! Dynamic Waypoint: Use maximal dynamics of the robot independent on other parameters
     bool max_dynamics{false};
-
-    //! Zero velocity Waypoint: Stop to zero velocity
-    bool zero_velocity{false};
 
     //! Dynamic Waypoint: Minimum time to get to next waypoint
     std::optional<double> minimum_time;
@@ -38,51 +33,30 @@ namespace franky {
     double blend_max_distance{0.0};
 
 
-    explicit Waypoint() : affine(), reference_type(ReferenceType::Absolute) {}
+    explicit Waypoint() : reference_type(ReferenceType::Absolute) {}
 
-    explicit Waypoint(const Affine &affine, ReferenceType reference_type = ReferenceType::Absolute)
-        : affine(affine), reference_type(reference_type) {}
+    explicit Waypoint(const Affine &affine, ReferenceType reference_type = ReferenceType::Absolute,
+                      std::optional<double> elbow = std::nullopt, double velocity_rel = 1.0,
+                      double blend_max_distance = 0.0, std::optional<double> minimum_time = std::nullopt)
+        : robot_pose(affine, elbow), reference_type(reference_type), velocity_rel(velocity_rel),
+          blend_max_distance(blend_max_distance), minimum_time(minimum_time) {}
 
-    explicit Waypoint(const Affine &affine, double elbow, ReferenceType reference_type = ReferenceType::Absolute)
-        : affine(affine), reference_type(reference_type), elbow(elbow) {}
-
-    explicit Waypoint(bool zero_velocity)
-        : affine(), reference_type(ReferenceType::Relative), zero_velocity(zero_velocity) {}
-
-    explicit Waypoint(double minimum_time)
-        : affine(), reference_type(ReferenceType::Relative), minimum_time(minimum_time) {}
-
-    explicit Waypoint(const Affine &affine, ReferenceType reference_type, double velocity_rel)
-        : affine(affine), reference_type(reference_type), velocity_rel(velocity_rel) {}
-
-    explicit Waypoint(const Affine &affine, double elbow, ReferenceType reference_type, double velocity_rel)
-        : affine(affine), elbow(elbow), reference_type(reference_type), velocity_rel(velocity_rel) {}
-
-    explicit Waypoint(const Affine &affine, std::optional<double> elbow, double blend_max_distance)
-        : affine(affine), elbow(elbow), blend_max_distance(blend_max_distance),
-          reference_type(ReferenceType::Absolute) {}
-
-
-    Affine getTargetAffine(const Affine &frame, const Affine &old_affine) const {
-      if (reference_type == ReferenceType::Absolute)
-        return affine * frame.inverse();
-      return old_affine * affine * frame.inverse();
-    }
-
-    Vector7d getTargetVector(const Affine &old_affine, double old_elbow) const {
-      return getTargetVector(Affine::Identity(), old_affine, old_elbow);
-    }
-
-    Vector7d getTargetVector(const Affine &frame, const Affine &old_affine, double old_elbow,
-                             const Affine &base_frame = Affine::Identity()) const {
-      double new_elbow;
-      if (reference_type == ReferenceType::Relative) {
-        new_elbow = elbow.value_or(0.0) + old_elbow;
+    RobotPose getTargetRobotPose(const RobotPose &old_robot_pose) const {
+      std::optional<double> new_elbow;
+      if (robot_pose.elbow_position().has_value() && reference_type == ReferenceType::Relative) {
+        if (!old_robot_pose.elbow_position().has_value())
+          new_elbow = robot_pose.elbow_position();
+        else {
+          new_elbow = robot_pose.elbow_position().value() + old_robot_pose.elbow_position().value();
+        }
       } else {
-        new_elbow = elbow.value_or(old_elbow);
+        new_elbow = robot_pose.elbow_position();
       }
-      return RobotPose(base_frame * getTargetAffine(frame, old_affine), new_elbow).vector_repr();
-    }
+      RobotPose new_robot_pose = robot_pose.with_elbow_position(new_elbow);
+      if (reference_type == ReferenceType::Absolute)
+        return new_robot_pose;
+      return old_robot_pose.end_effector_pose() * new_robot_pose;
+    };
   };
 
 } // namespace franky

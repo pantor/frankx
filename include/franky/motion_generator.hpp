@@ -3,28 +3,16 @@
 #include <Eigen/Core>
 #include <franka/duration.h>
 #include <franka/robot_state.h>
-
 #include <ruckig/input_parameter.hpp>
-#include <franky/types.hpp>
-#include <franky/robot/motion_data.hpp>
-#include <franky/robot/robot_state.hpp>
+
+#include "franky/types.hpp"
+#include "franky/robot/motion_data.hpp"
+#include "franky/robot/robot_state.hpp"
 #include "waypoint.hpp"
 
 
 namespace franky {
   struct MotionGenerator {
-    static inline franka::CartesianPose
-    CartesianPose(const Vector7d &vector, bool include_elbow = true, const Affine &base_frame = Affine::Identity()) {
-      RobotPose robot_pose(vector);
-      RobotPose robot_pose_absolute(base_frame * robot_pose.end_effector_pose, robot_pose.elbow_position);
-      return robot_pose_absolute.as_franka_pose(include_elbow);
-    }
-
-    static inline franka::CartesianPose
-    CartesianPose(const std::array<double, 7> &vector, bool include_elbow = true, const Affine &base_frame = Affine::Identity()) {
-      return CartesianPose(Vector7d(vector.data()), include_elbow, base_frame);
-    }
-
     template<class T = double>
     static inline std::array<T, 7> VectorCartRotElbow(T cart, T rot, T elbow) {
       return {cart, cart, cart, rot, rot, rot, elbow};
