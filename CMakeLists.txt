@@ -24,7 +24,6 @@ add_subdirectory(ruckig)
 add_library(franky
         src/gripper.cpp
         src/kinematics.cpp
-        src/path.cpp
         src/robot.cpp
         )
 target_compile_features(franky PUBLIC cxx_std_17)

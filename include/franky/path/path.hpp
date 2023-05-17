@@ -1,50 +1,30 @@
 #pragma once
 
-#include <iostream>
-#include <memory>
-
 #include <Eigen/Core>
-
-#include <franky/types.hpp>
-#include <franky/robot_pose.hpp>
-#include <franky/waypoint.hpp>
-#include <franky/path/segment.hpp>
 
 
 namespace franky {
+  template<size_t state_dimensions>
+  struct PathStep {
+    const Eigen::Vector<double, state_dimensions> q;
+    const Eigen::Vector<double, state_dimensions> dq;
+    const Eigen::Vector<double, state_dimensions> ddq;
+    const Eigen::Vector<double, state_dimensions> dddq;
+  };
 
-class Path {
-    std::vector<double> cumulative_lengths;
+  template<size_t state_dimensions>
+  class Path {
+    using Vector = Eigen::Matrix<double, state_dimensions, 1>;
+  public:
+    virtual double length() const = 0;
 
-    double length {0.0};
+    virtual Vector max_ddq() const = 0;
 
-    void init_path_points(const std::vector<Waypoint>& waypoints);
+    virtual Vector max_dddq() const = 0;
 
-public:
-    constexpr static size_t degrees_of_freedom {7};
+    virtual PathStep<state_dimensions> operator()(double s) const = 0;
 
-    std::vector<std::shared_ptr<Segment>> segments;
-    size_t get_index(double s) const;
-    std::tuple<std::shared_ptr<Segment>, double> get_local(double s) const;
-
-    explicit Path() { }
-    explicit Path(const std::vector<Waypoint>& waypoints);
-    explicit Path(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0);
-
-    double get_length() const;
-
-    Vector7d q(double s) const;
-    Vector7d q(double s, const Affine& frame) const;
-    Vector7d pdq(double s) const;
-    Vector7d pddq(double s) const;
-    Vector7d pdddq(double s) const;
-
-    Vector7d dq(double s, double ds) const;
-    Vector7d ddq(double s, double ds, double dds) const;
-    Vector7d dddq(double s, double ds, double dds, double ddds) const;
-
-    Vector7d max_pddq() const;
-    Vector7d max_pdddq() const;
-};
-
+  private:
+    size_t length_;
+  };
 } // namespace franky

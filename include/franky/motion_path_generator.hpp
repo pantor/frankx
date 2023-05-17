@@ -3,13 +3,14 @@
 #include <franka/duration.h>
 #include <franka/robot_state.h>
 
-#include <franky/types.hpp>
-#include <franky/robot/motion_data.hpp>
-#include <franky/robot/robot_state.hpp>
-#include <franky/motion/motion_path.hpp>
-#include <franky/path/path.hpp>
-#include <franky/path/time_parametrization.hpp>
-#include <franky/path/trajectory.hpp>
+#include "franky/types.hpp"
+#include "franky/robot/motion_data.hpp"
+#include "franky/robot/robot_state.hpp"
+#include "franky/motion/motion_path.hpp"
+#include "franky/path/aggregated_path.hpp"
+#include "franky/path/time_parametrization.hpp"
+#include "franky/path/trajectory.hpp"
+#include "franky/path/way_point_path.hpp"
 
 
 namespace franky {
@@ -21,7 +22,7 @@ namespace franky {
     const bool use_elbow{false};
     double time{0.0};
 
-    Trajectory trajectory{};
+    Trajectory<AggregatedPath<7>> trajectory;
 
     RobotType *robot;
     Affine frame;
@@ -42,7 +43,7 @@ namespace franky {
       all_waypoints.insert(all_waypoints.begin(), start_waypoint);
 
       // Create path
-      const Path path{all_waypoints};
+      const auto path = mk_path_from_waypoints(all_waypoints);
 
       // Get time parametrization
       TimeParametrization time_parametrization{RobotType::control_rate};
@@ -63,13 +64,17 @@ namespace franky {
 
       const int steps = std::max<int>(period.toMSec(), 1);
       trajectory_index += steps;
+      s_current = trajectory.path.length();
+      auto robot_pose = RobotPose(trajectory.path(s_current).q);
+      auto robot_pose_transformed = RobotPose(robot_pose.end_effector_pose * frame.inverse(), robot_pose.elbow_position);
+      auto output_pose = CartesianPose(robot_pose_transformed.vector_repr(), use_elbow);
       if (trajectory_index >= trajectory.states.size()) {
-        s_current = trajectory.path.get_length();
-        return franka::MotionFinished(CartesianPose(trajectory.path.q(s_current, frame), use_elbow));
+        s_current = trajectory.path.length();
+        return franka::MotionFinished(output_pose);
       }
 
       s_current = trajectory.states[trajectory_index].s;
-      return CartesianPose(trajectory.path.q(s_current, frame), use_elbow);
+      return output_pose;
     }
   };
 
