@@ -12,28 +12,16 @@ namespace franky {
 * A motion following a pre-defined path.
 * Needs zero velocity and acceleration at start time.
 */
-struct PathMotion {
+  struct PathMotion {
     std::vector<Waypoint> waypoints;
 
-    explicit PathMotion(const std::vector<Waypoint>& waypoints): waypoints(waypoints) { }
-    explicit PathMotion(const std::vector<Affine>& waypoints, double blend_max_distance = 0.0) {
-        this->waypoints.resize(waypoints.size());
-        for (size_t i = 0; i < waypoints.size(); i += 1) {
-            this->waypoints[i] = Waypoint(waypoints[i], std::nullopt, blend_max_distance);
-        }
-    }
-};
+    explicit PathMotion(const std::vector<Waypoint> &waypoints) : waypoints(waypoints) {}
+  };
 
-
-struct LinearPathMotion: public PathMotion {
-    explicit LinearPathMotion(const Affine& target): PathMotion({ Waypoint(target) }) { }
-    explicit LinearPathMotion(const Affine& target, double elbow): PathMotion({ Waypoint(target, elbow) }) { }
-};
-
-
-struct LinearRelativePathMotion: public PathMotion {
-    explicit LinearRelativePathMotion(const Affine& affine): PathMotion({ Waypoint(affine, Waypoint::ReferenceType::Relative) }) { }
-    explicit LinearRelativePathMotion(const Affine& affine, double elbow): PathMotion({ Waypoint(affine, elbow, Waypoint::ReferenceType::Relative) }) { }
-};
-
+  struct LinearPathMotion : public PathMotion {
+    explicit LinearPathMotion(const RobotPose &target, bool relative = false)
+        : PathMotion({
+                         {.robot_pose = target, .reference_type=relative ? Waypoint::ReferenceType::Relative
+                                                                         : Waypoint::ReferenceType::Absolute}}) {}
+  };
 } // namespace franky

@@ -30,15 +30,14 @@ namespace franky {
     MotionData &data;
     franka::RobotState asynchronous_state;
 
-    explicit PathMotionGenerator(RobotType *robot, const Affine &frame, PathMotion motion, MotionData &data) : robot(
-        robot), frame(frame), motion(motion), data(data) {
+    explicit PathMotionGenerator(RobotType *robot, const Affine &frame, PathMotion motion, MotionData &data)
+    : robot(robot), frame(frame), motion(motion), data(data) {
       // Insert current pose into beginning of path
       auto initial_state = robot->readOnce();
       franka::CartesianPose initial_cartesian_pose(initial_state.O_T_EE_c, initial_state.elbow_c);
-      Affine initial_pose;
-      initial_pose.matrix() = Eigen::Matrix4d::Map(initial_cartesian_pose.O_T_EE.data());
+      Affine initial_pose(Eigen::Matrix4d::Map(initial_cartesian_pose.O_T_EE.data()));
 
-      Waypoint start_waypoint{initial_pose * frame, initial_cartesian_pose.elbow[0]};
+      Waypoint start_waypoint{RobotPose{initial_pose * frame, initial_cartesian_pose.elbow[0]}};
       auto all_waypoints = motion.waypoints;
       all_waypoints.insert(all_waypoints.begin(), start_waypoint);
 
@@ -65,9 +64,9 @@ namespace franky {
       const int steps = std::max<int>(period.toMSec(), 1);
       trajectory_index += steps;
       s_current = trajectory.path.length();
-      auto robot_pose = RobotPose(trajectory.path(s_current).q);
-      auto robot_pose_transformed = RobotPose(robot_pose.end_effector_pose * frame.inverse(), robot_pose.elbow_position);
-      auto output_pose = CartesianPose(robot_pose_transformed.vector_repr(), use_elbow);
+      auto robot_pose = RobotPose(trajectory.path(s_current).q, !use_elbow);
+      auto robot_pose_transformed = robot_pose * frame.inverse();
+      auto output_pose = robot_pose_transformed.as_franka_pose();
       if (trajectory_index >= trajectory.states.size()) {
         s_current = trajectory.path.length();
         return franka::MotionFinished(output_pose);
