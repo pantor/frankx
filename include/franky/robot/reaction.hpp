@@ -12,20 +12,21 @@
 
 
 namespace franky {
+  template<typename ControlSignalType>
+  class Motion;
 
-  class WaypointMotion;
-
+  template<typename ControlSignalType>
   class Reaction {
-    using MotionFunc = std::function<std::optional<Motion>(const franka::RobotState &, double)>;
+    using MotionFunc = std::function<std::shared_ptr<Motion<ControlSignalType>>(const franka::RobotState &, double)>;
 
   public:
-    explicit Reaction(const Condition &condition, const std::optional<Motion> &new_motion = std::nullopt)
+    explicit Reaction(const Condition &condition, const std::shared_ptr<Motion<ControlSignalType>> new_motion)
         : Reaction(condition, [new_motion](const franka::RobotState &, double) { return new_motion; }) {}
 
     explicit Reaction(const Condition &condition, const MotionFunc &motion_func)
         : condition_(condition), motion_func_(motion_func) {}
 
-    std::optional<Motion> operator()(const franka::RobotState &robot_state, double time) {
+    std::shared_ptr<Motion<ControlSignalType>> operator()(const franka::RobotState &robot_state, double time) {
       return motion_func_(robot_state, time);
     }
 
