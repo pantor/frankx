@@ -7,29 +7,23 @@
 
 
 namespace franky {
-  AggregatedPath<7> mk_path_from_waypoints(const std::vector<Waypoint> &waypoints) {
+  AggregatedPath<7>
+  mk_path_from_waypoints(const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos = 0.0) {
     if (waypoints.size() < 2) {
       throw std::runtime_error(
           "Path needs at least 2 waypoints as input, but has only " + std::to_string(waypoints.size()) + ".");
     }
 
     std::vector<std::shared_ptr<LinearPath<7>>> line_segments;
-
-    double elbow_current = waypoints[0].elbow.value_or(0.0);
-    Affine affine_current = waypoints[0].affine;
-
-    Vector7d vector_current = waypoints[0].getTargetVector(affine_current, elbow_current);
-    Vector7d vector_next;
+    RobotPose prev_robot_pose = waypoints[0].robot_pose;
+    if (!prev_robot_pose.elbow_position().has_value())
+      prev_robot_pose = prev_robot_pose.with_elbow_position(default_initial_elbow_pos);
 
     for (size_t i = 1; i < waypoints.size(); i += 1) {
-      vector_next = waypoints[i].getTargetVector(affine_current, elbow_current);
-      RobotPose robot_pose(vector_next);
-      affine_current = robot_pose.end_effector_pose;
-      elbow_current = robot_pose.elbow_position;
-
-      auto segment = std::make_shared<LinearPath<7>>(vector_current, vector_next);
+      auto segment = std::make_shared<LinearPath<7>>(
+          prev_robot_pose.vector_repr(), waypoints[i].robot_pose.vector_repr());
       line_segments.emplace_back(segment);
-      std::swap(vector_current, vector_next);
+      prev_robot_pose = waypoints[i].robot_pose;
     }
 
     std::vector<std::shared_ptr<Path<7>>> segments;
@@ -44,8 +38,7 @@ namespace franky {
 
         double s_abs_max = std::min<double>({left->length() / 2, right->length() / 2});
 
-        auto blend = std::make_shared<QuarticBlendPath < 7>>
-        (
+        auto blend = std::make_shared<QuarticBlendPath<7>>(
             left->start, lm, rm, left->length(), waypoints[i].blend_max_distance, s_abs_max);
         double s_abs = blend->length() / 2;
 
