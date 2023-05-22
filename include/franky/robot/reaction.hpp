@@ -5,29 +5,36 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <franka/robot_state.h>
 
-#include <franky/robot/measure.hpp>
+#include "franky/robot/measure.hpp"
+#include "franky/motion/motion.hpp"
 
 
 namespace franky {
 
-class WaypointMotion;
+  class WaypointMotion;
 
-struct Reaction {
-    using WaypointAction = std::function<WaypointMotion(const RobotState<7>&, double)>;
-    std::optional<WaypointAction> waypoint_action;
-    std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion;
+  class Reaction {
+    using MotionFunc = std::function<std::optional<Motion>(const franka::RobotState &, double)>;
 
-    Condition condition;
-    bool has_fired {false};
+  public:
+    explicit Reaction(const Condition &condition, const std::optional<Motion> &new_motion = std::nullopt)
+        : Reaction(condition, [new_motion](const franka::RobotState &, double) { return new_motion; }) {}
 
-    explicit Reaction(Condition::CallbackType callback): condition(callback) { }
-    explicit Reaction(Condition::CallbackType callback, std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion): condition(callback), waypoint_motion(waypoint_motion) { }
-    explicit Reaction(Condition::CallbackType callback, std::optional<WaypointAction> waypoint_action): condition(callback), waypoint_action(waypoint_action) { }
+    explicit Reaction(const Condition &condition, const MotionFunc &motion_func)
+        : condition_(condition), motion_func_(motion_func) {}
 
-    explicit Reaction(Condition condition): condition(condition) { }
-    explicit Reaction(Condition condition, std::optional<std::shared_ptr<WaypointMotion>> waypoint_motion): condition(condition), waypoint_motion(waypoint_motion) { }
-    explicit Reaction(Condition condition, std::optional<WaypointAction> waypoint_action): condition(condition), waypoint_action(waypoint_action) { }
-};
+    std::optional<Motion> operator()(const franka::RobotState &robot_state, double time) {
+      return motion_func_(robot_state, time);
+    }
 
+    bool condition(const franka::RobotState &robot_state, double time) {
+      return condition_(robot_state, time);
+    }
+
+  private:
+    MotionFunc motion_func_;
+    Condition condition_;
+  };
 } // namespace franky
