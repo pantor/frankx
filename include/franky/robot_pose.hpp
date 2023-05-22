@@ -34,7 +34,7 @@ namespace franky {
     explicit RobotPose(const franka::CartesianPose franka_pose)
         : RobotPose(Affine(Eigen::Matrix4d::Map(franka_pose.O_T_EE.data())), franka_pose.elbow[0]) {}
 
-    Vector7d vector_repr() {
+    Vector7d vector_repr() const {
       Eigen::AngleAxis<double> orientation(end_effector_pose_.rotation());
       auto rotvec = orientation.axis() * orientation.angle();
       Vector7d result;
@@ -42,7 +42,7 @@ namespace franky {
       return result;
     }
 
-    franka::CartesianPose as_franka_pose() {
+    franka::CartesianPose as_franka_pose() const {
       std::array<double, 16> array;
       std::copy(end_effector_pose_.data(), end_effector_pose_.data() + array.size(), array.begin());
       if (elbow_position_.has_value()) {
