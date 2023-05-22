@@ -161,36 +161,6 @@ namespace franky {
     return true;
   }
 
-
-  bool Robot::move(PathMotion motion) {
-    return move(Affine::Identity(), motion);
-  }
-
-  bool Robot::move(PathMotion motion, MotionData &data) {
-    return move(Affine::Identity(), motion, data);
-  }
-
-  bool Robot::move(const Affine &frame, PathMotion motion) {
-    auto data = MotionData();
-    return move(frame, motion, data);
-  }
-
-  bool Robot::move(const Affine &frame, PathMotion motion, MotionData &data) {
-    PathMotionGenerator<Robot> mg(this, frame, motion, data);
-
-    asynchronous_state_ptr = &mg.asynchronous_state;
-
-    try {
-      control(stateful<franka::CartesianPose>(mg), controller_mode);
-
-    } catch (franka::Exception exception) {
-      std::cout << exception.what() << std::endl;
-      return false;
-    }
-    return true;
-  }
-
-
   bool Robot::move(WaypointMotion &motion) {
     return move(Affine::Identity(), motion);
   }

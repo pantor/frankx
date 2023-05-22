@@ -19,12 +19,11 @@
 #include <franky/robot/robot_state.hpp>
 #include <franky/robot/kinematics.hpp>
 
-#include <franky/kinematics.hpp>
-#include <franky/motion_generator.hpp>
-#include <franky/motion_impedance_generator.hpp>
-#include <franky/motion_joint_generator.hpp>
-#include <franky/motion_path_generator.hpp>
-#include <franky/motion_waypoint_generator.hpp>
+#include "franky/kinematics.hpp"
+#include "franky/motion_generator.hpp"
+#include "franky/motion_impedance_generator.hpp"
+#include "franky/motion_joint_generator.hpp"
+#include "franky/motion_waypoint_generator.hpp"
 
 
 namespace franky {
@@ -119,14 +118,6 @@ namespace franky {
     bool move(JointMotion motion);
 
     bool move(JointMotion motion, MotionData &data);
-
-    bool move(PathMotion motion);
-
-    bool move(PathMotion motion, MotionData &data);
-
-    bool move(const Affine &frame, PathMotion motion);
-
-    bool move(const Affine &frame, PathMotion motion, MotionData &data);
 
     bool move(WaypointMotion &motion);
 
