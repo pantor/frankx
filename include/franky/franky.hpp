@@ -8,7 +8,7 @@
 #include <franky/motion/motion_impedance.hpp>
 #include <franky/motion/motion_joint.hpp>
 #include <franky/motion/motion_path.hpp>
-#include <franky/motion/motion_waypoint.hpp>
+#include <franky/motion/waypoint_motion.hpp>
 
 #include <franky/gripper.hpp>
 #include <franky/robot.hpp>
