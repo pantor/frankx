@@ -14,6 +14,9 @@ namespace franky {
   class MotionGenerator {
     friend class Motion<ControlSignalType>;
 
+  public:
+    static constexpr size_t REACTION_RECURSION_LIMIT = 8;
+
     explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion,
                               bool stop_at_python_signal = true)
         : robot_(robot), initial_motion_(initial_motion), stop_at_python_signal_(stop_at_python_signal) {}
@@ -28,10 +31,22 @@ namespace franky {
 
       asynchronous_state_ = robot_state;
 
-      for (auto &reaction: current_motion_->reactions_) {
-        if (reaction.condition(robot_state, time_)) {
-          current_motion_ = reaction(robot_state, time_);
-          current_motion_->initUnsafe();
+      size_t recursion_depth = 0;
+      bool reaction_fired = true;
+      while(reaction_fired) {
+        reaction_fired = false;
+        for (auto &reaction: current_motion_->reactions_) {
+          if (reaction.condition(robot_state, time_)) {
+            current_motion_ = reaction(robot_state, time_);
+            current_motion_->initUnsafe();
+            reaction_fired = true;
+            recursion_depth++;
+            break;
+          }
+        }
+        if (recursion_depth > REACTION_RECURSION_LIMIT) {
+          throw std::runtime_error(
+              "Reaction recursion reached depth limit " + std::to_string(REACTION_RECURSION_LIMIT) + ".");
         }
       }
       return current_motion_->nextCommandUnsafe(robot_state, period, time_);
