@@ -82,10 +82,7 @@ namespace franky {
           }
 
         } else if (result_ == ruckig::Result::Error) {
-          std::cout << "[franky robot] Invalid inputs:" << std::endl;
-          return franka::MotionFinished(
-              (ref_frame_ *
-               RobotPose(toEigen<7>(input_para_.current_position), !waypoint_has_elbow_)).as_franka_pose());
+          throw std::runtime_error("Invalid inputs to motion planner.");
         }
         output_para_.pass_to_input(input_para_);
       }
