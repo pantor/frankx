@@ -10,21 +10,20 @@
 
 
 namespace franky {
+  class Robot;
+
   template<typename ControlSignalType>
   class MotionGenerator {
-    friend class Motion<ControlSignalType>;
-
   public:
     static constexpr size_t REACTION_RECURSION_LIMIT = 8;
 
     explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion)
         : robot_(robot), initial_motion_(initial_motion) {}
 
-    franka::CartesianPose operator()(const franka::RobotState &robot_state, franka::Duration period) {
-      std::lock_guard<std::mutex> lock(current_motion_.mutex());
+    ControlSignalType operator()(const franka::RobotState &robot_state, franka::Duration period) {
       if (time_ == 0.0) {
         current_motion_ = initial_motion_;
-        current_motion_->initUnsafe(robot_, robot_state, time_);
+        current_motion_->init(robot_, robot_state, time_);
       }
       time_ += period.toSec();
 
@@ -35,10 +34,10 @@ namespace franky {
       bool reaction_fired = true;
       while (reaction_fired) {
         reaction_fired = false;
-        for (auto &reaction: current_motion_->reactions_) {
-          if (reaction.condition(robot_state, time_)) {
-            current_motion_ = reaction(robot_state, time_);
-            current_motion_->initUnsafe(robot_state, time_);
+        for (auto &reaction: current_motion_->reactions()) {
+          if (reaction->condition(robot_state, time_)) {
+            current_motion_ = (*reaction)(robot_state, time_);
+            current_motion_->init(robot_, robot_state, time_);
             reaction_fired = true;
             recursion_depth++;
             break;
@@ -49,7 +48,7 @@ namespace franky {
               "Reaction recursion reached depth limit " + std::to_string(REACTION_RECURSION_LIMIT) + ".");
         }
       }
-      return current_motion_->nextCommandUnsafe(robot_state, period, time_);
+      return current_motion_->nextCommand(robot_state, period, time_);
     }
 
     void

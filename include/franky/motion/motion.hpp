@@ -26,6 +26,18 @@ namespace franky {
       return reactions_;
     }
 
+    void init(Robot *robot, const franka::RobotState &robot_state, double time) {
+      std::lock_guard<std::mutex> lock(mutex_);
+      robot_ = robot;
+      initImpl(robot_state, time);
+    };
+
+    ControlSignalType
+    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+      std::lock_guard<std::mutex> lock(mutex_);
+      return nextCommandImpl(robot_state, time_step, time);
+    };
+
   protected:
     void initImpl(const franka::RobotState &robot_state, double time) {}
 
@@ -36,23 +48,9 @@ namespace franky {
       return robot_;
     }
 
-    const std::mutex &mutex() const {
-      return mutex_;
-    }
-
   private:
-    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
     std::mutex mutex_;
+    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
     Robot *robot_;
-
-    void initUnsafe(Robot *robot, const franka::RobotState &robot_state, double time) {
-      robot_ = robot;
-      initImpl(robot_state, time);
-    };
-
-    ControlSignalType
-    nextCommandUnsafe(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-      return nextCommandImpl(robot_state, time_step, time);
-    };
   };
 } // namespace franky
