@@ -1,7 +1,8 @@
 #pragma once
 
 #include <ruckig/ruckig.hpp>
-#include <franky/path/trajectory.hpp>
+
+#include "franky/path/trajectory.hpp"
 
 
 namespace franky {

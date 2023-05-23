@@ -13,17 +13,9 @@
 #include <franka/robot.h>
 #include <franka/robot_state.h>
 
-#include <franky/types.hpp>
-#include <franky/robot_pose.hpp>
-#include <franky/robot/motion_data.hpp>
-#include <franky/robot/robot_state.hpp>
-#include <franky/robot/kinematics.hpp>
-
+#include "franky/types.hpp"
+#include "franky/robot_pose.hpp"
 #include "franky/kinematics.hpp"
-#include "franky/motion_generator.hpp"
-#include "franky/motion_impedance_generator.hpp"
-#include "franky/motion_joint_generator.hpp"
-#include "franky/motion_waypoint_generator.hpp"
 
 
 namespace franky {

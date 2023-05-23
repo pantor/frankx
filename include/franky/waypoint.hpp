@@ -4,9 +4,8 @@
 
 #include <Eigen/Geometry>
 
-#include <franky/robot_pose.hpp>
-
-#include <franky/types.hpp>
+#include "franky/robot_pose.hpp"
+#include "franky/types.hpp"
 
 
 namespace franky {

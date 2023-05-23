@@ -3,12 +3,11 @@
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 
-#include <franky/affine.hpp>
-#include <franky/path/path.hpp>
-#include <franky/path/time_parametrization.hpp>
-#include <franky/path/trajectory.hpp>
-#include <franky/gripper.hpp>
-#include <franky/robot.hpp>
+#include "franky/path/path.hpp"
+#include "franky/path/time_parametrization.hpp"
+#include "franky/path/trajectory.hpp"
+#include "franky/gripper.hpp"
+#include "franky/robot.hpp"
 
 
 namespace py = pybind11;

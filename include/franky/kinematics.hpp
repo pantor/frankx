@@ -5,7 +5,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-#include <franky/types.hpp>
+#include "franky/types.hpp"
 
 
 namespace franky {
