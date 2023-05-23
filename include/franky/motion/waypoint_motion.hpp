@@ -36,6 +36,7 @@ namespace franky {
       franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
       RobotPose robot_pose(initial_cartesian_pose);
       ref_frame_ = Affine();
+      current_cooldown_iteration_ = 0;
 
       RobotPose zero_pose(Affine::Identity(), robot_pose.elbow_position().value());
       auto initial_velocity = Vector<6>::Map(robot_state.O_dP_EE_c.data());
@@ -69,8 +70,8 @@ namespace franky {
                 ref_frame_ *
                 RobotPose(toEigen<7>(input_para_.current_position), !waypoint_has_elbow_)).as_franka_pose();
             // Allow cooldown of motion, so that the low-pass filter has time to adjust to target values
-            if (current_cooldown_iteration < cooldown_iterations) {
-              current_cooldown_iteration += 1;
+            if (current_cooldown_iteration_ < cooldown_iterations_) {
+              current_cooldown_iteration_ += 1;
               return output_pose;
             }
             return franka::MotionFinished(output_pose);
@@ -107,8 +108,8 @@ namespace franky {
 
     Affine frame_;
 
-    constexpr static size_t cooldown_iterations{5};
-    size_t current_cooldown_iteration{0};
+    constexpr static size_t cooldown_iterations_{5};
+    size_t current_cooldown_iteration_{0};
 
     void setNewWaypoint(const franka::RobotState &robot_state, const Waypoint &new_waypoint) {
       // We first convert the current state into the frame of the current pose
