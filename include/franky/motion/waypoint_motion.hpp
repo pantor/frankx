@@ -220,6 +220,7 @@ namespace franky {
 
 
   class LinearMotion : public WaypointMotion {
+  public:
     explicit LinearMotion(const RobotPose &target, bool relative = false, double velocity_rel = 1.0)
         : WaypointMotion{
         {
@@ -234,12 +235,14 @@ namespace franky {
 
 
   class StopMotion : public WaypointMotion {
+  public:
     explicit StopMotion() : WaypointMotion{
         {{.reference_type=Waypoint::ReferenceType::Relative, .max_dynamics = true}}} {}
   };
 
 
   class PositionHold : public WaypointMotion {
+  public:
     explicit PositionHold(double duration) : WaypointMotion{
         {{.reference_type=Waypoint::ReferenceType::Relative, .minimum_time = duration}}} {}
   };
