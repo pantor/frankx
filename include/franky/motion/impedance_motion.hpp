@@ -7,6 +7,7 @@
 #include <Eigen/Geometry>
 
 #include <franky/robot_pose.hpp>
+#include <franky/motion/motion.hpp>
 
 
 namespace franky {
@@ -20,7 +21,6 @@ namespace franky {
 
     struct Params {
       TargetType target_type{TargetType::Absolute};
-      Affine frame = Affine::Identity();
       double translational_stiffness{2000};
       double rotational_stiffness{200};
       Eigen::Vector<double, 6> force_constraints;
@@ -33,7 +33,6 @@ namespace franky {
     /// \param rotational_stiffness     in [1, 300] Nm/rad
     explicit ImpedanceMotion(const Affine &target, const Params &params)
         : target_(target), params_(params), Motion<franka::Torques>() {
-      // TODO: frame
       stiffness.setZero();
       stiffness.topLeftCorner(3, 3) << params.translational_stiffness * Eigen::MatrixXd::Identity(3, 3);
       stiffness.bottomRightCorner(3, 3) << params.rotational_stiffness * Eigen::MatrixXd::Identity(3, 3);
