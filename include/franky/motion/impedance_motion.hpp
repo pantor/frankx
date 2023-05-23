@@ -50,7 +50,7 @@ namespace franky {
         absolute_target_ = robot_pose * target_;
       else
         absolute_target_ = target_;
-      model_ = std::make_unique<franka::Model>(this->robot()->loadModel());
+      model_ = std::make_unique<franka::Model>(robot()->loadModel());
     }
 
     franka::Torques
@@ -128,7 +128,10 @@ namespace franky {
       double exponential_decay{0.005};
     };
 
-    ExponentialImpedanceMotion(const Affine &target, Params params)
+    explicit ExponentialImpedanceMotion(const Affine &target)
+        : ExponentialImpedanceMotion(target, Params()) {}
+
+    explicit ExponentialImpedanceMotion(const Affine &target, Params params)
         : params_(params), ImpedanceMotion(target, params) {}
 
   protected:
@@ -152,7 +155,10 @@ namespace franky {
       double finish_wait_factor{1.2}; // Wait a bit longer to stop
     };
 
-    LinearImpedanceMotion(const Affine &target, double duration, const Params &params)
+    explicit LinearImpedanceMotion(const Affine &target, double duration)
+        : LinearImpedanceMotion(target, duration, Params()) {}
+
+    explicit LinearImpedanceMotion(const Affine &target, double duration, const Params &params)
         : duration_(duration), params_(params), ImpedanceMotion(target, params) {}
 
   protected:
