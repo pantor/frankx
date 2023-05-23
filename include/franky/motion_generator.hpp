@@ -17,23 +17,23 @@ namespace franky {
   public:
     static constexpr size_t REACTION_RECURSION_LIMIT = 8;
 
-    explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion,
-                              bool stop_at_python_signal = true)
-        : robot_(robot), initial_motion_(initial_motion), stop_at_python_signal_(stop_at_python_signal) {}
+    explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion)
+        : robot_(robot), initial_motion_(initial_motion) {}
 
     franka::CartesianPose operator()(const franka::RobotState &robot_state, franka::Duration period) {
       std::lock_guard<std::mutex> lock(current_motion_.mutex());
       if (time_ == 0.0) {
         current_motion_ = initial_motion_;
-        current_motion_->initUnsafe(robot_state, time_);
+        current_motion_->initUnsafe(robot_, robot_state, time_);
       }
       time_ += period.toSec();
 
-      asynchronous_state_ = robot_state;
+      for(auto &callback: update_callbacks_)
+        callback(robot_state, period, time_);
 
       size_t recursion_depth = 0;
       bool reaction_fired = true;
-      while(reaction_fired) {
+      while (reaction_fired) {
         reaction_fired = false;
         for (auto &reaction: current_motion_->reactions_) {
           if (reaction.condition(robot_state, time_)) {
@@ -52,14 +52,17 @@ namespace franky {
       return current_motion_->nextCommandUnsafe(robot_state, period, time_);
     }
 
+    void
+    registerUpdateCallback(const std::function<void(const franka::RobotState &, franka::Duration, double)> &callback) {
+      update_callbacks_.push_back(callback);
+    }
+
   private:
     std::shared_ptr<Motion<ControlSignalType>> initial_motion_;
     std::shared_ptr<Motion<ControlSignalType>> current_motion_;
-    bool stop_at_python_signal_;
+    std::vector<std::function<void(const franka::RobotState &, franka::Duration, double)>> update_callbacks_;
 
     double time_{0.0};
     Robot *robot_;
-
-    franka::RobotState asynchronous_state_;
   };
 } // namespace franky
