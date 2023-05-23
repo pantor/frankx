@@ -25,7 +25,7 @@ namespace franky {
       std::lock_guard<std::mutex> lock(current_motion_.mutex());
       if (time_ == 0.0) {
         current_motion_ = initial_motion_;
-        current_motion_->initUnsafe(robot_state);
+        current_motion_->initUnsafe(robot_state, time_);
       }
       time_ += period.toSec();
 
@@ -38,7 +38,7 @@ namespace franky {
         for (auto &reaction: current_motion_->reactions_) {
           if (reaction.condition(robot_state, time_)) {
             current_motion_ = reaction(robot_state, time_);
-            current_motion_->initUnsafe();
+            current_motion_->initUnsafe(robot_state, time_);
             reaction_fired = true;
             recursion_depth++;
             break;

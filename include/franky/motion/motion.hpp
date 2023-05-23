@@ -27,7 +27,7 @@ namespace franky {
     }
 
   protected:
-    void initImpl(const franka::RobotState &robot_state) {};
+    void initImpl(const franka::RobotState &robot_state, double time) {}
 
     virtual ControlSignalType
     nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
@@ -36,14 +36,18 @@ namespace franky {
       return robot_;
     }
 
+    const std::mutex &mutex() const {
+      return mutex_;
+    }
+
   private:
     std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
     std::mutex mutex_;
     Robot *robot_;
 
-    void initUnsafe(Robot *robot, const franka::RobotState &robot_state) {
+    void initUnsafe(Robot *robot, const franka::RobotState &robot_state, double time) {
       robot_ = robot;
-      initImpl(robot_state);
+      initImpl(robot_state, time);
     };
 
     ControlSignalType

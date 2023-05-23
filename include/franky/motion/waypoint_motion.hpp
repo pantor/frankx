@@ -32,7 +32,7 @@ namespace franky {
     explicit WaypointMotion(std::vector<Waypoint> waypoints, const Params &params)
         : waypoints_(waypoints), params_(params) {}
 
-    void initImpl(const franka::RobotState &robot_state) {
+    void initImpl(const franka::RobotState &robot_state, double time) {
       franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
       RobotPose robot_pose(initial_cartesian_pose);
       ref_frame_ = Affine();
