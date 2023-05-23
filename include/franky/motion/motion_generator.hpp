@@ -2,7 +2,7 @@
 
 #include <franka/duration.h>
 #include <franka/robot_state.h>
-#include <ruckig/ruckig.hpp>
+#include "ruckig/ruckig.hpp"
 
 #include "franky/types.hpp"
 #include "franky/robot.hpp"
