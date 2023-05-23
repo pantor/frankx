@@ -28,7 +28,7 @@ namespace franky {
       return nextCommandImpl();
     };
 
-    void add_reaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
+    void addReaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
       const std::lock_guard<std::mutex> lock(mutex_);
       reactions_.push_back(reaction);
     }
