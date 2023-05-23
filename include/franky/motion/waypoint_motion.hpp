@@ -31,8 +31,7 @@ namespace franky {
         : WaypointMotion(waypoints, Params()) {}
 
     explicit WaypointMotion(std::vector<Waypoint> waypoints, const Params &params)
-        : waypoints_(waypoints), params_(params),
-          Motion<franka::CartesianPose>(params.controller_mode) {}
+        : waypoints_(waypoints), params_(params) {}
 
     void on_init(const franka::RobotState &robot_state) {
       franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);

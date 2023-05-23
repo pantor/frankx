@@ -14,8 +14,7 @@ namespace franky {
   template<typename ControlSignalType>
   class Motion {
   public:
-    explicit Motion(franka::ControllerMode controller_mode)
-        : controller_mode_(controller_mode), robot_(nullptr) {}
+    explicit Motion() : robot_(nullptr) {}
 
 
     void init(Robot* robot, const franka::RobotState &robot_state) {
@@ -38,21 +37,16 @@ namespace franky {
       return access_mutex_;
     }
 
-    franka::ControllerMode controller_mode() {
-      return controller_mode_;
-    }
-
   protected:
     void on_init(const franka::RobotState &robot_state) {};
 
-    Robot* robot() const {
+    Robot *robot() const {
       return robot_;
     }
 
   private:
     std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
     std::mutex access_mutex_;
-    franka::ControllerMode controller_mode_;
-    Robot* robot_;
+    Robot *robot_;
   };
 } // namespace franky
