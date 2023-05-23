@@ -24,7 +24,6 @@ namespace franky {
       double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
       bool max_dynamics{false};
       bool return_when_finished{true};
-      franka::ControllerMode controller_mode{franka::ControllerMode::kJointImpedance};
     };
 
     explicit WaypointMotion(std::vector<Waypoint> waypoints)
