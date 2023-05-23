@@ -17,13 +17,14 @@ namespace franky {
     explicit Motion() : robot_(nullptr) {}
 
 
-    void init(Robot* robot, const franka::RobotState &robot_state) {
+    void init(Robot *robot, const franka::RobotState &robot_state) {
       robot_ = robot;
-      on_init(robot_state);
+      initImpl(robot_state);
     };
 
-    virtual ControlSignalType
-    next_command(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
+    ControlSignalType nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+      return nextCommandImpl();
+    };
 
     void add_reaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
       reactions_.push_back(reaction);
@@ -38,7 +39,10 @@ namespace franky {
     }
 
   protected:
-    void on_init(const franka::RobotState &robot_state) {};
+    void initImpl(const franka::RobotState &robot_state) {};
+
+    virtual ControlSignalType
+    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
 
     Robot *robot() const {
       return robot_;

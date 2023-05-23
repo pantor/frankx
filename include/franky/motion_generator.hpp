@@ -36,7 +36,7 @@ namespace franky {
           current_motion_->init();
         }
       }
-      return current_motion_->next_command(robot_state, period, time_);
+      return current_motion_->nextCommand(robot_state, period, time_);
     }
 
   private:

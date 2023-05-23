@@ -33,7 +33,7 @@ namespace franky {
     explicit WaypointMotion(std::vector<Waypoint> waypoints, const Params &params)
         : waypoints_(waypoints), params_(params) {}
 
-    void on_init(const franka::RobotState &robot_state) {
+    void initImpl(const franka::RobotState &robot_state) {
       franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
       RobotPose robot_pose(initial_cartesian_pose);
       ref_frame_ = Affine();
@@ -52,7 +52,7 @@ namespace franky {
         setNewWaypoint(robot_state, *waypoint_iterator_);
     }
 
-    franka::CartesianPose next_command(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+    franka::CartesianPose nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
       const int steps = std::max<int>(time_step.toMSec(), 1);
       for (int i = 0; i < steps; i++) {
         result_ = trajectory_generator_.update(input_para_, output_para_);
