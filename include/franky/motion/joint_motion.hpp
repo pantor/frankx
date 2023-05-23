@@ -50,10 +50,10 @@ namespace franky {
       input_para.target_acceleration = toStd<7>(Vector7d::Zero());
 
       for (size_t dof = 0; dof < 7; dof++) {
-        input_para.max_velocity[dof] = Robot::max_joint_velocity[dof] * robot()->velocity_rel * params_.velocity_rel;
+        input_para.max_velocity[dof] = Robot::max_joint_velocity[dof] * robot()->velocity_rel() * params_.velocity_rel;
         input_para.max_acceleration[dof] =
-            0.3 * Robot::max_joint_acceleration[dof] * robot()->acceleration_rel * params_.acceleration_rel;
-        input_para.max_jerk[dof] = 0.3 * Robot::max_joint_jerk[dof] * robot()->jerk_rel * params_.jerk_rel;
+            0.3 * Robot::max_joint_acceleration[dof] * robot()->acceleration_rel() * params_.acceleration_rel;
+        input_para.max_jerk[dof] = 0.3 * Robot::max_joint_jerk[dof] * robot()->jerk_rel() * params_.jerk_rel;
       }
     }
 

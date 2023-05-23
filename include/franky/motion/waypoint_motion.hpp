@@ -52,7 +52,8 @@ namespace franky {
         setNewWaypoint(robot_state, *waypoint_iterator_);
     }
 
-    franka::CartesianPose nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+    franka::CartesianPose
+    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
       const int steps = std::max<int>(time_step.toMSec(), 1);
       for (int i = 0; i < steps; i++) {
         result_ = trajectory_generator_.update(input_para_, output_para_);
@@ -159,7 +160,7 @@ namespace franky {
     getInputLimits(const Waypoint &waypoint) const {
       constexpr double translation_factor{0.4};
       constexpr double derivative_factor{0.4};
-      const Robot* robot = this->robot();
+      const Robot *robot = this->robot();
 
       if (waypoint.max_dynamics || params_.max_dynamics) {
         auto max_velocity = vec_cart_rot_elbow(
@@ -181,22 +182,22 @@ namespace franky {
       }
 
       auto max_velocity = vec_cart_rot_elbow(
-          translation_factor * waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel *
+          translation_factor * waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() *
           robot->max_translation_velocity,
-          waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel * robot->max_rotation_velocity,
-          waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel * robot->max_elbow_velocity
+          waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * robot->max_rotation_velocity,
+          waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * robot->max_elbow_velocity
       );
       auto max_acceleration = vec_cart_rot_elbow(
-          translation_factor * derivative_factor * params_.acceleration_rel * robot->acceleration_rel *
+          translation_factor * derivative_factor * params_.acceleration_rel * robot->acceleration_rel() *
           robot->max_translation_acceleration,
-          derivative_factor * params_.acceleration_rel * robot->acceleration_rel * robot->max_rotation_acceleration,
-          derivative_factor * params_.acceleration_rel * robot->acceleration_rel * robot->max_elbow_acceleration
+          derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * robot->max_rotation_acceleration,
+          derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * robot->max_elbow_acceleration
       );
       auto max_jerk = vec_cart_rot_elbow(
-          translation_factor * std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel *
+          translation_factor * std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() *
           robot->max_translation_jerk,
-          std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel * robot->max_rotation_jerk,
-          std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel * robot->max_elbow_jerk
+          std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * robot->max_rotation_jerk,
+          std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * robot->max_elbow_jerk
       );
       return {max_velocity, max_acceleration, max_jerk};
     }

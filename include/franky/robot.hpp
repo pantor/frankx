@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef WITH_PYTHON
-
-#include <Python.h>
-
-#endif
-
 #include <franka/control_types.h>
 #include <franka/duration.h>
 #include <franka/exception.h>
@@ -16,11 +10,23 @@
 #include "franky/types.hpp"
 #include "franky/robot_pose.hpp"
 #include "franky/kinematics.hpp"
+#include "franky/motion/motion_generator.hpp"
+#include "franky/scope_guard.hpp"
 
 
 namespace franky {
 
   class Robot : public franka::Robot {
+  public:
+    struct Params {
+      double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
+
+      // kCartesianImpedance wobbles -> setK?
+      franka::ControllerMode controller_mode_{franka::ControllerMode::kJointImpedance};
+
+      franka::RealtimeConfig realtime_config{franka::RealtimeConfig::kEnforce};
+    };
+
     // Modified DH-parameters: alpha, d, a
     const KinematicChain<7> kinematics = KinematicChain<7>(
         {{
@@ -36,10 +42,6 @@ namespace franky {
             Euler(M_PI / 4, 0, M_PI),
             Eigen::Matrix<double, 3, 1>::Ones())
     );
-
-  public:
-    //! The robot's hostname / IP address
-    std::string fci_ip;
 
     // Cartesian constraints
     static constexpr double max_translation_velocity{1.7}; // [m/s]
@@ -63,61 +65,78 @@ namespace franky {
     static constexpr size_t degrees_of_freedoms{7};
     static constexpr double control_rate{0.001}; // [s]
 
-    double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
-
-    franka::ControllerMode controller_mode{
-        franka::ControllerMode::kJointImpedance};  // kCartesianImpedance wobbles -> setK?
-
-    //! Whether the robots try to continue an interrupted motion due to a libfranka position/velocity/acceleration discontinuity with reduced dynamics.
-    bool repeat_on_error{true};
-
-    //! Whether the robot stops if a python error signal is detected.
-    bool stop_at_python_signal{true};
-
     //! Connects to a robot at the given FCI IP address.
-    explicit Robot(std::string fci_ip, double dynamic_rel = 1.0, bool repeat_on_error = true,
-                   bool stop_at_python_signal = true,
-                   franka::RealtimeConfig realtime_config = franka::RealtimeConfig::kEnforce);
+    explicit Robot(const std::string &fci_ip);
 
-    void setDefaultBehavior();
+    explicit Robot(const std::string &fci_ip, const Params &params);
 
     void setDynamicRel(double dynamic_rel);
+
+    void setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel);
 
     bool hasErrors();
 
     bool recoverFromErrors();
 
-    Affine currentPose(const bool &read_once = true);
+    Affine currentPose();
 
-    std::array<double, 7> currentJointPositions(const bool &read_once = true);
+    Vector7d currentJointPositions();
 
-    Affine forwardKinematics(const std::array<double, 7> &q);
+    franka::RobotState state();
 
-    std::array<double, 7> inverseKinematics(const Affine &target, const std::array<double, 7> &q0);
+    inline double velocity_rel() const {
+      return params_.velocity_rel;
+    }
 
-    ::franka::RobotState *asynchronous_state_ptr;
+    inline double acceleration_rel() const {
+      return params_.acceleration_rel;
+    }
 
-    ::franka::RobotState get_state(const bool &read_once = true);
+    inline double jerk_rel() const {
+      return params_.jerk_rel;
+    }
 
-    bool move(ImpedanceMotion &motion);
+    template<typename ControlSignalType>
+    void move(const std::shared_ptr<Motion<ControlSignalType>> &motion) {
+      moveInternal<ControlSignalType>(motion, [this](const ControlFunc<ControlSignalType> &m) {
+        control(m, params_.controller_mode_);
+      });
+    }
 
-    bool move(ImpedanceMotion &motion, MotionData &data);
+    static Affine forwardKinematics(const Vector7d &q);
 
-    bool move(const Affine &frame, ImpedanceMotion &motion);
+    static Vector7d inverseKinematics(const Affine &target, const Vector7d &q0);
 
-    bool move(const Affine &frame, ImpedanceMotion &motion, MotionData &data);
+  private:
+    template<typename ControlSignalType>
+    using ControlFunc = std::function<ControlSignalType(const franka::RobotState &, franka::Duration)>;
 
-    bool move(JointMotion motion);
+    //! The robot's hostname / IP address
+    std::string fci_ip_;
+    Params params_;
+    franka::RobotState current_state_;
+    bool is_in_control_;
+    std::mutex state_mutex_;
 
-    bool move(JointMotion motion, MotionData &data);
-
-    bool move(WaypointMotion &motion);
-
-    bool move(WaypointMotion &motion, MotionData &data);
-
-    bool move(const Affine &frame, WaypointMotion &motion);
-
-    bool move(const Affine &frame, WaypointMotion &motion, MotionData &data);
+    template<typename ControlSignalType>
+    void moveInternal(
+        const std::shared_ptr<Motion<ControlSignalType>> &motion,
+        const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func) {
+      std::lock_guard<std::mutex> lock(state_mutex_);
+      if (is_in_control_) {
+        throw std::runtime_error("Robot is already in control.");
+      }
+      scope_guard is_in_control_guard([this]() { this->is_in_control_ = false; });
+      is_in_control_ = true;
+      MotionGenerator<ControlSignalType> motion_generator(this, motion);
+      motion_generator.registerUpdateCallback(
+          [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
+            std::lock_guard<std::mutex> lock(this->state_mutex_);
+            current_state_ = robot_state;
+          });
+      control_func(
+          [&motion_generator](const franka::RobotState &rs, franka::Duration d) { return motion_generator(rs, d); });
+    }
   };
 
 } // namespace franky
