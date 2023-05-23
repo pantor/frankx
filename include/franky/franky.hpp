@@ -1,14 +1,25 @@
 #pragma once
 
-#include <franky/types.hpp>
-#include <franky/robot_pose.hpp>
-#include <franky/robot/measure.hpp>
-#include <franky/robot/motion_data.hpp>
-#include <franky/robot/reaction.hpp>
-#include <franky/motion/motion_impedance.hpp>
-#include <franky/motion/motion_joint.hpp>
-#include <franky/motion/motion_path.hpp>
-#include <franky/motion/waypoint_motion.hpp>
+#include "franky/motion/impedance_motion.hpp"
+#include "franky/motion/joint_motion.hpp"
+#include "franky/motion/measure.hpp"
+#include "franky/motion/motion.hpp"
+#include "franky/motion/reaction.hpp"
+#include "franky/motion/waypoint_motion.hpp"
 
-#include <franky/gripper.hpp>
-#include <franky/robot.hpp>
+#include "franky/path/aggregated_path.hpp"
+#include "franky/path/linear_path.hpp"
+#include "franky/path/path.hpp"
+#include "franky/path/quartic_blend_path.hpp"
+#include "franky/path/time_parametrization.hpp"
+#include "franky/path/trajectory.hpp"
+#include "franky/path/way_point_path.hpp"
+
+#include "franky/gripper.hpp"
+#include "franky/kinematics.hpp"
+#include "franky/motion_generator.hpp"
+#include "franky/robot.hpp"
+#include "franky/robot_pose.hpp"
+#include "franky/types.hpp"
+#include "franky/util.hpp"
+#include "franky/waypoint.hpp"

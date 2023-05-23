@@ -2,7 +2,7 @@
 
 #include <mutex>
 
-#include "franky/robot/reaction.hpp"
+#include "reaction.hpp"
 #include "franky/robot.hpp"
 
 namespace franky {

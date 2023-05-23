@@ -7,7 +7,7 @@
 #include <optional>
 #include <franka/robot_state.h>
 
-#include "franky/robot/measure.hpp"
+#include "measure.hpp"
 #include "franky/motion/motion.hpp"
 
 
