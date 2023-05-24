@@ -13,7 +13,7 @@ namespace franky {
   public:
     explicit Measure(MeasureFunc measure_func);
 
-    Measure(double constant);
+    explicit Measure(double constant);
 
     inline double operator()(const franka::RobotState &robot_state, double time) const {
       return measure_func_(robot_state, time);

@@ -1,10 +1,12 @@
 #include "franky/motion/condition.hpp"
 
 #include <franka/robot_state.h>
+
+#include <utility>
 #include "franky/motion/measure.hpp"
 
 namespace franky {
-  Condition::Condition(Condition::CheckFunc callback) : check_func_(callback) {}
+  Condition::Condition(Condition::CheckFunc callback) : check_func_(std::move(callback)) {}
 
   Condition operator&&(const Condition &c1, const Condition &c2) {
     return Condition([c1, c2](const franka::RobotState &robot_state, double time) {

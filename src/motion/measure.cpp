@@ -1,12 +1,14 @@
 #include "franky/motion/measure.hpp"
 
 #include <cmath>
+#include <utility>
 #include <franka/robot_state.h>
 
 namespace franky {
-  Measure::Measure(Measure::MeasureFunc measure_func) : measure_func_(measure_func) {}
+  Measure::Measure(Measure::MeasureFunc measure_func) : measure_func_(std::move(measure_func)) {}
 
-  Measure::Measure(double constant) : measure_func_([constant](const franka::RobotState &robot_state, double time) {
+  Measure::Measure(double constant)
+      : measure_func_([constant](const franka::RobotState &robot_state, double time) {
     return constant;
   }) {}
 

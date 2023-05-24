@@ -12,8 +12,8 @@ namespace franky {
   LinearImpedanceMotion::LinearImpedanceMotion(const Affine &target, double duration)
       : LinearImpedanceMotion(target, duration, Params()) {}
 
-  LinearImpedanceMotion::LinearImpedanceMotion(const Affine &target, double duration,
-                                               const LinearImpedanceMotion::Params &params)
+  LinearImpedanceMotion::LinearImpedanceMotion(
+      const Affine &target, double duration, const LinearImpedanceMotion::Params &params)
       : duration_(duration), params_(params), ImpedanceMotion(target, params) {}
 
   void LinearImpedanceMotion::initImpl(const franka::RobotState &robot_state, double time) {

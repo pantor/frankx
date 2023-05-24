@@ -23,7 +23,7 @@ namespace franky {
 
     explicit JointMotion(const Vector7d &target);
 
-    explicit JointMotion(const Vector7d &target, const Params &params);
+    explicit JointMotion(Vector7d target, const Params &params);
 
   protected:
     void initImpl(const franka::RobotState &robot_state, double time) override;
@@ -41,7 +41,7 @@ namespace franky {
 
     ruckig::Result result;
 
-    std::array<double, 7> joint_positions;
+    std::array<double, 7> joint_positions{};
 
     constexpr static size_t cooldown_iterations_{5};
     size_t current_cooldown_iteration_{0};

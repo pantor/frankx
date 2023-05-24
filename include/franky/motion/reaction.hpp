@@ -20,9 +20,9 @@ namespace franky {
     using MotionFunc = std::function<std::shared_ptr<Motion<ControlSignalType>>(const franka::RobotState &, double)>;
 
   public:
-    explicit Reaction(const Condition &condition, const std::shared_ptr<Motion<ControlSignalType>> new_motion);
+    explicit Reaction(const Condition &condition, std::shared_ptr<Motion<ControlSignalType>> new_motion);
 
-    explicit Reaction(const Condition &condition, const MotionFunc &motion_func);
+    explicit Reaction(Condition condition, const MotionFunc &motion_func);
 
     inline std::shared_ptr<Motion<ControlSignalType>> operator()(const franka::RobotState &robot_state, double time) {
       return motion_func_(robot_state, time);

@@ -2,6 +2,7 @@
 
 #include <Eigen/Core>
 #include <ruckig/ruckig.hpp>
+#include <utility>
 #include <franka/robot_state.h>
 #include <franka/control_types.h>
 
@@ -12,7 +13,7 @@
 namespace franky {
   JointMotion::JointMotion(const Vector7d &target) : JointMotion(target, Params()) {}
 
-  JointMotion::JointMotion(const Vector7d &target, const JointMotion::Params &params) : target_(target), params_(params) {}
+  JointMotion::JointMotion(Vector7d target, const JointMotion::Params &params) : target_(std::move(target)), params_(params) {}
 
   void JointMotion::initImpl(const franka::RobotState &robot_state, double time) {
     current_cooldown_iteration_ = 0;
@@ -35,8 +36,8 @@ namespace franky {
 
   franka::JointPositions
   JointMotion::nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-    const int steps = std::max<int>(time_step.toMSec(), 1);
-    for (int i = 0; i < steps; i++) {
+    const uint64_t steps = std::max<uint64_t>(time_step.toMSec(), 1);
+    for (size_t i = 0; i < steps; i++) {
       result = trajectory_generator_.update(input_para, output_para);
       joint_positions = output_para.new_position;
       if (result == ruckig::Result::Finished) {
@@ -56,7 +57,7 @@ namespace franky {
       }
       output_para.pass_to_input(input_para);
     }
-    return franka::JointPositions(joint_positions);
+    return {joint_positions};
   }
 
 } // namespace franky

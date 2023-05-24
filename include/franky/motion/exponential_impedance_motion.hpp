@@ -19,7 +19,7 @@ namespace franky {
 
     explicit ExponentialImpedanceMotion(const Affine &target);
 
-    explicit ExponentialImpedanceMotion(const Affine &target, Params params);
+    explicit ExponentialImpedanceMotion(const Affine &target, const Params& params);
 
   protected:
     std::tuple<Affine, bool>

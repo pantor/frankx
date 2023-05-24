@@ -14,7 +14,7 @@ namespace franky {
   public:
     using CheckFunc = std::function<bool(const franka::RobotState &, double)>;
 
-    Condition(CheckFunc callback);
+    explicit Condition(CheckFunc callback);
 
     //! Check if the condition is fulfilled
     inline bool operator()(const franka::RobotState &robot_state, double time) const {

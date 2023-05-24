@@ -31,7 +31,7 @@ namespace franky {
     /// \param frame
     /// \param translational_stiffness  in [10, 3000] N/m
     /// \param rotational_stiffness     in [1, 300] Nm/rad
-    explicit ImpedanceMotion(const Affine &target, const Params &params);
+    explicit ImpedanceMotion(Affine target, const Params &params);
 
   protected:
     void initImpl(const franka::RobotState &robot_state, double time) override;
@@ -39,11 +39,11 @@ namespace franky {
     franka::Torques
     nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;
 
-    inline Affine intermediate_target() const {
+    [[nodiscard]] inline Affine intermediate_target() const {
       return intermediate_target_;
     }
 
-    inline Affine target() const {
+    [[nodiscard]] inline Affine target() const {
       return absolute_target_;
     }
 

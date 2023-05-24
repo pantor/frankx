@@ -16,7 +16,7 @@ namespace franky {
   public:
     explicit Motion();
 
-    void addReaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction);
+    void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
     std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
@@ -31,7 +31,7 @@ namespace franky {
     virtual ControlSignalType
     nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
 
-    inline Robot *robot() const {
+    [[nodiscard]] inline Robot *robot() const {
       return robot_;
     }
 

@@ -1,6 +1,7 @@
 #include "franky/motion/waypoint_motion.hpp"
 
 #include <ruckig/ruckig.hpp>
+#include <utility>
 
 
 #include "franky/robot_pose.hpp"
@@ -11,10 +12,10 @@
 
 namespace franky {
   WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints)
-      : WaypointMotion(waypoints, Params()) {}
+      : WaypointMotion(std::move(waypoints), Params()) {}
 
-  WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints, const WaypointMotion::Params &params)
-      : waypoints_(waypoints), params_(params) {}
+  WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints, WaypointMotion::Params params)
+      : waypoints_(std::move(waypoints)), params_(std::move(params)) {}
 
   void WaypointMotion::initImpl(const franka::RobotState &robot_state, double time) {
     franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
@@ -38,11 +39,11 @@ namespace franky {
 
   franka::CartesianPose
   WaypointMotion::nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-    const int steps = std::max<int>(time_step.toMSec(), 1);
-    for (int i = 0; i < steps; i++) {
-      result_ = trajectory_generator_.update(input_para_, output_para_);
+    const uint64_t steps = std::max<uint64_t>(time_step.toMSec(), 1);
+    for (size_t i = 0; i < steps; i++) {
+      auto result = trajectory_generator_.update(input_para_, output_para_);
 
-      if (result_ == ruckig::Result::Finished) {
+      if (result == ruckig::Result::Finished) {
         bool has_new_waypoint = false;
 
         if (waypoint_iterator_ != waypoints_.end()) {
@@ -66,7 +67,7 @@ namespace franky {
           setNewWaypoint(robot_state, *waypoint_iterator_);
         }
 
-      } else if (result_ == ruckig::Result::Error) {
+      } else if (result == ruckig::Result::Error) {
         throw std::runtime_error("Invalid inputs to motion planner.");
       }
       output_para_.pass_to_input(input_para_);
@@ -122,40 +123,40 @@ namespace franky {
 
     if (waypoint.max_dynamics || params_.max_dynamics) {
       auto max_velocity = vec_cart_rot_elbow(
-          0.8 * translation_factor * robot->max_translation_velocity,
-          0.8 * robot->max_rotation_velocity,
-          0.8 * robot->max_elbow_velocity
+          0.8 * translation_factor * Robot::max_translation_velocity,
+          0.8 * Robot::max_rotation_velocity,
+          0.8 * Robot::max_elbow_velocity
       );
       auto max_acceleration = vec_cart_rot_elbow(
-          0.8 * translation_factor * derivative_factor * robot->max_translation_acceleration,
-          0.8 * derivative_factor * robot->max_rotation_acceleration,
-          0.8 * derivative_factor * robot->max_elbow_acceleration
+          0.8 * translation_factor * derivative_factor * Robot::max_translation_acceleration,
+          0.8 * derivative_factor * Robot::max_rotation_acceleration,
+          0.8 * derivative_factor * Robot::max_elbow_acceleration
       );
       auto max_jerk = vec_cart_rot_elbow(
-          0.8 * translation_factor * std::pow(derivative_factor, 2) * robot->max_translation_jerk,
-          0.8 * std::pow(derivative_factor, 2) * robot->max_rotation_jerk,
-          0.8 * std::pow(derivative_factor, 2) * robot->max_elbow_jerk
+          0.8 * translation_factor * std::pow(derivative_factor, 2) * Robot::max_translation_jerk,
+          0.8 * std::pow(derivative_factor, 2) * Robot::max_rotation_jerk,
+          0.8 * std::pow(derivative_factor, 2) * Robot::max_elbow_jerk
       );
       return {max_velocity, max_acceleration, max_jerk};
     }
 
     auto max_velocity = vec_cart_rot_elbow(
         translation_factor * waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() *
-        robot->max_translation_velocity,
-        waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * robot->max_rotation_velocity,
-        waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * robot->max_elbow_velocity
+        Robot::max_translation_velocity,
+        waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * Robot::max_rotation_velocity,
+        waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * Robot::max_elbow_velocity
     );
     auto max_acceleration = vec_cart_rot_elbow(
         translation_factor * derivative_factor * params_.acceleration_rel * robot->acceleration_rel() *
-        robot->max_translation_acceleration,
-        derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * robot->max_rotation_acceleration,
-        derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * robot->max_elbow_acceleration
+        Robot::max_translation_acceleration,
+        derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * Robot::max_rotation_acceleration,
+        derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * Robot::max_elbow_acceleration
     );
     auto max_jerk = vec_cart_rot_elbow(
         translation_factor * std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() *
-        robot->max_translation_jerk,
-        std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * robot->max_rotation_jerk,
-        std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * robot->max_elbow_jerk
+        Robot::max_translation_jerk,
+        std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * Robot::max_rotation_jerk,
+        std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * Robot::max_elbow_jerk
     );
     return {max_velocity, max_acceleration, max_jerk};
   }

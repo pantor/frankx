@@ -4,6 +4,7 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include <utility>
 #include <franka/robot_state.h>
 
 #include "franky/motion/motion.hpp"
@@ -23,6 +24,6 @@ namespace franky {
       : Reaction(condition, [new_motion](const franka::RobotState &, double) { return new_motion; }) {}
 
   template<typename ControlSignalType>
-  Reaction<ControlSignalType>::Reaction(const Condition &condition, const Reaction::MotionFunc &motion_func)
-      : condition_(condition), motion_func_(motion_func) {}
+  Reaction<ControlSignalType>::Reaction(Condition condition, const Reaction::MotionFunc &motion_func)
+      : condition_(std::move(condition)), motion_func_(motion_func) {}
 } // namespace franky

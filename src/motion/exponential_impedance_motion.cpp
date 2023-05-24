@@ -12,8 +12,8 @@ namespace franky {
   ExponentialImpedanceMotion::ExponentialImpedanceMotion(const Affine &target)
       : ExponentialImpedanceMotion(target, Params()) {}
 
-  ExponentialImpedanceMotion::ExponentialImpedanceMotion(const Affine &target,
-                                                         ExponentialImpedanceMotion::Params params)
+  ExponentialImpedanceMotion::ExponentialImpedanceMotion(
+      const Affine &target, const ExponentialImpedanceMotion::Params& params)
       : params_(params), ImpedanceMotion(target, params) {}
 
   std::tuple<Affine, bool>

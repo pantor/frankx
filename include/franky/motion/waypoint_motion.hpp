@@ -29,7 +29,7 @@ namespace franky {
 
     explicit WaypointMotion(std::vector<Waypoint> waypoints);
 
-    explicit WaypointMotion(std::vector<Waypoint> waypoints, const Params &params);
+    explicit WaypointMotion(std::vector<Waypoint> waypoints, Params params);
 
   protected:
     void initImpl(const franka::RobotState &robot_state, double time) override;
@@ -49,7 +49,6 @@ namespace franky {
     ruckig::Ruckig<7> trajectory_generator_{Robot::control_rate};
     ruckig::InputParameter<7> input_para_;
     ruckig::OutputParameter<7> output_para_;
-    ruckig::Result result_;
 
     std::vector<Waypoint>::iterator waypoint_iterator_;
     bool waypoint_has_elbow_{false};
@@ -63,7 +62,7 @@ namespace franky {
       return {cart, cart, cart, rot, rot, rot, elbow};
     }
 
-    std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>>
+    [[nodiscard]] std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>>
     getInputLimits(const Waypoint &waypoint) const;
 
     void setInputLimits(ruckig::InputParameter<7> &input_parameters, const Waypoint &waypoint) const;
