@@ -18,7 +18,7 @@ class Gripper: public franka::Gripper {
     * Save clamp width and compare it in the is_grasping method. If it's smaller,
     * the gripper moves and the object is missing.
     */
-    double last_clamp_width; // [m]
+    double last_clamp_width{}; // [m]
 
 public:
     static constexpr double max_speed {0.1}; // [m/s]
@@ -32,11 +32,11 @@ public:
 
     const double max_width {0.081 + width_calibration}; // [m]
 
-    double width() const;
-    bool isGrasping() const;
+    [[nodiscard]] double width() const;
+    [[nodiscard]] bool isGrasping() const;
 
     bool move(double width); // [m]
-    bool move_unsafe(double width); // [m]
+    bool moveUnsafe(double width); // [m]
     std::future<bool> moveAsync(double width); // [m]
 
     bool open();
@@ -46,7 +46,6 @@ public:
     bool release();
     bool release(double width); // [m]
     bool releaseRelative(double width); // [m]
-    
     
     ::franka::GripperState get_state();
 };
