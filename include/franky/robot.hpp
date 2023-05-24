@@ -153,12 +153,13 @@ namespace franky {
     void moveInternal(
         const std::shared_ptr<Motion<ControlSignalType>> &motion,
         const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func) {
-      std::lock_guard<std::mutex> lock(state_mutex_);
+      std::unique_lock<std::mutex> lock(state_mutex_);
       if (is_in_control_) {
         throw std::runtime_error("Robot is already in control.");
       }
       scope_guard is_in_control_guard([this]() { this->is_in_control_ = false; });
       is_in_control_ = true;
+      lock.unlock();
       MotionGenerator<ControlSignalType> motion_generator(this, motion);
       motion_generator.registerUpdateCallback(
           [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
