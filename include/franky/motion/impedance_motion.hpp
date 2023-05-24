@@ -42,7 +42,7 @@ namespace franky {
     }
 
   protected:
-    void initImpl(const franka::RobotState &robot_state, double time) {
+    void initImpl(const franka::RobotState &robot_state, double time) override {
       auto robot_pose = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
       intermediate_target_ = robot_pose;
       if (params_.target_type == TargetType::Relative)
@@ -53,7 +53,7 @@ namespace franky {
     }
 
     franka::Torques
-    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override {
       std::array<double, 7> coriolis_array = model_->coriolis(robot_state);
       std::array<double, 42> jacobian_array = model_->zeroJacobian(franka::Frame::kEndEffector, robot_state);
 
@@ -98,7 +98,6 @@ namespace franky {
       return output;
     }
 
-  protected:
     Affine intermediate_target() const {
       return intermediate_target_;
     }

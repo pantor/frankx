@@ -23,22 +23,8 @@ namespace franky {
 
     explicit JointMotion(const Vector7d &target, const Params &params) : target_(target), params_(params) {}
 
-  private:
-    Vector7d target_;
-    Params params_;
-
-    ruckig::Ruckig<7> trajectory_generator_{Robot::control_rate};
-    ruckig::InputParameter<7> input_para;
-    ruckig::OutputParameter<7> output_para;
-
-    ruckig::Result result;
-
-    std::array<double, 7> joint_positions;
-
-    constexpr static size_t cooldown_iterations_{5};
-    size_t current_cooldown_iteration_{0};
-
-    void initImpl(const franka::RobotState &robot_state, double time) {
+  protected:
+    void initImpl(const franka::RobotState &robot_state, double time) override {
       current_cooldown_iteration_ = 0;
 
       input_para.current_position = robot_state.q_d;
@@ -58,7 +44,7 @@ namespace franky {
     }
 
     franka::JointPositions
-    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override {
       const int steps = std::max<int>(time_step.toMSec(), 1);
       for (int i = 0; i < steps; i++) {
         result = trajectory_generator_.update(input_para, output_para);
@@ -82,6 +68,21 @@ namespace franky {
       }
       return franka::JointPositions(joint_positions);
     }
+
+  private:
+    Vector7d target_;
+    Params params_;
+
+    ruckig::Ruckig<7> trajectory_generator_{Robot::control_rate};
+    ruckig::InputParameter<7> input_para;
+    ruckig::OutputParameter<7> output_para;
+
+    ruckig::Result result;
+
+    std::array<double, 7> joint_positions;
+
+    constexpr static size_t cooldown_iterations_{5};
+    size_t current_cooldown_iteration_{0};
   };
 
 } // namespace franky

@@ -39,7 +39,7 @@ namespace franky {
     };
 
   protected:
-    void initImpl(const franka::RobotState &robot_state, double time) {}
+    virtual void initImpl(const franka::RobotState &robot_state, double time) {}
 
     virtual ControlSignalType
     nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
