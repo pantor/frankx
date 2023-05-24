@@ -28,11 +28,11 @@ namespace franky {
       }
     }
 
-    double length() const {
+    double length() const override {
       return cumulative_lengths_.back();
     }
 
-    Vector max_ddq() const {
+    Vector max_ddq() const override {
       Vector result;
       for (size_t i = 0; i < state_dimensions; i++) {
         auto max_ptr = *std::max_element(
@@ -45,7 +45,7 @@ namespace franky {
       return result;
     }
 
-    Vector max_dddq() const {
+    Vector max_dddq() const override {
       Vector result;
       for (size_t i = 0; i < state_dimensions; i++) {
         auto max_ptr = *std::max_element(
@@ -58,7 +58,7 @@ namespace franky {
       return result;
     }
 
-    PathStep<state_dimensions> operator()(double s) const {
+    PathStep<state_dimensions> operator()(double s) const override {
       size_t index = get_index(s);
       double s_local = (index == 0) ? s : s - cumulative_lengths_[index - 1];
       return (*segments_[index])(s_local);

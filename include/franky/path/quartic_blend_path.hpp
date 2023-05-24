@@ -30,7 +30,7 @@ namespace franky {
       f_ = lb.array() + lm.array() * (-s_abs_min + s_mid);
     }
 
-    PathStep<state_dimensions> operator()(double s) const {
+    PathStep<state_dimensions> operator()(double s) const override {
       return {
           f_ + s * (e_ + s * (s * (c_ + s * b_))),
           e_ + s * (s * (3 * c_ + s * 4 * b_)),
@@ -39,15 +39,15 @@ namespace franky {
       };
     }
 
-    virtual double length() const {
+    virtual double length() const override {
       return length_;
     }
 
-    virtual Vector max_ddq() const {
+    virtual Vector max_ddq() const override {
       return (-3 * (lm_ - rm_)) / (4. * this->length() / 2);
     }
 
-    virtual Vector max_dddq() const {
+    virtual Vector max_dddq() const override {
       return (3 * (lm_ - rm_)) / (2. * std::pow(this->length() / 2, 2));
     }
 

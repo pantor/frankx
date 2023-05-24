@@ -17,7 +17,7 @@ namespace franky {
 
     explicit LinearPath(const Vector &start, const Vector &end) : start(start), end(end) {}
 
-    PathStep<state_dimensions> operator()(double s) const {
+    PathStep<state_dimensions> operator()(double s) const override {
       return {
           start + s / this->length() * (end - start),
           (end - start) / this->length(),
@@ -26,15 +26,15 @@ namespace franky {
       };
     }
 
-    virtual double length() const {
+    double length() const override {
       return (end - start).norm();
     }
 
-    virtual Vector max_ddq() const {
+    Vector max_ddq() const override {
       return Vector::Zero();
     }
 
-    virtual Vector max_dddq() const {
+    Vector max_dddq() const override {
       return Vector::Zero();
     }
 
