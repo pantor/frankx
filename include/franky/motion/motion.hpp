@@ -40,4 +40,4 @@ namespace franky {
     std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
     Robot *robot_;
   };
-} // namespace franky
+}  // namespace franky

@@ -46,4 +46,4 @@ namespace franky {
     constexpr static size_t cooldown_iterations_{5};
     size_t current_cooldown_iteration_{0};
   };
-} // namespace franky
+}  // namespace franky

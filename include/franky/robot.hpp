@@ -173,4 +173,4 @@ namespace franky {
           [&motion_generator](const franka::RobotState &rs, franka::Duration d) { return motion_generator(rs, d); });
     }
   };
-} // namespace franky
+}  // namespace franky

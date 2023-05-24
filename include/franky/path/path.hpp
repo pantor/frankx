@@ -24,4 +24,4 @@ namespace franky {
 
     virtual PathStep<state_dimensions> operator()(double s) const = 0;
   };
-} // namespace franky
+}  // namespace franky

@@ -19,4 +19,4 @@ namespace franky {
     //! The trajectory state for each consecutive time step (with delta_time difference of the time parametrization)
     std::vector<TrajectoryState> states;
   };
-} // namespace franky
+}  // namespace franky

@@ -60,4 +60,4 @@ namespace franky {
     return {joint_positions};
   }
 
-} // namespace franky
+}  // namespace franky

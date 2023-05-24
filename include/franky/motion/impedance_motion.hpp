@@ -60,4 +60,4 @@ namespace franky {
 
     std::unique_ptr<franka::Model> model_;
   };
-} // namespace franky
+}  // namespace franky

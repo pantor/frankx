@@ -51,4 +51,4 @@ namespace franky {
     }
     return current_motion_->nextCommand(robot_state, period, time_);
   }
-} // namespace franky
+}  // namespace franky

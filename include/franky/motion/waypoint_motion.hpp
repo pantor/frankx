@@ -67,4 +67,4 @@ namespace franky {
 
     void setInputLimits(ruckig::InputParameter<7> &input_parameters, const Waypoint &waypoint) const;
   };
-} // namespace franky
+}  // namespace franky

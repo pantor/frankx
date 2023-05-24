@@ -36,4 +36,4 @@ namespace franky {
     MotionFunc motion_func_;
     Condition condition_;
   };
-} // namespace franky
+}  // namespace franky

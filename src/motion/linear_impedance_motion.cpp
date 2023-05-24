@@ -41,4 +41,4 @@ namespace franky {
     }
     return {intermediate_goal, done};
   }
-} // namespace franky
+}  // namespace franky

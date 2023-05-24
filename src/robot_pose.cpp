@@ -47,4 +47,4 @@ namespace franky {
   }
 
   RobotPose::RobotPose() : end_effector_pose_(Eigen::Affine3d::Identity()), elbow_position_(std::nullopt) {}
-} // namespace franky
+}  // namespace franky

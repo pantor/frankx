@@ -49,4 +49,4 @@ namespace franky {
   private:
     Vector start_, end_;
   };
-} // namespace franky
+}  // namespace franky

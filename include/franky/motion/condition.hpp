@@ -24,4 +24,4 @@ namespace franky {
   private:
     CheckFunc check_func_;
   };
-} // namespace franky
+}  // namespace franky

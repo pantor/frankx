@@ -48,4 +48,4 @@ namespace franky {
       return time;
     });
   }
-} // namespace franky
+}  // namespace franky

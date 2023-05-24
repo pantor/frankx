@@ -109,4 +109,4 @@ namespace franky {
       return trajectory;
     }
   };
-} // namespace franky
+}  // namespace franky

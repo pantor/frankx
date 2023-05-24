@@ -175,4 +175,4 @@ namespace franky {
       input_parameters.synchronization = ruckig::Synchronization::Time;
     }
   }
-} // namespace franky
+}  // namespace franky

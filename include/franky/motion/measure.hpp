@@ -34,4 +34,4 @@ namespace franky {
   private:
     MeasureFunc measure_func_;
   };
-} // namespace franky
+}  // namespace franky

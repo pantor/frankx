@@ -28,4 +28,4 @@ namespace franky {
   private:
     Params params_;
   };
-} // namespace franky
+}  // namespace franky

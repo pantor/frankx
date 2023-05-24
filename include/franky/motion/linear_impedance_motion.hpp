@@ -33,4 +33,4 @@ namespace franky {
     double duration_;
     Params params_;
   };
-} // namespace franky
+}  // namespace franky

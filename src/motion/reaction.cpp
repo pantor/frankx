@@ -26,4 +26,4 @@ namespace franky {
   template<typename ControlSignalType>
   Reaction<ControlSignalType>::Reaction(Condition condition, const Reaction::MotionFunc &motion_func)
       : condition_(std::move(condition)), motion_func_(motion_func) {}
-} // namespace franky
+}  // namespace franky

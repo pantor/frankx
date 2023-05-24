@@ -81,4 +81,4 @@ namespace franky {
 
   AggregatedPath<7>
   mk_path_from_waypoints(const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos = 0.0);
-} // namespace franky
+}  // namespace franky

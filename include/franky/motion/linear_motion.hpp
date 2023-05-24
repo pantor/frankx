@@ -14,4 +14,4 @@ namespace franky {
   public:
     explicit LinearMotion(const RobotPose &target, bool relative = false, double velocity_rel = 1.0);
   };
-} // namespace franky
+}  // namespace franky

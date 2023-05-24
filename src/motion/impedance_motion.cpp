@@ -76,4 +76,4 @@ namespace franky {
 
     return output;
   }
-} // namespace franky
+}  // namespace franky

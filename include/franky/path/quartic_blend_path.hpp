@@ -56,4 +56,4 @@ namespace franky {
     Vector7d b_, c_, e_, f_;
     const Vector7d lb_, lm_, rm_;
   };
-} // namespace franky
+}  // namespace franky

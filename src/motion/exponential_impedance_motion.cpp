@@ -24,4 +24,4 @@ namespace franky {
         params_.exponential_decay, Eigen::Quaterniond(target().rotation()));
     return {Affine().fromPositionOrientationScale(trans, rot, Eigen::Vector3d::Ones()), false};
   }
-} // namespace franky
+}  // namespace franky

@@ -74,4 +74,4 @@ namespace franky {
     }
     return current_state_;
   }
-} // namepace franky
+}  // namespace franky

@@ -56,4 +56,4 @@ namespace franky {
     segments.emplace_back(line_segments.back());
     return AggregatedPath<7>(segments);
   }
-} // namespace franky
+}  // namespace franky

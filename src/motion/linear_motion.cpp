@@ -20,4 +20,4 @@ namespace franky {
               .velocity_rel = velocity_rel
           }
       }} {}
-} // namespace franky
+}  // namespace franky

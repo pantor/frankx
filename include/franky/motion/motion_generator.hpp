@@ -37,4 +37,4 @@ namespace franky {
     double time_{0.0};
     Robot *robot_;
   };
-} // namespace franky
+}  // namespace franky

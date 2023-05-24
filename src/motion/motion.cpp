@@ -41,4 +41,4 @@ namespace franky {
     std::lock_guard<std::mutex> lock(mutex_);
     return nextCommandImpl(robot_state, time_step, time);
   }
-} // namespace franky
+}  // namespace franky

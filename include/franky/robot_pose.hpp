@@ -58,4 +58,4 @@ namespace franky {
   inline RobotPose operator*(const Affine &left_transform, const RobotPose &robot_pose) {
     return robot_pose.left_transform(left_transform);
   }
-} // namespace franky
+}  // namespace franky

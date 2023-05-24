@@ -61,4 +61,4 @@ namespace franky {
       return m1(robot_state, time) > m2(robot_state, time);
     });
   }
-} // namespace franky
+}  // namespace franky
