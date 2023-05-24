@@ -38,7 +38,7 @@ namespace franky {
       Eigen::AngleAxis<double> orientation(end_effector_pose_.rotation());
       auto rotvec = orientation.axis() * orientation.angle();
       Vector7d result;
-      result << end_effector_pose_.translation(), rotvec, elbow_position_;
+      result << end_effector_pose_.translation(), rotvec, elbow_position_.value_or(0.0);
       return result;
     }
 
