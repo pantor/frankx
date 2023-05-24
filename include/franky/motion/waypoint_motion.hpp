@@ -21,6 +21,7 @@ namespace franky {
   class WaypointMotion : public Motion<franka::CartesianPose> {
   public:
     struct Params {
+      Affine frame{Affine::Identity()};
       double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
       bool max_dynamics{false};
       bool return_when_finished{true};
@@ -36,7 +37,7 @@ namespace franky {
     void initImpl(const franka::RobotState &robot_state, double time) override {
       franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
       RobotPose robot_pose(initial_cartesian_pose);
-      ref_frame_ = Affine();
+      ref_frame_ = Affine::Identity();
       current_cooldown_iteration_ = 0;
 
       RobotPose zero_pose(Affine::Identity(), robot_pose.elbow_position().value());
@@ -108,8 +109,6 @@ namespace franky {
     std::vector<Waypoint>::iterator waypoint_iterator_;
     bool waypoint_has_elbow_{false};
 
-    Affine frame_;
-
     constexpr static size_t cooldown_iterations_{5};
     size_t current_cooldown_iteration_{0};
 
@@ -143,7 +142,7 @@ namespace franky {
       if (!target_robot_pose_.elbow_position().has_value()) {
         prev_target_robot_pose = prev_target_robot_pose.with_elbow_position(robot_state.elbow[0]);
       }
-      auto new_target_robot_pose = new_waypoint.getTargetRobotPose(prev_target_robot_pose) * frame_.inverse();
+      auto new_target_robot_pose = new_waypoint.getTargetRobotPose(prev_target_robot_pose) * params_.frame.inverse();
       auto new_target_robot_pose_ref_frame = ref_frame_.inverse() * new_target_robot_pose;
       input_para_.enabled = {true, true, true, true, true, true, waypoint_has_elbow_};
       input_para_.target_position = toStd<7>(new_target_robot_pose_ref_frame.vector_repr());

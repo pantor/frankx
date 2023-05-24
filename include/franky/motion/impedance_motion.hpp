@@ -177,7 +177,7 @@ namespace franky {
         auto init_trans = initial_pose_.translation();
         auto trans = init_trans + transition_parameter * (target().translation() - init_trans);
         auto rot = q_start.slerp(transition_parameter, q_end);
-        intermediate_goal = Affine().fromPositionOrientationScale(trans, rot, Eigen::Vector3d::Ones());
+        intermediate_goal.fromPositionOrientationScale(trans, rot, Eigen::Vector3d::Ones());
         done = false;
       } else if (params_.return_when_finished && transition_parameter > params_.finish_wait_factor) {
         done = true;
