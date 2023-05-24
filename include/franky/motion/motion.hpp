@@ -14,29 +14,16 @@ namespace franky {
   template<typename ControlSignalType>
   class Motion {
   public:
-    explicit Motion() : robot_(nullptr) {}
+    explicit Motion();
 
-    void addReaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
-      const std::lock_guard<std::mutex> lock(mutex_);
-      reactions_.push_back(reaction);
-    }
+    void addReaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
-    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions() {
-      const std::lock_guard<std::mutex> lock(mutex_);
-      return reactions_;
-    }
+    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
-    void init(Robot *robot, const franka::RobotState &robot_state, double time) {
-      std::lock_guard<std::mutex> lock(mutex_);
-      robot_ = robot;
-      initImpl(robot_state, time);
-    };
+    void init(Robot *robot, const franka::RobotState &robot_state, double time);;
 
     ControlSignalType
-    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-      std::lock_guard<std::mutex> lock(mutex_);
-      return nextCommandImpl(robot_state, time_step, time);
-    };
+    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);;
 
   protected:
     virtual void initImpl(const franka::RobotState &robot_state, double time) {}
@@ -44,7 +31,7 @@ namespace franky {
     virtual ControlSignalType
     nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
 
-    Robot *robot() const {
+    inline Robot *robot() const {
       return robot_;
     }
 

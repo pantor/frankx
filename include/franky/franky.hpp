@@ -1,13 +1,17 @@
 #pragma once
 
+#include "franky/motion/condition.hpp"
+#include "franky/motion/exponential_impedance_motion.hpp"
 #include "franky/motion/impedance_motion.hpp"
 #include "franky/motion/joint_motion.hpp"
+#include "franky/motion/linear_impedance_motion.hpp"
+#include "franky/motion/linear_motion.hpp"
 #include "franky/motion/measure.hpp"
 #include "franky/motion/motion.hpp"
 #include "franky/motion/motion_generator.hpp"
 #include "franky/motion/reaction.hpp"
-
 #include "franky/motion/waypoint_motion.hpp"
+
 #include "franky/path/aggregated_path.hpp"
 #include "franky/path/linear_path.hpp"
 #include "franky/path/path.hpp"

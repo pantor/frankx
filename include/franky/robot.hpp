@@ -11,10 +11,13 @@
 #include "franky/robot_pose.hpp"
 #include "franky/kinematics.hpp"
 #include "franky/motion/motion_generator.hpp"
+#include "franky/motion/motion.hpp"
 #include "franky/scope_guard.hpp"
 
 
 namespace franky {
+  template<typename ControlSignalType>
+  class MotionGenerator;
 
   class Robot : public franka::Robot {
   public:

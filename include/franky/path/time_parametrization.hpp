@@ -3,6 +3,7 @@
 #include <ruckig/ruckig.hpp>
 
 #include "franky/path/trajectory.hpp"
+#include "franky/types.hpp"
 
 
 namespace franky {
