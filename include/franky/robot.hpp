@@ -96,10 +96,34 @@ namespace franky {
       return params_.jerk_rel;
     }
 
-    template<typename ControlSignalType>
-    void move(const std::shared_ptr<Motion<ControlSignalType>> &motion) {
-      moveInternal<ControlSignalType>(motion, [this](const ControlFunc<ControlSignalType> &m) {
+    // These helper functions are needed as the implicit template deduction does not work on subclasses of Motion
+    inline void move(const std::shared_ptr<Motion<franka::CartesianPose>> &motion) {
+      moveInternal<franka::CartesianPose>(motion, [this](const ControlFunc <franka::CartesianPose> &m) {
         control(m, params_.controller_mode_);
+      });
+    }
+
+    inline void move(const std::shared_ptr<Motion<franka::CartesianVelocities>> &motion) {
+      moveInternal<franka::CartesianVelocities>(motion, [this](const ControlFunc <franka::CartesianVelocities> &m) {
+        control(m, params_.controller_mode_);
+      });
+    }
+
+    inline void move(const std::shared_ptr<Motion<franka::JointPositions>> &motion) {
+      moveInternal<franka::JointPositions>(motion, [this](const ControlFunc <franka::JointPositions> &m) {
+        control(m, params_.controller_mode_);
+      });
+    }
+
+    inline void move(const std::shared_ptr<Motion<franka::JointVelocities>> &motion) {
+      moveInternal<franka::JointVelocities>(motion, [this](const ControlFunc <franka::JointVelocities> &m) {
+        control(m, params_.controller_mode_);
+      });
+    }
+
+    inline void move(const std::shared_ptr<Motion<franka::Torques>> &motion) {
+      moveInternal<franka::Torques>(motion, [this](const ControlFunc <franka::Torques> &m) {
+        control(m);
       });
     }
 
@@ -117,6 +141,13 @@ namespace franky {
     franka::RobotState current_state_;
     bool is_in_control_;
     std::mutex state_mutex_;
+
+    template<typename ControlSignalType>
+    inline void move(const std::shared_ptr<Motion<ControlSignalType>> &motion) {
+      moveInternal<ControlSignalType>(motion, [this](const ControlFunc<ControlSignalType> &m) {
+        control(m, params_.controller_mode_);
+      });
+    }
 
     template<typename ControlSignalType>
     void moveInternal(
@@ -138,5 +169,4 @@ namespace franky {
           [&motion_generator](const franka::RobotState &rs, franka::Duration d) { return motion_generator(rs, d); });
     }
   };
-
 } // namespace franky

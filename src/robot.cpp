@@ -74,11 +74,4 @@ namespace franky {
     }
     return current_state_;
   }
-
-  template<>
-  void Robot::move<franka::Torques>(const std::shared_ptr<Motion<franka::Torques>> &motion) {
-    moveInternal<franka::Torques>(motion, [this](const ControlFunc<franka::Torques> &m) {
-      control(m);
-    });
-  }
 } // namepace franky
