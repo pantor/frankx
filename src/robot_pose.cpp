@@ -2,17 +2,17 @@
 
 #include <optional>
 #include <Eigen/Core>
+#include <utility>
 #include <franka/control_types.h>
 
 #include "franky/types.hpp"
 
 
 namespace franky {
-  RobotPose::RobotPose(const RobotPose &robot_pose)
-      : end_effector_pose_(robot_pose.end_effector_pose_), elbow_position_(robot_pose.elbow_position_) {}
+  RobotPose::RobotPose(const RobotPose &robot_pose) = default;
 
-  RobotPose::RobotPose(const Eigen::Affine3d &end_effector_pose, std::optional<double> elbow_position)
-      : end_effector_pose_(end_effector_pose), elbow_position_(elbow_position) {}
+  RobotPose::RobotPose(Eigen::Affine3d end_effector_pose, std::optional<double> elbow_position)
+      : end_effector_pose_(std::move(end_effector_pose)), elbow_position_(elbow_position) {}
 
   RobotPose::RobotPose(const Vector7d &vector_repr, bool ignore_elbow)
       : RobotPose(
@@ -43,6 +43,8 @@ namespace franky {
     if (elbow_position_.has_value()) {
       return franka::CartesianPose(array, {elbow_position_.value(), -1});
     }
-    return franka::CartesianPose(array);
+    return {array};
   }
+
+  RobotPose::RobotPose() : end_effector_pose_(Eigen::Affine3d::Identity()), elbow_position_(std::nullopt) {}
 } // namespace franky
