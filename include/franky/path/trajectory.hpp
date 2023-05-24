@@ -18,10 +18,5 @@ namespace franky {
 
     //! The trajectory state for each consecutive time step (with delta_time difference of the time parametrization)
     std::vector<TrajectoryState> states;
-
-    explicit Trajectory() {}
-
-    explicit Trajectory(const PathType &path) : path(path) {}
   };
-
 } // namespace franky

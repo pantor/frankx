@@ -16,15 +16,12 @@ namespace franky {
   class Path {
     using Vector = Eigen::Matrix<double, state_dimensions, 1>;
   public:
-    virtual double length() const = 0;
+    [[nodiscard]] virtual double length() const = 0;
 
     virtual Vector max_ddq() const = 0;
 
     virtual Vector max_dddq() const = 0;
 
     virtual PathStep<state_dimensions> operator()(double s) const = 0;
-
-  private:
-    size_t length_;
   };
 } // namespace franky

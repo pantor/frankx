@@ -11,7 +11,7 @@ namespace franky {
   class AggregatedPath : public Path<state_dimensions> {
     using Vector = Eigen::Matrix<double, state_dimensions, 1>;
   public:
-    AggregatedPath() {}
+    AggregatedPath() = default;
 
     AggregatedPath(const AggregatedPath<state_dimensions> &aggregated_path)
         : segments_(aggregated_path.segments_), cumulative_lengths_(aggregated_path.cumulative_lengths_) {}
@@ -28,7 +28,7 @@ namespace franky {
       }
     }
 
-    double length() const override {
+    [[nodiscard]] inline double length() const override {
       return cumulative_lengths_.back();
     }
 
@@ -64,13 +64,13 @@ namespace franky {
       return (*segments_[index])(s_local);
     }
 
-    size_t get_index(double s) const {
+    [[nodiscard]] size_t get_index(double s) const {
       auto ptr = std::lower_bound(cumulative_lengths_.begin(), cumulative_lengths_.end(), s);
       size_t index = std::distance(cumulative_lengths_.begin(), ptr);
       return std::min(index, segments_.size() - 1);
     }
 
-    std::vector<std::shared_ptr<Path<state_dimensions>>> segments() const {
+    inline std::vector<std::shared_ptr<Path<state_dimensions>>> segments() const {
       return segments_;
     }
 
@@ -79,4 +79,6 @@ namespace franky {
     std::vector<double> cumulative_lengths_;
   };
 
+  AggregatedPath<7>
+  mk_path_from_waypoints(const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos = 0.0);
 } // namespace franky

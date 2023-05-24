@@ -15,9 +15,8 @@ namespace franky {
     const double delta_time;
 
   public:
-    TimeParametrization(double delta_time)
-        : delta_time(delta_time), otg(std::make_unique<ruckig::Ruckig<1>>(delta_time)) {
-    }
+    explicit TimeParametrization(double delta_time)
+        : delta_time(delta_time), otg(std::make_unique<ruckig::Ruckig<1>>(delta_time)) {}
 
     //! Returns list of path positions s at delta time
     template<size_t state_dimensions>
@@ -26,7 +25,7 @@ namespace franky {
         const std::array<double, state_dimensions> &max_velocity,
         const std::array<double, state_dimensions> &max_acceleration,
         const std::array<double, state_dimensions> &max_jerk) {
-      Trajectory trajectory(path);
+      Trajectory trajectory{path};
 
       // For linear segments: accelerate as fast as possible
       // For blend segments: Constant path velocity ds
@@ -64,7 +63,7 @@ namespace franky {
           max_ddds = 0.0;
         }
 
-        max_path_dynamics.push_back({max_ds, max_dds, max_ddds});
+        max_path_dynamics.emplace_back(max_ds, max_dds, max_ddds);
       }
 
       // Integrate forward and (if necessary) backward
@@ -79,8 +78,7 @@ namespace franky {
       double s_new{0.0}, ds_new{0.0}, dds_new{0.0};
       size_t index_current = path.get_index(s_new);
 
-      TrajectoryState current_state{time, s_new, ds_new, dds_new, 0.0};
-      trajectory.states.push_back(current_state);
+      trajectory.states.emplace_back({time, s_new, ds_new, dds_new, 0.0});
 
       input.current_position[0] = s_new;
       input.current_velocity[0] = ds_new;
@@ -104,13 +102,11 @@ namespace franky {
           index_current = index_new;
         }
 
-        current_state = {time, s_new, ds_new, dds_new, 0.0};
-        trajectory.states.push_back(current_state);
+        trajectory.states.emplace_back({time, s_new, ds_new, dds_new, 0.0});
         output.pass_to_input(input);
       }
 
       return trajectory;
     }
   };
-
 } // namespace franky

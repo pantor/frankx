@@ -7,8 +7,8 @@
 
 
 namespace franky {
-  AggregatedPath<7>
-  mk_path_from_waypoints(const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos = 0.0) {
+  AggregatedPath<7> mk_path_from_waypoints(
+      const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos) {
     if (waypoints.size() < 2) {
       throw std::runtime_error(
           "Path needs at least 2 waypoints as input, but has only " + std::to_string(waypoints.size()) + ".");
@@ -33,18 +33,18 @@ namespace franky {
         auto &left = line_segments[i - 1];
         auto &right = line_segments[i];
 
-        Vector7d lm = (left->end - left->start) / left->length();
-        Vector7d rm = (right->end - right->start) / right->length();
+        Vector7d lm = (left->end() - left->start()) / left->length();
+        Vector7d rm = (right->end() - right->start()) / right->length();
 
-        double s_abs_max = std::min<double>({left->length() / 2, right->length() / 2});
+        auto s_abs_max = std::min<double>({left->length() / 2, right->length() / 2});
 
         auto blend = std::make_shared<QuarticBlendPath<7>>(
-            left->start, lm, rm, left->length(), waypoints[i].blend_max_distance, s_abs_max);
+            left->start(), lm, rm, left->length(), waypoints[i].blend_max_distance, s_abs_max);
         double s_abs = blend->length() / 2;
 
         auto new_left = std::make_shared<LinearPath<7>>(
-            left->start, (*left)(left->length() - s_abs).q);
-        auto new_right = std::make_shared<LinearPath<7>>((*right)(s_abs).q, right->end);
+            left->start(), (*left)(left->length() - s_abs).q);
+        auto new_right = std::make_shared<LinearPath<7>>((*right)(s_abs).q, right->end());
 
         segments.emplace_back(new_left);
         segments.emplace_back(blend);

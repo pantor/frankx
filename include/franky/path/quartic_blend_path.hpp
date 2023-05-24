@@ -39,20 +39,20 @@ namespace franky {
       };
     }
 
-    virtual double length() const override {
+    [[nodiscard]] inline double length() const override {
       return length_;
     }
 
-    virtual Vector max_ddq() const override {
+    Vector max_ddq() const override {
       return (-3 * (lm_ - rm_)) / (4. * this->length() / 2);
     }
 
-    virtual Vector max_dddq() const override {
+    Vector max_dddq() const override {
       return (3 * (lm_ - rm_)) / (2. * std::pow(this->length() / 2, 2));
     }
 
   private:
-    double length_;
+    double length_{};
     Vector7d b_, c_, e_, f_;
     const Vector7d lb_, lm_, rm_;
   };
