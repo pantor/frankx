@@ -1,7 +1,6 @@
-#pragma once
+#include "franky/path/aggregated_path.hpp"
 
 #include "franky/waypoint.hpp"
-#include "franky/path/aggregated_path.hpp"
 #include "franky/path/linear_path.hpp"
 #include "franky/path/quartic_blend_path.hpp"
 

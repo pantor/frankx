@@ -2,7 +2,7 @@
 
 #include <Eigen/Core>
 
-#include "franky/path/aggregated_path.hpp"
+#include "franky/path/path.hpp"
 
 
 namespace franky {

@@ -1,8 +1,5 @@
 #include "franky/motion/reaction.hpp"
 
-#include <cmath>
-#include <iostream>
-#include <functional>
 #include <memory>
 #include <utility>
 #include <franka/robot_state.h>

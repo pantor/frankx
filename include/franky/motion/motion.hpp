@@ -20,10 +20,10 @@ namespace franky {
 
     std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
-    void init(Robot *robot, const franka::RobotState &robot_state, double time);;
+    void init(Robot *robot, const franka::RobotState &robot_state, double time);
 
     ControlSignalType
-    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);;
+    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
 
   protected:
     virtual void initImpl(const franka::RobotState &robot_state, double time) {}

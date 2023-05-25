@@ -18,89 +18,89 @@ using namespace franky;
 PYBIND11_MODULE(_franky, m) {
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
-  py::class_<Affine>(m, "Affine")
-    .def(py::init<double, double, double, double, double, double>(), "x"_a=0, "y"_a=0, "z"_a=0, "a"_a=0, "b"_a=0, "c"_a=0)
-    .def(py::init<double, double, double, double, double, double, double>(), "x"_a=0, "y"_a=0, "z"_a=0, "q_w"_a=1, "q_x"_a=0, "q_y"_a=0, "q_z"_a=0)
-    .def(py::init<const std::array<double, 16>&>())
-    .def(py::init([](py::dict d) {
-      if (d.contains("q_x")) { // Prefer quaternion construction
-        return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
-      }
-      return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
-    }))
-    .def(py::init<const Affine&>()) // Copy constructor
-    .def(py::self * py::self)
-    .def("inverse", &Affine::inverse)
-    .def("translate", &Affine::translate)
-    .def("pretranslate", &Affine::pretranslate)
-    .def("translation", &Affine::translation)
-    .def("vector", &Affine::vector)
-    .def("array", &Affine::array)
-    .def("rotate", &Affine::rotate)
-    .def("prerotate", &Affine::prerotate)
-    .def("rotation", &Affine::rotation)
-    .def("quaternion", &Affine::py_quaternion)
-    .def_property("x", &Affine::x, &Affine::setX)
-    .def_property("y", &Affine::y, &Affine::setY)
-    .def_property("z", &Affine::z, &Affine::setZ)
-    .def_property("a", &Affine::a, &Affine::setA)
-    .def_property("b", &Affine::b, &Affine::setB)
-    .def_property("c", &Affine::c, &Affine::setC)
-    .def_property_readonly("q_w", &Affine::qW)
-    .def_property_readonly("q_x", &Affine::qX)
-    .def_property_readonly("q_y", &Affine::qY)
-    .def_property_readonly("q_z", &Affine::qZ)
-    .def("slerp", &Affine::slerp)
-    .def("get_inner_random", &Affine::getInnerRandom)
-    .def("__repr__", &Affine::toString)
-    .def("as_dict", [](Affine self) {
-      auto translation = self.translation();
-      auto quaternion = self.quaternion();
+//  py::class_<Affine>(m, "Affine")
+//    .def(py::init<double, double, double, double, double, double>(), "x"_a=0, "y"_a=0, "z"_a=0, "a"_a=0, "b"_a=0, "c"_a=0)
+//    .def(py::init<double, double, double, double, double, double, double>(), "x"_a=0, "y"_a=0, "z"_a=0, "q_w"_a=1, "q_x"_a=0, "q_y"_a=0, "q_z"_a=0)
+//    .def(py::init<const std::array<double, 16>&>())
+//    .def(py::init([](py::dict d) {
+//      if (d.contains("q_x")) { // Prefer quaternion construction
+//        return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["q_w"].cast<double>(), d["q_x"].cast<double>(), d["q_y"].cast<double>(), d["q_z"].cast<double>());
+//      }
+//      return Affine(d["x"].cast<double>(), d["y"].cast<double>(), d["z"].cast<double>(), d["a"].cast<double>(), d["b"].cast<double>(), d["c"].cast<double>());
+//    }))
+//    .def(py::init<const Affine&>()) // Copy constructor
+//    .def(py::self * py::self)
+//    .def("inverse", &Affine::inverse)
+//    .def("translate", &Affine::translate)
+//    .def("pretranslate", &Affine::pretranslate)
+//    .def("translation", &Affine::translation)
+//    .def("vector", &Affine::vector)
+//    .def("array", &Affine::array)
+//    .def("rotate", &Affine::rotate)
+//    .def("prerotate", &Affine::prerotate)
+//    .def("rotation", &Affine::rotation)
+//    .def("quaternion", &Affine::py_quaternion)
+//    .def_property("x", &Affine::x, &Affine::setX)
+//    .def_property("y", &Affine::y, &Affine::setY)
+//    .def_property("z", &Affine::z, &Affine::setZ)
+//    .def_property("a", &Affine::a, &Affine::setA)
+//    .def_property("b", &Affine::b, &Affine::setB)
+//    .def_property("c", &Affine::c, &Affine::setC)
+//    .def_property_readonly("q_w", &Affine::qW)
+//    .def_property_readonly("q_x", &Affine::qX)
+//    .def_property_readonly("q_y", &Affine::qY)
+//    .def_property_readonly("q_z", &Affine::qZ)
+//    .def("slerp", &Affine::slerp)
+//    .def("get_inner_random", &Affine::getInnerRandom)
+//    .def("__repr__", &Affine::toString)
+//    .def("as_dict", [](Affine self) {
+//      auto translation = self.translation();
+//      auto quaternion = self.quaternion();
+//
+//      py::dict d;
+//      d["x"] = translation.x();
+//      d["y"] = translation.y();
+//      d["z"] = translation.z();
+//      d["a"] = self.a();
+//      d["b"] = self.b();
+//      d["c"] = self.c();
+//      d["q_w"] = quaternion.w();
+//      d["q_x"] = quaternion.x();
+//      d["q_y"] = quaternion.y();
+//      d["q_z"] = quaternion.z();
+//      return d;
+//    });
 
-      py::dict d;
-      d["x"] = translation.x();
-      d["y"] = translation.y();
-      d["z"] = translation.z();
-      d["a"] = self.a();
-      d["b"] = self.b();
-      d["c"] = self.c();
-      d["q_w"] = quaternion.w();
-      d["q_x"] = quaternion.x();
-      d["q_y"] = quaternion.y();
-      d["q_z"] = quaternion.z();
-      return d;
-    });
-
-  py::class_<Path>(m, "Path")
-    .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
-    .def(py::init<const std::vector<franky::Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
-    .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
-    .def_property_readonly("length", &Path::get_length)
-    .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
-    .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
-    .def("pdq", &Path::pdq, "s"_a)
-    .def("pddq", &Path::pddq, "s"_a)
-    .def("pdddq", &Path::pdddq, "s"_a)
-    .def("dq", &Path::dq, "s"_a, "ds"_a)
-    .def("ddq", &Path::ddq, "s"_a, "ds"_a, "dds"_a)
-    .def("dddq", &Path::dddq, "s"_a, "ds"_a, "dds"_a, "ddds"_a)
-    .def("max_pddq", &Path::max_pddq)
-    .def("max_pdddq", &Path::max_pdddq);
-
-  py::class_<Trajectory::State>(m, "TrajectoryState")
-    .def_readwrite("t", &Trajectory::State::t)
-    .def_readwrite("s", &Trajectory::State::s)
-    .def_readwrite("ds", &Trajectory::State::ds)
-    .def_readwrite("dds", &Trajectory::State::dds)
-    .def_readwrite("ddds", &Trajectory::State::ddds);
-
-  py::class_<Trajectory>(m, "Trajectory")
-    .def_readwrite("path", &Trajectory::path)
-    .def_readwrite("states", &Trajectory::states);
-
-  py::class_<TimeParametrization>(m, "TimeParametrization")
-    .def(py::init<double>(), "delta_time"_a)
-    .def("parametrize", &TimeParametrization::parametrize, "path"_a, "max_velocity"_a, "max_accleration"_a, "max_jerk"_a);
+//  py::class_<Path>(m, "Path")
+//    .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
+//    .def(py::init<const std::vector<franky::Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
+//    .def_readonly_static("degrees_of_freedom", &Path::degrees_of_freedom)
+//    .def_property_readonly("length", &Path::get_length)
+//    .def("q", (Vector7d (Path::*)(double) const)&Path::q, "s"_a)
+//    .def("q", (Vector7d (Path::*)(double, const Affine&) const)&Path::q, "s"_a, "frame"_a)
+//    .def("pdq", &Path::pdq, "s"_a)
+//    .def("pddq", &Path::pddq, "s"_a)
+//    .def("pdddq", &Path::pdddq, "s"_a)
+//    .def("dq", &Path::dq, "s"_a, "ds"_a)
+//    .def("ddq", &Path::ddq, "s"_a, "ds"_a, "dds"_a)
+//    .def("dddq", &Path::dddq, "s"_a, "ds"_a, "dds"_a, "ddds"_a)
+//    .def("max_pddq", &Path::max_pddq)
+//    .def("max_pdddq", &Path::max_pdddq);
+//
+//  py::class_<Trajectory::State>(m, "TrajectoryState")
+//    .def_readwrite("t", &Trajectory::State::t)
+//    .def_readwrite("s", &Trajectory::State::s)
+//    .def_readwrite("ds", &Trajectory::State::ds)
+//    .def_readwrite("dds", &Trajectory::State::dds)
+//    .def_readwrite("ddds", &Trajectory::State::ddds);
+//
+//  py::class_<Trajectory>(m, "Trajectory")
+//    .def_readwrite("path", &Trajectory::path)
+//    .def_readwrite("states", &Trajectory::states);
+//
+//  py::class_<TimeParametrization>(m, "TimeParametrization")
+//    .def(py::init<double>(), "delta_time"_a)
+//    .def("parametrize", &TimeParametrization::parametrize, "path"_a, "max_velocity"_a, "max_accleration"_a, "max_jerk"_a);
 
   py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
     .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
@@ -114,98 +114,98 @@ PYBIND11_MODULE(_franky, m) {
     .def_static("jacobian", &Kinematics::jacobian, "q"_a)
     .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a=std::nullopt);
 
-  py::class_<Condition>(m, "Condition");
+//  py::class_<Condition>(m, "Condition");
+//
+//  py::class_<Measure>(m, "Measure")
+//    .def_property_readonly_static("ForceX", [](py::object) { return Measure::ForceX(); })
+//    .def_property_readonly_static("ForceY", [](py::object) { return Measure::ForceY(); })
+//    .def_property_readonly_static("ForceZ", [](py::object) { return Measure::ForceZ(); })
+//    .def_property_readonly_static("ForceXYNorm", [](py::object) { return Measure::ForceXYNorm(); })
+//    .def_property_readonly_static("ForceXYZNorm", [](py::object) { return Measure::ForceXYZNorm(); })
+//    .def_property_readonly_static("Time", [](py::object) { return Measure::Time(); })
+//    .def("__eq__", &Measure::operator==, py::is_operator())
+//    .def("__ne__", &Measure::operator!=, py::is_operator())
+//    .def("__gt__", &Measure::operator>, py::is_operator())
+//    .def("__ge__", &Measure::operator>=, py::is_operator())
+//    .def("__lt__", &Measure::operator<, py::is_operator())
+//    .def("__le__", &Measure::operator<=, py::is_operator());
+//
+//  py::class_<Reaction>(m, "Reaction")
+//    .def(py::init<Condition>())
+//    .def(py::init<Condition, std::shared_ptr<WaypointMotion>>())
+//    .def_readonly("has_fired", &Reaction::has_fired);
+//
+//  py::class_<MotionData>(m, "MotionData")
+//    .def(py::init<double>(), "dynamic_rel"_a = 1.0)
+//    .def_readwrite("velocity_rel", &MotionData::velocity_rel)
+//    .def_readwrite("acceleration_rel", &MotionData::acceleration_rel)
+//    .def_readonly("reactions", &MotionData::reactions)
+//    .def("with_dynamic_rel", &MotionData::withDynamicRel)
+//    .def("with_max_dynamics", &MotionData::withMaxDynamics)
+//    .def("with_reaction", &MotionData::withReaction)
+//    .def_property_readonly("did_break", &MotionData::didBreak);
+//
+//  using ReferenceType = Waypoint::ReferenceType;
+//  py::class_<Waypoint> waypoint(m, "Waypoint");
+//  py::enum_<ReferenceType>(waypoint, "Waypoint")
+//    .value("Absolute", ReferenceType::Absolute)
+//    .value("Relative", ReferenceType::Relative)
+//    .export_values();
+//
+//  waypoint.def(py::init<>())
+//    .def(py::init<bool>(), "zero_velocity"_a)
+//    .def(py::init<double>(), "minimum_time"_a)
+//    .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+//    .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
+//    .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
+//    .def_readonly("affine", &Waypoint::affine)
+//    .def_readonly("elbow", &Waypoint::elbow)
+//    .def_readonly("reference_type", &Waypoint::reference_type)
+//    .def_readonly("minimum_time", &Waypoint::minimum_time);
+//
+//  py::class_<JointMotion>(m, "JointMotion")
+//    .def(py::init<const std::array<double, 7>&>(), "target"_a)
+//    .def_readonly("target", &JointMotion::target);
+//
+//  py::class_<PathMotion>(m, "PathMotion")
+//    .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
+//    .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
+//    .def_readonly("waypoints", &PathMotion::waypoints);
+//
+//  py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
+//    .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)
+//    .def(py::init<const std::vector<Waypoint> &, bool>(), "waypoints"_a, "return_when_finished"_a)
+//    .def("set_next_waypoint", &WaypointMotion::setNextWaypoint, "waypoint"_a)
+//    .def("set_next_waypoints", &WaypointMotion::setNextWaypoints, "waypoints"_a)
+//    .def("finish", &WaypointMotion::finish);
 
-  py::class_<Measure>(m, "Measure")
-    .def_property_readonly_static("ForceX", [](py::object) { return Measure::ForceX(); })
-    .def_property_readonly_static("ForceY", [](py::object) { return Measure::ForceY(); })
-    .def_property_readonly_static("ForceZ", [](py::object) { return Measure::ForceZ(); })
-    .def_property_readonly_static("ForceXYNorm", [](py::object) { return Measure::ForceXYNorm(); })
-    .def_property_readonly_static("ForceXYZNorm", [](py::object) { return Measure::ForceXYZNorm(); })
-    .def_property_readonly_static("Time", [](py::object) { return Measure::Time(); })
-    .def("__eq__", &Measure::operator==, py::is_operator())
-    .def("__ne__", &Measure::operator!=, py::is_operator())
-    .def("__gt__", &Measure::operator>, py::is_operator())
-    .def("__ge__", &Measure::operator>=, py::is_operator())
-    .def("__lt__", &Measure::operator<, py::is_operator())
-    .def("__le__", &Measure::operator<=, py::is_operator());
-
-  py::class_<Reaction>(m, "Reaction")
-    .def(py::init<Condition>())
-    .def(py::init<Condition, std::shared_ptr<WaypointMotion>>())
-    .def_readonly("has_fired", &Reaction::has_fired);
-
-  py::class_<MotionData>(m, "MotionData")
-    .def(py::init<double>(), "dynamic_rel"_a = 1.0)
-    .def_readwrite("velocity_rel", &MotionData::velocity_rel)
-    .def_readwrite("acceleration_rel", &MotionData::acceleration_rel)
-    .def_readonly("reactions", &MotionData::reactions)
-    .def("with_dynamic_rel", &MotionData::withDynamicRel)
-    .def("with_max_dynamics", &MotionData::withMaxDynamics)
-    .def("with_reaction", &MotionData::withReaction)
-    .def_property_readonly("did_break", &MotionData::didBreak);
-
-  using ReferenceType = Waypoint::ReferenceType;
-  py::class_<Waypoint> waypoint(m, "Waypoint");
-  py::enum_<ReferenceType>(waypoint, "Waypoint")
-    .value("Absolute", ReferenceType::Absolute)
-    .value("Relative", ReferenceType::Relative)
-    .export_values();
-
-  waypoint.def(py::init<>())
-    .def(py::init<bool>(), "zero_velocity"_a)
-    .def(py::init<double>(), "minimum_time"_a)
-    .def(py::init<const Affine &, ReferenceType, double>(), "affine"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
-    .def(py::init<const Affine &, double, ReferenceType, double>(), "affine"_a, "elbow"_a, "reference_type"_a = ReferenceType::Absolute, "dynamic_rel"_a = 1.0)
-    .def_readwrite("velocity_rel", &Waypoint::velocity_rel)
-    .def_readonly("affine", &Waypoint::affine)
-    .def_readonly("elbow", &Waypoint::elbow)
-    .def_readonly("reference_type", &Waypoint::reference_type)
-    .def_readonly("minimum_time", &Waypoint::minimum_time);
-
-  py::class_<JointMotion>(m, "JointMotion")
-    .def(py::init<const std::array<double, 7>&>(), "target"_a)
-    .def_readonly("target", &JointMotion::target);
-
-  py::class_<PathMotion>(m, "PathMotion")
-    .def(py::init<const std::vector<Waypoint>&>(), "waypoints"_a)
-    .def(py::init<const std::vector<Affine>&, double>(), "waypoints"_a, "blend_max_distance"_a = 0.0)
-    .def_readonly("waypoints", &PathMotion::waypoints);
-
-  py::class_<WaypointMotion, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
-    .def(py::init<const std::vector<Waypoint> &>(), "waypoints"_a)
-    .def(py::init<const std::vector<Waypoint> &, bool>(), "waypoints"_a, "return_when_finished"_a)
-    .def("set_next_waypoint", &WaypointMotion::setNextWaypoint, "waypoint"_a)
-    .def("set_next_waypoints", &WaypointMotion::setNextWaypoints, "waypoints"_a)
-    .def("finish", &WaypointMotion::finish);
-
-  py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
-    .def(py::init<const Affine&>(), "target"_a)
-    .def(py::init<const Affine&, double>(), "target"_a, "elbow"_a);
-
-  py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
-    .def(py::init<const Affine&>(), "affine"_a)
-    .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a)
-    .def(py::init<const Affine&, double, double>(), "affine"_a, "elbow"_a, "dynamic_rel"_a);
-
-  py::class_<StopMotion, WaypointMotion, std::shared_ptr<StopMotion>>(m, "StopMotion")
-    .def(py::init<>())
-    .def(py::init<const Affine&>())
-    .def(py::init<const Affine&, double>());
-
-  py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
-    .def(py::init<double>(), "duration"_a);
-
-  py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
-    .def(py::init<>())
-    .def(py::init<double>(), "joint_stiffness"_a)
-    .def(py::init<double, double>(), "translational_stiffness"_a, "rotational_stiffness"_a)
-    .def_property_readonly("is_active", &ImpedanceMotion::isActive)
-    .def_property("target", &ImpedanceMotion::getTarget, &ImpedanceMotion::setTarget)
-    .def("set_linear_relative_target_motion", &ImpedanceMotion::setLinearRelativeTargetMotion, "relative_target"_a, "duration"_a)
-    .def("set_spiral_target_motion", &ImpedanceMotion::setSpiralTargetMotion)
-    .def("add_force_constraint", (void (ImpedanceMotion::*)(std::optional<double>, std::optional<double>, std::optional<double>)) &ImpedanceMotion::addForceConstraint, py::kw_only(), "x"_a = std::nullopt, "y"_a = std::nullopt, "z"_a = std::nullopt)
-    .def("finish", &ImpedanceMotion::finish);
+//  py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
+//    .def(py::init<const Affine&>(), "target"_a)
+//    .def(py::init<const Affine&, double>(), "target"_a, "elbow"_a);
+//
+//  py::class_<LinearRelativeMotion, WaypointMotion, std::shared_ptr<LinearRelativeMotion>>(m, "LinearRelativeMotion")
+//    .def(py::init<const Affine&>(), "affine"_a)
+//    .def(py::init<const Affine&, double>(), "affine"_a, "elbow"_a)
+//    .def(py::init<const Affine&, double, double>(), "affine"_a, "elbow"_a, "dynamic_rel"_a);
+//
+//  py::class_<StopMotion, WaypointMotion, std::shared_ptr<StopMotion>>(m, "StopMotion")
+//    .def(py::init<>())
+//    .def(py::init<const Affine&>())
+//    .def(py::init<const Affine&, double>());
+//
+//  py::class_<PositionHold, WaypointMotion, std::shared_ptr<PositionHold>>(m, "PositionHold")
+//    .def(py::init<double>(), "duration"_a);
+//
+//  py::class_<ImpedanceMotion>(m, "ImpedanceMotion")
+//    .def(py::init<>())
+//    .def(py::init<double>(), "joint_stiffness"_a)
+//    .def(py::init<double, double>(), "translational_stiffness"_a, "rotational_stiffness"_a)
+//    .def_property_readonly("is_active", &ImpedanceMotion::isActive)
+//    .def_property("target", &ImpedanceMotion::getTarget, &ImpedanceMotion::setTarget)
+//    .def("set_linear_relative_target_motion", &ImpedanceMotion::setLinearRelativeTargetMotion, "relative_target"_a, "duration"_a)
+//    .def("set_spiral_target_motion", &ImpedanceMotion::setSpiralTargetMotion)
+//    .def("add_force_constraint", (void (ImpedanceMotion::*)(std::optional<double>, std::optional<double>, std::optional<double>)) &ImpedanceMotion::addForceConstraint, py::kw_only(), "x"_a = std::nullopt, "y"_a = std::nullopt, "z"_a = std::nullopt)
+//    .def("finish", &ImpedanceMotion::finish);
 
   py::class_<franka::Duration>(m, "Duration")
     .def(py::init<>())
@@ -326,58 +326,58 @@ PYBIND11_MODULE(_franky, m) {
     .def_readonly("robot_mode", &franka::RobotState::robot_mode)
     .def_readonly("time", &franka::RobotState::time);
 
-  py::class_<Robot>(m, "Robot")
-    .def(py::init<const std::string &, double, bool, bool, franka::RealtimeConfig &>(), "fci_ip"_a, "dynamic_rel"_a = 1.0, "repeat_on_error"_a = true, "stop_at_python_signal"_a = true, "realtime_config"_a = franka::RealtimeConfig::kEnforce)
-    .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
-    .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
-    .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
-    .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
-    .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
-    .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
-    .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
-    .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
-    .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
-    .def_readonly_static("degrees_of_freedoms", &Robot::degrees_of_freedoms)
-    .def_readonly_static("control_rate", &Robot::control_rate)
-    .def_readonly("fci_ip", &Robot::fci_ip)
-    .def_readwrite("controller_mode", &Robot::controller_mode)
-    .def_readwrite("velocity_rel", &Robot::velocity_rel)
-    .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
-    .def_readwrite("jerk_rel", &Robot::jerk_rel)
-    .def_readwrite("repeat_on_error", &Robot::repeat_on_error)
-    .def_readwrite("stop_at_python_signal", &Robot::stop_at_python_signal)
-    .def("server_version", &Robot::serverVersion)
-    .def("set_default_behavior", &Robot::setDefaultBehavior)
-    .def("set_joint_impedance", &Robot::setJointImpedance)
-    .def("set_cartesian_impedance", &Robot::setCartesianImpedance)
-    .def("set_K", &Robot::setK)
-    .def("set_EE", &Robot::setEE)
-    .def("set_load", &Robot::setLoad)
-    .def("set_dynamic_rel", &Robot::setDynamicRel)
-    .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
-    .def("stop", &Robot::stop)
-    .def("has_errors", &Robot::hasErrors)
-    .def("recover_from_errors", &Robot::recoverFromErrors)
-    .def("read_once", &Robot::readOnce)
-    .def("current_pose", &Robot::currentPose, "read_once"_a = true)
-    .def("current_joint_positions", &Robot::currentJointPositions, "read_once"_a = true)
-    .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
-    .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "q0"_a)
-    .def("get_state", &Robot::get_state, "read_once"_a = true)
-    .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(JointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(JointMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(PathMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(PathMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, PathMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, PathMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(WaypointMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
-    .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>(), "frame"_a, "waypoint_motion"_a, "motion_data"_a);
+//  py::class_<Robot>(m, "Robot")
+//    .def(py::init<const std::string &, double, bool, bool, franka::RealtimeConfig &>(), "fci_ip"_a, "dynamic_rel"_a = 1.0, "repeat_on_error"_a = true, "stop_at_python_signal"_a = true, "realtime_config"_a = franka::RealtimeConfig::kEnforce)
+//    .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity)
+//    .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity)
+//    .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity)
+//    .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration)
+//    .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration)
+//    .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration)
+//    .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk)
+//    .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk)
+//    .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk)
+//    .def_readonly_static("degrees_of_freedoms", &Robot::degrees_of_freedoms)
+//    .def_readonly_static("control_rate", &Robot::control_rate)
+//    .def_readonly("fci_ip", &Robot::fci_ip)
+//    .def_readwrite("controller_mode", &Robot::controller_mode)
+//    .def_readwrite("velocity_rel", &Robot::velocity_rel)
+//    .def_readwrite("acceleration_rel", &Robot::acceleration_rel)
+//    .def_readwrite("jerk_rel", &Robot::jerk_rel)
+//    .def_readwrite("repeat_on_error", &Robot::repeat_on_error)
+//    .def_readwrite("stop_at_python_signal", &Robot::stop_at_python_signal)
+//    .def("server_version", &Robot::serverVersion)
+//    .def("set_default_behavior", &Robot::setDefaultBehavior)
+//    .def("set_joint_impedance", &Robot::setJointImpedance)
+//    .def("set_cartesian_impedance", &Robot::setCartesianImpedance)
+//    .def("set_K", &Robot::setK)
+//    .def("set_EE", &Robot::setEE)
+//    .def("set_load", &Robot::setLoad)
+//    .def("set_dynamic_rel", &Robot::setDynamicRel)
+//    .def("automatic_error_recovery ", &Robot::automaticErrorRecovery)
+//    .def("stop", &Robot::stop)
+//    .def("has_errors", &Robot::hasErrors)
+//    .def("recover_from_errors", &Robot::recoverFromErrors)
+//    .def("read_once", &Robot::readOnce)
+//    .def("current_pose", &Robot::currentPose, "read_once"_a = true)
+//    .def("current_joint_positions", &Robot::currentJointPositions, "read_once"_a = true)
+//    .def("forward_kinematics", &Robot::forwardKinematics, "q"_a)
+//    .def("inverse_kinematics", &Robot::inverseKinematics, "target"_a, "q0"_a)
+//    .def("get_state", &Robot::get_state, "read_once"_a = true)
+//    .def("move", (bool (Robot::*)(ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, ImpedanceMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(JointMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(JointMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(PathMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(PathMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, PathMotion)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, PathMotion, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(WaypointMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&)) &Robot::move, py::call_guard<py::gil_scoped_release>())
+//    .def("move", (bool (Robot::*)(const Affine&, WaypointMotion&, MotionData&)) &Robot::move, py::call_guard<py::gil_scoped_release>(), "frame"_a, "waypoint_motion"_a, "motion_data"_a);
 
   py::class_<franka::GripperState>(m, "GripperState")
     .def_readonly("width", &franka::GripperState::width)

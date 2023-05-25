@@ -9,9 +9,8 @@
 #include "franky/motion/measure.hpp"
 
 namespace franky {
-
   class Condition {
-  public:
+   public:
     using CheckFunc = std::function<bool(const franka::RobotState &, double)>;
 
     explicit Condition(CheckFunc callback);
@@ -21,7 +20,25 @@ namespace franky {
       return check_func_(robot_state, time);
     }
 
-  private:
+   private:
     CheckFunc check_func_;
   };
+
+  Condition operator&&(const Condition &c1, const Condition &c2);
+
+  Condition operator||(const Condition &c1, const Condition &c2);
+
+  Condition operator!(const Condition &c);
+
+  Condition operator==(const Measure &m1, const Measure &m2);
+
+  Condition operator!=(const Measure &m1, const Measure &m2);
+
+  Condition operator<=(const Measure &m1, const Measure &m2);
+
+  Condition operator>=(const Measure &m1, const Measure &m2);
+
+  Condition operator<(const Measure &m1, const Measure &m2);
+
+  Condition operator>(const Measure &m1, const Measure &m2);
 }  // namespace franky

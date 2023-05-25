@@ -1,8 +1,8 @@
 #include "franky/motion/condition.hpp"
 
 #include <franka/robot_state.h>
-
 #include <utility>
+
 #include "franky/motion/measure.hpp"
 
 namespace franky {

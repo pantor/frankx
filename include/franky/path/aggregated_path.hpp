@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "franky/path/path.hpp"
-#include "franky/path/linear_path.hpp"
+#include "franky/waypoint.hpp"
 
 
 namespace franky {
