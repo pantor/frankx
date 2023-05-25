@@ -8,33 +8,34 @@
 #include "franky/robot.hpp"
 #include "franky/motion/motion.hpp"
 
-
 namespace franky {
-  class Robot;
 
-  template<typename ControlSignalType>
-  class Motion;
+class Robot;
 
-  template<typename ControlSignalType>
-  class MotionGenerator {
-  public:
-    static constexpr size_t REACTION_RECURSION_LIMIT = 8;
+template<typename ControlSignalType>
+class Motion;
 
-    explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion);
+template<typename ControlSignalType>
+class MotionGenerator {
+ public:
+  static constexpr size_t REACTION_RECURSION_LIMIT = 8;
 
-    ControlSignalType operator()(const franka::RobotState &robot_state, franka::Duration period);
+  explicit MotionGenerator(Robot *robot, std::shared_ptr<Motion<ControlSignalType>> initial_motion);
 
-    inline void
-    registerUpdateCallback(const std::function<void(const franka::RobotState &, franka::Duration, double)> &callback) {
-      update_callbacks_.push_back(callback);
-    }
+  ControlSignalType operator()(const franka::RobotState &robot_state, franka::Duration period);
 
-  private:
-    std::shared_ptr<Motion<ControlSignalType>> initial_motion_;
-    std::shared_ptr<Motion<ControlSignalType>> current_motion_;
-    std::vector<std::function<void(const franka::RobotState &, franka::Duration, double)>> update_callbacks_;
+  inline void
+  registerUpdateCallback(const std::function<void(const franka::RobotState &, franka::Duration, double)> &callback) {
+    update_callbacks_.push_back(callback);
+  }
 
-    double time_{0.0};
-    Robot *robot_;
-  };
+ private:
+  std::shared_ptr<Motion<ControlSignalType>> initial_motion_;
+  std::shared_ptr<Motion<ControlSignalType>> current_motion_;
+  std::vector<std::function<void(const franka::RobotState &, franka::Duration, double)>> update_callbacks_;
+
+  double time_{0.0};
+  Robot *robot_;
+};
+
 }  // namespace franky

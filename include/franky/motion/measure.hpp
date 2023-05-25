@@ -7,31 +7,33 @@
 #include <franka/robot_state.h>
 
 namespace franky {
-  class Measure {
-    using MeasureFunc = std::function<double(const franka::RobotState &, double)>;
 
-  public:
-    explicit Measure(MeasureFunc measure_func);
+class Measure {
+  using MeasureFunc = std::function<double(const franka::RobotState &, double)>;
 
-    explicit Measure(double constant);
+ public:
+  explicit Measure(MeasureFunc measure_func);
 
-    inline double operator()(const franka::RobotState &robot_state, double time) const {
-      return measure_func_(robot_state, time);
-    }
+  explicit Measure(double constant);
 
-    static Measure ForceX();
+  inline double operator()(const franka::RobotState &robot_state, double time) const {
+    return measure_func_(robot_state, time);
+  }
 
-    static Measure ForceY();
+  static Measure ForceX();
 
-    static Measure ForceZ();
+  static Measure ForceY();
 
-    static Measure ForceXYNorm();
+  static Measure ForceZ();
 
-    static Measure ForceXYZNorm();
+  static Measure ForceXYNorm();
 
-    static Measure Time();
+  static Measure ForceXYZNorm();
 
-  private:
-    MeasureFunc measure_func_;
-  };
+  static Measure Time();
+
+ private:
+  MeasureFunc measure_func_;
+};
+
 }  // namespace franky

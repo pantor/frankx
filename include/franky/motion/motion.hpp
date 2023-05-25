@@ -6,38 +6,40 @@
 #include "franky/robot.hpp"
 
 namespace franky {
-  class Robot;
 
-  template<typename ControlSignalType>
-  class Reaction;
+class Robot;
 
-  template<typename ControlSignalType>
-  class Motion {
-  public:
-    explicit Motion();
+template<typename ControlSignalType>
+class Reaction;
 
-    void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
+template<typename ControlSignalType>
+class Motion {
+ public:
+  explicit Motion();
 
-    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
+  void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
-    void init(Robot *robot, const franka::RobotState &robot_state, double time);
+  std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
-    ControlSignalType
-    nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
+  void init(Robot *robot, const franka::RobotState &robot_state, double time);
 
-  protected:
-    virtual void initImpl(const franka::RobotState &robot_state, double time) {}
+  ControlSignalType
+  nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
 
-    virtual ControlSignalType
-    nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
+ protected:
+  virtual void initImpl(const franka::RobotState &robot_state, double time) {}
 
-    [[nodiscard]] inline Robot *robot() const {
-      return robot_;
-    }
+  virtual ControlSignalType
+  nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
 
-  private:
-    std::mutex mutex_;
-    std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
-    Robot *robot_;
-  };
+  [[nodiscard]] inline Robot *robot() const {
+    return robot_;
+  }
+
+ private:
+  std::mutex mutex_;
+  std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
+  Robot *robot_;
+};
+
 }  // namespace franky
