@@ -21,12 +21,10 @@ message("Found Franka Version: ${Franka_VERSION}")
 
 add_subdirectory(ruckig)
 
-add_library(franky
-        src/gripper.cpp
-        src/kinematics.cpp
-        src/robot.cpp
-        )
-target_compile_features(franky PUBLIC cxx_std_17)
+file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+list(REMOVE_ITEM SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/python.cpp")
+add_library(franky ${SRC})
+set_property(TARGET franky PROPERTY CXX_STANDARD 17)
 target_include_directories(franky PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(franky PUBLIC Franka::Franka Eigen3::Eigen ruckig)
 
