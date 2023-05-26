@@ -90,7 +90,7 @@ RUN git clone https://github.com/catchorg/Catch2.git \
 # Build franky     #
 # ---------------- #
 
-RUN git clone --recursive https://github.com/pantor/franky.git \
+RUN git clone --recursive https://github.com/timschneider42/franky.git \
   && mkdir -p franky/build && cd franky/build \
   && cmake .. \
   && make -j$(nproc) \

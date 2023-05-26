@@ -1,27 +1,27 @@
 <div align="center">
-  <img width="340" src="https://raw.githubusercontent.com/pantor/franky/master/doc/logo.svg?sanitize=true">
+  <img width="340" src="https://raw.githubusercontent.com/timschneider42/franky/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
     High-Level Motion Library for the Franka Emika Robot
   </h3>
 </div>
 <p align="center">
-  <a href="https://github.com/pantor/franky/actions">
-    <img src="https://github.com/pantor/franky/workflows/CI/badge.svg" alt="CI">
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/CI/badge.svg" alt="CI">
   </a>
 
-  <a href="https://github.com/pantor/franky/actions">
-    <img src="https://github.com/pantor/franky/workflows/Publish/badge.svg" alt="Publish">
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/Publish/badge.svg" alt="Publish">
   </a>
 
-  <a href="https://github.com/pantor/franky/issues">
-    <img src="https://img.shields.io/github/issues/pantor/franky.svg" alt="Issues">
+  <a href="https://github.com/timschneider42/franky/issues">
+    <img src="https://img.shields.io/github/issues/timschneider42/franky.svg" alt="Issues">
   </a>
 
-  <a href="https://github.com/pantor/franky/releases">
-    <img src="https://img.shields.io/github/v/release/pantor/franky.svg?include_prereleases&sort=semver" alt="Releases">
+  <a href="https://github.com/timschneider42/franky/releases">
+    <img src="https://img.shields.io/github/v/release/timschneider42/franky.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
 
-  <a href="https://github.com/pantor/franky/blob/master/LICENSE">
+  <a href="https://github.com/timschneider42/franky/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-LGPL-green.svg" alt="LGPL">
   </a>
 </p>
@@ -40,7 +40,7 @@ pip install franky
 Franky is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Franky uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install franky via
 
 ```bash
-git clone --recurse-submodules git@github.com:pantor/franky.git
+git clone --recurse-submodules git@github.com:timschneider42/franky.git
 cd franky
 mkdir -p build
 cd build
@@ -63,15 +63,15 @@ Make sure that the built library can be found from Python by adapting your Pytho
 To use franky within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
 
 ```bash
-git clone https://github.com/pantor/franky.git
+git clone https://github.com/timschneider42/franky.git
 cd franky/
-docker build -t pantor/franky --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
+docker build -t franky --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
 ```
 
 To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:
 
 ```bash
-docker run -it --rm --network=host --privileged pantor/franky
+docker run -it --rm --network=host --privileged franky
 ```
 
 The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
