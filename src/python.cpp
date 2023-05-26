@@ -29,6 +29,19 @@ std::string affine_to_str(const Affine &affine) {
   return ss.str();
 }
 
+template<typename ControlSignalType>
+void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
+  py::class_<Motion<ControlSignalType>>(m, (control_signal_name + "Motion").c_str())
+      .def_property_readonly("reaction", &Motion<ControlSignalType>::reactions)
+      .def("add_reaction", &Motion<ControlSignalType>::addReaction);
+}
+
+template<typename ControlSignalType>
+void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
+  py::class_<Reaction<ControlSignalType>>(m, (control_signal_name + "Reaction").c_str())
+      .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>());
+}
+
 PYBIND11_MODULE(_franky, m) {
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
@@ -37,109 +50,157 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<ExponentialImpedanceMotion>(m, "ExponentialImpedanceMotion")
       .def(py::init<>([](
-          const Affine &target,
-          ImpedanceMotion::TargetType target_type = ImpedanceMotion::TargetType::Absolute,
-          double translational_stiffness = 2000,
-          double rotational_stiffness = 200,
-          std::optional<std::array<std::optional<double>, 6>> force_constraints = std::nullopt,
-          double exponential_decay = 0.005) {
-        Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
-        Eigen::Vector<double, 6> force_constraints_value;
-        if (force_constraints.has_value()) {
-          for (int i = 0; i < 6; i++) {
-            force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
-            force_constraints_active[i] = force_constraints.value()[i].has_value();
-          }
-        }
-        return new ExponentialImpedanceMotion(
-            target,
-            {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-             force_constraints_active, exponential_decay});
-      }));
+               const Affine &target, ImpedanceMotion::TargetType target_type, double translational_stiffness,
+               double rotational_stiffness, std::optional<std::array<std::optional<double>, 6>> force_constraints,
+               double exponential_decay = 0.005) {
+             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
+             Eigen::Vector<double, 6> force_constraints_value;
+             if (force_constraints.has_value()) {
+               for (int i = 0; i < 6; i++) {
+                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
+                 force_constraints_active[i] = force_constraints.value()[i].has_value();
+               }
+             }
+             return new ExponentialImpedanceMotion(
+                 target,
+                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                  force_constraints_active, exponential_decay});
+           }),
+           "target"_a,
+           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "translational_stiffness"_a = 2000,
+           "rotational_stiffness"_a = 200,
+           "force_constraints"_a = std::nullopt,
+           "exponential_decay"_a = 0.005);
 
-  py::class_<ImpedanceMotion>(m, "ImpedanceMotion");
+  py::class_<ImpedanceMotion> impedance_motion(m, "ImpedanceMotion");
+
+  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
+      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
+      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute);
 
   py::class_<JointMotion>(m, "JointMotion")
       .def(py::init<>([](
-          const Vector7d &target,
-          double velocity_rel = 1.0,
-          double acceleration_rel = 1.0,
-          double jerk_rel = 1.0,
-          bool return_when_finished = true) {
-        return new JointMotion(target, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
-      }));
+               const Vector7d &target, double velocity_rel, double acceleration_rel, double jerk_rel,
+               bool return_when_finished) {
+             return new JointMotion(target, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+           }),
+           "target"_a,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "return_when_finished"_a = true);
 
   py::class_<LinearImpedanceMotion>(m, "LinearImpedanceMotion")
       .def(py::init<>([](
-          const Affine &target,
-          double duration,
-          ImpedanceMotion::TargetType target_type = ImpedanceMotion::TargetType::Absolute,
-          double translational_stiffness = 2000,
-          double rotational_stiffness = 200,
-          std::optional<std::array<std::optional<double>, 6>> force_constraints = std::nullopt,
-          bool return_when_finished = true,
-          double finish_wait_factor = 1.2) {
-        Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
-        Eigen::Vector<double, 6> force_constraints_value;
-        if (force_constraints.has_value()) {
-          for (int i = 0; i < 6; i++) {
-            force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
-            force_constraints_active[i] = force_constraints.value()[i].has_value();
-          }
-        }
-        return new LinearImpedanceMotion(
-            target, duration,
-            {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-             force_constraints_active, return_when_finished, finish_wait_factor});
-      }));
+               const Affine &target,
+               double duration,
+               ImpedanceMotion::TargetType target_type,
+               double translational_stiffness,
+               double rotational_stiffness,
+               std::optional<std::array<std::optional<double>, 6>> force_constraints,
+               bool return_when_finished,
+               double finish_wait_factor) {
+             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
+             Eigen::Vector<double, 6> force_constraints_value;
+             if (force_constraints.has_value()) {
+               for (int i = 0; i < 6; i++) {
+                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
+                 force_constraints_active[i] = force_constraints.value()[i].has_value();
+               }
+             }
+             return new LinearImpedanceMotion(
+                 target, duration,
+                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                  force_constraints_active, return_when_finished, finish_wait_factor});
+           }),
+           "target"_a,
+           "duration"_a,
+           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "translational_stiffness"_a = 2000,
+           "rotational_stiffness"_a = 200,
+           "force_constraints"_a = std::nullopt,
+           "return_when_finished"_a = true,
+           "finish_wait_factor"_a = 1.2);
 
   py::class_<LinearMotion>(m, "LinearMotion")
-      .def(py::init<>([](
-          const RobotPose &target,
-          bool relative = false,
-          double velocity_rel = 1.0) {
+      .def(py::init<>([](const RobotPose &target, bool relative, double velocity_rel) {
         return new LinearMotion(target, relative, velocity_rel);
-      }));
+      }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
 
   py::class_<Measure>(m, "Measure")
       .def_property_readonly_static("FORCE_X", [](py::object) { return Measure::ForceX(); })
       .def_property_readonly_static("FORCE_Y", [](py::object) { return Measure::ForceY(); })
       .def_property_readonly_static("FORCE_Z", [](py::object) { return Measure::ForceZ(); })
       .def_property_readonly_static("TIME", [](py::object) { return Measure::Time(); })
-      .def("__eq__", pybind11::overload_cast<const Measure &, const Measure &>(&operator==), py::is_operator())
-      .def("__eq__", pybind11::overload_cast<const Measure &, double>(&operator==), py::is_operator())
-      .def("__eq__", pybind11::overload_cast<double, const Measure &>(&operator==), py::is_operator())
-      .def("__ne__", pybind11::overload_cast<const Measure &, const Measure &>(&operator!=), py::is_operator())
-      .def("__ne__", pybind11::overload_cast<const Measure &, double>(&operator!=), py::is_operator())
-      .def("__ne__", pybind11::overload_cast<double, const Measure &>(&operator!=), py::is_operator())
-      .def("__gt__", pybind11::overload_cast<const Measure &, const Measure &>(&operator>), py::is_operator())
-      .def("__gt__", pybind11::overload_cast<const Measure &, double>(&operator>), py::is_operator())
-      .def("__gt__", pybind11::overload_cast<double, const Measure &>(&operator>), py::is_operator())
-      .def("__ge__", pybind11::overload_cast<const Measure &, const Measure &>(&operator>=), py::is_operator())
-      .def("__ge__", pybind11::overload_cast<const Measure &, double>(&operator>=), py::is_operator())
-      .def("__ge__", pybind11::overload_cast<double, const Measure &>(&operator>=), py::is_operator())
-      .def("__lt__", pybind11::overload_cast<const Measure &, const Measure &>(&operator<), py::is_operator())
-      .def("__lt__", pybind11::overload_cast<const Measure &, double>(&operator<), py::is_operator())
-      .def("__lt__", pybind11::overload_cast<double, const Measure &>(&operator<), py::is_operator())
-      .def("__le__", pybind11::overload_cast<const Measure &, const Measure &>(&operator<=), py::is_operator())
-      .def("__le__", pybind11::overload_cast<const Measure &, double>(&operator<=), py::is_operator())
-      .def("__le__", pybind11::overload_cast<double, const Measure &>(&operator<=), py::is_operator())
-      .def("__add__", pybind11::overload_cast<const Measure &, const Measure &>(&operator+), py::is_operator())
-      .def("__add__", pybind11::overload_cast<const Measure &, double>(&operator+), py::is_operator())
-      .def("__add__", pybind11::overload_cast<double, const Measure &>(&operator+), py::is_operator())
-      .def("__sub__", pybind11::overload_cast<const Measure &, const Measure &>(&operator-), py::is_operator())
-      .def("__sub__", pybind11::overload_cast<const Measure &, double>(&operator-), py::is_operator())
-      .def("__sub__", pybind11::overload_cast<double, const Measure &>(&operator-), py::is_operator())
-      .def("__mul__", pybind11::overload_cast<const Measure &, const Measure &>(&operator*), py::is_operator())
-      .def("__mul__", pybind11::overload_cast<const Measure &, double>(&operator*), py::is_operator())
-      .def("__mul__", pybind11::overload_cast<double, const Measure &>(&operator*), py::is_operator())
-      .def("__div__", pybind11::overload_cast<const Measure &, const Measure &>(&operator/), py::is_operator())
-      .def("__div__", pybind11::overload_cast<const Measure &, double>(&operator/), py::is_operator())
-      .def("__div__", pybind11::overload_cast<double, const Measure &>(&operator/), py::is_operator())
-      .def("__pow__", pybind11::overload_cast<const Measure &, const Measure &>(&measure_pow), py::is_operator())
-      .def("__pow__", pybind11::overload_cast<const Measure &, double>(&measure_pow), py::is_operator())
-      .def("__pow__", pybind11::overload_cast<double, const Measure &>(&measure_pow), py::is_operator())
+      .def("__eq__", py::overload_cast<const Measure &, const Measure &>(&operator==), py::is_operator())
+      .def("__eq__", py::overload_cast<const Measure &, double>(&operator==), py::is_operator())
+      .def("__eq__", py::overload_cast<double, const Measure &>(&operator==), py::is_operator())
+      .def("__ne__", py::overload_cast<const Measure &, const Measure &>(&operator!=), py::is_operator())
+      .def("__ne__", py::overload_cast<const Measure &, double>(&operator!=), py::is_operator())
+      .def("__ne__", py::overload_cast<double, const Measure &>(&operator!=), py::is_operator())
+      .def("__gt__", py::overload_cast<const Measure &, const Measure &>(&operator>), py::is_operator())
+      .def("__gt__", py::overload_cast<const Measure &, double>(&operator>), py::is_operator())
+      .def("__gt__", py::overload_cast<double, const Measure &>(&operator>), py::is_operator())
+      .def("__ge__", py::overload_cast<const Measure &, const Measure &>(&operator>=), py::is_operator())
+      .def("__ge__", py::overload_cast<const Measure &, double>(&operator>=), py::is_operator())
+      .def("__ge__", py::overload_cast<double, const Measure &>(&operator>=), py::is_operator())
+      .def("__lt__", py::overload_cast<const Measure &, const Measure &>(&operator<), py::is_operator())
+      .def("__lt__", py::overload_cast<const Measure &, double>(&operator<), py::is_operator())
+      .def("__lt__", py::overload_cast<double, const Measure &>(&operator<), py::is_operator())
+      .def("__le__", py::overload_cast<const Measure &, const Measure &>(&operator<=), py::is_operator())
+      .def("__le__", py::overload_cast<const Measure &, double>(&operator<=), py::is_operator())
+      .def("__le__", py::overload_cast<double, const Measure &>(&operator<=), py::is_operator())
+      .def("__add__", py::overload_cast<const Measure &, const Measure &>(&operator+), py::is_operator())
+      .def("__add__", py::overload_cast<const Measure &, double>(&operator+), py::is_operator())
+      .def("__add__", py::overload_cast<double, const Measure &>(&operator+), py::is_operator())
+      .def("__sub__", py::overload_cast<const Measure &, const Measure &>(&operator-), py::is_operator())
+      .def("__sub__", py::overload_cast<const Measure &, double>(&operator-), py::is_operator())
+      .def("__sub__", py::overload_cast<double, const Measure &>(&operator-), py::is_operator())
+      .def("__mul__", py::overload_cast<const Measure &, const Measure &>(&operator*), py::is_operator())
+      .def("__mul__", py::overload_cast<const Measure &, double>(&operator*), py::is_operator())
+      .def("__mul__", py::overload_cast<double, const Measure &>(&operator*), py::is_operator())
+      .def("__div__", py::overload_cast<const Measure &, const Measure &>(&operator/), py::is_operator())
+      .def("__div__", py::overload_cast<const Measure &, double>(&operator/), py::is_operator())
+      .def("__div__", py::overload_cast<double, const Measure &>(&operator/), py::is_operator())
+      .def("__pow__", py::overload_cast<const Measure &, const Measure &>(&measure_pow), py::is_operator())
+      .def("__pow__", py::overload_cast<const Measure &, double>(&measure_pow), py::is_operator())
+      .def("__pow__", py::overload_cast<double, const Measure &>(&measure_pow), py::is_operator())
       .def("__repr__", &Measure::repr);
+
+  mk_motion_class<franka::Torques>(m, "Torque");
+  mk_motion_class<franka::JointVelocities>(m, "JointVelocity");
+  mk_motion_class<franka::JointPositions>(m, "JointPosition");
+  mk_motion_class<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mk_motion_class<franka::CartesianPose>(m, "CartesianPose");
+
+  mk_reaction_class<franka::Torques>(m, "Torque");
+  mk_reaction_class<franka::JointVelocities>(m, "JointVelocity");
+  mk_reaction_class<franka::JointPositions>(m, "JointPosition");
+  mk_reaction_class<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mk_reaction_class<franka::CartesianPose>(m, "CartesianPose");
+
+  py::class_<WaypointMotion>(m, "WaypointMotion")
+      .def(py::init<>([](
+               const std::vector<Waypoint> &waypoints,
+               const std::optional<Affine> &frame = std::nullopt,
+               double velocity_rel = 1.0,
+               double acceleration_rel = 1.0,
+               double jerk_rel = 1.0,
+               bool max_dynamics = false,
+               bool return_when_finished = true) {
+             return new WaypointMotion(
+                 waypoints,
+                 {frame.value_or(Affine::Identity()), velocity_rel, acceleration_rel, jerk_rel, max_dynamics,
+                  return_when_finished});
+           }),
+           "waypoints"_a,
+           "frame"_a = std::nullopt,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "max_dynamics"_a = false,
+           "return_when_finished"_a = true);
 
   py::class_<RobotPose>(m, "RobotPose")
       .def(py::init<Eigen::Affine3d, std::optional<double>>(),
