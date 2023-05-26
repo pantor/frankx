@@ -6,25 +6,25 @@
 
 namespace franky {
 
-Condition::Condition(Condition::CheckFunc check_func, std::string name)
-    : check_func_(std::move(check_func)), name_(std::move(name)) {}
+Condition::Condition(Condition::CheckFunc check_func, std::string repr)
+    : check_func_(std::move(check_func)), repr_(std::move(repr)) {}
 
 Condition operator&&(const Condition &c1, const Condition &c2) {
   return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
     return c1(robot_state, time) && c2(robot_state, time);
-  }, "(" + c1.name() + ") && (" + c2.name() + ")");
+  }, "(" + c1.repr() + ") && (" + c2.repr() + ")");
 }
 
 Condition operator||(const Condition &c1, const Condition &c2) {
   return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
     return c1(robot_state, time) || c2(robot_state, time);
-  }, c1.name() + " || " + c2.name());
+  }, c1.repr() + " || " + c2.repr());
 }
 
 Condition operator!(const Condition &c) {
   return Condition([c](const franka::RobotState &robot_state, double time) {
     return !c(robot_state, time);
-  }, "!(" + c.name() + ")");
+  }, "!(" + c.repr() + ")");
 }
 
 }  // namespace franky
