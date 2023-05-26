@@ -19,7 +19,7 @@ class Measure {
   using MeasureFunc = std::function<double(const franka::RobotState &, double)>;
 
  public:
-  explicit Measure(MeasureFunc measure_func);
+  explicit Measure(MeasureFunc measure_func, std::string repr = "NULL");
 
   explicit Measure(double constant);
 
@@ -35,8 +35,13 @@ class Measure {
 
   static Measure Time();
 
+  std::string repr() const {
+    return repr_;
+  }
+
  private:
   MeasureFunc measure_func_;
+  std::string repr_;
 };
 
 Condition operator&&(const Condition &c1, const Condition &c2);
