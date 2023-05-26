@@ -44,12 +44,6 @@ class Measure {
   std::string repr_;
 };
 
-Condition operator&&(const Condition &c1, const Condition &c2);
-
-Condition operator||(const Condition &c1, const Condition &c2);
-
-Condition operator!(const Condition &c);
-
 MEASURE_OP_DECL(==)
 MEASURE_OP_DECL(!=)
 MEASURE_OP_DECL(<=)
