@@ -15,8 +15,6 @@ class Reaction;
 template<typename ControlSignalType>
 class Motion {
  public:
-  explicit Motion();
-
   void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
@@ -27,6 +25,8 @@ class Motion {
   nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
 
  protected:
+  explicit Motion();
+
   virtual void initImpl(const franka::RobotState &robot_state, double time) {}
 
   virtual ControlSignalType
