@@ -8,6 +8,11 @@
 
 #include "franky/motion/condition.hpp"
 
+#define MEASURE_OP_DECL(OP) \
+Condition operator OP(const Measure &m1, const Measure &m2); \
+Condition operator OP(const Measure &m1, double m2); \
+Condition operator OP(double m1, const Measure &m2);
+
 namespace franky {
 
 class Measure {
@@ -16,7 +21,7 @@ class Measure {
  public:
   explicit Measure(MeasureFunc measure_func);
 
-  Measure(double constant);
+  explicit Measure(double constant);
 
   inline double operator()(const franka::RobotState &robot_state, double time) const {
     return measure_func_(robot_state, time);
@@ -34,16 +39,17 @@ class Measure {
   MeasureFunc measure_func_;
 };
 
-Condition operator==(const Measure &m1, const Measure &m2);
+Condition operator&&(const Condition &c1, const Condition &c2);
 
-Condition operator!=(const Measure &m1, const Measure &m2);
+Condition operator||(const Condition &c1, const Condition &c2);
 
-Condition operator<=(const Measure &m1, const Measure &m2);
+Condition operator!(const Condition &c);
 
-Condition operator>=(const Measure &m1, const Measure &m2);
-
-Condition operator<(const Measure &m1, const Measure &m2);
-
-Condition operator>(const Measure &m1, const Measure &m2);
+MEASURE_OP_DECL(==)
+MEASURE_OP_DECL(!=)
+MEASURE_OP_DECL(<=)
+MEASURE_OP_DECL(>=)
+MEASURE_OP_DECL(<)
+MEASURE_OP_DECL(>)
 
 }  // namespace franky

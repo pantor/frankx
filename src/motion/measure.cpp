@@ -1,8 +1,20 @@
 #include "franky/motion/measure.hpp"
 
-#include <cmath>
 #include <utility>
 #include <franka/robot_state.h>
+
+#define MEASURE_OP_DEF(OP) \
+Condition operator OP(const Measure &m1, const Measure &m2) { \
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) { \
+    return m1(robot_state, time) OP m2(robot_state, time); \
+  }); \
+} \
+Condition operator OP(const Measure &m1, double m2) { \
+  return m1 OP Measure(m2); \
+} \
+Condition operator OP(double m1, const Measure &m2) { \
+  return Measure(m1) OP m2; \
+}
 
 namespace franky {
 
@@ -37,40 +49,29 @@ Measure Measure::Time() {
   });
 }
 
-Condition operator==(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) == m2(robot_state, time);
+Condition operator&&(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
+    return c1(robot_state, time) && c2(robot_state, time);
   });
 }
 
-Condition operator!=(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) != m2(robot_state, time);
+Condition operator||(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
+    return c1(robot_state, time) || c2(robot_state, time);
   });
 }
 
-Condition operator<=(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) <= m2(robot_state, time);
+Condition operator!(const Condition &c) {
+  return Condition([c](const franka::RobotState &robot_state, double time) {
+    return !c(robot_state, time);
   });
 }
 
-Condition operator>=(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) >= m2(robot_state, time);
-  });
-}
-
-Condition operator<(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) < m2(robot_state, time);
-  });
-}
-
-Condition operator>(const Measure &m1, const Measure &m2) {
-  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
-    return m1(robot_state, time) > m2(robot_state, time);
-  });
-}
+MEASURE_OP_DEF(==)
+MEASURE_OP_DEF(!=)
+MEASURE_OP_DEF(<=)
+MEASURE_OP_DEF(>=)
+MEASURE_OP_DEF(<)
+MEASURE_OP_DEF(>)
 
 }  // namespace franky
