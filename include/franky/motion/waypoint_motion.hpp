@@ -25,7 +25,7 @@ class WaypointMotion : public Motion<franka::CartesianPose> {
     bool return_when_finished{true};
   };
 
-  explicit WaypointMotion(std::vector<Waypoint> waypoints);
+  explicit WaypointMotion(const std::vector<Waypoint> &waypoints);
 
   explicit WaypointMotion(std::vector<Waypoint> waypoints, Params params);
 

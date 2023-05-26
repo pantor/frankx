@@ -10,8 +10,8 @@
 
 namespace franky {
 
-WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints)
-    : WaypointMotion(std::move(waypoints), Params()) {}
+WaypointMotion::WaypointMotion(const std::vector<Waypoint>& waypoints)
+    : WaypointMotion(waypoints, Params()) {}
 
 WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints, WaypointMotion::Params params)
     : waypoints_(std::move(waypoints)), params_(std::move(params)) {}
