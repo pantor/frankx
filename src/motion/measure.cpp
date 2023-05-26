@@ -31,22 +31,63 @@ Measure Measure::ForceZ() {
   });
 }
 
-Measure Measure::ForceXYNorm() {
-  return Measure([](const franka::RobotState &robot_state, double time) {
-    return std::pow(robot_state.O_F_ext_hat_K[0], 2) + std::pow(robot_state.O_F_ext_hat_K[1], 2);
-  });
-}
-
-Measure Measure::ForceXYZNorm() {
-  return Measure([](const franka::RobotState &robot_state, double time) {
-    return std::pow(robot_state.O_F_ext_hat_K[0], 2) + std::pow(robot_state.O_F_ext_hat_K[1], 2) +
-        std::pow(robot_state.O_F_ext_hat_K[2], 2);
-  });
-}
-
 Measure Measure::Time() {
   return Measure([](const franka::RobotState &robot_state, double time) {
     return time;
+  });
+}
+
+Condition operator&&(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
+    return c1(robot_state, time) && c2(robot_state, time);
+  });
+}
+
+Condition operator||(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double time) {
+    return c1(robot_state, time) || c2(robot_state, time);
+  });
+}
+
+Condition operator!(const Condition &c) {
+  return Condition([c](const franka::RobotState &robot_state, double time) {
+    return !c(robot_state, time);
+  });
+}
+
+Condition operator==(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) == m2(robot_state, time);
+  });
+}
+
+Condition operator!=(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) != m2(robot_state, time);
+  });
+}
+
+Condition operator<=(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) <= m2(robot_state, time);
+  });
+}
+
+Condition operator>=(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) >= m2(robot_state, time);
+  });
+}
+
+Condition operator<(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) < m2(robot_state, time);
+  });
+}
+
+Condition operator>(const Measure &m1, const Measure &m2) {
+  return Condition([m1, m2](const franka::RobotState &robot_state, double time) {
+    return m1(robot_state, time) > m2(robot_state, time);
   });
 }
 

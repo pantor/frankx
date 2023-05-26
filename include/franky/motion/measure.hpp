@@ -6,6 +6,8 @@
 #include <iostream>
 #include <franka/robot_state.h>
 
+#include "franky/motion/condition.hpp"
+
 namespace franky {
 
 class Measure {
@@ -14,7 +16,7 @@ class Measure {
  public:
   explicit Measure(MeasureFunc measure_func);
 
-  explicit Measure(double constant);
+  Measure(double constant);
 
   inline double operator()(const franka::RobotState &robot_state, double time) const {
     return measure_func_(robot_state, time);
@@ -26,14 +28,28 @@ class Measure {
 
   static Measure ForceZ();
 
-  static Measure ForceXYNorm();
-
-  static Measure ForceXYZNorm();
-
   static Measure Time();
 
  private:
   MeasureFunc measure_func_;
 };
+
+Condition operator&&(const Condition &c1, const Condition &c2);
+
+Condition operator||(const Condition &c1, const Condition &c2);
+
+Condition operator!(const Condition &c);
+
+Condition operator==(const Measure &m1, const Measure &m2);
+
+Condition operator!=(const Measure &m1, const Measure &m2);
+
+Condition operator<=(const Measure &m1, const Measure &m2);
+
+Condition operator>=(const Measure &m1, const Measure &m2);
+
+Condition operator<(const Measure &m1, const Measure &m2);
+
+Condition operator>(const Measure &m1, const Measure &m2);
 
 }  // namespace franky
