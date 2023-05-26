@@ -3,7 +3,7 @@
 
 #include <Eigen/Core>
 
-#include <franky/franky.hpp>
+#include "franky.hpp"
 
 
 using namespace franky;

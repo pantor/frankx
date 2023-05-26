@@ -19,5 +19,5 @@ RobotPose Waypoint::getTargetRobotPose(const RobotPose &old_robot_pose) const {
     return new_robot_pose;
   return old_robot_pose.end_effector_pose() * new_robot_pose;
 }
-  
+
 }  // namespace franky

@@ -1,4 +1,4 @@
-#include <franky/franky.hpp>
+#include <franky.hpp>
 
 #include "util.cpp"
 

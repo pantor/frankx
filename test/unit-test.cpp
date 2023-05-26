@@ -3,7 +3,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <franky/franky.hpp>
+#include "franky.hpp"
 
 
 using namespace franky;
