@@ -1,19 +1,25 @@
 #include "franky/motion/measure.hpp"
 
+#include <sstream>
 #include <utility>
 #include <franka/robot_state.h>
 
-#define MEASURE_OP_DEF(OP) \
+#define MEASURE_CMP_DEF(OP) \
 Condition operator OP(const Measure &m1, const Measure &m2) { \
+  std::stringstream ss;     \
+  ss << m1.repr() << " " << #OP << " " << m2.repr(); \
   return Condition([m1, m2](const franka::RobotState &robot_state, double time) { \
     return m1(robot_state, time) OP m2(robot_state, time); \
-  }, m1.repr() + " OP " + m2.repr()); \
-} \
-Condition operator OP(const Measure &m1, double m2) { \
-  return m1 OP Measure(m2); \
-} \
-Condition operator OP(double m1, const Measure &m2) { \
-  return Measure(m1) OP m2; \
+  }, ss.str()); \
+}
+
+#define MEASURE_OP_DEF(OP) \
+Measure operator OP(const Measure &m1, const Measure &m2) { \
+  std::stringstream ss;     \
+  ss << "(" << m1.repr() << ") " << #OP << " (" << m2.repr() << ")"; \
+  return Measure([m1, m2](const franka::RobotState &robot_state, double time) { \
+    return m1(robot_state, time) OP m2(robot_state, time); \
+  }, ss.str()); \
 }
 
 namespace franky {
@@ -50,11 +56,24 @@ Measure Measure::Time() {
   }, "t");
 }
 
-MEASURE_OP_DEF(==)
-MEASURE_OP_DEF(!=)
-MEASURE_OP_DEF(<=)
-MEASURE_OP_DEF(>=)
-MEASURE_OP_DEF(<)
-MEASURE_OP_DEF(>)
+MEASURE_CMP_DEF(==)
+MEASURE_CMP_DEF(!=)
+MEASURE_CMP_DEF(<=)
+MEASURE_CMP_DEF(>=)
+MEASURE_CMP_DEF(<)
+MEASURE_CMP_DEF(>)
+
+MEASURE_OP_DEF(+)
+MEASURE_OP_DEF(-)
+MEASURE_OP_DEF(*)
+MEASURE_OP_DEF(/)
+
+Measure measure_pow(const Measure &base, const Measure &exponent) {
+  std::stringstream ss;
+  ss << "(" << base.repr() << ")^(" << exponent.repr() << ")";
+  return Measure([base, exponent](const franka::RobotState &robot_state, double time) {
+    return std::pow(base(robot_state, time), exponent(robot_state, time));
+  }, ss.str());
+}
 
 }  // namespace franky

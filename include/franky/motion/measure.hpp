@@ -8,10 +8,23 @@
 
 #include "franky/motion/condition.hpp"
 
-#define MEASURE_OP_DECL(OP) \
+#define MEASURE_CMP_DECL(OP) \
 Condition operator OP(const Measure &m1, const Measure &m2); \
-Condition operator OP(const Measure &m1, double m2); \
-Condition operator OP(double m1, const Measure &m2);
+inline Condition operator OP(const Measure &m1, double m2) { \
+  return m1 OP Measure(m2); \
+} \
+inline Condition operator OP(double m1, const Measure &m2) { \
+  return Measure(m1) OP m2; \
+}
+
+#define MEASURE_OP_DECL(OP) \
+Measure operator OP(const Measure &m1, const Measure &m2); \
+inline Measure operator OP(const Measure &m1, double m2){ \
+  return m1 OP Measure(m2); \
+} \
+inline Measure operator OP(double m1, const Measure &m2){ \
+  return Measure(m1) OP m2; \
+}
 
 namespace franky {
 
@@ -27,6 +40,10 @@ class Measure {
     return measure_func_(robot_state, time);
   }
 
+  inline std::string repr() const {
+    return repr_;
+  }
+
   static Measure ForceX();
 
   static Measure ForceY();
@@ -35,20 +52,29 @@ class Measure {
 
   static Measure Time();
 
-  std::string repr() const {
-    return repr_;
-  }
-
  private:
   MeasureFunc measure_func_;
   std::string repr_;
 };
 
-MEASURE_OP_DECL(==)
-MEASURE_OP_DECL(!=)
-MEASURE_OP_DECL(<=)
-MEASURE_OP_DECL(>=)
-MEASURE_OP_DECL(<)
-MEASURE_OP_DECL(>)
+MEASURE_CMP_DECL(==)
+MEASURE_CMP_DECL(!=)
+MEASURE_CMP_DECL(<=)
+MEASURE_CMP_DECL(>=)
+MEASURE_CMP_DECL(<)
+MEASURE_CMP_DECL(>)
+
+MEASURE_OP_DECL(+)
+MEASURE_OP_DECL(-)
+MEASURE_OP_DECL(*)
+MEASURE_OP_DECL(/)
+
+Measure measure_pow(const Measure &base, const Measure &exponent);
+inline Measure measure_pow(double base, const Measure &exponent) {
+  return measure_pow(Measure(base), exponent);
+}
+inline Measure measure_pow(const Measure &base, double exponent) {
+  return measure_pow(base, Measure(exponent));
+}
 
 }  // namespace franky
