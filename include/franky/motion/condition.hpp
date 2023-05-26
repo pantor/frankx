@@ -12,7 +12,7 @@ class Condition {
  public:
   using CheckFunc = std::function<bool(const franka::RobotState &, double)>;
 
-  explicit Condition(CheckFunc callback) : check_func_(std::move(callback)) {};
+  explicit Condition(CheckFunc callback);
 
   //! Check if the condition is fulfilled
   inline bool operator()(const franka::RobotState &robot_state, double time) const {
@@ -22,5 +22,11 @@ class Condition {
  private:
   CheckFunc check_func_;
 };
+
+Condition operator&&(const Condition &c1, const Condition &c2);
+
+Condition operator||(const Condition &c1, const Condition &c2);
+
+Condition operator!(const Condition &c);
 
 }  // namespace franky

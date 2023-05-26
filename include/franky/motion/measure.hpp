@@ -34,12 +34,6 @@ class Measure {
   MeasureFunc measure_func_;
 };
 
-Condition operator&&(const Condition &c1, const Condition &c2);
-
-Condition operator||(const Condition &c1, const Condition &c2);
-
-Condition operator!(const Condition &c);
-
 Condition operator==(const Measure &m1, const Measure &m2);
 
 Condition operator!=(const Measure &m1, const Measure &m2);
