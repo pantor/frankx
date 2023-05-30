@@ -47,90 +47,6 @@ void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
 PYBIND11_MODULE(_franky, m) {
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
-  py::class_<Condition>(m, "Condition")
-      .def("__repr__", &Condition::repr);
-
-  py::class_<ImpedanceMotion> impedance_motion(m, "ImpedanceMotion");
-
-  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
-      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
-      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute)
-      .export_values();
-
-  py::class_<ExponentialImpedanceMotion>(m, "ExponentialImpedanceMotion")
-      .def(py::init<>([](
-               const Affine &target, ImpedanceMotion::TargetType target_type, double translational_stiffness,
-               double rotational_stiffness, std::optional<std::array<std::optional<double>, 6>> force_constraints,
-               double exponential_decay = 0.005) {
-             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
-             Eigen::Vector<double, 6> force_constraints_value;
-             if (force_constraints.has_value()) {
-               for (int i = 0; i < 6; i++) {
-                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
-                 force_constraints_active[i] = force_constraints.value()[i].has_value();
-               }
-             }
-             return new ExponentialImpedanceMotion(
-                 target,
-                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-                  force_constraints_active, exponential_decay});
-           }),
-           "target"_a,
-           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
-           "translational_stiffness"_a = 2000,
-           "rotational_stiffness"_a = 200,
-           "force_constraints"_a = std::nullopt,
-           "exponential_decay"_a = 0.005);
-
-  py::class_<JointMotion>(m, "JointMotion")
-      .def(py::init<>([](
-               const Vector7d &target, double velocity_rel, double acceleration_rel, double jerk_rel,
-               bool return_when_finished) {
-             return new JointMotion(target, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
-           }),
-           "target"_a,
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
-           "return_when_finished"_a = true);
-
-  py::class_<LinearImpedanceMotion>(m, "LinearImpedanceMotion")
-      .def(py::init<>([](
-               const Affine &target,
-               double duration,
-               ImpedanceMotion::TargetType target_type,
-               double translational_stiffness,
-               double rotational_stiffness,
-               std::optional<std::array<std::optional<double>, 6>> force_constraints,
-               bool return_when_finished,
-               double finish_wait_factor) {
-             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
-             Eigen::Vector<double, 6> force_constraints_value;
-             if (force_constraints.has_value()) {
-               for (int i = 0; i < 6; i++) {
-                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
-                 force_constraints_active[i] = force_constraints.value()[i].has_value();
-               }
-             }
-             return new LinearImpedanceMotion(
-                 target, duration,
-                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-                  force_constraints_active, return_when_finished, finish_wait_factor});
-           }),
-           "target"_a,
-           "duration"_a,
-           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
-           "translational_stiffness"_a = 2000,
-           "rotational_stiffness"_a = 200,
-           "force_constraints"_a = std::nullopt,
-           "return_when_finished"_a = true,
-           "finish_wait_factor"_a = 1.2);
-
-  py::class_<LinearMotion>(m, "LinearMotion")
-      .def(py::init<>([](const RobotPose &target, bool relative, double velocity_rel) {
-        return new LinearMotion(target, relative, velocity_rel);
-      }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
-
   py::class_<Measure>(m, "Measure")
       .def_property_readonly_static("FORCE_X", [](py::object) { return Measure::ForceX(); })
       .def_property_readonly_static("FORCE_Y", [](py::object) { return Measure::ForceY(); })
@@ -172,19 +88,92 @@ PYBIND11_MODULE(_franky, m) {
       .def("__pow__", py::overload_cast<double, const Measure &>(&measure_pow), py::is_operator())
       .def("__repr__", &Measure::repr);
 
+  py::class_<Condition>(m, "Condition")
+      .def("__repr__", &Condition::repr);
+
   mk_motion_class<franka::Torques>(m, "Torque");
   mk_motion_class<franka::JointVelocities>(m, "JointVelocity");
   mk_motion_class<franka::JointPositions>(m, "JointPosition");
   mk_motion_class<franka::CartesianVelocities>(m, "CartesianVelocity");
   mk_motion_class<franka::CartesianPose>(m, "CartesianPose");
 
-  mk_reaction_class<franka::Torques>(m, "Torque");
-  mk_reaction_class<franka::JointVelocities>(m, "JointVelocity");
-  mk_reaction_class<franka::JointPositions>(m, "JointPosition");
-  mk_reaction_class<franka::CartesianVelocities>(m, "CartesianVelocity");
-  mk_reaction_class<franka::CartesianPose>(m, "CartesianPose");
+  py::class_<ImpedanceMotion, Motion<franka::Torques>> impedance_motion(m, "ImpedanceMotion");
 
-  py::class_<WaypointMotion>(m, "WaypointMotion")
+  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
+      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
+      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute)
+      .export_values();
+
+  py::class_<ExponentialImpedanceMotion, ImpedanceMotion>(m, "ExponentialImpedanceMotion")
+      .def(py::init<>([](
+               const Affine &target, ImpedanceMotion::TargetType target_type, double translational_stiffness,
+               double rotational_stiffness, std::optional<std::array<std::optional<double>, 6>> force_constraints,
+               double exponential_decay = 0.005) {
+             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
+             Eigen::Vector<double, 6> force_constraints_value;
+             if (force_constraints.has_value()) {
+               for (int i = 0; i < 6; i++) {
+                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
+                 force_constraints_active[i] = force_constraints.value()[i].has_value();
+               }
+             }
+             return new ExponentialImpedanceMotion(
+                 target,
+                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                  force_constraints_active, exponential_decay});
+           }),
+           "target"_a,
+           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "translational_stiffness"_a = 2000,
+           "rotational_stiffness"_a = 200,
+           "force_constraints"_a = std::nullopt,
+           "exponential_decay"_a = 0.005);
+
+  py::class_<LinearImpedanceMotion, ImpedanceMotion>(m, "LinearImpedanceMotion")
+      .def(py::init<>([](
+               const Affine &target,
+               double duration,
+               ImpedanceMotion::TargetType target_type,
+               double translational_stiffness,
+               double rotational_stiffness,
+               std::optional<std::array<std::optional<double>, 6>> force_constraints,
+               bool return_when_finished,
+               double finish_wait_factor) {
+             Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
+             Eigen::Vector<double, 6> force_constraints_value;
+             if (force_constraints.has_value()) {
+               for (int i = 0; i < 6; i++) {
+                 force_constraints_value[i] = force_constraints.value()[i].value_or(NAN);
+                 force_constraints_active[i] = force_constraints.value()[i].has_value();
+               }
+             }
+             return new LinearImpedanceMotion(
+                 target, duration,
+                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                  force_constraints_active, return_when_finished, finish_wait_factor});
+           }),
+           "target"_a,
+           "duration"_a,
+           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "translational_stiffness"_a = 2000,
+           "rotational_stiffness"_a = 200,
+           "force_constraints"_a = std::nullopt,
+           "return_when_finished"_a = true,
+           "finish_wait_factor"_a = 1.2);
+
+  py::class_<JointMotion, Motion<franka::JointPositions>>(m, "JointMotion")
+      .def(py::init<>([](
+               const Vector7d &target, double velocity_rel, double acceleration_rel, double jerk_rel,
+               bool return_when_finished) {
+             return new JointMotion(target, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+           }),
+           "target"_a,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "return_when_finished"_a = true);
+
+  py::class_<WaypointMotion, Motion<franka::CartesianPose>>(m, "WaypointMotion")
       .def(py::init<>([](
                const std::vector<Waypoint> &waypoints,
                const std::optional<Affine> &frame = std::nullopt,
@@ -205,6 +194,17 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "max_dynamics"_a = false,
            "return_when_finished"_a = true);
+
+  py::class_<LinearMotion, WaypointMotion>(m, "LinearMotion")
+      .def(py::init<>([](const RobotPose &target, bool relative, double velocity_rel) {
+        return new LinearMotion(target, relative, velocity_rel);
+      }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
+
+  mk_reaction_class<franka::Torques>(m, "Torque");
+  mk_reaction_class<franka::JointVelocities>(m, "JointVelocity");
+  mk_reaction_class<franka::JointPositions>(m, "JointPosition");
+  mk_reaction_class<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mk_reaction_class<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<Gripper>(m, "Gripper")
       .def(py::init<const std::string &, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
