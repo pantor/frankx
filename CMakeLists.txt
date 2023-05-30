@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 
 project(franky VERSION 0.2.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
 
 
 include(GNUInstallDirs)
@@ -21,10 +22,8 @@ message("Found Franka Version: ${Franka_VERSION}")
 
 add_subdirectory(ruckig)
 
-file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-list(REMOVE_ITEM SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/python.cpp")
+file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 add_library(franky ${SRC})
-set_property(TARGET franky PROPERTY CXX_STANDARD 17)
 target_include_directories(franky PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(franky PUBLIC Franka::Franka Eigen3::Eigen ruckig)
 
@@ -43,7 +42,8 @@ if (BUILD_PYTHON_MODULE)
         target_link_libraries(franky PUBLIC pybind11::embed)
     endif ()
 
-    pybind11_add_module(_franky src/python.cpp)
+    file(GLOB_RECURSE PYTHON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/python/*.cpp")
+    pybind11_add_module(_franky ${PYTHON_SRC})
     target_link_libraries(_franky PUBLIC franky)
 endif ()
 
