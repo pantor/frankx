@@ -314,6 +314,22 @@ PYBIND11_MODULE(_franky, m) {
         return ss.str();
       });
 
+  py::class_<Waypoint>(m, "Waypoint")
+      .def(py::init<RobotPose, Waypoint::ReferenceType, double, bool, std::optional<double>, double>(),
+           "robot_pose"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "velocity_rel"_a = 1.0,
+           "max_dynamics"_a = false, "minimum_time"_a = std::nullopt, "blend_max_distance"_a = 0.0)
+      .def_readonly("robot_pose", &Waypoint::robot_pose)
+      .def_readonly("reference_type", &Waypoint::reference_type)
+      .def_readonly("velocity_rel", &Waypoint::velocity_rel)
+      .def_readonly("max_dynamics", &Waypoint::max_dynamics)
+      .def_readonly("minimum_time", &Waypoint::minimum_time)
+      .def_readonly("blend_max_distance", &Waypoint::blend_max_distance);
+
+  py::enum_<Waypoint::ReferenceType>(m, "WaypointReferenceType")
+      .value("Absolute", Waypoint::ReferenceType::Absolute)
+      .value("Relative", Waypoint::ReferenceType::Relative)
+      .export_values();
+
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
            "transformation_matrix"_a = Eigen::Matrix<double, 4, 4>::Identity())
@@ -368,8 +384,10 @@ PYBIND11_MODULE(_franky, m) {
                              [](const franka::Errors &e) { return e.cartesian_velocity_violation; })
       .def_property_readonly("force_control_safety_violation",
                              [](const franka::Errors &e) { return e.force_control_safety_violation; })
-      .def_property_readonly("joint_reflex", [](const franka::Errors &e) { return e.joint_reflex; })
-      .def_property_readonly("cartesian_reflex", [](const franka::Errors &e) { return e.cartesian_reflex; })
+      .def_property_readonly("joint_reflex",
+                             [](const franka::Errors &e) { return e.joint_reflex; })
+      .def_property_readonly("cartesian_reflex",
+                             [](const franka::Errors &e) { return e.cartesian_reflex; })
       .def_property_readonly("max_goal_pose_deviation_violation",
                              [](const franka::Errors &e) { return e.max_goal_pose_deviation_violation; })
       .def_property_readonly("max_path_pose_deviation_violation",
@@ -418,11 +436,14 @@ PYBIND11_MODULE(_franky, m) {
                              [](const franka::Errors &e) { return e.start_elbow_sign_inconsistent; })
       .def_property_readonly("communication_constraints_violation",
                              [](const franka::Errors &e) { return e.communication_constraints_violation; })
-      .def_property_readonly("power_limit_violation", [](const franka::Errors &e) { return e.power_limit_violation; })
+      .def_property_readonly("power_limit_violation",
+                             [](const franka::Errors &e) { return e.power_limit_violation; })
       .def_property_readonly("joint_p2p_insufficient_torque_for_planning",
                              [](const franka::Errors &e) { return e.joint_p2p_insufficient_torque_for_planning; })
-      .def_property_readonly("tau_j_range_violation", [](const franka::Errors &e) { return e.tau_j_range_violation; })
-      .def_property_readonly("instability_detected", [](const franka::Errors &e) { return e.instability_detected; })
+      .def_property_readonly("tau_j_range_violation",
+                             [](const franka::Errors &e) { return e.tau_j_range_violation; })
+      .def_property_readonly("instability_detected",
+                             [](const franka::Errors &e) { return e.instability_detected; })
       .def_property_readonly("joint_move_in_wrong_direction",
                              [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
 
