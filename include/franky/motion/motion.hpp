@@ -19,7 +19,7 @@ class Motion {
 
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
-  void init(Robot *robot, const franka::RobotState &robot_state, double time);
+  void init(Robot *robot, const franka::RobotState &robot_state);
 
   ControlSignalType
   nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
@@ -27,7 +27,7 @@ class Motion {
  protected:
   explicit Motion();
 
-  virtual void initImpl(const franka::RobotState &robot_state, double time) {}
+  virtual void initImpl(const franka::RobotState &robot_state) {}
 
   virtual ControlSignalType
   nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;

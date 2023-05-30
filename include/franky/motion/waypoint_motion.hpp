@@ -30,7 +30,7 @@ class WaypointMotion : public Motion<franka::CartesianPose> {
   explicit WaypointMotion(std::vector<Waypoint> waypoints, Params params);
 
  protected:
-  void initImpl(const franka::RobotState &robot_state, double time) override;
+  void initImpl(const franka::RobotState &robot_state) override;
 
   franka::CartesianPose
   nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;

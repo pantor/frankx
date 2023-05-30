@@ -24,21 +24,22 @@ ControlSignalType
 MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_state, franka::Duration period) {
   if (abs_time_ == 0.0) {
     current_motion_ = initial_motion_;
-    current_motion_->init(robot_, robot_state, abs_time_);
+    current_motion_->init(robot_, robot_state);
   }
   abs_time_ += period.toSec();
+  auto rel_time = abs_time_ - rel_time_offset_;
 
   for (auto &callback : update_callbacks_)
-    callback(robot_state, period, abs_time_);
+    callback(robot_state, period, rel_time);
 
   size_t recursion_depth = 0;
   bool reaction_fired = true;
   while (reaction_fired) {
     reaction_fired = false;
     for (auto &reaction : current_motion_->reactions()) {
-      if (reaction->condition(robot_state, abs_time_ - rel_time_offset_, abs_time_)) {
-        current_motion_ = (*reaction)(robot_state, abs_time_ - rel_time_offset_, abs_time_);
-        current_motion_->init(robot_, robot_state, abs_time_);
+      if (reaction->condition(robot_state, rel_time, abs_time_)) {
+        current_motion_ = (*reaction)(robot_state, rel_time, abs_time_);
+        current_motion_->init(robot_, robot_state);
         rel_time_offset_ = abs_time_;
         reaction_fired = true;
         recursion_depth++;
@@ -50,7 +51,7 @@ MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_s
           "Reaction recursion reached depth limit " + std::to_string(REACTION_RECURSION_LIMIT) + ".");
     }
   }
-  return current_motion_->nextCommand(robot_state, period, abs_time_);
+  return current_motion_->nextCommand(robot_state, period, rel_time);
 }
 
 }  // namespace franky

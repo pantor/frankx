@@ -16,7 +16,7 @@ WaypointMotion::WaypointMotion(const std::vector<Waypoint>& waypoints)
 WaypointMotion::WaypointMotion(std::vector<Waypoint> waypoints, WaypointMotion::Params params)
     : waypoints_(std::move(waypoints)), params_(std::move(params)) {}
 
-void WaypointMotion::initImpl(const franka::RobotState &robot_state, double time) {
+void WaypointMotion::initImpl(const franka::RobotState &robot_state) {
   franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
   RobotPose robot_pose(initial_cartesian_pose);
   ref_frame_ = Affine::Identity();

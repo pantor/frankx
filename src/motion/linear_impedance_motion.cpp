@@ -16,15 +16,14 @@ LinearImpedanceMotion::LinearImpedanceMotion(
     const Affine &target, double duration, const LinearImpedanceMotion::Params &params)
     : duration_(duration), params_(params), ImpedanceMotion(target, params) {}
 
-void LinearImpedanceMotion::initImpl(const franka::RobotState &robot_state, double time) {
-  ImpedanceMotion::initImpl(robot_state, time);
+void LinearImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
+  ImpedanceMotion::initImpl(robot_state);
   initial_pose_ = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
-  motion_init_time_ = time;
 }
 
 std::tuple<Affine, bool>
 LinearImpedanceMotion::update(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-  double transition_parameter = (time - motion_init_time_) / duration_;
+  double transition_parameter = time / duration_;
   Affine intermediate_goal;
   bool done;
   if (transition_parameter <= 1.0) {  // [ms] to [s]

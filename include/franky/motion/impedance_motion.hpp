@@ -34,7 +34,7 @@ class ImpedanceMotion : public Motion<franka::Torques> {
   explicit ImpedanceMotion(Affine target, const Params &params);
 
  protected:
-  void initImpl(const franka::RobotState &robot_state, double time) override;
+  void initImpl(const franka::RobotState &robot_state) override;
 
   franka::Torques
   nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;

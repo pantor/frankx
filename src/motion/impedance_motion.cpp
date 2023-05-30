@@ -21,7 +21,7 @@ ImpedanceMotion::ImpedanceMotion(Affine target, const ImpedanceMotion::Params &p
   damping.bottomRightCorner(3, 3) << 2.0 * sqrt(params.rotational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
 }
 
-void ImpedanceMotion::initImpl(const franka::RobotState &robot_state, double time) {
+void ImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
   auto robot_pose = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
   intermediate_target_ = robot_pose;
   if (params_.target_type == TargetType::Relative)

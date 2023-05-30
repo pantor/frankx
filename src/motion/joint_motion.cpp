@@ -16,7 +16,7 @@ JointMotion::JointMotion(const Vector7d &target) : JointMotion(target, Params())
 JointMotion::JointMotion(Vector7d target, const JointMotion::Params &params)
     : target_(std::move(target)), params_(params) {}
 
-void JointMotion::initImpl(const franka::RobotState &robot_state, double time) {
+void JointMotion::initImpl(const franka::RobotState &robot_state) {
   current_cooldown_iteration_ = 0;
 
   input_para.current_position = robot_state.q_d;

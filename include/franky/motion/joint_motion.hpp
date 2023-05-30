@@ -25,7 +25,7 @@ class JointMotion : public Motion<franka::JointPositions> {
   explicit JointMotion(Vector7d target, const Params &params);
 
  protected:
-  void initImpl(const franka::RobotState &robot_state, double time) override;
+  void initImpl(const franka::RobotState &robot_state) override;
 
   franka::JointPositions
   nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;

@@ -29,16 +29,15 @@ std::vector<std::shared_ptr<Reaction<ControlSignalType>>> Motion<ControlSignalTy
 }
 
 template<typename ControlSignalType>
-void Motion<ControlSignalType>::init(Robot *robot, const franka::RobotState &robot_state, double time) {
+void Motion<ControlSignalType>::init(Robot *robot, const franka::RobotState &robot_state) {
   std::lock_guard<std::mutex> lock(mutex_);
   robot_ = robot;
-  initImpl(robot_state, time);
+  initImpl(robot_state);
 }
 
 template<typename ControlSignalType>
 ControlSignalType
-Motion<ControlSignalType>::nextCommand(const franka::RobotState &robot_state, franka::Duration time_step,
-                                       double time) {
+Motion<ControlSignalType>::nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
   std::lock_guard<std::mutex> lock(mutex_);
   return nextCommandImpl(robot_state, time_step, time);
 }
