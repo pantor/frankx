@@ -41,7 +41,8 @@ void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
 
 template<typename ControlSignalType>
 void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
-  py::class_<Reaction<ControlSignalType>>(m, (control_signal_name + "Reaction").c_str())
+  py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
+      m, (control_signal_name + "Reaction").c_str())
       .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>());
 }
 
