@@ -31,8 +31,9 @@ bool Robot::recoverFromErrors() {
   return !hasErrors();
 }
 
-Affine Robot::currentPose() {
-  return Affine(Eigen::Matrix4d::Map(state().O_T_EE.data()));
+RobotPose Robot::currentPose() {
+  auto s = state();
+  return RobotPose(Affine(Eigen::Matrix4d::Map(s.O_T_EE.data())), s.elbow[0]);
 }
 
 Vector7d Robot::currentJointPositions() {

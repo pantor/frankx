@@ -81,7 +81,7 @@ class Robot : public franka::Robot {
 
   bool recoverFromErrors();
 
-  Affine currentPose();
+  RobotPose currentPose();
 
   Vector7d currentJointPositions();
 
