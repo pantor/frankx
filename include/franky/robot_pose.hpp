@@ -14,7 +14,7 @@ class RobotPose {
 
   RobotPose(const RobotPose &robot_pose);
 
-  explicit RobotPose(Eigen::Affine3d end_effector_pose, std::optional<double> elbow_position = std::nullopt);
+  RobotPose(Affine end_effector_pose, std::optional<double> elbow_position = std::nullopt);
 
   explicit RobotPose(const Vector7d &vector_repr, bool ignore_elbow = false);
 
