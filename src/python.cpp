@@ -202,6 +202,104 @@ PYBIND11_MODULE(_franky, m) {
            "max_dynamics"_a = false,
            "return_when_finished"_a = true);
 
+  py::class_<Gripper>(m, "Gripper")
+      .def(py::init<const std::string &, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
+      .def_readwrite("gripper_force", &Gripper::gripper_force)
+      .def_readwrite("gripper_speed", &Gripper::gripper_speed)
+      .def_readonly("max_width", &Gripper::max_width)
+      .def_readonly("has_error", &Gripper::has_error)
+      .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
+      .def("grasp",
+           (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp,
+           py::call_guard<py::gil_scoped_release>())
+      .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
+      .def("stop", &Gripper::stop)
+      .def("read_once", &Gripper::readOnce)
+      .def("server_version", &Gripper::serverVersion)
+      .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
+      .def("move_unsafe", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
+      .def("width", &Gripper::width)
+      .def("is_grasping", &Gripper::isGrasping)
+      .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())
+      .def("clamp", (bool (Gripper::*)()) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
+      .def("clamp", (bool (Gripper::*)(double)) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
+      .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
+      .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
+      .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>())
+      .def("get_state", &Gripper::get_state);
+
+  py::class_<Kinematics>(m, "Kinematics")
+      .def_static("forward", &Kinematics::forward, "q"_a)
+      .def_static("forward_elbow", &Kinematics::forwardElbow, "q"_a)
+      .def_static("forward_euler", &Kinematics::forwardEuler, "q"_a)
+      .def_static("jacobian", &Kinematics::jacobian, "q"_a)
+      .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a = std::nullopt);
+
+  py::class_<Robot>(m, "Robot")
+      .def(py::init<>([](
+               const std::string &fci_ip,
+               double velocity_rel,
+               double acceleration_rel,
+               double jerk_rel,
+               franka::ControllerMode controller_mode,
+               franka::RealtimeConfig realtime_config) {
+             return new Robot(fci_ip, {velocity_rel, acceleration_rel, jerk_rel, controller_mode, realtime_config});
+           }),
+           "fci_ip"_a,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "controller_mode"_a = franka::ControllerMode::kJointImpedance,
+           "realtime_config"_a = franka::RealtimeConfig::kEnforce)
+      .def("set_dynamic_rel", py::overload_cast<double>(&Robot::setDynamicRel), "dynamic_rel"_a)
+      .def("set_dynamic_rel", py::overload_cast<double, double, double>(&Robot::setDynamicRel),
+           "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
+      .def("recover_from_errors", &Robot::recoverFromErrors)
+      .def("move",
+           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::CartesianPose>> &)>(&Robot::move),
+           py::call_guard<py::gil_scoped_release>())
+      .def("move",
+           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::CartesianVelocities>> &)>(&Robot::move),
+           py::call_guard<py::gil_scoped_release>())
+      .def("move",
+           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::JointPositions>> &)>(&Robot::move),
+           py::call_guard<py::gil_scoped_release>())
+      .def("move",
+           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::JointVelocities>> &)>(&Robot::move),
+           py::call_guard<py::gil_scoped_release>())
+      .def("move",
+           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::Torques>> &)>(&Robot::move),
+           py::call_guard<py::gil_scoped_release>())
+      .def_property_readonly("velocity_rel", &Robot::velocity_rel)
+      .def_property_readonly("acceleration_rel", &Robot::acceleration_rel)
+      .def_property_readonly("jerk_rel", &Robot::jerk_rel)
+      .def_property_readonly("has_errors", &Robot::hasErrors)
+      .def_property_readonly("current_pose", &Robot::currentPose)
+      .def_property_readonly("current_joint_positions", &Robot::currentJointPositions)
+      .def_property_readonly("state", &Robot::state)
+      .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity, "[m/s]")
+      .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity, "[rad/s]")
+      .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity, "[rad/s]")
+      .def_readonly_static("max_translation_acceleration", &Robot::max_translation_acceleration, "[m/s²]")
+      .def_readonly_static("max_rotation_acceleration", &Robot::max_rotation_acceleration, "[rad/s²]")
+      .def_readonly_static("max_elbow_acceleration", &Robot::max_elbow_acceleration, "[rad/s²]")
+      .def_readonly_static("max_translation_jerk", &Robot::max_translation_jerk, "[m/s³]")
+      .def_readonly_static("max_rotation_jerk", &Robot::max_rotation_jerk, "[rad/s³]")
+      .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk, "[rad/s³]")
+      .def_readonly_static("degrees_of_freedom", &Robot::degrees_of_freedoms)
+      .def_readonly_static("control_rate", &Robot::control_rate, "[s]")
+      .def_property_readonly_static("max_joint_velocity", []() {
+        return Vector7d::Map(Robot::max_joint_velocity.data());
+      }, "[rad/s]")
+      .def_property_readonly_static("max_joint_acceleration", []() {
+        return Vector7d::Map(Robot::max_joint_acceleration.data());
+      }, "[rad/s²]")
+      .def_property_readonly_static("max_joint_jerk", []() {
+        return Vector7d::Map(Robot::max_joint_jerk.data());
+      }, "[rad/s^3]")
+      .def_static("forward_kinematics", &Robot::forwardKinematics, "q"_a)
+      .def_static("inverseKinematics", &Robot::inverseKinematics, "target"_a, "q0"_a);
+
   py::class_<RobotPose>(m, "RobotPose")
       .def(py::init<Eigen::Affine3d, std::optional<double>>(),
            "end_effector_pose"_a,
@@ -241,13 +339,6 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
       .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
       .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
-
-  py::class_<Kinematics>(m, "Kinematics")
-      .def_static("forward", &Kinematics::forward, "q"_a)
-      .def_static("forwardElbow", &Kinematics::forwardElbow, "q"_a)
-      .def_static("forwardEuler", &Kinematics::forwardEuler, "q"_a)
-      .def_static("jacobian", &Kinematics::jacobian, "q"_a)
-      .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a = std::nullopt);
 
   py::class_<franka::Duration>(m, "Duration")
       .def(py::init<>())
@@ -406,32 +497,6 @@ PYBIND11_MODULE(_franky, m) {
       .def_readonly("is_grasped", &franka::GripperState::is_grasped)
       .def_readonly("temperature", &franka::GripperState::temperature)
       .def_readonly("time", &franka::GripperState::time);
-
-  py::class_<Gripper>(m, "Gripper")
-      .def(py::init<const std::string &, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
-      .def_readwrite("gripper_force", &Gripper::gripper_force)
-      .def_readwrite("gripper_speed", &Gripper::gripper_speed)
-      .def_readonly("max_width", &Gripper::max_width)
-      .def_readonly("has_error", &Gripper::has_error)
-      .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
-      .def("grasp",
-           (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp,
-           py::call_guard<py::gil_scoped_release>())
-      .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
-      .def("stop", &Gripper::stop)
-      .def("read_once", &Gripper::readOnce)
-      .def("server_version", &Gripper::serverVersion)
-      .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
-      .def("move_unsafe", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
-      .def("width", &Gripper::width)
-      .def("is_grasping", &Gripper::isGrasping)
-      .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())
-      .def("clamp", (bool (Gripper::*)()) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
-      .def("clamp", (bool (Gripper::*)(double)) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
-      .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
-      .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
-      .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>())
-      .def("get_state", &Gripper::get_state);
 
   py::register_exception<franka::CommandException>(m, "CommandException");
   py::register_exception<franka::ControlException>(m, "ControlException");
