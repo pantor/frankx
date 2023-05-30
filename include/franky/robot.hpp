@@ -25,7 +25,7 @@ class Robot : public franka::Robot {
     double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
 
     // kCartesianImpedance wobbles -> setK?
-    franka::ControllerMode controller_mode_{franka::ControllerMode::kJointImpedance};
+    franka::ControllerMode controller_mode{franka::ControllerMode::kJointImpedance};
 
     franka::RealtimeConfig realtime_config{franka::RealtimeConfig::kEnforce};
   };
@@ -102,25 +102,25 @@ class Robot : public franka::Robot {
   // These helper functions are needed as the implicit template deduction does not work on subclasses of Motion
   inline void move(const std::shared_ptr<Motion<franka::CartesianPose>> &motion) {
     moveInternal<franka::CartesianPose>(motion, [this](const ControlFunc<franka::CartesianPose> &m) {
-      control(m, params_.controller_mode_);
+      control(m, params_.controller_mode);
     });
   }
 
   inline void move(const std::shared_ptr<Motion<franka::CartesianVelocities>> &motion) {
     moveInternal<franka::CartesianVelocities>(motion, [this](const ControlFunc<franka::CartesianVelocities> &m) {
-      control(m, params_.controller_mode_);
+      control(m, params_.controller_mode);
     });
   }
 
   inline void move(const std::shared_ptr<Motion<franka::JointPositions>> &motion) {
     moveInternal<franka::JointPositions>(motion, [this](const ControlFunc<franka::JointPositions> &m) {
-      control(m, params_.controller_mode_);
+      control(m, params_.controller_mode);
     });
   }
 
   inline void move(const std::shared_ptr<Motion<franka::JointVelocities>> &motion) {
     moveInternal<franka::JointVelocities>(motion, [this](const ControlFunc<franka::JointVelocities> &m) {
-      control(m, params_.controller_mode_);
+      control(m, params_.controller_mode);
     });
   }
 
@@ -148,7 +148,7 @@ class Robot : public franka::Robot {
   template<typename ControlSignalType>
   inline void move(const std::shared_ptr<Motion<ControlSignalType>> &motion) {
     moveInternal<ControlSignalType>(motion, [this](const ControlFunc<ControlSignalType> &m) {
-      control(m, params_.controller_mode_);
+      control(m, params_.controller_mode);
     });
   }
 
