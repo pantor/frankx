@@ -24,17 +24,21 @@ class Reaction {
 
   explicit Reaction(Condition condition, const MotionFunc &motion_func);
 
-  inline std::shared_ptr<Motion<ControlSignalType>> operator()(const franka::RobotState &robot_state, double time) {
-    return motion_func_(robot_state, time);
+  std::shared_ptr<Motion<ControlSignalType>> operator()(const franka::RobotState &robot_state, double time);
+
+  [[nodiscard]] inline bool condition(const franka::RobotState &robot_state, double time) const {
+    return condition_(robot_state, time);
   }
 
-  inline bool condition(const franka::RobotState &robot_state, double time) {
-    return condition_(robot_state, time);
+  inline void registerCallback(std::function<void(Reaction *, const franka::RobotState &, double)> callback) {
+    callbacks_.push_back(callback);
   }
 
  private:
   MotionFunc motion_func_;
   Condition condition_;
+  std::mutex callback_mutex_;
+  std::vector<std::function<void(Reaction *, const franka::RobotState &, double)>> callbacks_{};
 };
 
 }  // namespace franky

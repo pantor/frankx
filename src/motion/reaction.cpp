@@ -24,4 +24,20 @@ template<typename ControlSignalType>
 Reaction<ControlSignalType>::Reaction(Condition condition, const Reaction::MotionFunc &motion_func)
     : condition_(std::move(condition)), motion_func_(motion_func) {}
 
+template<typename ControlSignalType>
+std::shared_ptr<Motion<ControlSignalType>> Reaction<ControlSignalType>::operator()(
+    const franka::RobotState &robot_state, double time) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  for (auto cb : callbacks_)
+    cb(this, robot_state, time);
+  return motion_func_(robot_state, time);
+}
+
+template<typename ControlSignalType>
+void Reaction<ControlSignalType>::registerCallback(
+    std::function<void(Reaction<ControlSignalType> *, const franka::RobotState &, double, double)> callback) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  callbacks_.push_back(callback);
+}
+
 }  // namespace franky
