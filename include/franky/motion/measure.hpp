@@ -29,18 +29,18 @@ inline Measure operator OP(double m1, const Measure &m2){ \
 namespace franky {
 
 class Measure {
-  using MeasureFunc = std::function<double(const franka::RobotState &, double)>;
+  using MeasureFunc = std::function<double(const franka::RobotState &, double, double)>;
 
  public:
   explicit Measure(MeasureFunc measure_func, std::string repr = "NULL");
 
   explicit Measure(double constant);
 
-  inline double operator()(const franka::RobotState &robot_state, double time) const {
-    return measure_func_(robot_state, time);
+  inline double operator()(const franka::RobotState &robot_state, double rel_time, double abs_time) const {
+    return measure_func_(robot_state, rel_time, abs_time);
   }
 
-  inline std::string repr() const {
+  [[nodiscard]] inline std::string repr() const {
     return repr_;
   }
 
@@ -50,7 +50,9 @@ class Measure {
 
   static Measure ForceZ();
 
-  static Measure Time();
+  static Measure RelTime();
+
+  static Measure AbsTime();
 
  private:
   MeasureFunc measure_func_;

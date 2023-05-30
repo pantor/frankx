@@ -10,16 +10,16 @@ namespace franky {
 
 class Condition {
  public:
-  using CheckFunc = std::function<bool(const franka::RobotState &, double)>;
+  using CheckFunc = std::function<bool(const franka::RobotState &, double, double)>;
 
   explicit Condition(CheckFunc check_func, std::string repr = "NULL");
 
   //! Check if the condition is fulfilled
-  inline bool operator()(const franka::RobotState &robot_state, double time) const {
-    return check_func_(robot_state, time);
+  inline bool operator()(const franka::RobotState &robot_state, double rel_time, double abs_time) const {
+    return check_func_(robot_state, rel_time, abs_time);
   }
 
-  inline std::string repr() const {
+  [[nodiscard]] inline std::string repr() const {
     return repr_;
   }
 
