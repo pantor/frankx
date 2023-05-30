@@ -33,7 +33,8 @@ std::string affine_to_str(const Affine &affine) {
 
 template<typename ControlSignalType>
 void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
-  py::class_<Motion<ControlSignalType>>(m, (control_signal_name + "Motion").c_str())
+  py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>>(
+      m, (control_signal_name + "Motion").c_str())
       .def_property_readonly("reaction", &Motion<ControlSignalType>::reactions)
       .def("add_reaction", &Motion<ControlSignalType>::addReaction);
 }
@@ -97,14 +98,16 @@ PYBIND11_MODULE(_franky, m) {
   mk_motion_class<franka::CartesianVelocities>(m, "CartesianVelocity");
   mk_motion_class<franka::CartesianPose>(m, "CartesianPose");
 
-  py::class_<ImpedanceMotion, Motion<franka::Torques>> impedance_motion(m, "ImpedanceMotion");
+  py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>
+      impedance_motion(m, "ImpedanceMotion");
 
   py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
       .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
       .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute)
       .export_values();
 
-  py::class_<ExponentialImpedanceMotion, ImpedanceMotion>(m, "ExponentialImpedanceMotion")
+  py::class_<ExponentialImpedanceMotion, ImpedanceMotion, std::shared_ptr<ExponentialImpedanceMotion>>(
+      m, "ExponentialImpedanceMotion")
       .def(py::init<>([](
                const Affine &target, ImpedanceMotion::TargetType target_type, double translational_stiffness,
                double rotational_stiffness, std::optional<std::array<std::optional<double>, 6>> force_constraints,
@@ -129,7 +132,7 @@ PYBIND11_MODULE(_franky, m) {
            "force_constraints"_a = std::nullopt,
            "exponential_decay"_a = 0.005);
 
-  py::class_<LinearImpedanceMotion, ImpedanceMotion>(m, "LinearImpedanceMotion")
+  py::class_<LinearImpedanceMotion, ImpedanceMotion, std::shared_ptr<LinearImpedanceMotion>>(m, "LinearImpedanceMotion")
       .def(py::init<>([](
                const Affine &target,
                double duration,
@@ -161,7 +164,7 @@ PYBIND11_MODULE(_franky, m) {
            "return_when_finished"_a = true,
            "finish_wait_factor"_a = 1.2);
 
-  py::class_<JointMotion, Motion<franka::JointPositions>>(m, "JointMotion")
+  py::class_<JointMotion, Motion<franka::JointPositions>, std::shared_ptr<JointMotion>>(m, "JointMotion")
       .def(py::init<>([](
                const Vector7d &target, double velocity_rel, double acceleration_rel, double jerk_rel,
                bool return_when_finished) {
@@ -173,7 +176,7 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "return_when_finished"_a = true);
 
-  py::class_<WaypointMotion, Motion<franka::CartesianPose>>(m, "WaypointMotion")
+  py::class_<WaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
       .def(py::init<>([](
                const std::vector<Waypoint> &waypoints,
                const std::optional<Affine> &frame = std::nullopt,
@@ -195,7 +198,7 @@ PYBIND11_MODULE(_franky, m) {
            "max_dynamics"_a = false,
            "return_when_finished"_a = true);
 
-  py::class_<LinearMotion, WaypointMotion>(m, "LinearMotion")
+  py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
       .def(py::init<>([](const RobotPose &target, bool relative, double velocity_rel) {
         return new LinearMotion(target, relative, velocity_rel);
       }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
