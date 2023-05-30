@@ -327,6 +327,7 @@ PYBIND11_MODULE(_franky, m) {
         ss << ")";
         return ss.str();
       });
+  py::implicitly_convertible<Affine, RobotPose>();
 
   py::class_<Waypoint> waypoint(m, "Waypoint");
 
