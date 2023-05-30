@@ -5,6 +5,10 @@
 
 #include "franky.hpp"
 
+
+#include <iostream>
+
+
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the '_a' literal
 using namespace franky;
@@ -43,6 +47,8 @@ void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
 }
 
 PYBIND11_MODULE(_franky, m) {
+  std::cout << "test1234" << std::endl;
+
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
   py::class_<Condition>(m, "Condition")
