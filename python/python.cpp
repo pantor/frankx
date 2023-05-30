@@ -5,9 +5,7 @@
 
 #include "franky.hpp"
 
-
 #include <iostream>
-
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the '_a' literal
@@ -47,12 +45,17 @@ void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
 }
 
 PYBIND11_MODULE(_franky, m) {
-  std::cout << "test1234" << std::endl;
-
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
   py::class_<Condition>(m, "Condition")
       .def("__repr__", &Condition::repr);
+
+  py::class_<ImpedanceMotion> impedance_motion(m, "ImpedanceMotion");
+
+  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
+      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
+      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute)
+      .export_values();
 
   py::class_<ExponentialImpedanceMotion>(m, "ExponentialImpedanceMotion")
       .def(py::init<>([](
@@ -78,12 +81,6 @@ PYBIND11_MODULE(_franky, m) {
            "rotational_stiffness"_a = 200,
            "force_constraints"_a = std::nullopt,
            "exponential_decay"_a = 0.005);
-
-  py::class_<ImpedanceMotion> impedance_motion(m, "ImpedanceMotion");
-
-  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
-      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
-      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute);
 
   py::class_<JointMotion>(m, "JointMotion")
       .def(py::init<>([](
@@ -242,6 +239,16 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("jacobian", &Kinematics::jacobian, "q"_a)
       .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a = std::nullopt);
 
+  py::enum_<franka::ControllerMode>(m, "ControllerMode")
+      .value("JointImpedance", franka::ControllerMode::kJointImpedance)
+      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance)
+      .export_values();
+
+  py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
+      .value("Enforce", franka::RealtimeConfig::kEnforce)
+      .value("Ignore", franka::RealtimeConfig::kIgnore)
+      .export_values();
+
   py::class_<Robot>(m, "Robot")
       .def(py::init<>([](
                const std::string &fci_ip,
@@ -321,7 +328,14 @@ PYBIND11_MODULE(_franky, m) {
         return ss.str();
       });
 
-  py::class_<Waypoint>(m, "Waypoint")
+  py::class_<Waypoint> waypoint(m, "Waypoint");
+
+  py::enum_<Waypoint::ReferenceType>(waypoint, "ReferenceType")
+      .value("ABSOLUTE", Waypoint::ReferenceType::Absolute)
+      .value("RELATIVE", Waypoint::ReferenceType::Relative)
+      .export_values();
+
+  waypoint
       .def(py::init<RobotPose, Waypoint::ReferenceType, double, bool, std::optional<double>, double>(),
            "robot_pose"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "velocity_rel"_a = 1.0,
            "max_dynamics"_a = false, "minimum_time"_a = std::nullopt, "blend_max_distance"_a = 0.0)
@@ -331,11 +345,6 @@ PYBIND11_MODULE(_franky, m) {
       .def_readonly("max_dynamics", &Waypoint::max_dynamics)
       .def_readonly("minimum_time", &Waypoint::minimum_time)
       .def_readonly("blend_max_distance", &Waypoint::blend_max_distance);
-
-  py::enum_<Waypoint::ReferenceType>(m, "WaypointReferenceType")
-      .value("Absolute", Waypoint::ReferenceType::Absolute)
-      .value("Relative", Waypoint::ReferenceType::Relative)
-      .export_values();
 
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
@@ -462,16 +471,6 @@ PYBIND11_MODULE(_franky, m) {
       .value("Reflex", franka::RobotMode::kReflex)
       .value("UserStopped", franka::RobotMode::kUserStopped)
       .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery)
-      .export_values();
-
-  py::enum_<franka::ControllerMode>(m, "ControllerMode")
-      .value("JointImpedance", franka::ControllerMode::kJointImpedance)
-      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance)
-      .export_values();
-
-  py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
-      .value("Enforce", franka::RealtimeConfig::kEnforce)
-      .value("Ignore", franka::RealtimeConfig::kIgnore)
       .export_values();
 
   py::class_<franka::RobotState>(m, "RobotState")
