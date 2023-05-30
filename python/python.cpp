@@ -315,7 +315,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("inverseKinematics", &Robot::inverseKinematics, "target"_a, "q0"_a);
 
   py::class_<RobotPose>(m, "RobotPose")
-      .def(py::init<Eigen::Affine3d, std::optional<double>>(),
+      .def(py::init<Affine, std::optional<double>>(),
            "end_effector_pose"_a,
            "elbow_position"_a = std::nullopt)
       .def(py::init<const RobotPose &>()) // Copy constructor
@@ -352,7 +352,7 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](const Vector<3> &translation, const Vector<4> &quaternion) {
         return Affine().fromPositionOrientationScale(
             translation, Eigen::Quaterniond(quaternion), Vector<3>::Ones());
-      }))
+      }), "translation"_a = Vector<3>{0, 0, 0}, "quaternion"_a = Vector<4>{0, 0, 0, 1})
       .def(py::init<const Affine &>()) // Copy constructor
       .def(py::self * py::self)
       .def_property_readonly("inverse", &Affine::inverse)
