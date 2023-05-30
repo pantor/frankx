@@ -2,14 +2,17 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
+#include <pybind11/functional.h>
 
-#include "franky.hpp"
+#include <franky.hpp>
 
-#include <iostream>
+#include "concurrent_queue.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the '_a' literal
 using namespace franky;
+
+ConcurrentQueue<std::function<void()>> callback_queue;
 
 template<int dims>
 std::string vec_to_str(const Vector<dims> &vec) {
@@ -43,8 +46,29 @@ template<typename ControlSignalType>
 void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
   py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
       m, (control_signal_name + "Reaction").c_str())
-      .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>());
+      .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>())
+      .def("register_callback", [](
+          Reaction<ControlSignalType> &reaction,
+          const std::function<void(const franka::RobotState &, double, double)> &callback
+      ) {
+        reaction.registerCallback([callback](
+            const franka::RobotState &robot_state, double rel_time, double abs_time) {
+          callback_queue.push([callback, robot_state, rel_time, abs_time]() {
+            callback(robot_state, rel_time, abs_time);
+          });
+        });
+      }, "callback"_a);
 }
+
+[[noreturn]] void executeCallbacks() {
+  while (true) {
+    std::function<void()> callback = callback_queue.pop();
+    callback();
+  }
+}
+
+// Start the callback execution thread
+std::thread callback_thread(executeCallbacks);
 
 PYBIND11_MODULE(_franky, m) {
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
