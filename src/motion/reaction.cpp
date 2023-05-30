@@ -29,13 +29,13 @@ std::shared_ptr<Motion<ControlSignalType>> Reaction<ControlSignalType>::operator
     const franka::RobotState &robot_state, double rel_time, double abs_time) {
   std::lock_guard<std::mutex> lock(callback_mutex_);
   for (auto cb : callbacks_)
-    cb(this, robot_state, rel_time, abs_time);
+    cb(robot_state, rel_time, abs_time);
   return motion_func_(robot_state, rel_time, abs_time);
 }
 
 template<typename ControlSignalType>
 void Reaction<ControlSignalType>::registerCallback(
-    std::function<void(Reaction<ControlSignalType> *, const franka::RobotState &, double, double)> callback) {
+    std::function<void(const franka::RobotState &, double, double)> callback) {
   std::lock_guard<std::mutex> lock(callback_mutex_);
   callbacks_.push_back(callback);
 }

@@ -30,13 +30,13 @@ class Reaction {
     return condition_(robot_state, rel_time, abs_time);
   }
 
-  void registerCallback(std::function<void(Reaction *, const franka::RobotState &, double, double)> callback);
+  void registerCallback(std::function<void(const franka::RobotState &, double, double)> callback);
 
  private:
   MotionFunc motion_func_;
   Condition condition_;
   std::mutex callback_mutex_;
-  std::vector<std::function<void(Reaction *, const franka::RobotState &, double, double)>> callbacks_{};
+  std::vector<std::function<void(const franka::RobotState &, double, double)>> callbacks_{};
 };
 
 }  // namespace franky
