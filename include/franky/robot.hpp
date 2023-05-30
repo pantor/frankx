@@ -77,15 +77,15 @@ class Robot : public franka::Robot {
 
   void setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel);
 
-  bool hasErrors();
-
   bool recoverFromErrors();
 
-  RobotPose currentPose();
+  [[nodiscard]] bool hasErrors();
 
-  Vector7d currentJointPositions();
+  [[nodiscard]] RobotPose currentPose();
 
-  franka::RobotState state();
+  [[nodiscard]] Vector7d currentJointPositions();
+
+  [[nodiscard]] franka::RobotState state();
 
   [[nodiscard]] inline double velocity_rel() const {
     return params_.velocity_rel;
@@ -130,9 +130,9 @@ class Robot : public franka::Robot {
     });
   }
 
-  static Affine forwardKinematics(const Vector7d &q);
+  [[nodiscard]] static Affine forwardKinematics(const Vector7d &q);
 
-  static Vector7d inverseKinematics(const Affine &target, const Vector7d &q0);
+  [[nodiscard]] static Vector7d inverseKinematics(const Affine &target, const Vector7d &q0);
 
  private:
   template<typename ControlSignalType>
