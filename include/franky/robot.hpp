@@ -77,6 +77,29 @@ class Robot : public franka::Robot {
 
   void setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel);
 
+  using franka::Robot::setCollisionBehavior;
+
+  void setCollisionBehavior(double torque_threshold, double force_threshold);
+
+  void setCollisionBehavior(const std::array<double, 7> &torque_thresholds,
+                            const std::array<double, 6> &force_thresholds);
+
+  void setCollisionBehavior(
+      double lower_torque_threshold,
+      double upper_torque_threshold,
+      double lower_force_threshold,
+      double upper_force_threshold);
+
+  void setCollisionBehavior(
+      double lower_torque_threshold_acceleration,
+      double upper_torque_threshold_acceleration,
+      double lower_torque_threshold_nominal,
+      double upper_torque_threshold_nominal,
+      double lower_force_threshold_acceleration,
+      double upper_force_threshold_acceleration,
+      double lower_force_threshold_nominal,
+      double upper_force_threshold_nominal);
+
   bool recoverFromErrors();
 
   [[nodiscard]] bool hasErrors();

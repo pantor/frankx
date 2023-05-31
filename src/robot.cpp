@@ -1,6 +1,8 @@
+#include "franky/robot.hpp"
+
 #include <ruckig/ruckig.hpp>
 
-#include "franky/robot.hpp"
+#include "franky/util.hpp"
 
 namespace franky {
 
@@ -74,6 +76,47 @@ franka::RobotState Robot::state() {
     current_state_ = readOnce();
   }
   return current_state_;
+}
+
+void Robot::setCollisionBehavior(double torque_threshold, double force_threshold) {
+  setCollisionBehavior(mkFull<7>(torque_threshold), mkFull<6>(force_threshold));
+}
+
+void Robot::setCollisionBehavior(const std::array<double, 7> &torque_thresholds, const std::array<double, 6> &force_thresholds) {
+  setCollisionBehavior(torque_thresholds, torque_thresholds, force_thresholds, force_thresholds);
+}
+
+void Robot::setCollisionBehavior(
+    double lower_torque_threshold,
+    double upper_torque_threshold,
+    double lower_force_threshold,
+    double upper_force_threshold) {
+  setCollisionBehavior(
+      mkFull<7>(lower_torque_threshold),
+      mkFull<7>(upper_torque_threshold),
+      mkFull<6>(lower_force_threshold),
+      mkFull<6>(upper_force_threshold));
+}
+
+void Robot::setCollisionBehavior(
+    double lower_torque_threshold_acceleration,
+    double upper_torque_threshold_acceleration,
+    double lower_torque_threshold_nominal,
+    double upper_torque_threshold_nominal,
+    double lower_force_threshold_acceleration,
+    double upper_force_threshold_acceleration,
+    double lower_force_threshold_nominal,
+    double upper_force_threshold_nominal) {
+  setCollisionBehavior(
+      mkFull<7>(lower_torque_threshold_acceleration),
+      mkFull<7>(upper_torque_threshold_acceleration),
+      mkFull<7>(lower_torque_threshold_nominal),
+      mkFull<7>(upper_torque_threshold_nominal),
+      mkFull<6>(lower_force_threshold_acceleration),
+      mkFull<6>(upper_force_threshold_acceleration),
+      mkFull<6>(lower_force_threshold_nominal),
+      mkFull<6>(upper_force_threshold_nominal));
+
 }
 
 }  // namespace franky

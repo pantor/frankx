@@ -325,6 +325,15 @@ PYBIND11_MODULE(_franky, m) {
       .def("move",
            static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::Torques>> &)>(&Robot::move),
            py::call_guard<py::gil_scoped_release>())
+      .def("set_collision_behavior", py::overload_cast<double, double>(&Robot::setCollisionBehavior),
+           "torque_threshold"_a, "force_threshold"_a)
+      .def("set_collision_behavior",
+           py::overload_cast<
+               const std::array<double, 7> &,
+               const std::array<double, 6> &>(&Robot::setCollisionBehavior),
+           "torque_thresholds"_a, "force_thresholds"_a)
+      .def("set_collision_behavior", py::overload_cast<double, double, double, double>(&Robot::setCollisionBehavior),
+           "lower_torque_threshold"_a, "upper_torque_threshold"_a, "lower_force_threshold"_a, "upper_force_threshold"_a)
       .def("set_collision_behavior",
            py::overload_cast<
                const std::array<double, 7> &,
@@ -336,6 +345,24 @@ PYBIND11_MODULE(_franky, m) {
            "upper_torque_thresholds"_a,
            "lower_force_thresholds"_a,
            "upper_force_thresholds"_a)
+      .def("set_collision_behavior",
+           py::overload_cast<
+               double,
+               double,
+               double,
+               double,
+               double,
+               double,
+               double,
+               double>(&Robot::setCollisionBehavior),
+           "lower_torque_threshold_acceleration"_a,
+           "upper_torque_threshold_acceleration"_a,
+           "lower_torque_threshold_nominal"_a,
+           "upper_torque_threshold_nominal"_a,
+           "lower_force_threshold_acceleration"_a,
+           "upper_force_threshold_acceleration"_a,
+           "lower_force_threshold_nominal"_a,
+           "upper_force_threshold_nominal"_a)
       .def("set_collision_behavior",
            py::overload_cast<
                const std::array<double, 7> &,

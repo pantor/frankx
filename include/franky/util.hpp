@@ -17,4 +17,11 @@ inline Eigen::Matrix<double, dims, 1> toEigen(const std::array<double, dims> &ve
   return Eigen::Matrix<double, dims, 1>::Map(vector.data());
 }
 
+template<size_t size>
+std::array<double, size> mkFull(double val) {
+  std::array<double, size> output{};
+  output.fill(val);
+  return output;
+}
+
 }
