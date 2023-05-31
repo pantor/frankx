@@ -325,6 +325,43 @@ PYBIND11_MODULE(_franky, m) {
       .def("move",
            static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::Torques>> &)>(&Robot::move),
            py::call_guard<py::gil_scoped_release>())
+      .def("set_collision_behavior",
+           py::overload_cast<
+               const std::array<double, 7> &,
+               const std::array<double, 7> &,
+               const std::array<double, 6> &,
+               const std::array<double, 6> &
+           >(&Robot::setCollisionBehavior),
+           "lower_torque_thresholds"_a,
+           "upper_torque_thresholds"_a,
+           "lower_force_thresholds"_a,
+           "upper_force_thresholds"_a)
+      .def("set_collision_behavior",
+           py::overload_cast<
+               const std::array<double, 7> &,
+               const std::array<double, 7> &,
+               const std::array<double, 7> &,
+               const std::array<double, 7> &,
+               const std::array<double, 6> &,
+               const std::array<double, 6> &,
+               const std::array<double, 6> &,
+               const std::array<double, 6> &
+           >(&Robot::setCollisionBehavior),
+           "lower_torque_thresholds_acceleration"_a,
+           "upper_torque_thresholds_acceleration"_a,
+           "lower_torque_thresholds_nominal"_a,
+           "upper_torque_thresholds_nominal"_a,
+           "lower_force_thresholds_acceleration"_a,
+           "upper_force_thresholds_acceleration"_a,
+           "lower_force_thresholds_nominal"_a,
+           "upper_force_thresholds_nominal"_a)
+      .def("set_joint_impedance", &Robot::setJointImpedance, "K_theta"_a)
+      .def("set_cartesian_impedance", &Robot::setCartesianImpedance, "K_x"_a)
+      .def("set_guiding_mode", &Robot::setGuidingMode, "guiding_mode"_a, "elbow"_a)
+      .def("set_k", &Robot::setK, "EE_T_K"_a)
+      .def("set_ee", &Robot::setEE, "NE_T_EE"_a)
+      .def("set_load", &Robot::setLoad, "load_mass"_a, "F_x_Cload"_a, "load_inertia"_a)
+      .def("stop", &Robot::stop)
       .def_property_readonly("velocity_rel", &Robot::velocity_rel)
       .def_property_readonly("acceleration_rel", &Robot::acceleration_rel)
       .def_property_readonly("jerk_rel", &Robot::jerk_rel)
