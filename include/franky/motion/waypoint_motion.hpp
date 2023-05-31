@@ -44,6 +44,7 @@ class WaypointMotion : public Motion<franka::CartesianPose> {
   Affine ref_frame_;
 
   ruckig::Ruckig<7> trajectory_generator_{Robot::control_rate};
+  ruckig::Result prev_result_;
   ruckig::InputParameter<7> input_para_;
   ruckig::OutputParameter<7> output_para_;
 
