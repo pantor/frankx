@@ -39,7 +39,21 @@ void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
   py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>>(
       m, (control_signal_name + "Motion").c_str())
       .def_property_readonly("reactions", &Motion<ControlSignalType>::reactions)
-      .def("add_reaction", &Motion<ControlSignalType>::addReaction);
+      .def("add_reaction", &Motion<ControlSignalType>::addReaction)
+      .def("register_callback", [](
+          Motion<ControlSignalType> &motion,
+          const typename Motion<ControlSignalType>::CallbackType &callback
+      ) {
+        motion.registerCallback([callback](
+            const franka::RobotState &robot_state,
+            franka::Duration time_step,
+            double time,
+            const ControlSignalType &control_signal) {
+          callback_queue.push([callback, robot_state, time_step, time, control_signal]() {
+            callback(robot_state, time_step, time, control_signal);
+          });
+        });
+      }, "callback"_a);
 }
 
 template<typename ControlSignalType>
@@ -47,7 +61,7 @@ void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
   py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
       m, (control_signal_name + "Reaction").c_str())
       .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>(),
-          "condition"_a, "motion"_a = nullptr)
+           "condition"_a, "motion"_a = nullptr)
       .def("register_callback", [](
           Reaction<ControlSignalType> &reaction,
           const std::function<void(const franka::RobotState &, double, double)> &callback
@@ -559,6 +573,21 @@ PYBIND11_MODULE(_franky, m) {
       .def_readonly("is_grasped", &franka::GripperState::is_grasped)
       .def_readonly("temperature", &franka::GripperState::temperature)
       .def_readonly("time", &franka::GripperState::time);
+
+  py::class_<franka::Torques>(m, "Torques")
+      .def_readonly("tau_J", &franka::Torques::tau_J);
+
+  py::class_<franka::JointVelocities>(m, "JointVelocities")
+      .def_readonly("dq", &franka::JointVelocities::dq);
+
+  py::class_<franka::JointPositions>(m, "JointPositions")
+      .def_readonly("q", &franka::JointPositions::q);
+
+  py::class_<franka::CartesianVelocities>(m, "CartesianVelocities")
+      .def_readonly("O_dP_EE", &franka::CartesianVelocities::O_dP_EE);
+
+  py::class_<franka::CartesianPose>(m, "CartesianPose")
+      .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE);
 
   py::register_exception<franka::CommandException>(m, "CommandException");
   py::register_exception<franka::ControlException>(m, "ControlException");

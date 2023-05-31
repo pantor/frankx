@@ -17,6 +17,12 @@ template<typename ControlSignalType>
 Motion<ControlSignalType>::Motion() : robot_(nullptr) {}
 
 template<typename ControlSignalType>
+void Motion<ControlSignalType>::registerCallback(CallbackType callback) {
+  const std::lock_guard<std::mutex> lock(callback_mutex_);
+  callbacks_.push_back(callback);
+}
+
+template<typename ControlSignalType>
 void Motion<ControlSignalType>::addReaction(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
   const std::lock_guard<std::mutex> lock(reaction_mutex_);
   reactions_.push_back(reaction);
@@ -37,7 +43,11 @@ void Motion<ControlSignalType>::init(Robot *robot, const franka::RobotState &rob
 template<typename ControlSignalType>
 ControlSignalType
 Motion<ControlSignalType>::nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-  return nextCommandImpl(robot_state, time_step, time);
+  auto next_command = nextCommandImpl(robot_state, time_step, time);
+  const std::lock_guard<std::mutex> lock(callback_mutex_);
+  for (auto const &cb : callbacks_)
+    cb(robot_state, time_step, time, next_command);
+  return next_command;
 }
 
 template<typename ControlSignalType>

@@ -15,9 +15,14 @@ class Reaction;
 template<typename ControlSignalType>
 class Motion {
  public:
+  using CallbackType = std::function<
+      void(const franka::RobotState &, franka::Duration, double, const ControlSignalType &)>;
+
   void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
+
+  void registerCallback(CallbackType callback);
 
   void init(Robot *robot, const franka::RobotState &robot_state);
 
@@ -42,6 +47,8 @@ class Motion {
  private:
   std::mutex reaction_mutex_;
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
+  std::mutex callback_mutex_;
+  std::vector<CallbackType> callbacks_;
   Robot *robot_;
 };
 
