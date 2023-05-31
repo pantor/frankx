@@ -38,7 +38,7 @@ template<typename ControlSignalType>
 void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
   py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>>(
       m, (control_signal_name + "Motion").c_str())
-      .def_property_readonly("reaction", &Motion<ControlSignalType>::reactions)
+      .def_property_readonly("reactions", &Motion<ControlSignalType>::reactions)
       .def("add_reaction", &Motion<ControlSignalType>::addReaction);
 }
 
@@ -46,7 +46,8 @@ template<typename ControlSignalType>
 void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
   py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
       m, (control_signal_name + "Reaction").c_str())
-      .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>())
+      .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>(),
+          "condition"_a, "motion"_a = nullptr)
       .def("register_callback", [](
           Reaction<ControlSignalType> &reaction,
           const std::function<void(const franka::RobotState &, double, double)> &callback
