@@ -1,7 +1,6 @@
 #include "franky/motion/joint_waypoint_motion.hpp"
 
 #include <ruckig/ruckig.hpp>
-#include <utility>
 
 #include "franky/robot_pose.hpp"
 #include "franky/robot.hpp"
