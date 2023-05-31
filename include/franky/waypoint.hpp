@@ -6,15 +6,11 @@
 
 #include "franky/robot_pose.hpp"
 #include "franky/types.hpp"
+#include "franky/motion/reference_type.hpp"
 
 namespace franky {
 
 struct Waypoint {
-  enum class ReferenceType {
-    Absolute,
-    Relative
-  };
-
   RobotPose robot_pose;
   ReferenceType reference_type{ReferenceType::Absolute};
 

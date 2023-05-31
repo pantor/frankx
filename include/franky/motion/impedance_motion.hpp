@@ -8,19 +8,15 @@
 
 #include "franky/robot_pose.hpp"
 #include "franky/motion/motion.hpp"
+#include "franky/motion/reference_type.hpp"
 
 namespace franky {
 
 class ImpedanceMotion : public Motion<franka::Torques> {
  public:
  public:
-  enum class TargetType {
-    Absolute,
-    Relative
-  };
-
   struct Params {
-    TargetType target_type{TargetType::Absolute};
+    ReferenceType target_type{ReferenceType::Absolute};
     double translational_stiffness{2000};
     double rotational_stiffness{200};
     Eigen::Vector<double, 6> force_constraints;

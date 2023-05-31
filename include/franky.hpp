@@ -10,6 +10,7 @@
 #include "franky/motion/motion.hpp"
 #include "franky/motion/motion_generator.hpp"
 #include "franky/motion/reaction.hpp"
+#include "franky/motion/reference_type.hpp"
 #include "franky/motion/waypoint_motion.hpp"
 
 #include "franky/path/aggregated_path.hpp"

@@ -9,15 +9,7 @@
 
 namespace franky {
 
-LinearMotion::LinearMotion(const RobotPose &target, bool relative, double velocity_rel)
-    : WaypointMotion{
-    {
-        {
-            .robot_pose = target,
-            .reference_type=relative ? Waypoint::ReferenceType::Relative
-                                     : Waypoint::ReferenceType::Absolute,
-            .velocity_rel = velocity_rel
-        }
-    }} {}
+LinearMotion::LinearMotion(const RobotPose &target, ReferenceType reference_type, double velocity_rel)
+    : WaypointMotion({{.robot_pose = target, .reference_type=reference_type, .velocity_rel = velocity_rel}}) {}
 
 }  // namespace franky

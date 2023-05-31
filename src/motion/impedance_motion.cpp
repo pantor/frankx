@@ -24,7 +24,7 @@ ImpedanceMotion::ImpedanceMotion(Affine target, const ImpedanceMotion::Params &p
 void ImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
   auto robot_pose = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
   intermediate_target_ = robot_pose;
-  if (params_.target_type == TargetType::Relative)
+  if (params_.target_type == ReferenceType::Relative)
     absolute_target_ = robot_pose * target_;
   else
     absolute_target_ = target_;

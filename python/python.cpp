@@ -136,18 +136,17 @@ PYBIND11_MODULE(_franky, m) {
   mkMotionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
   mkMotionClass<franka::CartesianPose>(m, "CartesianPose");
 
-  py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>
-      impedance_motion(m, "ImpedanceMotion");
+  py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>(m, "ImpedanceMotion");
 
-  py::enum_<ImpedanceMotion::TargetType>(impedance_motion, "TargetType")
-      .value("RELATIVE", ImpedanceMotion::TargetType::Relative)
-      .value("ABSOLUTE", ImpedanceMotion::TargetType::Absolute)
+  py::enum_<ReferenceType>(m, "ReferenceType")
+      .value("RELATIVE", ReferenceType::Relative)
+      .value("ABSOLUTE", ReferenceType::Absolute)
       .export_values();
 
   py::class_<ExponentialImpedanceMotion, ImpedanceMotion, std::shared_ptr<ExponentialImpedanceMotion>>(
       m, "ExponentialImpedanceMotion")
       .def(py::init<>([](
-               const Affine &target, ImpedanceMotion::TargetType target_type, double translational_stiffness,
+               const Affine &target, ReferenceType target_type, double translational_stiffness,
                double rotational_stiffness, std::optional<std::array<std::optional<double>, 6>> force_constraints,
                double exponential_decay = 0.005) {
              Eigen::Vector<bool, 6> force_constraints_active = Eigen::Vector<bool, 6>::Zero();
@@ -164,7 +163,7 @@ PYBIND11_MODULE(_franky, m) {
                   force_constraints_active, exponential_decay});
            }),
            "target"_a,
-           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "target_type"_a = ReferenceType::Absolute,
            "translational_stiffness"_a = 2000,
            "rotational_stiffness"_a = 200,
            "force_constraints"_a = std::nullopt,
@@ -174,7 +173,7 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const Affine &target,
                double duration,
-               ImpedanceMotion::TargetType target_type,
+               ReferenceType target_type,
                double translational_stiffness,
                double rotational_stiffness,
                std::optional<std::array<std::optional<double>, 6>> force_constraints,
@@ -195,7 +194,7 @@ PYBIND11_MODULE(_franky, m) {
            }),
            "target"_a,
            "duration"_a,
-           "target_type"_a = ImpedanceMotion::TargetType::Absolute,
+           "target_type"_a = ReferenceType::Absolute,
            "translational_stiffness"_a = 2000,
            "rotational_stiffness"_a = 200,
            "force_constraints"_a = std::nullopt,
@@ -237,9 +236,9 @@ PYBIND11_MODULE(_franky, m) {
            "return_when_finished"_a = true);
 
   py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
-      .def(py::init<>([](const RobotPose &target, bool relative, double velocity_rel) {
-        return new LinearMotion(target, relative, velocity_rel);
-      }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
+      .def(py::init<>([](const RobotPose &target, ReferenceType reference_type, double velocity_rel) {
+        return new LinearMotion(target, reference_type, velocity_rel);
+      }), "target"_a, "reference_type"_a = ReferenceType::Absolute, "velocity_rel"_a = 1.0);
 
   mkReactionClass<franka::Torques>(m, "Torque");
   mkReactionClass<franka::JointVelocities>(m, "JointVelocity");
@@ -449,14 +448,9 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<Waypoint> waypoint(m, "Waypoint");
 
-  py::enum_<Waypoint::ReferenceType>(waypoint, "ReferenceType")
-      .value("ABSOLUTE", Waypoint::ReferenceType::Absolute)
-      .value("RELATIVE", Waypoint::ReferenceType::Relative)
-      .export_values();
-
   waypoint
-      .def(py::init<RobotPose, Waypoint::ReferenceType, double, bool, std::optional<double>, double>(),
-           "robot_pose"_a, "reference_type"_a = Waypoint::ReferenceType::Absolute, "velocity_rel"_a = 1.0,
+      .def(py::init<RobotPose, ReferenceType, double, bool, std::optional<double>, double>(),
+           "robot_pose"_a, "reference_type"_a = ReferenceType::Absolute, "velocity_rel"_a = 1.0,
            "max_dynamics"_a = false, "minimum_time"_a = std::nullopt, "blend_max_distance"_a = 0.0)
       .def_readonly("robot_pose", &Waypoint::robot_pose)
       .def_readonly("reference_type", &Waypoint::reference_type)
