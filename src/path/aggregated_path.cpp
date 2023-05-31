@@ -1,13 +1,12 @@
 #include "franky/path/aggregated_path.hpp"
 
-#include "franky/waypoint.hpp"
 #include "franky/path/linear_path.hpp"
 #include "franky/path/quartic_blend_path.hpp"
 
 namespace franky {
 
 AggregatedPath<7> mk_path_from_waypoints(
-    const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos) {
+    const std::vector<PathWaypoint> &waypoints, double default_initial_elbow_pos) {
   if (waypoints.size() < 2) {
     throw std::runtime_error(
         "Path needs at least 2 waypoints as input, but has only " + std::to_string(waypoints.size()) + ".");

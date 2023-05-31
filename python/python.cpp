@@ -449,15 +449,14 @@ PYBIND11_MODULE(_franky, m) {
   py::class_<Waypoint> waypoint(m, "Waypoint");
 
   waypoint
-      .def(py::init<RobotPose, ReferenceType, double, bool, std::optional<double>, double>(),
+      .def(py::init<RobotPose, ReferenceType, double, bool, std::optional<double>>(),
            "robot_pose"_a, "reference_type"_a = ReferenceType::Absolute, "velocity_rel"_a = 1.0,
-           "max_dynamics"_a = false, "minimum_time"_a = std::nullopt, "blend_max_distance"_a = 0.0)
+           "max_dynamics"_a = false, "minimum_time"_a = std::nullopt)
       .def_readonly("robot_pose", &Waypoint::robot_pose)
       .def_readonly("reference_type", &Waypoint::reference_type)
       .def_readonly("velocity_rel", &Waypoint::velocity_rel)
       .def_readonly("max_dynamics", &Waypoint::max_dynamics)
-      .def_readonly("minimum_time", &Waypoint::minimum_time)
-      .def_readonly("blend_max_distance", &Waypoint::blend_max_distance);
+      .def_readonly("minimum_time", &Waypoint::minimum_time);
 
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),

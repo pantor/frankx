@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "franky/path/path.hpp"
-#include "franky/waypoint.hpp"
+#include "franky/robot_pose.hpp"
 
 namespace franky {
 
@@ -79,7 +79,14 @@ class AggregatedPath : public Path<state_dimensions> {
   std::vector<double> cumulative_lengths_;
 };
 
+struct PathWaypoint {
+  RobotPose robot_pose;
+
+  //! Path Waypoint: Maximum distance for blending.
+  double blend_max_distance{0.0};
+};
+
 AggregatedPath<7>
-mk_path_from_waypoints(const std::vector<Waypoint> &waypoints, double default_initial_elbow_pos = 0.0);
+mk_path_from_waypoints(const std::vector<PathWaypoint> &waypoints, double default_initial_elbow_pos = 0.0);
 
 }  // namespace franky

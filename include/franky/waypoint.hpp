@@ -23,9 +23,6 @@ struct Waypoint {
   //! Dynamic Waypoint: Minimum time to get to next waypoint
   std::optional<double> minimum_time{std::nullopt};
 
-  //! Path Waypoint: Maximum distance for blending.
-  double blend_max_distance{0.0};
-
   [[nodiscard]] RobotPose getTargetRobotPose(const RobotPose &old_robot_pose) const;
 };
 
