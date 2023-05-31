@@ -203,13 +203,39 @@ PYBIND11_MODULE(_franky, m) {
            "return_when_finished"_a = true,
            "finish_wait_factor"_a = 1.2);
 
-  py::class_<JointMotion, Motion<franka::JointPositions>, std::shared_ptr<JointMotion>>(m, "JointMotion")
-      .def(py::init<>([](
-               const Vector7d &target, double velocity_rel, double acceleration_rel, double jerk_rel,
-               bool return_when_finished) {
-             return new JointMotion(target, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
-           }),
+  py::class_<JointWaypoint>(m, "JointWaypoint")
+      .def(py::init<>(
+               [](
+                   const Vector7d &target,
+                   double velocity_rel,
+                   double acceleration_rel,
+                   double jerk_rel,
+                   bool max_dynamics,
+                   std::optional<double> minimum_time) {
+                 return JointWaypoint{{velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time}, target};
+               }
+           ),
            "target"_a,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "max_dynamics"_a = false,
+           "minimum_time"_a = std::nullopt)
+      .def_readonly("target", &JointWaypoint::target)
+      .def_readonly("velocity_rel", &Waypoint::velocity_rel)
+      .def_readonly("acceleration_rel", &Waypoint::acceleration_rel)
+      .def_readonly("jerk_rel", &Waypoint::jerk_rel)
+      .def_readonly("max_dynamics", &Waypoint::max_dynamics)
+      .def_readonly("minimum_time", &Waypoint::minimum_time);
+
+  py::class_<JointWaypointMotion, Motion<franka::JointPositions>, std::shared_ptr<JointWaypointMotion>>(
+      m, "JointWaypointMotion")
+      .def(py::init<>([](
+               const std::vector<JointWaypoint> &waypoints, double velocity_rel, double acceleration_rel,
+               double jerk_rel, bool return_when_finished) {
+             return new JointWaypointMotion(waypoints, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+           }),
+           "waypoints"_a,
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
            "jerk_rel"_a = 1.0,
@@ -452,9 +478,7 @@ PYBIND11_MODULE(_franky, m) {
       });
   py::implicitly_convertible<Affine, RobotPose>();
 
-  py::class_<CartesianWaypoint> waypoint(m, "CartesianWaypoint");
-
-  waypoint
+  py::class_<CartesianWaypoint>(m, "CartesianWaypoint")
       .def(py::init<>(
                [](
                    const RobotPose &robot_pose,
