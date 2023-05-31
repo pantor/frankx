@@ -112,7 +112,9 @@ PYBIND11_MODULE(_franky, m) {
       .def("__repr__", &Measure::repr);
 
   py::class_<Condition>(m, "Condition")
-      .def("__repr__", &Condition::repr);
+      .def("__repr__", &Condition::repr)
+      .def_property_readonly_static("TRUE", &Condition::TRUE)
+      .def_property_readonly_static("FALSE", &Condition::FALSE);
 
   mk_motion_class<franka::Torques>(m, "Torque");
   mk_motion_class<franka::JointVelocities>(m, "JointVelocity");

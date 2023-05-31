@@ -23,6 +23,20 @@ class Condition {
     return repr_;
   }
 
+  static Condition TRUE() {
+    return Condition(
+        [](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+          return true;
+        }, "true");
+  }
+
+  static Condition FALSE() {
+    return Condition(
+        [](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+          return false;
+        }, "false");
+  }
+
  private:
   CheckFunc check_func_;
   std::string repr_;
