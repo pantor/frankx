@@ -343,6 +343,13 @@ PYBIND11_MODULE(_franky, m) {
            "end_effector_pose"_a,
            "elbow_position"_a = std::nullopt)
       .def(py::init<const RobotPose &>()) // Copy constructor
+      .def("with_elbow_position", &RobotPose::with_elbow_position, "elbow_position"_a)
+      .def_property_readonly("end_effector_pose", &RobotPose::end_effector_pose)
+      .def_property_readonly("elbow_position", &RobotPose::elbow_position)
+      .def("__mul__", py::overload_cast<const RobotPose &, const Affine &>(&operator*), py::is_operator())
+      .def("__rmul__",
+           [](const RobotPose &robot_pose, const Affine &affine) { return affine * robot_pose; },
+           py::is_operator())
       .def("__repr__", [](const RobotPose &robot_pose) {
         std::stringstream ss;
         ss << "(ee_pose=" << affine_to_str(robot_pose.end_effector_pose());
