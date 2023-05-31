@@ -15,7 +15,7 @@ struct Waypoint {
   ReferenceType reference_type{ReferenceType::Absolute};
 
   //! Dynamic Waypoint: Relative velocity factor
-  double velocity_rel{1.0};
+  double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
 
   //! Dynamic Waypoint: Use maximal dynamics of the robot independent on other parameters
   bool max_dynamics{false};

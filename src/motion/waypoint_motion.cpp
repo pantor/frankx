@@ -153,8 +153,8 @@ WaypointMotion::getInputLimits(const Waypoint &waypoint) const {
     jerk_factor = 1.0;
   } else {
     vel_factor = waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel();
-    acc_factor = params_.acceleration_rel * robot->acceleration_rel();
-    jerk_factor = params_.jerk_rel * robot->jerk_rel();
+    acc_factor = waypoint.acceleration_rel * params_.acceleration_rel * robot->acceleration_rel();
+    jerk_factor = waypoint.jerk_rel * params_.jerk_rel * robot->jerk_rel();
   }
 
   auto vel_lim = vel_factor * max_vel;

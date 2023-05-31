@@ -13,7 +13,11 @@ namespace franky {
 class LinearMotion : public WaypointMotion {
  public:
   explicit LinearMotion(
-      const RobotPose &target, ReferenceType reference_type = ReferenceType::Absolute, double velocity_rel = 1.0);
+      const RobotPose &target,
+      ReferenceType reference_type = ReferenceType::Absolute,
+      double velocity_rel = 1.0,
+      double acceleration_rel = 1.0,
+      double jerk_rel = 1.0);
 };
 
 }  // namespace franky
