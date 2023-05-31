@@ -24,6 +24,9 @@ class Motion {
   ControlSignalType
   nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
 
+  std::shared_ptr<Motion<ControlSignalType>>
+  checkAndCallReactions(const franka::RobotState &robot_state, double rel_time, double abs_time_);
+
  protected:
   explicit Motion();
 
@@ -37,7 +40,7 @@ class Motion {
   }
 
  private:
-  std::mutex mutex_;
+  std::mutex reaction_mutex_;
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
   Robot *robot_;
 };
