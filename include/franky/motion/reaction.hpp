@@ -20,7 +20,7 @@ class Reaction {
   using MotionFunc = std::function<std::shared_ptr<Motion<ControlSignalType>>(const franka::RobotState &, double, double)>;
 
  public:
-  explicit Reaction(const Condition &condition, std::shared_ptr<Motion<ControlSignalType>> new_motion);
+  explicit Reaction(const Condition &condition, std::shared_ptr<Motion<ControlSignalType>> new_motion = nullptr);
 
   explicit Reaction(Condition condition, const MotionFunc &motion_func);
 
