@@ -21,11 +21,11 @@ int main(int argc, char *argv[]) {
 
   // Define and move forwards
   auto way = mk_affine(0.0, 0.05, 0.0);
-  auto motion_forward = std::make_shared<LinearMotion>(RobotPose(way), true);
+  auto motion_forward = std::make_shared<LinearMotion>(RobotPose(way), ReferenceType::Relative);
   robot.move(motion_forward);
 
   // And move backwards using the inverse motion
-  auto motion_backward = std::make_shared<LinearMotion>(RobotPose(way.inverse()), true);
+  auto motion_backward = std::make_shared<LinearMotion>(RobotPose(way.inverse()), ReferenceType::Relative);
   robot.move(motion_backward);
 
   return 0;
