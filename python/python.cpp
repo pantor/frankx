@@ -15,7 +15,7 @@ using namespace franky;
 ConcurrentQueue<std::function<void()>> callback_queue;
 
 template<int dims>
-std::string vec_to_str(const Vector<dims> &vec) {
+std::string vecToStr(const Vector<dims> &vec) {
   std::stringstream ss;
   ss << "[";
   for (size_t i = 0; i < dims; i++) {
@@ -27,15 +27,15 @@ std::string vec_to_str(const Vector<dims> &vec) {
   return ss.str();
 }
 
-std::string affine_to_str(const Affine &affine) {
+std::string affineToStr(const Affine &affine) {
   std::stringstream ss;
-  ss << "(t=" << vec_to_str(affine.translation().eval())
-     << ", q=" << vec_to_str(Eigen::Quaterniond(affine.rotation()).coeffs()) << ")";
+  ss << "(t=" << vecToStr(affine.translation().eval())
+     << ", q=" << vecToStr(Eigen::Quaterniond(affine.rotation()).coeffs()) << ")";
   return ss.str();
 }
 
 template<typename ControlSignalType>
-void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
+void mkMotionClass(py::module_ m, const std::string &control_signal_name) {
   py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>>(
       m, (control_signal_name + "Motion").c_str())
       .def_property_readonly("reactions", &Motion<ControlSignalType>::reactions)
@@ -57,7 +57,7 @@ void mk_motion_class(py::module_ m, const std::string &control_signal_name) {
 }
 
 template<typename ControlSignalType>
-void mk_reaction_class(py::module_ m, const std::string &control_signal_name) {
+void mkReactionClass(py::module_ m, const std::string &control_signal_name) {
   py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
       m, (control_signal_name + "Reaction").c_str())
       .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>(),
@@ -130,11 +130,11 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly_static("TRUE", [](py::object) { return Condition::TRUE(); })
       .def_property_readonly_static("FALSE", [](py::object) { return Condition::FALSE(); });
 
-  mk_motion_class<franka::Torques>(m, "Torque");
-  mk_motion_class<franka::JointVelocities>(m, "JointVelocity");
-  mk_motion_class<franka::JointPositions>(m, "JointPosition");
-  mk_motion_class<franka::CartesianVelocities>(m, "CartesianVelocity");
-  mk_motion_class<franka::CartesianPose>(m, "CartesianPose");
+  mkMotionClass<franka::Torques>(m, "Torque");
+  mkMotionClass<franka::JointVelocities>(m, "JointVelocity");
+  mkMotionClass<franka::JointPositions>(m, "JointPosition");
+  mkMotionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mkMotionClass<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>
       impedance_motion(m, "ImpedanceMotion");
@@ -241,11 +241,11 @@ PYBIND11_MODULE(_franky, m) {
         return new LinearMotion(target, relative, velocity_rel);
       }), "target"_a, "relative"_a = false, "velocity_rel"_a = 1.0);
 
-  mk_reaction_class<franka::Torques>(m, "Torque");
-  mk_reaction_class<franka::JointVelocities>(m, "JointVelocity");
-  mk_reaction_class<franka::JointPositions>(m, "JointPosition");
-  mk_reaction_class<franka::CartesianVelocities>(m, "CartesianVelocity");
-  mk_reaction_class<franka::CartesianPose>(m, "CartesianPose");
+  mkReactionClass<franka::Torques>(m, "Torque");
+  mkReactionClass<franka::JointVelocities>(m, "JointVelocity");
+  mkReactionClass<franka::JointPositions>(m, "JointPosition");
+  mkReactionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mkReactionClass<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<Gripper>(m, "Gripper")
       .def(py::init<const std::string &, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
@@ -439,7 +439,7 @@ PYBIND11_MODULE(_franky, m) {
            py::is_operator())
       .def("__repr__", [](const RobotPose &robot_pose) {
         std::stringstream ss;
-        ss << "(ee_pose=" << affine_to_str(robot_pose.end_effector_pose());
+        ss << "(ee_pose=" << affineToStr(robot_pose.end_effector_pose());
         if (robot_pose.elbow_position().has_value())
           ss << ", elbow=" << robot_pose.elbow_position().value();
         ss << ")";
@@ -484,7 +484,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly("matrix", [](const Affine &affine) {
         return affine.matrix();
       })
-      .def("__repr__", affine_to_str);
+      .def("__repr__", &affineToStr);
 
   py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
       .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
