@@ -93,7 +93,7 @@ class WaypointMotion : public Motion<ControlSignalType> {
                               const WaypointType &new_waypoint,
                               ruckig::InputParameter<7> &input_parameter) = 0;
 
-  [[nodiscard]] virtual std::tuple<Vector7d, Vector7d, Vector7d> getInputLimits(const WaypointType &waypoint) const = 0;
+  [[nodiscard]] virtual std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const = 0;
 
   [[nodiscard]] virtual ControlSignalType getControlSignal(const ruckig::InputParameter<7> &input_parameter) const = 0;
 
@@ -112,7 +112,16 @@ class WaypointMotion : public Motion<ControlSignalType> {
   size_t current_cooldown_iteration_{0};
 
   void setInputLimits(const WaypointType &waypoint) {
-    auto [vel_lim, acc_lim, jerk_lim] = getInputLimits(waypoint);
+    auto robot = this->robot();
+
+    auto [vel_lim, acc_lim, jerk_lim] = getAbsoluteInputLimits();
+
+    if (!waypoint.max_dynamics && !params_.max_dynamics) {
+      vel_lim *= waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel();
+      acc_lim *= waypoint.acceleration_rel * params_.acceleration_rel * robot->acceleration_rel();
+      jerk_lim *= waypoint.jerk_rel * params_.jerk_rel * robot->jerk_rel();
+    }
+
     input_para_.max_velocity = toStd<7>(vel_lim);
     input_para_.max_acceleration = toStd<7>(acc_lim);
     input_para_.max_jerk = toStd<7>(jerk_lim);

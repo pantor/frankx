@@ -37,7 +37,7 @@ class CartesianWaypointMotion : public WaypointMotion<franka::CartesianPose, Car
                       const CartesianWaypoint &new_waypoint,
                       ruckig::InputParameter<7> &input_parameter) override;
 
-  std::tuple<Vector7d, Vector7d, Vector7d> getInputLimits(const CartesianWaypoint &waypoint) const override;
+  std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
 
   franka::CartesianPose getControlSignal(const ruckig::InputParameter<7> &input_parameter) const override;
 

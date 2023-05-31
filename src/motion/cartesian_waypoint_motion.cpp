@@ -109,7 +109,7 @@ void CartesianWaypointMotion::setNewWaypoint(
 }
 
 std::tuple<Vector7d, Vector7d, Vector7d>
-CartesianWaypointMotion::getInputLimits(const CartesianWaypoint &waypoint) const {
+CartesianWaypointMotion::getAbsoluteInputLimits() const {
   constexpr double translation_factor{0.4};
   constexpr double derivative_factor{0.4};
   const Robot *robot = this->robot();
@@ -126,23 +126,7 @@ CartesianWaypointMotion::getInputLimits(const CartesianWaypoint &waypoint) const
       translation_factor * Robot::max_translation_jerk,
       Robot::max_rotation_jerk,
       Robot::max_elbow_jerk);
-
-  double vel_factor, acc_factor, jerk_factor;
-
-  if (waypoint.max_dynamics || params_.max_dynamics) {
-    vel_factor = 1.0;
-    acc_factor = 1.0;
-    jerk_factor = 1.0;
-  } else {
-    vel_factor = waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel();
-    acc_factor = waypoint.acceleration_rel * params_.acceleration_rel * robot->acceleration_rel();
-    jerk_factor = waypoint.jerk_rel * params_.jerk_rel * robot->jerk_rel();
-  }
-
-  auto vel_lim = vel_factor * max_vel;
-  auto acc_lim = acc_factor * max_acc;
-  auto jerk_lim = jerk_factor * max_jerk;
-  return {vel_lim, acc_lim, jerk_lim};
+  return {max_vel, max_acc, max_jerk};
 }
 
 }  // namespace franky
