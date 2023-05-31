@@ -84,6 +84,10 @@ void mkReactionClass(py::module_ m, const std::string &control_signal_name) {
   }
 }
 
+Condition python_interrupt_condition([](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+  return Py_IsInitialized() && PyErr_CheckSignals() == -1;
+});
+
 // Start the callback execution thread
 std::thread callback_thread(executeCallbacks);
 
@@ -237,7 +241,11 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const std::vector<JointWaypoint> &waypoints, double velocity_rel, double acceleration_rel,
                double jerk_rel, bool return_when_finished) {
-             return new JointWaypointMotion(waypoints, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+             auto motion = new JointWaypointMotion(
+                     waypoints, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+             motion->addReaction(std::make_shared<Reaction<franka::JointPositions>>(
+                 python_interrupt_condition, std::make_shared<StopMotion<franka::JointPositions>>()));
+             return motion;
            }),
            "waypoints"_a,
            "velocity_rel"_a = 1.0,
@@ -255,10 +263,13 @@ PYBIND11_MODULE(_franky, m) {
                double jerk_rel = 1.0,
                bool max_dynamics = false,
                bool return_when_finished = true) {
-             return new CartesianWaypointMotion(
+             auto motion = new CartesianWaypointMotion(
                  waypoints,
                  {{velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
                   frame.value_or(Affine::Identity())});
+             motion->addReaction(std::make_shared<Reaction<franka::CartesianPose>>(
+                 python_interrupt_condition, std::make_shared<StopMotion<franka::CartesianPose>>()));
+             return motion;
            }),
            "waypoints"_a,
            "frame"_a = std::nullopt,
