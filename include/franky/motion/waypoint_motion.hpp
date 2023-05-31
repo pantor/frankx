@@ -56,11 +56,11 @@ class WaypointMotion : public Motion<franka::CartesianPose> {
 
   void setNewWaypoint(const franka::RobotState &robot_state, const Waypoint &new_waypoint);
 
-  static inline std::array<double, 7> vec_cart_rot_elbow(double cart, double rot, double elbow) {
+  static inline Vector7d vec_cart_rot_elbow(double cart, double rot, double elbow) {
     return {cart, cart, cart, rot, rot, rot, elbow};
   }
 
-  [[nodiscard]] std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>>
+  [[nodiscard]] std::tuple<Vector7d , Vector7d , Vector7d >
   getInputLimits(const Waypoint &waypoint) const;
 
   void setInputLimits(ruckig::InputParameter<7> &input_parameters, const Waypoint &waypoint) const;

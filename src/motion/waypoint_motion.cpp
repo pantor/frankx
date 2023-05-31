@@ -126,55 +126,48 @@ void WaypointMotion::setNewWaypoint(const franka::RobotState &robot_state, const
   target_robot_pose_ = new_target_robot_pose;
 }
 
-std::tuple<std::array<double, 7>, std::array<double, 7>, std::array<double, 7>>
+std::tuple<Vector7d, Vector7d, Vector7d>
 WaypointMotion::getInputLimits(const Waypoint &waypoint) const {
   constexpr double translation_factor{0.4};
   constexpr double derivative_factor{0.4};
   const Robot *robot = this->robot();
 
+  Vector7d max_vel = vec_cart_rot_elbow(
+      translation_factor * Robot::max_translation_velocity,
+      Robot::max_rotation_velocity,
+      Robot::max_elbow_velocity);
+  Vector7d max_acc = derivative_factor * vec_cart_rot_elbow(
+      translation_factor * Robot::max_elbow_acceleration,
+      Robot::max_elbow_acceleration,
+      Robot::max_elbow_acceleration);
+  Vector7d max_jerk = std::pow(derivative_factor, 2) * vec_cart_rot_elbow(
+      translation_factor * Robot::max_translation_jerk,
+      Robot::max_rotation_jerk,
+      Robot::max_elbow_jerk);
+
+  double vel_factor, acc_factor, jerk_factor;
+
   if (waypoint.max_dynamics || params_.max_dynamics) {
-    auto max_velocity = vec_cart_rot_elbow(
-        0.8 * translation_factor * Robot::max_translation_velocity,
-        0.8 * Robot::max_rotation_velocity,
-        0.8 * Robot::max_elbow_velocity
-    );
-    auto max_acceleration = vec_cart_rot_elbow(
-        0.8 * translation_factor * derivative_factor * Robot::max_translation_acceleration,
-        0.8 * derivative_factor * Robot::max_rotation_acceleration,
-        0.8 * derivative_factor * Robot::max_elbow_acceleration
-    );
-    auto max_jerk = vec_cart_rot_elbow(
-        0.8 * translation_factor * std::pow(derivative_factor, 2) * Robot::max_translation_jerk,
-        0.8 * std::pow(derivative_factor, 2) * Robot::max_rotation_jerk,
-        0.8 * std::pow(derivative_factor, 2) * Robot::max_elbow_jerk
-    );
-    return {max_velocity, max_acceleration, max_jerk};
+    vel_factor = 1.0;
+    acc_factor = 1.0;
+    jerk_factor = 1.0;
+  } else {
+    vel_factor = waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel();
+    acc_factor = params_.acceleration_rel * robot->acceleration_rel();
+    jerk_factor = params_.jerk_rel * robot->jerk_rel();
   }
 
-  auto max_velocity = vec_cart_rot_elbow(
-      translation_factor * waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() *
-          Robot::max_translation_velocity,
-      waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * Robot::max_rotation_velocity,
-      waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel() * Robot::max_elbow_velocity
-  );
-  auto max_acceleration = vec_cart_rot_elbow(
-      translation_factor * derivative_factor * params_.acceleration_rel * robot->acceleration_rel() *
-          Robot::max_translation_acceleration,
-      derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * Robot::max_rotation_acceleration,
-      derivative_factor * params_.acceleration_rel * robot->acceleration_rel() * Robot::max_elbow_acceleration
-  );
-  auto max_jerk = vec_cart_rot_elbow(
-      translation_factor * std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() *
-          Robot::max_translation_jerk,
-      std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * Robot::max_rotation_jerk,
-      std::pow(derivative_factor, 2) * params_.jerk_rel * robot->jerk_rel() * Robot::max_elbow_jerk
-  );
-  return {max_velocity, max_acceleration, max_jerk};
+  auto vel_lim = vel_factor * max_vel;
+  auto acc_lim = acc_factor * max_acc;
+  auto jerk_lim = jerk_factor * max_jerk;
+  return {vel_lim, acc_lim, jerk_lim};
 }
 
 void WaypointMotion::setInputLimits(ruckig::InputParameter<7> &input_parameters, const Waypoint &waypoint) const {
-  std::tie(input_parameters.max_velocity, input_parameters.max_acceleration,
-           input_parameters.max_jerk) = getInputLimits(waypoint);
+  auto [vel_lim, acc_lim, jerk_lim] = getInputLimits(waypoint);
+  input_parameters.max_velocity = toStd<7>(vel_lim);
+  input_parameters.max_acceleration = toStd<7>(acc_lim);
+  input_parameters.max_jerk = toStd<7>(jerk_lim);
 
   if (!(waypoint.max_dynamics || params_.max_dynamics) && waypoint.minimum_time.has_value()) {
     input_parameters.minimum_duration = waypoint.minimum_time.value();
