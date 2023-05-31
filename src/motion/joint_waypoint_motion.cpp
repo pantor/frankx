@@ -31,7 +31,10 @@ void JointWaypointMotion::setNewWaypoint(
     const franka::RobotState &robot_state,
     const JointWaypoint &new_waypoint,
     ruckig::InputParameter<7> &input_parameter) {
-  input_parameter.target_position = toStd<7>(new_waypoint.target);
+  auto new_target = new_waypoint.target;
+  if (new_waypoint.reference_type == ReferenceType::Relative)
+    new_target += toEigen(input_parameter.current_position);
+  input_parameter.target_position = toStd<7>(new_target);
   input_parameter.target_velocity = toStd<7>(Vector7d::Zero());
   input_parameter.target_acceleration = toStd<7>(Vector7d::Zero());
 }

@@ -16,6 +16,7 @@ namespace franky {
 
 struct JointWaypoint : public Waypoint {
   Vector7d target;
+  ReferenceType reference_type;
 };
 
 class JointWaypointMotion : public WaypointMotion<franka::JointPositions, JointWaypoint> {
