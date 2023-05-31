@@ -24,6 +24,8 @@ class Robot : public franka::Robot {
   struct Params {
     double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
 
+    double default_torque_threshold{20.0}, default_force_threshold{30.0};
+
     // kCartesianImpedance wobbles -> setK?
     franka::ControllerMode controller_mode{franka::ControllerMode::kJointImpedance};
 

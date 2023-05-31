@@ -296,14 +296,20 @@ PYBIND11_MODULE(_franky, m) {
                double velocity_rel,
                double acceleration_rel,
                double jerk_rel,
+               double default_torque_threshold,
+               double default_force_threshold,
                franka::ControllerMode controller_mode,
                franka::RealtimeConfig realtime_config) {
-             return new Robot(fci_ip, {velocity_rel, acceleration_rel, jerk_rel, controller_mode, realtime_config});
+             return new Robot(
+                 fci_ip, {velocity_rel, acceleration_rel, jerk_rel, default_torque_threshold, default_force_threshold,
+                          controller_mode, realtime_config});
            }),
            "fci_ip"_a,
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
            "jerk_rel"_a = 1.0,
+           "default_torque_threshold"_a = 20.0,
+           "default_force_threshold"_a = 30.0,
            "controller_mode"_a = franka::ControllerMode::kJointImpedance,
            "realtime_config"_a = franka::RealtimeConfig::kEnforce)
       .def("set_dynamic_rel", py::overload_cast<double>(&Robot::setDynamicRel), "dynamic_rel"_a)

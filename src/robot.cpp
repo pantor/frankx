@@ -12,7 +12,9 @@ using Affine = Eigen::Affine3d;
 Robot::Robot(const std::string &fci_ip) : Robot(fci_ip, Params()) {}
 
 Robot::Robot(const std::string &fci_ip, const Params &params)
-    : fci_ip_(fci_ip), params_(params), is_in_control_(false), franka::Robot(fci_ip, params.realtime_config) {}
+    : fci_ip_(fci_ip), params_(params), is_in_control_(false), franka::Robot(fci_ip, params.realtime_config) {
+  setCollisionBehavior(params_.default_torque_threshold, params_.default_force_threshold);
+}
 
 void Robot::setDynamicRel(double dynamic_rel) {
   setDynamicRel(dynamic_rel, dynamic_rel, dynamic_rel);
