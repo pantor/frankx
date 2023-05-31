@@ -22,11 +22,11 @@ MotionGenerator<ControlSignalType>::MotionGenerator(
 template<typename ControlSignalType>
 ControlSignalType
 MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_state, franka::Duration period) {
+  abs_time_ += period.toSec();
   if (abs_time_ == 0.0) {
     current_motion_ = initial_motion_;
     current_motion_->init(robot_, robot_state);
   }
-  abs_time_ += period.toSec();
   auto rel_time = abs_time_ - rel_time_offset_;
 
   for (auto &callback : update_callbacks_)
