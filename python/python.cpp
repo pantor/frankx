@@ -4,6 +4,8 @@
 #include <pybind11/eigen.h>
 #include <pybind11/functional.h>
 
+#include <franka/robot_state.h>
+
 #include <franky.hpp>
 
 #include "concurrent_queue.hpp"
@@ -213,19 +215,20 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "return_when_finished"_a = true);
 
-  py::class_<WaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<WaypointMotion>>(m, "WaypointMotion")
+  py::class_<CartesianWaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<CartesianWaypointMotion>>(
+      m, "CartesianWaypointMotion")
       .def(py::init<>([](
-               const std::vector<Waypoint> &waypoints,
+               const std::vector<CartesianWaypoint> &waypoints,
                const std::optional<Affine> &frame = std::nullopt,
                double velocity_rel = 1.0,
                double acceleration_rel = 1.0,
                double jerk_rel = 1.0,
                bool max_dynamics = false,
                bool return_when_finished = true) {
-             return new WaypointMotion(
+             return new CartesianWaypointMotion(
                  waypoints,
-                 {frame.value_or(Affine::Identity()), velocity_rel, acceleration_rel, jerk_rel, max_dynamics,
-                  return_when_finished});
+                 {{velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
+                  frame.value_or(Affine::Identity())});
            }),
            "waypoints"_a,
            "frame"_a = std::nullopt,
@@ -235,10 +238,13 @@ PYBIND11_MODULE(_franky, m) {
            "max_dynamics"_a = false,
            "return_when_finished"_a = true);
 
-  py::class_<LinearMotion, WaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
-      .def(py::init<>([](const RobotPose &target, ReferenceType reference_type, double velocity_rel) {
-        return new LinearMotion(target, reference_type, velocity_rel);
-      }), "target"_a, "reference_type"_a = ReferenceType::Absolute, "velocity_rel"_a = 1.0);
+  py::class_<LinearMotion, CartesianWaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
+      .def(py::init<const RobotPose &, ReferenceType, double, double, double>(),
+           "target"_a,
+           "reference_type"_a = ReferenceType::Absolute,
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0);
 
   mkReactionClass<franka::Torques>(m, "Torque");
   mkReactionClass<franka::JointVelocities>(m, "JointVelocity");
@@ -446,10 +452,23 @@ PYBIND11_MODULE(_franky, m) {
       });
   py::implicitly_convertible<Affine, RobotPose>();
 
-  py::class_<Waypoint> waypoint(m, "Waypoint");
+  py::class_<CartesianWaypoint> waypoint(m, "CartesianWaypoint");
 
   waypoint
-      .def(py::init<RobotPose, ReferenceType, double, double, double, bool, std::optional<double>>(),
+      .def(py::init<>(
+               [](
+                   const RobotPose &robot_pose,
+                   ReferenceType reference_type,
+                   double velocity_rel,
+                   double acceleration_rel,
+                   double jerk_rel,
+                   bool max_dynamics,
+                   std::optional<double> minimum_time) {
+                 return CartesianWaypoint{
+                     {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time},
+                     robot_pose, reference_type};
+               }
+           ),
            "robot_pose"_a,
            "reference_type"_a = ReferenceType::Absolute,
            "velocity_rel"_a = 1.0,
@@ -457,8 +476,8 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "max_dynamics"_a = false,
            "minimum_time"_a = std::nullopt)
-      .def_readonly("robot_pose", &Waypoint::robot_pose)
-      .def_readonly("reference_type", &Waypoint::reference_type)
+      .def_readonly("robot_pose", &CartesianWaypoint::robot_pose)
+      .def_readonly("reference_type", &CartesianWaypoint::reference_type)
       .def_readonly("velocity_rel", &Waypoint::velocity_rel)
       .def_readonly("acceleration_rel", &Waypoint::acceleration_rel)
       .def_readonly("jerk_rel", &Waypoint::jerk_rel)

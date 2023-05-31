@@ -5,12 +5,12 @@
 #include <ruckig/ruckig.hpp>
 
 #include "franky/robot_pose.hpp"
-#include "franky/motion/waypoint_motion.hpp"
+#include "franky/motion/cartesian_waypoint_motion.hpp"
 #include "franky/motion/reference_type.hpp"
 
 namespace franky {
 
-class LinearMotion : public WaypointMotion {
+class LinearMotion : public CartesianWaypointMotion {
  public:
   explicit LinearMotion(
       const RobotPose &target,

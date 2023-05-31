@@ -1,7 +1,7 @@
 #include "franky/motion/linear_motion.hpp"
 
 #include "franky/robot_pose.hpp"
-#include "franky/motion/waypoint_motion.hpp"
+#include "franky/motion/cartesian_waypoint_motion.hpp"
 
 namespace franky {
 
@@ -11,14 +11,17 @@ LinearMotion::LinearMotion(
     double velocity_rel,
     double acceleration_rel,
     double jerk_rel)
-    : WaypointMotion(
+    : CartesianWaypointMotion(
     {
-        {
-            .robot_pose = target,
-            .reference_type=reference_type,
-            .velocity_rel = velocity_rel,
-            .acceleration_rel = acceleration_rel,
-            .jerk_rel = jerk_rel}
+        CartesianWaypoint{
+            {
+                .velocity_rel = velocity_rel,
+                .acceleration_rel = acceleration_rel,
+                .jerk_rel = jerk_rel
+            },
+            target,
+            reference_type
+        }
     }) {}
 
 }  // namespace franky
