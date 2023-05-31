@@ -163,10 +163,11 @@ PYBIND11_MODULE(_franky, m) {
                  force_constraints_active[i] = force_constraints.value()[i].has_value();
                }
              }
-             return new ExponentialImpedanceMotion(
+             return std::make_shared<ExponentialImpedanceMotion>(
                  target,
-                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-                  force_constraints_active, exponential_decay});
+                 ExponentialImpedanceMotion::Params{
+                     target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                     force_constraints_active, exponential_decay});
            }),
            "target"_a,
            "target_type"_a = ReferenceType::Absolute,
@@ -193,10 +194,11 @@ PYBIND11_MODULE(_franky, m) {
                  force_constraints_active[i] = force_constraints.value()[i].has_value();
                }
              }
-             return new LinearImpedanceMotion(
+             return std::make_shared<LinearImpedanceMotion>(
                  target, duration,
-                 {target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
-                  force_constraints_active, return_when_finished, finish_wait_factor});
+                 LinearImpedanceMotion::Params{
+                     target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
+                     force_constraints_active, return_when_finished, finish_wait_factor});
            }),
            "target"_a,
            "duration"_a,
@@ -241,8 +243,10 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const std::vector<JointWaypoint> &waypoints, double velocity_rel, double acceleration_rel,
                double jerk_rel, bool return_when_finished) {
-             auto motion = new JointWaypointMotion(
-                     waypoints, {velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+             auto motion = std::make_shared<JointWaypointMotion>(
+                 waypoints,
+                 JointWaypointMotion::Params{
+                     velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
              motion->addReaction(std::make_shared<Reaction<franka::JointPositions>>(
                  python_interrupt_condition, std::make_shared<StopMotion<franka::JointPositions>>()));
              return motion;
@@ -263,10 +267,11 @@ PYBIND11_MODULE(_franky, m) {
                double jerk_rel = 1.0,
                bool max_dynamics = false,
                bool return_when_finished = true) {
-             auto motion = new CartesianWaypointMotion(
+             auto motion = std::make_shared<CartesianWaypointMotion>(
                  waypoints,
-                 {{velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
-                  frame.value_or(Affine::Identity())});
+                 CartesianWaypointMotion::Params{
+                     {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
+                     frame.value_or(Affine::Identity())});
              motion->addReaction(std::make_shared<Reaction<franka::CartesianPose>>(
                  python_interrupt_condition, std::make_shared<StopMotion<franka::CartesianPose>>()));
              return motion;
@@ -356,9 +361,10 @@ PYBIND11_MODULE(_franky, m) {
                double default_force_threshold,
                franka::ControllerMode controller_mode,
                franka::RealtimeConfig realtime_config) {
-             return new Robot(
-                 fci_ip, {velocity_rel, acceleration_rel, jerk_rel, default_torque_threshold, default_force_threshold,
-                          controller_mode, realtime_config});
+             return std::make_unique<Robot>(
+                 fci_ip, Robot::Params{
+                     velocity_rel, acceleration_rel, jerk_rel, default_torque_threshold, default_force_threshold,
+                     controller_mode, realtime_config});
            }),
            "fci_ip"_a,
            "velocity_rel"_a = 1.0,
