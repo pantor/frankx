@@ -8,9 +8,11 @@ namespace franky {
 LinearMotion::LinearMotion(
     const RobotPose &target,
     ReferenceType reference_type,
+    const Affine& frame,
     double velocity_rel,
     double acceleration_rel,
-    double jerk_rel)
+    double jerk_rel,
+    bool return_when_finished)
     : CartesianWaypointMotion(
     {
         CartesianWaypoint{
@@ -22,6 +24,11 @@ LinearMotion::LinearMotion(
             target,
             reference_type
         }
+    }, {
+      {
+        .return_when_finished = return_when_finished,
+      },
+      frame
     }) {}
 
 }  // namespace franky
