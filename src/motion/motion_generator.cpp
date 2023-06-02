@@ -53,7 +53,7 @@ MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_s
       reaction_fired = true;
       recursion_depth++;
       if (recursion_depth > REACTION_RECURSION_LIMIT) {
-        throw std::runtime_error(
+        throw ReactionRecursionException(
             "Reaction recursion reached depth limit " + std::to_string(REACTION_RECURSION_LIMIT) + ".");
       }
     }

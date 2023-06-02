@@ -10,6 +10,10 @@
 
 namespace franky {
 
+struct GripperException : public std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
+
 class Gripper: public franka::Gripper {
     const double width_calibration {0.004}; // [m], Difference from gripper jaws
     const double min_width {0.002}; // [m]

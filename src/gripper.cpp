@@ -24,7 +24,7 @@ bool Gripper::move(double width) { // [m]
     const double current_width = this->width();
     if (current_width > 0.01 && std::abs(current_width - width) > 0.01) {
       has_error = true;
-      throw std::runtime_error(
+      throw GripperException(
           "Gripper does (" + std::to_string(current_width) + ") not do what it should (" + std::to_string(width) +
               ").");
       return false;

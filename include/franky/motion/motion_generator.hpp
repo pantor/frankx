@@ -11,6 +11,10 @@
 
 namespace franky {
 
+struct ReactionRecursionException : public std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
+
 class Robot;
 
 template<typename ControlSignalType>
