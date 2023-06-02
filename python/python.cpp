@@ -749,4 +749,5 @@ PYBIND11_MODULE(_franky, m) {
   py::register_exception<franka::NetworkException>(m, "NetworkException");
   py::register_exception<franka::ProtocolException>(m, "ProtocolException");
   py::register_exception<franka::RealtimeException>(m, "RealtimeException");
+  py::register_exception<franky::InvalidMotionTypeException>(m, "InvalidMotionTypeException");
 }

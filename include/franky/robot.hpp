@@ -20,6 +20,10 @@
 
 namespace franky {
 
+struct InvalidMotionTypeException : public std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
+
 class Robot : public franka::Robot {
  public:
   struct Params {
@@ -196,30 +200,38 @@ class Robot : public franka::Robot {
     {
       std::unique_lock<std::mutex> lock(control_mutex_);
       if (is_in_control_unsafe()) {
-        throw std::runtime_error("Robot is already in control.");
-      }
+        if (!std::holds_alternative<MotionGenerator<ControlSignalType>>(motion_generator_)) {
+          throw InvalidMotionTypeException("The type of motion cannot change during runtime. Please ensure that the "
+                                           "previous motion finished before using a new type of motion.");
+        } else {
+          std::get<MotionGenerator<ControlSignalType>>(motion_generator_).updateMotion(motion);
+        }
+      } else {
+        if (control_exception_ != nullptr) {
+          std::rethrow_exception(control_exception_);
+          control_exception_ = nullptr;
+        }
 
-      if (control_exception_ != nullptr) {
-        std::rethrow_exception(control_exception_);
-        control_exception_ = nullptr;
-      }
-
-      motion_generator_.emplace<MotionGenerator<ControlSignalType>>(this, motion);
-      auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_);
-      motion_generator->registerUpdateCallback(
-          [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
-            std::lock_guard<std::mutex> lock(this->state_mutex_);
-            current_state_ = robot_state;
-          });
-      control_thread_ = std::make_shared<std::thread>(
-          [this, control_func_executor](const ControlFunc<ControlSignalType> &control_func) {
-            try {
-              control_func_executor(control_func);
-            } catch (...) {
-              control_exception_ = std::current_exception();
+        motion_generator_.emplace<MotionGenerator<ControlSignalType>>(this, motion);
+        auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_);
+        motion_generator->registerUpdateCallback(
+            [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
+              std::lock_guard<std::mutex> lock(this->state_mutex_);
+              current_state_ = robot_state;
+            });
+        control_thread_ = std::make_shared<std::thread>(
+            [this, control_func_executor](const ControlFunc<ControlSignalType> &control_func) {
+              try {
+                control_func_executor(control_func);
+              } catch (...) {
+                control_exception_ = std::current_exception();
+              }
+            },
+            [motion_generator](const franka::RobotState &rs, franka::Duration d) {
+              return (*motion_generator)(rs, d);
             }
-          },
-          [motion_generator](const franka::RobotState &rs, franka::Duration d) { return (*motion_generator)(rs, d); });
+        );
+      }
     }
     if (!async)
       joinMotion();
