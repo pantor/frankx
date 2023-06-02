@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include <franka/duration.h>
 #include <franka/robot_state.h>
@@ -29,10 +30,14 @@ class MotionGenerator {
     update_callbacks_.push_back(callback);
   }
 
+  void updateMotion(std::shared_ptr<Motion<ControlSignalType>> new_motion);
+
  private:
   std::shared_ptr<Motion<ControlSignalType>> initial_motion_;
   std::shared_ptr<Motion<ControlSignalType>> current_motion_;
+  std::shared_ptr<Motion<ControlSignalType>> new_motion_;
   std::vector<std::function<void(const franka::RobotState &, franka::Duration, double)>> update_callbacks_;
+  std::mutex new_motion_mutex_;
 
   double abs_time_{0.0};
   double rel_time_offset_{0.0};

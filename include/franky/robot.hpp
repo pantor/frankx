@@ -167,6 +167,14 @@ class Robot : public franka::Robot {
  private:
   template<typename ControlSignalType>
   using ControlFunc = std::function<ControlSignalType(const franka::RobotState &, franka::Duration)>;
+  using MotionGeneratorVariant = std::variant<
+      std::nullopt_t,
+      MotionGenerator<franka::Torques>,
+      MotionGenerator<franka::JointVelocities>,
+      MotionGenerator<franka::JointPositions>,
+      MotionGenerator<franka::CartesianVelocities>,
+      MotionGenerator<franka::CartesianPose>
+  >;
 
   //! The robot's hostname / IP address
   std::string fci_ip_;
@@ -175,13 +183,7 @@ class Robot : public franka::Robot {
   std::mutex state_mutex_;
   std::mutex control_mutex_;
   std::shared_ptr<std::thread> control_thread_;
-  std::optional<std::variant<
-      MotionGenerator<franka::Torques>,
-      MotionGenerator<franka::JointVelocities>,
-      MotionGenerator<franka::JointPositions>,
-      MotionGenerator<franka::CartesianVelocities>,
-      MotionGenerator<franka::CartesianPose>
-  >> motion_generator_;
+  MotionGeneratorVariant motion_generator_{std::nullopt};
   std::exception_ptr control_exception_{nullptr};
 
   [[nodiscard]] bool is_in_control_unsafe() const;
@@ -202,8 +204,8 @@ class Robot : public franka::Robot {
         control_exception_ = nullptr;
       }
 
-      motion_generator_ = MotionGenerator<ControlSignalType>(this, motion);
-      auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_.value());
+      motion_generator_.emplace<MotionGenerator<ControlSignalType>>(this, motion);
+      auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_);
       motion_generator->registerUpdateCallback(
           [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
             std::lock_guard<std::mutex> lock(this->state_mutex_);

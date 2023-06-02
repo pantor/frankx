@@ -29,9 +29,15 @@ void Motion<ControlSignalType>::addReaction(const std::shared_ptr<Reaction<Contr
 }
 
 template<typename ControlSignalType>
+void Motion<ControlSignalType>::addReactionFront(const std::shared_ptr<Reaction<ControlSignalType>> reaction) {
+  const std::lock_guard<std::mutex> lock(reaction_mutex_);
+  reactions_.push_front(reaction);
+}
+
+template<typename ControlSignalType>
 std::vector<std::shared_ptr<Reaction<ControlSignalType>>> Motion<ControlSignalType>::reactions() {
   const std::lock_guard<std::mutex> lock(reaction_mutex_);
-  return reactions_;
+  return std::vector(reactions_.begin(), reactions_.end());
 }
 
 template<typename ControlSignalType>

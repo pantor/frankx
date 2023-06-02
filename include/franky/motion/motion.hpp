@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <list>
 
 #include "reaction.hpp"
 #include "franky/robot.hpp"
@@ -19,6 +20,8 @@ class Motion {
       void(const franka::RobotState &, franka::Duration, double, const ControlSignalType &)>;
 
   void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
+
+  void addReactionFront(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
   std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions();
 
@@ -46,7 +49,7 @@ class Motion {
 
  private:
   std::mutex reaction_mutex_;
-  std::vector<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
+  std::list<std::shared_ptr<Reaction<ControlSignalType>>> reactions_;
   std::mutex callback_mutex_;
   std::vector<CallbackType> callbacks_;
   Robot *robot_;
