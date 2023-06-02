@@ -6,6 +6,8 @@
 #include <franka/model.h>
 #include <franka/robot.h>
 #include <franka/robot_state.h>
+#include <thread>
+#include <variant>
 
 #include "franky/types.hpp"
 #include "franky/robot_pose.hpp"
@@ -15,9 +17,6 @@
 #include "franky/scope_guard.hpp"
 
 namespace franky {
-
-template<typename ControlSignalType>
-class MotionGenerator;
 
 class Robot : public franka::Robot {
  public:
@@ -124,40 +123,44 @@ class Robot : public franka::Robot {
     return params_.jerk_rel;
   }
 
+  [[nodiscard]] bool is_in_control();
+
+  void joinMotion();
+
   // These helper functions are needed as the implicit template deduction does not work on subclasses of Motion
-  inline void move(const std::shared_ptr<Motion<franka::CartesianPose>> &motion) {
+  inline void move(const std::shared_ptr<Motion<franka::CartesianPose>> &motion, bool async = false) {
     moveInternal<franka::CartesianPose>(motion, [this](const ControlFunc<franka::CartesianPose> &m) {
       control(m, params_.controller_mode);
-    });
+    }, async);
   }
 
-  inline void move(const std::shared_ptr<Motion<franka::CartesianVelocities>> &motion) {
+  inline void move(const std::shared_ptr<Motion<franka::CartesianVelocities>> &motion, bool async = false) {
     moveInternal<franka::CartesianVelocities>(motion, [this](const ControlFunc<franka::CartesianVelocities> &m) {
       control(m, params_.controller_mode);
-    });
+    }, async);
   }
 
-  inline void move(const std::shared_ptr<Motion<franka::JointPositions>> &motion) {
+  inline void move(const std::shared_ptr<Motion<franka::JointPositions>> &motion, bool async = false) {
     moveInternal<franka::JointPositions>(motion, [this](const ControlFunc<franka::JointPositions> &m) {
       control(m, params_.controller_mode);
-    });
+    }, async);
   }
 
-  inline void move(const std::shared_ptr<Motion<franka::JointVelocities>> &motion) {
+  inline void move(const std::shared_ptr<Motion<franka::JointVelocities>> &motion, bool async = false) {
     moveInternal<franka::JointVelocities>(motion, [this](const ControlFunc<franka::JointVelocities> &m) {
       control(m, params_.controller_mode);
-    });
+    }, async);
   }
 
-  inline void move(const std::shared_ptr<Motion<franka::Torques>> &motion) {
+  inline void move(const std::shared_ptr<Motion<franka::Torques>> &motion, bool async = false) {
     moveInternal<franka::Torques>(motion, [this](const ControlFunc<franka::Torques> &m) {
       control(m);
-    });
+    }, async);
   }
 
-  [[nodiscard]] static Affine forwardKinematics(const Vector7d &q);
-
   [[nodiscard]] static Vector7d inverseKinematics(const Affine &target, const Vector7d &q0);
+
+  [[nodiscard]] static Affine forwardKinematics(const Vector7d &q);
 
  private:
   template<typename ControlSignalType>
@@ -167,35 +170,42 @@ class Robot : public franka::Robot {
   std::string fci_ip_;
   Params params_;
   franka::RobotState current_state_;
-  bool is_in_control_;
   std::mutex state_mutex_;
+  std::mutex control_mutex_;
+  std::shared_ptr<std::thread> control_thread_;
+  std::optional<std::variant<
+      MotionGenerator<franka::Torques>,
+      MotionGenerator<franka::JointVelocities>,
+      MotionGenerator<franka::JointPositions>,
+      MotionGenerator<franka::CartesianVelocities>,
+      MotionGenerator<franka::CartesianPose>
+  >> motion_generator_;
 
-  template<typename ControlSignalType>
-  inline void move(const std::shared_ptr<Motion<ControlSignalType>> &motion) {
-    moveInternal<ControlSignalType>(motion, [this](const ControlFunc<ControlSignalType> &m) {
-      control(m, params_.controller_mode);
-    });
-  }
+  [[nodiscard]] bool is_in_control_unsafe() const;
 
   template<typename ControlSignalType>
   void moveInternal(
       const std::shared_ptr<Motion<ControlSignalType>> &motion,
-      const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func) {
-    std::unique_lock<std::mutex> lock(state_mutex_);
-    if (is_in_control_) {
-      throw std::runtime_error("Robot is already in control.");
+      const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func,
+      bool async) {
+    {
+      std::unique_lock<std::mutex> lock(control_mutex_);
+      if (is_in_control_unsafe()) {
+        throw std::runtime_error("Robot is already in control.");
+      }
+      motion_generator_ = MotionGenerator<ControlSignalType>(this, motion);
+      auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_.value());
+      motion_generator->registerUpdateCallback(
+          [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
+            std::lock_guard<std::mutex> lock(this->state_mutex_);
+            current_state_ = robot_state;
+          });
+      control_thread_ = std::make_shared<std::thread>(
+          control_func,
+          [motion_generator](const franka::RobotState &rs, franka::Duration d) { return (*motion_generator)(rs, d); });
     }
-    scope_guard is_in_control_guard([this]() { this->is_in_control_ = false; });
-    is_in_control_ = true;
-    lock.unlock();
-    MotionGenerator<ControlSignalType> motion_generator(this, motion);
-    motion_generator.registerUpdateCallback(
-        [this](const franka::RobotState &robot_state, franka::Duration duration, double time) {
-          std::lock_guard<std::mutex> lock(this->state_mutex_);
-          current_state_ = robot_state;
-        });
-    control_func(
-        [&motion_generator](const franka::RobotState &rs, franka::Duration d) { return motion_generator(rs, d); });
+    if (!async)
+      joinMotion();
   }
 };
 

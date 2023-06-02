@@ -12,7 +12,7 @@ using Affine = Eigen::Affine3d;
 Robot::Robot(const std::string &fci_ip) : Robot(fci_ip, Params()) {}
 
 Robot::Robot(const std::string &fci_ip, const Params &params)
-    : fci_ip_(fci_ip), params_(params), is_in_control_(false), franka::Robot(fci_ip, params.realtime_config) {
+    : fci_ip_(fci_ip), params_(params), franka::Robot(fci_ip, params.realtime_config) {
   setCollisionBehavior(params_.default_torque_threshold, params_.default_force_threshold);
 }
 
@@ -73,9 +73,12 @@ Vector7d Robot::inverseKinematics(const Affine &target, const Vector7d &q0) {
 }
 
 franka::RobotState Robot::state() {
-  std::lock_guard<std::mutex> lock(state_mutex_);
-  if (!is_in_control_) {
-    current_state_ = readOnce();
+  std::lock_guard<std::mutex> state_lock(state_mutex_);
+  {
+    std::lock_guard<std::mutex> control_lock(control_mutex_);
+    if (!is_in_control_unsafe()) {
+      current_state_ = readOnce();
+    }
   }
   return current_state_;
 }
@@ -84,7 +87,8 @@ void Robot::setCollisionBehavior(double torque_threshold, double force_threshold
   setCollisionBehavior(mkFull<7>(torque_threshold), mkFull<6>(force_threshold));
 }
 
-void Robot::setCollisionBehavior(const std::array<double, 7> &torque_thresholds, const std::array<double, 6> &force_thresholds) {
+void Robot::setCollisionBehavior(const std::array<double, 7> &torque_thresholds,
+                                 const std::array<double, 6> &force_thresholds) {
   setCollisionBehavior(torque_thresholds, torque_thresholds, force_thresholds, force_thresholds);
 }
 
@@ -119,6 +123,27 @@ void Robot::setCollisionBehavior(
       mkFull<6>(lower_force_threshold_nominal),
       mkFull<6>(upper_force_threshold_nominal));
 
+}
+
+bool Robot::is_in_control_unsafe() const {
+  return control_thread_ != nullptr && control_thread_->joinable();
+}
+
+bool Robot::is_in_control() {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  return is_in_control_unsafe();
+}
+
+void Robot::joinMotion() {
+  // This is to ensure the thread safety of this operation. Otherwise, it is possible that the thread pointer
+  // gets overwritten at the exact moment we try to join the thread.
+  std::shared_ptr<std::thread> thread = nullptr;
+  {
+    std::unique_lock<std::mutex> lock(control_mutex_);
+    thread = control_thread_;
+  }
+  if (thread != nullptr)
+    thread->join();
 }
 
 }  // namespace franky

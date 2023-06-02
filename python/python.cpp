@@ -379,20 +379,26 @@ PYBIND11_MODULE(_franky, m) {
            "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
       .def("recover_from_errors", &Robot::recoverFromErrors)
       .def("move",
-           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::CartesianPose>> &)>(&Robot::move),
+           py::overload_cast<const std::shared_ptr<Motion<franka::CartesianPose>> &, bool>(&Robot::move),
+           "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("move",
-           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::CartesianVelocities>> &)>(&Robot::move),
+           py::overload_cast<const std::shared_ptr<Motion<franka::CartesianVelocities>> &, bool>(&Robot::move),
+           "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("move",
-           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::JointPositions>> &)>(&Robot::move),
+           py::overload_cast<const std::shared_ptr<Motion<franka::JointPositions>> &, bool>(&Robot::move),
+           "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("move",
-           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::JointVelocities>> &)>(&Robot::move),
+           py::overload_cast<const std::shared_ptr<Motion<franka::JointVelocities>> &, bool>(&Robot::move),
+           "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("move",
-           static_cast<void (Robot::*)(const std::shared_ptr<Motion<franka::Torques>> &)>(&Robot::move),
+           py::overload_cast<const std::shared_ptr<Motion<franka::Torques>> &, bool>(&Robot::move),
+           "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
+      .def("join_motion", &Robot::joinMotion)
       .def("set_collision_behavior", py::overload_cast<double, double>(&Robot::setCollisionBehavior),
            "torque_threshold"_a, "force_threshold"_a)
       .def("set_collision_behavior",
@@ -464,6 +470,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly("current_pose", &Robot::currentPose)
       .def_property_readonly("current_joint_positions", &Robot::currentJointPositions)
       .def_property_readonly("state", &Robot::state)
+      .def_property_readonly("is_in_control", &Robot::is_in_control)
       .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity, "[m/s]")
       .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity, "[rad/s]")
       .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity, "[rad/s]")
