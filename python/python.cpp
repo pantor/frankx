@@ -389,15 +389,15 @@ PYBIND11_MODULE(_franky, m) {
       .def("set_dynamic_rel", py::overload_cast<double, double, double>(&Robot::setDynamicRel),
            "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
       .def("recover_from_errors", &Robot::recoverFromErrors)
-      .def("move", &robotMove<franka::CartesianPose>, "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::CartesianPose>, "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move", &robotMove<franka::CartesianVelocities> , "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::CartesianVelocities> , "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move", &robotMove<franka::JointPositions> , "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::JointPositions> , "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move", &robotMove<franka::JointVelocities> , "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::JointVelocities> , "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move", &robotMove<franka::Torques> , "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::Torques> , "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("join_motion", &Robot::joinMotion, py::call_guard<py::gil_scoped_release>())
       .def("set_collision_behavior", py::overload_cast<double, double>(&Robot::setCollisionBehavior),
