@@ -135,15 +135,19 @@ bool Robot::is_in_control() {
 }
 
 void Robot::joinMotion() {
-  // This is to ensure the thread safety of this operation. Otherwise, it is possible that the thread pointer
-  // gets overwritten at the exact moment we try to join the thread.
-  std::shared_ptr<std::thread> thread = nullptr;
+  // This is to ensure the control_thread safety of this operation. Otherwise, it is possible that the control_thread pointer
+  // gets overwritten at the exact moment we try to join the control_thread.
+  std::shared_ptr<std::thread> control_thread = nullptr;
+  std::exception_ptr control_exception = nullptr;
   {
     std::unique_lock<std::mutex> lock(control_mutex_);
-    thread = control_thread_;
+    control_thread = control_thread_;
+    control_exception = control_exception_;
   }
-  if (thread != nullptr)
-    thread->join();
+  if (control_thread != nullptr)
+    control_thread->join();
+  if (control_exception != nullptr)
+    std::rethrow_exception(control_exception);
 }
 
 }  // namespace franky

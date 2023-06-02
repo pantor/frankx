@@ -1,13 +1,15 @@
 #pragma once
 
+#include <thread>
+#include <variant>
+#include <exception>
+#include <stdexcept>
 #include <franka/control_types.h>
 #include <franka/duration.h>
 #include <franka/exception.h>
 #include <franka/model.h>
 #include <franka/robot.h>
 #include <franka/robot_state.h>
-#include <thread>
-#include <variant>
 
 #include "franky/types.hpp"
 #include "franky/robot_pose.hpp"
@@ -180,19 +182,26 @@ class Robot : public franka::Robot {
       MotionGenerator<franka::CartesianVelocities>,
       MotionGenerator<franka::CartesianPose>
   >> motion_generator_;
+  std::exception_ptr control_exception_{nullptr};
 
   [[nodiscard]] bool is_in_control_unsafe() const;
 
   template<typename ControlSignalType>
   void moveInternal(
       const std::shared_ptr<Motion<ControlSignalType>> &motion,
-      const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func,
+      const std::function<void(const ControlFunc<ControlSignalType> &)> &control_func_executor,
       bool async) {
     {
       std::unique_lock<std::mutex> lock(control_mutex_);
       if (is_in_control_unsafe()) {
         throw std::runtime_error("Robot is already in control.");
       }
+
+      if (control_exception_ != nullptr) {
+        std::rethrow_exception(control_exception_);
+        control_exception_ = nullptr;
+      }
+
       motion_generator_ = MotionGenerator<ControlSignalType>(this, motion);
       auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_.value());
       motion_generator->registerUpdateCallback(
@@ -201,7 +210,13 @@ class Robot : public franka::Robot {
             current_state_ = robot_state;
           });
       control_thread_ = std::make_shared<std::thread>(
-          control_func,
+          [this, control_func_executor](const ControlFunc<ControlSignalType> &control_func) {
+            try {
+              control_func_executor(control_func);
+            } catch (...) {
+              control_exception_ = std::current_exception();
+            }
+          },
           [motion_generator](const franka::RobotState &rs, franka::Duration d) { return (*motion_generator)(rs, d); });
     }
     if (!async)
