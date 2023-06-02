@@ -3,6 +3,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 #include <pybind11/functional.h>
+#include <Python.h>
 
 #include <franka/robot_state.h>
 
@@ -84,10 +85,26 @@ void mkReactionClass(py::module_ m, const std::string &control_signal_name) {
   }
 }
 
-Condition python_interrupt_condition([](const franka::RobotState &robot_state, double rel_time, double abs_time) {
-  return Py_IsInitialized() && PyErr_CheckSignals() == -1;
-});
-
+template<typename ControlSignalType>
+void robotMove(Robot &robot, std::shared_ptr<Motion<ControlSignalType>> motion, bool async) {
+  robot.move(motion, true);
+  if (!async) {
+    auto future = std::async(std::launch::async, &Robot::joinMotion, &robot);
+    // Check if python wants to terminate every 100 ms
+    while (future.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout) {
+      bool terminate;
+      {
+        auto gstate = PyGILState_Ensure();
+        terminate = Py_IsInitialized() && PyErr_CheckSignals() == -1;
+        PyGILState_Release(gstate);
+      }
+      if (terminate) {
+        robot.stop();
+        future.wait();
+      }
+    }
+  }
+}
 // Start the callback execution thread
 std::thread callback_thread(executeCallbacks);
 
@@ -243,13 +260,10 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const std::vector<JointWaypoint> &waypoints, double velocity_rel, double acceleration_rel,
                double jerk_rel, bool return_when_finished) {
-             auto motion = std::make_shared<JointWaypointMotion>(
+             return std::make_shared<JointWaypointMotion>(
                  waypoints,
                  JointWaypointMotion::Params{
                      velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
-             motion->addReaction(std::make_shared<Reaction<franka::JointPositions>>(
-                 python_interrupt_condition, std::make_shared<StopMotion<franka::JointPositions>>()));
-             return motion;
            }),
            "waypoints"_a,
            "velocity_rel"_a = 1.0,
@@ -267,14 +281,11 @@ PYBIND11_MODULE(_franky, m) {
                double jerk_rel = 1.0,
                bool max_dynamics = false,
                bool return_when_finished = true) {
-             auto motion = std::make_shared<CartesianWaypointMotion>(
+             return std::make_shared<CartesianWaypointMotion>(
                  waypoints,
                  CartesianWaypointMotion::Params{
                      {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
                      frame.value_or(Affine::Identity())});
-             motion->addReaction(std::make_shared<Reaction<franka::CartesianPose>>(
-                 python_interrupt_condition, std::make_shared<StopMotion<franka::CartesianPose>>()));
-             return motion;
            }),
            "waypoints"_a,
            "frame"_a = std::nullopt,
@@ -378,27 +389,17 @@ PYBIND11_MODULE(_franky, m) {
       .def("set_dynamic_rel", py::overload_cast<double, double, double>(&Robot::setDynamicRel),
            "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
       .def("recover_from_errors", &Robot::recoverFromErrors)
-      .def("move",
-           py::overload_cast<const std::shared_ptr<Motion<franka::CartesianPose>> &, bool>(&Robot::move),
-           "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::CartesianPose>, "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move",
-           py::overload_cast<const std::shared_ptr<Motion<franka::CartesianVelocities>> &, bool>(&Robot::move),
-           "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::CartesianVelocities> , "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move",
-           py::overload_cast<const std::shared_ptr<Motion<franka::JointPositions>> &, bool>(&Robot::move),
-           "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::JointPositions> , "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move",
-           py::overload_cast<const std::shared_ptr<Motion<franka::JointVelocities>> &, bool>(&Robot::move),
-           "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::JointVelocities> , "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("move",
-           py::overload_cast<const std::shared_ptr<Motion<franka::Torques>> &, bool>(&Robot::move),
-           "motion"_a, "async"_a = false,
+      .def("move", &robotMove<franka::Torques> , "motion"_a, "async"_a = false,
            py::call_guard<py::gil_scoped_release>())
-      .def("join_motion", &Robot::joinMotion)
+      .def("join_motion", &Robot::joinMotion, py::call_guard<py::gil_scoped_release>())
       .def("set_collision_behavior", py::overload_cast<double, double>(&Robot::setCollisionBehavior),
            "torque_threshold"_a, "force_threshold"_a)
       .def("set_collision_behavior",
