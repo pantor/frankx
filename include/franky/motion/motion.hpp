@@ -33,7 +33,7 @@ class Motion {
   nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
 
   std::shared_ptr<Motion<ControlSignalType>>
-  checkAndCallReactions(const franka::RobotState &robot_state, double rel_time, double abs_time_);
+  checkAndCallReactions(const franka::RobotState &robot_state, double rel_time, double abs_time);
 
  protected:
   explicit Motion();

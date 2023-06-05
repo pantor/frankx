@@ -58,10 +58,10 @@ Motion<ControlSignalType>::nextCommand(const franka::RobotState &robot_state, fr
 
 template<typename ControlSignalType>
 std::shared_ptr<Motion<ControlSignalType>> Motion<ControlSignalType>::checkAndCallReactions(
-    const franka::RobotState &robot_state, double rel_time, double abs_time_) {
+    const franka::RobotState &robot_state, double rel_time, double abs_time) {
   for (auto &reaction : reactions_) {
-    if (reaction->condition(robot_state, rel_time, abs_time_)) {
-      auto new_motion = (*reaction)(robot_state, rel_time, abs_time_);
+    if (reaction->condition(robot_state, rel_time, abs_time)) {
+      auto new_motion = (*reaction)(robot_state, rel_time, abs_time);
       if (new_motion != nullptr)
         return new_motion;
     }
