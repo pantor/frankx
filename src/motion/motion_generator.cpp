@@ -28,16 +28,16 @@ MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_s
     if (new_motion_ != nullptr || abs_time_ == 0.0) {
       if (new_motion_ != nullptr) {
         current_motion_ = new_motion_;
+        new_motion_ = nullptr;
       } else {
         current_motion_ = initial_motion_;
-        rel_time_offset_ = 0.0;
       }
+      rel_time_offset_ = abs_time_;
       current_motion_->init(robot_, robot_state);
     }
   }
 
   auto rel_time = abs_time_ - rel_time_offset_;
-
   for (auto &callback : update_callbacks_)
     callback(robot_state, period, rel_time);
 
@@ -45,7 +45,7 @@ MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_s
   bool reaction_fired = true;
   while (reaction_fired) {
     reaction_fired = false;
-    auto new_motion = current_motion_->checkAndCallReactions(robot_state, rel_time, abs_time_);
+    auto new_motion = current_motion_->checkAndCallReactions(robot_state, abs_time_ - rel_time_offset_, abs_time_);
     if (new_motion != nullptr) {
       current_motion_ = new_motion;
       current_motion_->init(robot_, robot_state);
