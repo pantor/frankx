@@ -307,11 +307,11 @@ PYBIND11_MODULE(_franky, m) {
              return std::make_shared<LinearMotion>(
                  target,
                  reference_type,
+                 frame.value_or(Affine::Identity()),
                  velocity_rel,
                  acceleration_rel,
                  jerk_rel,
-                 return_when_finished,
-                 frame.value_or(Affine::Identity()));
+                 return_when_finished);
            }),
            "target"_a,
            "reference_type"_a = ReferenceType::Absolute,
