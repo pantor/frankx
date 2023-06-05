@@ -104,6 +104,7 @@ void robotMove(Robot &robot, std::shared_ptr<Motion<ControlSignalType>> motion, 
         future.wait();
       }
     }
+    future.get();
   }
 }
 // Start the callback execution thread
