@@ -43,8 +43,6 @@ class CartesianWaypointMotion : public WaypointMotion<franka::CartesianPose, Rob
   RobotPose target_robot_pose_;
   Affine ref_frame_;
 
-  [[nodiscard]] RobotPose getTargetRobotPose(const RobotPose &old_robot_pose) const;
-
   static inline Vector7d vec_cart_rot_elbow(double cart, double rot, double elbow) {
     return {cart, cart, cart, rot, rot, rot, elbow};
   }
