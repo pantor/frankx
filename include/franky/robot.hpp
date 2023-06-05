@@ -131,6 +131,8 @@ class Robot : public franka::Robot {
 
   [[nodiscard]] bool is_in_control();
 
+  [[nodiscard]] std::string fci_hostname() const;
+
   void joinMotion();
 
   // These helper functions are needed as the implicit template deduction does not work on subclasses of Motion

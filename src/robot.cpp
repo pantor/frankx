@@ -135,6 +135,10 @@ bool Robot::is_in_control() {
   return is_in_control_unsafe();
 }
 
+std::string Robot::fci_hostname() const {
+  return fci_hostname_;
+}
+
 void Robot::joinMotion() {
   // This is to ensure the control thread safety of this operation. Otherwise, it is possible that the control_thread
   // pointer gets overwritten at the exact moment we try to join the control_thread.

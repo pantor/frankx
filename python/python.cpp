@@ -492,6 +492,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly("current_joint_positions", &Robot::currentJointPositions)
       .def_property_readonly("state", &Robot::state)
       .def_property_readonly("is_in_control", &Robot::is_in_control)
+      .def_property_readonly("fci_hostname", &Robot::fci_hostname)
       .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity, "[m/s]")
       .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity, "[rad/s]")
       .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity, "[rad/s]")
