@@ -9,10 +9,10 @@ namespace franky {
 using Affine = Eigen::Affine3d;
 
 //! Connects to a robot at the given FCI IP address.
-Robot::Robot(const std::string &fci_ip) : Robot(fci_ip, Params()) {}
+Robot::Robot(const std::string &fci_hostname) : Robot(fci_hostname, Params()) {}
 
-Robot::Robot(const std::string &fci_ip, const Params &params)
-    : fci_ip_(fci_ip), params_(params), franka::Robot(fci_ip, params.realtime_config) {
+Robot::Robot(const std::string &fci_hostname, const Params &params)
+    : fci_hostname_(fci_hostname), params_(params), franka::Robot(fci_hostname, params.realtime_config) {
   setCollisionBehavior(params_.default_torque_threshold, params_.default_force_threshold);
 }
 

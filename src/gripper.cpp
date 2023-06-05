@@ -2,8 +2,8 @@
 
 namespace franky {
 
-Gripper::Gripper(const std::string &fci_ip, double speed, double force)
-    : franka::Gripper(fci_ip), gripper_speed(speed), gripper_force(force) {}
+Gripper::Gripper(const std::string &fci_hostname, double speed, double force)
+    : franka::Gripper(fci_hostname), gripper_speed(speed), gripper_force(force) {}
 
 double Gripper::width() const {
   auto state = readOnce();

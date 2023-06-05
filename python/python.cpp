@@ -340,7 +340,7 @@ PYBIND11_MODULE(_franky, m) {
   mkReactionClass<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<Gripper>(m, "Gripper")
-      .def(py::init<const std::string &, double, double>(), "fci_ip"_a, "speed"_a = 0.02, "force"_a = 20.0)
+      .def(py::init<const std::string &, double, double>(), "fci_hostname"_a, "speed"_a = 0.02, "force"_a = 20.0)
       .def_readwrite("gripper_force", &Gripper::gripper_force)
       .def_readwrite("gripper_speed", &Gripper::gripper_speed)
       .def_readonly("max_width", &Gripper::max_width)
@@ -384,7 +384,7 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<Robot>(m, "Robot")
       .def(py::init<>([](
-               const std::string &fci_ip,
+               const std::string &fci_hostname,
                double velocity_rel,
                double acceleration_rel,
                double jerk_rel,
@@ -393,11 +393,11 @@ PYBIND11_MODULE(_franky, m) {
                franka::ControllerMode controller_mode,
                franka::RealtimeConfig realtime_config) {
              return std::make_unique<Robot>(
-                 fci_ip, Robot::Params{
+                 fci_hostname, Robot::Params{
                      velocity_rel, acceleration_rel, jerk_rel, default_torque_threshold, default_force_threshold,
                      controller_mode, realtime_config});
            }),
-           "fci_ip"_a,
+           "fci_hostname"_a,
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
            "jerk_rel"_a = 1.0,

@@ -76,9 +76,9 @@ class Robot : public franka::Robot {
   static constexpr double control_rate{0.001}; // [s]
 
   //! Connects to a robot at the given FCI IP address.
-  explicit Robot(const std::string &fci_ip);
+  explicit Robot(const std::string &fci_hostname);
 
-  explicit Robot(const std::string &fci_ip, const Params &params);
+  explicit Robot(const std::string &fci_hostname, const Params &params);
 
   void setDynamicRel(double dynamic_rel);
 
@@ -181,7 +181,7 @@ class Robot : public franka::Robot {
   >;
 
   //! The robot's hostname / IP address
-  std::string fci_ip_;
+  std::string fci_hostname_;
   Params params_;
   franka::RobotState current_state_;
   std::mutex state_mutex_;
