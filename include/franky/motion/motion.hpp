@@ -27,10 +27,16 @@ class Motion {
 
   void registerCallback(CallbackType callback);
 
-  void init(Robot *robot, const franka::RobotState &robot_state);
+  void init(
+      Robot *robot, const franka::RobotState &robot_state, const std::optional<ControlSignalType> &previous_command);
 
   ControlSignalType
-  nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time);
+  nextCommand(
+      const franka::RobotState &robot_state,
+      franka::Duration time_step,
+      double rel_time,
+      double abs_time,
+      const std::optional<ControlSignalType> &previous_command);
 
   std::shared_ptr<Motion<ControlSignalType>>
   checkAndCallReactions(const franka::RobotState &robot_state, double rel_time, double abs_time);
@@ -38,11 +44,16 @@ class Motion {
  protected:
   explicit Motion();
 
-  virtual void initImpl(const franka::RobotState &robot_state) {}
+  virtual void initImpl(
+      const franka::RobotState &robot_state, const std::optional<ControlSignalType> &previous_command) {}
 
   virtual ControlSignalType
   nextCommandImpl(
-      const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) = 0;
+      const franka::RobotState &robot_state,
+      franka::Duration time_step,
+      double rel_time,
+      double abs_time,
+      const std::optional<ControlSignalType> &previous_command) = 0;
 
   [[nodiscard]] inline Robot *robot() const {
     return robot_;

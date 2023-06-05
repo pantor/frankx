@@ -30,11 +30,15 @@ class ImpedanceMotion : public Motion<franka::Torques> {
   explicit ImpedanceMotion(Affine target, const Params &params);
 
  protected:
-  void initImpl(const franka::RobotState &robot_state) override;
+  void initImpl(const franka::RobotState &robot_state, const std::optional<franka::Torques> &previous_command) override;
 
   franka::Torques
   nextCommandImpl(
-      const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) override;
+      const franka::RobotState &robot_state,
+      franka::Duration time_step,
+      double rel_time,
+      double abs_time,
+      const std::optional<franka::Torques> &previous_command) override;
 
   [[nodiscard]] inline Affine intermediate_target() const {
     return intermediate_target_;

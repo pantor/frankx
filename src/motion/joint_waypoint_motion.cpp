@@ -15,8 +15,10 @@ JointWaypointMotion::JointWaypointMotion(const std::vector<Waypoint<Vector7d>> &
     : WaypointMotion<franka::JointPositions, Vector7d>(waypoints, params) {}
 
 void JointWaypointMotion::initWaypointMotion(
-    const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) {
-  input_parameter.current_position = robot_state.q_d;
+    const franka::RobotState &robot_state,
+    const std::optional<franka::JointPositions> &previous_command,
+    ruckig::InputParameter<7> &input_parameter) {
+  input_parameter.current_position = previous_command->q;
   input_parameter.current_velocity = robot_state.dq_d;
   input_parameter.current_acceleration = robot_state.ddq_d;
 }
@@ -28,6 +30,7 @@ franka::JointPositions JointWaypointMotion::getControlSignal(
 
 void JointWaypointMotion::setNewWaypoint(
     const franka::RobotState &robot_state,
+    const std::optional<franka::JointPositions> &previous_command,
     const Waypoint<Vector7d> &new_waypoint,
     ruckig::InputParameter<7> &input_parameter) {
   auto new_target = new_waypoint.target;

@@ -22,7 +22,7 @@ class LinearImpedanceMotion : public ImpedanceMotion {
   explicit LinearImpedanceMotion(const Affine &target, double duration, const Params &params);
 
  protected:
-  void initImpl(const franka::RobotState &robot_state) override;
+  void initImpl(const franka::RobotState &robot_state, const std::optional<franka::Torques> &previous_command) override;
 
   std::tuple<Affine, bool>
   update(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;

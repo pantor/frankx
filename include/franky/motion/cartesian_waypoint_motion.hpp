@@ -27,11 +27,16 @@ class CartesianWaypointMotion : public WaypointMotion<franka::CartesianPose, Rob
 
  protected:
 
-  void initWaypointMotion(const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) override;
+  void initWaypointMotion(
+      const franka::RobotState &robot_state,
+      const std::optional<franka::CartesianPose> &previous_command,
+      ruckig::InputParameter<7> &input_parameter) override;
 
-  void setNewWaypoint(const franka::RobotState &robot_state,
-                      const Waypoint<RobotPose> &new_waypoint,
-                      ruckig::InputParameter<7> &input_parameter) override;
+  void setNewWaypoint(
+      const franka::RobotState &robot_state,
+      const std::optional<franka::CartesianPose> &previous_command,
+      const Waypoint<RobotPose> &new_waypoint,
+      ruckig::InputParameter<7> &input_parameter) override;
 
   [[nodiscard]] std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
 

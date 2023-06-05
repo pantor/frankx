@@ -46,6 +46,7 @@ class MotionGenerator {
   std::shared_ptr<Motion<ControlSignalType>> new_motion_;
   std::vector<std::function<void(const franka::RobotState &, franka::Duration, double)>> update_callbacks_;
   std::mutex new_motion_mutex_;
+  std::optional<ControlSignalType> previous_command_;
 
   double abs_time_{0.0};
   double rel_time_offset_{0.0};

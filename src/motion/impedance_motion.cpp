@@ -21,7 +21,9 @@ ImpedanceMotion::ImpedanceMotion(Affine target, const ImpedanceMotion::Params &p
   damping.bottomRightCorner(3, 3) << 2.0 * sqrt(params.rotational_stiffness) * Eigen::MatrixXd::Identity(3, 3);
 }
 
-void ImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
+void ImpedanceMotion::initImpl(
+    const franka::RobotState &robot_state,
+    const std::optional<franka::Torques> &previous_command) {
   auto robot_pose = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
   intermediate_target_ = robot_pose;
   if (params_.target_type == ReferenceType::Relative)
@@ -33,7 +35,11 @@ void ImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
 
 franka::Torques
 ImpedanceMotion::nextCommandImpl(
-    const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) {
+    const franka::RobotState &robot_state,
+    franka::Duration time_step,
+    double rel_time,
+    double abs_time,
+    const std::optional<franka::Torques> &previous_command) {
   std::array<double, 7> coriolis_array = model_->coriolis(robot_state);
   std::array<double, 42> jacobian_array = model_->zeroJacobian(franka::Frame::kEndEffector, robot_state);
 

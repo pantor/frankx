@@ -16,9 +16,11 @@ LinearImpedanceMotion::LinearImpedanceMotion(
     const Affine &target, double duration, const LinearImpedanceMotion::Params &params)
     : duration_(duration), params_(params), ImpedanceMotion(target, params) {}
 
-void LinearImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
-  ImpedanceMotion::initImpl(robot_state);
-  initial_pose_ = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE.data()));
+void LinearImpedanceMotion::initImpl(
+    const franka::RobotState &robot_state,
+    const std::optional<franka::Torques> &previous_command) {
+  ImpedanceMotion::initImpl(robot_state, previous_command);
+  initial_pose_ = Affine(Eigen::Matrix4d::Map(robot_state.O_T_EE_c.data()));
 }
 
 std::tuple<Affine, bool>

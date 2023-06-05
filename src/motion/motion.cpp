@@ -41,16 +41,21 @@ std::vector<std::shared_ptr<Reaction<ControlSignalType>>> Motion<ControlSignalTy
 }
 
 template<typename ControlSignalType>
-void Motion<ControlSignalType>::init(Robot *robot, const franka::RobotState &robot_state) {
+void Motion<ControlSignalType>::init(
+    Robot *robot, const franka::RobotState &robot_state, const std::optional<ControlSignalType> &previous_command) {
   robot_ = robot;
-  initImpl(robot_state);
+  initImpl(robot_state, previous_command);
 }
 
 template<typename ControlSignalType>
 ControlSignalType
 Motion<ControlSignalType>::nextCommand(
-    const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) {
-  auto next_command = nextCommandImpl(robot_state, time_step, rel_time, abs_time);
+    const franka::RobotState &robot_state,
+    franka::Duration time_step,
+    double rel_time,
+    double abs_time,
+    const std::optional<ControlSignalType> &previous_command) {
+  auto next_command = nextCommandImpl(robot_state, time_step, rel_time, abs_time, previous_command);
   const std::lock_guard<std::mutex> lock(callback_mutex_);
   for (auto const &cb : callbacks_)
     cb(robot_state, time_step, rel_time, abs_time, next_command);

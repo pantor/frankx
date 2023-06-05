@@ -16,9 +16,10 @@ CartesianWaypointMotion::CartesianWaypointMotion(const std::vector<Waypoint<Robo
     : params_(std::move(params)), WaypointMotion<franka::CartesianPose, RobotPose>(waypoints, params.base_params) {}
 
 void CartesianWaypointMotion::initWaypointMotion(
-    const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) {
-  franka::CartesianPose initial_cartesian_pose(robot_state.O_T_EE_c, robot_state.elbow_c);
-  RobotPose robot_pose(initial_cartesian_pose);
+    const franka::RobotState &robot_state,
+    const std::optional<franka::CartesianPose> &previous_command,
+    ruckig::InputParameter<7> &input_parameter) {
+  RobotPose robot_pose(previous_command.value_or(franka::CartesianPose{robot_state.O_T_EE_c, robot_state.elbow_c}));
   ref_frame_ = Affine::Identity();
 
   auto initial_velocity = Vector<6>::Map(robot_state.O_dP_EE_c.data());
@@ -42,6 +43,7 @@ franka::CartesianPose CartesianWaypointMotion::getControlSignal(
 
 void CartesianWaypointMotion::setNewWaypoint(
     const franka::RobotState &robot_state,
+    const std::optional<franka::CartesianPose> &previous_command,
     const Waypoint<RobotPose> &new_waypoint,
     ruckig::InputParameter<7> &input_parameter) {
   auto waypoint_has_elbow = input_parameter.enabled[6];

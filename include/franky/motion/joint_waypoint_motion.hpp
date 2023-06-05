@@ -22,10 +22,14 @@ class JointWaypointMotion : public WaypointMotion<franka::JointPositions, Vector
 
  protected:
 
-  void initWaypointMotion(const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) override;
+  void initWaypointMotion(
+      const franka::RobotState &robot_state,
+      const std::optional<franka::JointPositions> &previous_command,
+      ruckig::InputParameter<7> &input_parameter) override;
 
   void setNewWaypoint(
       const franka::RobotState &robot_state,
+      const std::optional<franka::JointPositions> &previous_command,
       const Waypoint<Vector7d> &new_waypoint,
       ruckig::InputParameter<7> &input_parameter) override;
 
