@@ -50,10 +50,11 @@ void mkMotionClass(py::module_ m, const std::string &control_signal_name) {
         motion.registerCallback([callback](
             const franka::RobotState &robot_state,
             franka::Duration time_step,
-            double time,
+            double rel_time,
+            double abs_time,
             const ControlSignalType &control_signal) {
-          callback_queue.push([callback, robot_state, time_step, time, control_signal]() {
-            callback(robot_state, time_step, time, control_signal);
+          callback_queue.push([callback, robot_state, time_step, rel_time, abs_time, control_signal]() {
+            callback(robot_state, time_step, rel_time, abs_time, control_signal);
           });
         });
       }, "callback"_a);

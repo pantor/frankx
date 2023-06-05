@@ -58,7 +58,8 @@ class WaypointMotion : public Motion<ControlSignalType> {
   }
 
   ControlSignalType
-  nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override {
+  nextCommandImpl(
+      const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) override {
     const uint64_t steps = std::max<uint64_t>(time_step.toMSec(), 1);
     for (size_t i = 0; i < steps; i++) {
       if (prev_result_ == ruckig::Result::Finished) {

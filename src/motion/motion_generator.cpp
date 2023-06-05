@@ -58,7 +58,7 @@ MotionGenerator<ControlSignalType>::operator()(const franka::RobotState &robot_s
       }
     }
   }
-  return current_motion_->nextCommand(robot_state, period, rel_time);
+  return current_motion_->nextCommand(robot_state, period, rel_time, abs_time_);
 }
 
 template<typename ControlSignalType>

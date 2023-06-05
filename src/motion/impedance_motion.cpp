@@ -32,7 +32,8 @@ void ImpedanceMotion::initImpl(const franka::RobotState &robot_state) {
 }
 
 franka::Torques
-ImpedanceMotion::nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+ImpedanceMotion::nextCommandImpl(
+    const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) {
   std::array<double, 7> coriolis_array = model_->coriolis(robot_state);
   std::array<double, 42> jacobian_array = model_->zeroJacobian(franka::Frame::kEndEffector, robot_state);
 
@@ -67,7 +68,7 @@ ImpedanceMotion::nextCommandImpl(const franka::RobotState &robot_state, franka::
   Eigen::VectorXd::Map(&tau_d_array[0], 7) = tau_d;
 
   // Update target with target motion
-  auto [intermediate_target, finish] = update(robot_state, time_step, time);
+  auto [intermediate_target, finish] = update(robot_state, time_step, rel_time);
   intermediate_target_ = intermediate_target;
 
   auto output = franka::Torques(tau_d_array);

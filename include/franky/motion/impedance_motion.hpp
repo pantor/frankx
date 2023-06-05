@@ -33,7 +33,8 @@ class ImpedanceMotion : public Motion<franka::Torques> {
   void initImpl(const franka::RobotState &robot_state) override;
 
   franka::Torques
-  nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) override;
+  nextCommandImpl(
+      const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) override;
 
   [[nodiscard]] inline Affine intermediate_target() const {
     return intermediate_target_;

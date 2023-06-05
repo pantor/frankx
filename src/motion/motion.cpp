@@ -48,11 +48,12 @@ void Motion<ControlSignalType>::init(Robot *robot, const franka::RobotState &rob
 
 template<typename ControlSignalType>
 ControlSignalType
-Motion<ControlSignalType>::nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
-  auto next_command = nextCommandImpl(robot_state, time_step, time);
+Motion<ControlSignalType>::nextCommand(
+    const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) {
+  auto next_command = nextCommandImpl(robot_state, time_step, rel_time, abs_time);
   const std::lock_guard<std::mutex> lock(callback_mutex_);
   for (auto const &cb : callbacks_)
-    cb(robot_state, time_step, time, next_command);
+    cb(robot_state, time_step, rel_time, abs_time, next_command);
   return next_command;
 }
 

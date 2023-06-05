@@ -17,7 +17,7 @@ template<typename ControlSignalType>
 class Motion {
  public:
   using CallbackType = std::function<
-      void(const franka::RobotState &, franka::Duration, double, const ControlSignalType &)>;
+      void(const franka::RobotState &, franka::Duration, double, double, const ControlSignalType &)>;
 
   void addReaction(std::shared_ptr<Reaction<ControlSignalType>> reaction);
 
@@ -30,7 +30,7 @@ class Motion {
   void init(Robot *robot, const franka::RobotState &robot_state);
 
   ControlSignalType
-  nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double time);
+  nextCommand(const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time);
 
   std::shared_ptr<Motion<ControlSignalType>>
   checkAndCallReactions(const franka::RobotState &robot_state, double rel_time, double abs_time);
@@ -41,7 +41,8 @@ class Motion {
   virtual void initImpl(const franka::RobotState &robot_state) {}
 
   virtual ControlSignalType
-  nextCommandImpl(const franka::RobotState &robot_state, franka::Duration time_step, double time) = 0;
+  nextCommandImpl(
+      const franka::RobotState &robot_state, franka::Duration time_step, double rel_time, double abs_time) = 0;
 
   [[nodiscard]] inline Robot *robot() const {
     return robot_;
