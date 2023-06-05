@@ -36,6 +36,10 @@ class MotionGenerator {
 
   void updateMotion(std::shared_ptr<Motion<ControlSignalType>> new_motion);
 
+  bool has_new_motion();
+
+  void resetTimeUnsafe();
+
  private:
   std::shared_ptr<Motion<ControlSignalType>> initial_motion_;
   std::shared_ptr<Motion<ControlSignalType>> current_motion_;

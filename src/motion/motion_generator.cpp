@@ -67,4 +67,15 @@ void MotionGenerator<ControlSignalType>::updateMotion(const std::shared_ptr<Moti
   new_motion_ = new_motion;
 }
 
+template<typename ControlSignalType>
+bool MotionGenerator<ControlSignalType>::has_new_motion() {
+  return new_motion_ != nullptr;
+}
+
+template<typename ControlSignalType>
+void MotionGenerator<ControlSignalType>::resetTimeUnsafe() {
+  abs_time_ = 0.0;
+  rel_time_offset_ = 0.0;
+}
+
 }  // namespace franky

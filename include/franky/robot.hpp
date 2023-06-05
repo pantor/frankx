@@ -1,6 +1,6 @@
 #pragma once
 
-#include <thread>
+#include <future>
 #include <variant>
 #include <exception>
 #include <stdexcept>
@@ -186,9 +186,9 @@ class Robot : public franka::Robot {
   franka::RobotState current_state_;
   std::mutex state_mutex_;
   std::mutex control_mutex_;
-  std::shared_ptr<std::thread> control_thread_;
+  std::optional<std::shared_future<std::exception_ptr>> control_future_;
   MotionGeneratorVariant motion_generator_{std::nullopt};
-  std::exception_ptr control_exception_{nullptr};
+  bool motion_generator_running_{false};
 
   [[nodiscard]] bool is_in_control_unsafe() const;
 
@@ -199,7 +199,7 @@ class Robot : public franka::Robot {
       bool async) {
     {
       std::unique_lock<std::mutex> lock(control_mutex_);
-      if (is_in_control_unsafe()) {
+      if (is_in_control_unsafe() && motion_generator_running_) {
         if (!std::holds_alternative<MotionGenerator<ControlSignalType>>(motion_generator_)) {
           throw InvalidMotionTypeException("The type of motion cannot change during runtime. Please ensure that the "
                                            "previous motion finished before using a new type of motion.");
@@ -207,9 +207,12 @@ class Robot : public franka::Robot {
           std::get<MotionGenerator<ControlSignalType>>(motion_generator_).updateMotion(motion);
         }
       } else {
-        if (control_exception_ != nullptr) {
-          std::rethrow_exception(control_exception_);
-          control_exception_ = nullptr;
+        if (control_future_.has_value()) {
+          control_future_->wait();
+          auto control_exception = control_future_->get();
+          if (control_exception != nullptr)
+            std::rethrow_exception(control_exception);
+          control_future_ = std::nullopt;
         }
 
         motion_generator_.emplace<MotionGenerator<ControlSignalType>>(this, motion);
@@ -219,16 +222,37 @@ class Robot : public franka::Robot {
               std::lock_guard<std::mutex> lock(this->state_mutex_);
               current_state_ = robot_state;
             });
-        control_thread_ = std::make_shared<std::thread>(
-            [this, control_func_executor](const ControlFunc<ControlSignalType> &control_func) {
+        motion_generator_running_ = true;
+        control_future_ = std::async(
+            std::launch::async,
+            [this, control_func_executor, motion_generator]() {
               try {
-                control_func_executor(control_func);
+                bool done = false;
+                while (!done) {
+                  control_func_executor(
+                      [motion_generator](const franka::RobotState &rs, franka::Duration d) {
+                        return (*motion_generator)(rs, d);
+                      });
+                  std::unique_lock<std::mutex> lock(control_mutex_);
+
+                  // This code is just for the case that a new motion is set just after the old one terminates. If this
+                  // happens, we need to continue with this motion, unless an exception occurs.
+                  done = !motion_generator->has_new_motion();
+                  if (motion_generator->has_new_motion()) {
+                    motion_generator->resetTimeUnsafe();
+                  } else {
+                    done = true;
+                    motion_generator_running_ = false;
+                  }
+                }
               } catch (...) {
-                control_exception_ = std::current_exception();
+                {
+                  std::unique_lock<std::mutex> lock(control_mutex_);
+                  motion_generator_running_ = false;
+                }
+                return std::current_exception();
               }
-            },
-            [motion_generator](const franka::RobotState &rs, franka::Duration d) {
-              return (*motion_generator)(rs, d);
+              return std::exception_ptr{nullptr};
             }
         );
       }
