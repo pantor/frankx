@@ -299,11 +299,11 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const RobotPose &target,
                ReferenceType reference_type,
-               const std::optional<Affine> &frame,
                double velocity_rel,
                double acceleration_rel,
                double jerk_rel,
-               bool return_when_finished) {
+               bool return_when_finished,
+               const std::optional<Affine> &frame) {
              return std::make_shared<LinearMotion>(
                  target,
                  reference_type,
