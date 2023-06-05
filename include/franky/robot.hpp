@@ -17,6 +17,7 @@
 #include "franky/motion/motion_generator.hpp"
 #include "franky/motion/motion.hpp"
 #include "franky/scope_guard.hpp"
+#include "franky/control_signal_type.hpp"
 
 namespace franky {
 
@@ -132,6 +133,8 @@ class Robot : public franka::Robot {
   [[nodiscard]] bool is_in_control();
 
   [[nodiscard]] std::string fci_hostname() const;
+
+  [[nodiscard]] std::optional<ControlSignalType> current_control_signal_type();
 
   void joinMotion();
 

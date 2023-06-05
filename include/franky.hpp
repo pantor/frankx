@@ -22,6 +22,7 @@
 #include "franky/path/time_parametrization.hpp"
 #include "franky/path/trajectory.hpp"
 
+#include "franky/control_signal_type.hpp"
 #include "franky/gripper.hpp"
 #include "franky/kinematics.hpp"
 #include "franky/robot.hpp"

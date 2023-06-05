@@ -154,4 +154,20 @@ void Robot::joinMotion() {
     std::rethrow_exception(control_exception);
 }
 
+std::optional<ControlSignalType> Robot::current_control_signal_type() {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  if (!is_in_control())
+    return std::nullopt;
+  if (std::holds_alternative<MotionGenerator<franka::Torques>>(motion_generator_))
+    return ControlSignalType::Torques;
+  else if (std::holds_alternative<MotionGenerator<franka::JointVelocities>>(motion_generator_))
+    return ControlSignalType::JointVelocities;
+  else if (std::holds_alternative<MotionGenerator<franka::JointPositions>>(motion_generator_))
+    return ControlSignalType::JointPositions;
+  else if (std::holds_alternative<MotionGenerator<franka::CartesianVelocities>>(motion_generator_))
+    return ControlSignalType::CartesianVelocities;
+  else
+    return ControlSignalType::CartesianPose;
+}
+
 }  // namespace franky

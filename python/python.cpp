@@ -382,6 +382,14 @@ PYBIND11_MODULE(_franky, m) {
       .value("Ignore", franka::RealtimeConfig::kIgnore)
       .export_values();
 
+  py::enum_<ControlSignalType>(m, "ControlSignalType")
+      .value("Torques", ControlSignalType::Torques)
+      .value("JointVelocities", ControlSignalType::JointVelocities)
+      .value("JointPositions", ControlSignalType::JointPositions)
+      .value("CartesianVelocities", ControlSignalType::CartesianVelocities)
+      .value("CartesianPose", ControlSignalType::CartesianPose)
+      .export_values();
+
   py::class_<Robot>(m, "Robot")
       .def(py::init<>([](
                const std::string &fci_hostname,
@@ -493,6 +501,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly("state", &Robot::state)
       .def_property_readonly("is_in_control", &Robot::is_in_control)
       .def_property_readonly("fci_hostname", &Robot::fci_hostname)
+      .def_property_readonly("current_control_signal_type", &Robot::current_control_signal_type)
       .def_readonly_static("max_translation_velocity", &Robot::max_translation_velocity, "[m/s]")
       .def_readonly_static("max_rotation_velocity", &Robot::max_rotation_velocity, "[rad/s]")
       .def_readonly_static("max_elbow_velocity", &Robot::max_elbow_velocity, "[rad/s]")
