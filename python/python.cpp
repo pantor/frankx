@@ -226,7 +226,7 @@ PYBIND11_MODULE(_franky, m) {
            "return_when_finished"_a = true,
            "finish_wait_factor"_a = 1.2);
 
-  py::class_<JointWaypoint>(m, "JointWaypoint")
+  py::class_<Waypoint<Vector7d>>(m, "JointWaypoint")
       .def(py::init<>(
                [](
                    const Vector7d &target,
@@ -236,8 +236,8 @@ PYBIND11_MODULE(_franky, m) {
                    double jerk_rel,
                    bool max_dynamics,
                    std::optional<double> minimum_time) {
-                 return JointWaypoint{
-                     {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time}, target, reference_type};
+                 return Waypoint<Vector7d>{
+                     target, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
                }
            ),
            "target"_a,
@@ -247,18 +247,18 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "max_dynamics"_a = false,
            "minimum_time"_a = std::nullopt)
-      .def_readonly("target", &JointWaypoint::target)
-      .def_readonly("reference_type", &JointWaypoint::reference_type)
-      .def_readonly("velocity_rel", &Waypoint::velocity_rel)
-      .def_readonly("acceleration_rel", &Waypoint::acceleration_rel)
-      .def_readonly("jerk_rel", &Waypoint::jerk_rel)
-      .def_readonly("max_dynamics", &Waypoint::max_dynamics)
-      .def_readonly("minimum_time", &Waypoint::minimum_time);
+      .def_readonly("target", &Waypoint<Vector7d>::target)
+      .def_readonly("reference_type", &Waypoint<Vector7d>::reference_type)
+      .def_readonly("velocity_rel", &Waypoint<Vector7d>::velocity_rel)
+      .def_readonly("acceleration_rel", &Waypoint<Vector7d>::acceleration_rel)
+      .def_readonly("jerk_rel", &Waypoint<Vector7d>::jerk_rel)
+      .def_readonly("max_dynamics", &Waypoint<Vector7d>::max_dynamics)
+      .def_readonly("minimum_time", &Waypoint<Vector7d>::minimum_time);
 
   py::class_<JointWaypointMotion, Motion<franka::JointPositions>, std::shared_ptr<JointWaypointMotion>>(
       m, "JointWaypointMotion")
       .def(py::init<>([](
-               const std::vector<JointWaypoint> &waypoints, double velocity_rel, double acceleration_rel,
+               const std::vector<Waypoint<Vector7d>> &waypoints, double velocity_rel, double acceleration_rel,
                double jerk_rel, bool return_when_finished) {
              return std::make_shared<JointWaypointMotion>(
                  waypoints,
@@ -274,7 +274,7 @@ PYBIND11_MODULE(_franky, m) {
   py::class_<CartesianWaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<CartesianWaypointMotion>>(
       m, "CartesianWaypointMotion")
       .def(py::init<>([](
-               const std::vector<CartesianWaypoint> &waypoints,
+               const std::vector<Waypoint<RobotPose>> &waypoints,
                const std::optional<Affine> &frame = std::nullopt,
                double velocity_rel = 1.0,
                double acceleration_rel = 1.0,
@@ -535,7 +535,7 @@ PYBIND11_MODULE(_franky, m) {
       });
   py::implicitly_convertible<Affine, RobotPose>();
 
-  py::class_<CartesianWaypoint>(m, "CartesianWaypoint")
+  py::class_<Waypoint<RobotPose>>(m, "CartesianWaypoint")
       .def(py::init<>(
                [](
                    const RobotPose &robot_pose,
@@ -545,9 +545,8 @@ PYBIND11_MODULE(_franky, m) {
                    double jerk_rel,
                    bool max_dynamics,
                    std::optional<double> minimum_time) {
-                 return CartesianWaypoint{
-                     {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time},
-                     robot_pose, reference_type};
+                 return Waypoint<RobotPose>{
+                     robot_pose, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
                }
            ),
            "robot_pose"_a,
@@ -557,13 +556,13 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "max_dynamics"_a = false,
            "minimum_time"_a = std::nullopt)
-      .def_readonly("robot_pose", &CartesianWaypoint::robot_pose)
-      .def_readonly("reference_type", &CartesianWaypoint::reference_type)
-      .def_readonly("velocity_rel", &Waypoint::velocity_rel)
-      .def_readonly("acceleration_rel", &Waypoint::acceleration_rel)
-      .def_readonly("jerk_rel", &Waypoint::jerk_rel)
-      .def_readonly("max_dynamics", &Waypoint::max_dynamics)
-      .def_readonly("minimum_time", &Waypoint::minimum_time);
+      .def_readonly("target", &Waypoint<RobotPose>::target)
+      .def_readonly("reference_type", &Waypoint<RobotPose>::reference_type)
+      .def_readonly("velocity_rel", &Waypoint<RobotPose>::velocity_rel)
+      .def_readonly("acceleration_rel", &Waypoint<RobotPose>::acceleration_rel)
+      .def_readonly("jerk_rel", &Waypoint<RobotPose>::jerk_rel)
+      .def_readonly("max_dynamics", &Waypoint<RobotPose>::max_dynamics)
+      .def_readonly("minimum_time", &Waypoint<RobotPose>::minimum_time);
 
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),

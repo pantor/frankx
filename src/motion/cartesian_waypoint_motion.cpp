@@ -9,11 +9,11 @@
 
 namespace franky {
 
-CartesianWaypointMotion::CartesianWaypointMotion(const std::vector<CartesianWaypoint> &waypoints)
+CartesianWaypointMotion::CartesianWaypointMotion(const std::vector<Waypoint<RobotPose>> &waypoints)
     : CartesianWaypointMotion(waypoints, Params()) {}
 
-CartesianWaypointMotion::CartesianWaypointMotion(const std::vector<CartesianWaypoint> &waypoints, Params params)
-    : params_(std::move(params)), WaypointMotion<franka::CartesianPose, CartesianWaypoint>(waypoints, params) {}
+CartesianWaypointMotion::CartesianWaypointMotion(const std::vector<Waypoint<RobotPose>> &waypoints, Params params)
+    : params_(std::move(params)), WaypointMotion<franka::CartesianPose, RobotPose>(waypoints, params.base_params) {}
 
 void CartesianWaypointMotion::initWaypointMotion(
     const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) {
@@ -42,7 +42,7 @@ franka::CartesianPose CartesianWaypointMotion::getControlSignal(
 
 void CartesianWaypointMotion::setNewWaypoint(
     const franka::RobotState &robot_state,
-    const CartesianWaypoint &new_waypoint,
+    const Waypoint<RobotPose> &new_waypoint,
     ruckig::InputParameter<7> &input_parameter) {
   auto waypoint_has_elbow = input_parameter.enabled[6];
 
@@ -78,7 +78,7 @@ void CartesianWaypointMotion::setNewWaypoint(
   input_parameter.current_velocity = toStd<7>(current_velocity_ref_frame);
   input_parameter.current_acceleration = toStd<7>(current_acc_ref_frame);
 
-  waypoint_has_elbow = new_waypoint.robot_pose.elbow_position().has_value();
+  waypoint_has_elbow = new_waypoint.target.elbow_position().has_value();
 
   auto prev_target_robot_pose = target_robot_pose_;
   if (!target_robot_pose_.elbow_position().has_value()) {
@@ -86,16 +86,16 @@ void CartesianWaypointMotion::setNewWaypoint(
   }
 
   std::optional<double> new_elbow;
-  if (new_waypoint.robot_pose.elbow_position().has_value() && new_waypoint.reference_type == ReferenceType::Relative) {
+  if (new_waypoint.target.elbow_position().has_value() && new_waypoint.reference_type == ReferenceType::Relative) {
     if (!prev_target_robot_pose.elbow_position().has_value())
-      new_elbow = new_waypoint.robot_pose.elbow_position();
+      new_elbow = new_waypoint.target.elbow_position();
     else {
-      new_elbow = new_waypoint.robot_pose.elbow_position().value() + prev_target_robot_pose.elbow_position().value();
+      new_elbow = new_waypoint.target.elbow_position().value() + prev_target_robot_pose.elbow_position().value();
     }
   } else {
-    new_elbow = new_waypoint.robot_pose.elbow_position();
+    new_elbow = new_waypoint.target.elbow_position();
   }
-  RobotPose new_target_robot_pose = new_waypoint.robot_pose.with_elbow_position(new_elbow);
+  RobotPose new_target_robot_pose = new_waypoint.target.with_elbow_position(new_elbow);
   if (new_waypoint.reference_type == ReferenceType::Relative)
     new_target_robot_pose = prev_target_robot_pose.end_effector_pose() * new_target_robot_pose;
 

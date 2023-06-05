@@ -14,28 +14,25 @@
 
 namespace franky {
 
-struct JointWaypoint : public Waypoint {
-  Vector7d target;
-  ReferenceType reference_type;
-};
-
-class JointWaypointMotion : public WaypointMotion<franka::JointPositions, JointWaypoint> {
+class JointWaypointMotion : public WaypointMotion<franka::JointPositions, Vector7d> {
  public:
-  explicit JointWaypointMotion(const std::vector<JointWaypoint> &waypoints);
+  explicit JointWaypointMotion(const std::vector<Waypoint<Vector7d>> &waypoints);
 
-  explicit JointWaypointMotion(const std::vector<JointWaypoint> &waypoints, Params params);
+  explicit JointWaypointMotion(const std::vector<Waypoint<Vector7d>> &waypoints, Params params);
 
  protected:
 
   void initWaypointMotion(const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) override;
 
-  void setNewWaypoint(const franka::RobotState &robot_state,
-                      const JointWaypoint &new_waypoint,
-                      ruckig::InputParameter<7> &input_parameter) override;
+  void setNewWaypoint(
+      const franka::RobotState &robot_state,
+      const Waypoint<Vector7d> &new_waypoint,
+      ruckig::InputParameter<7> &input_parameter) override;
 
-  std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
+  [[nodiscard]] std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
 
-  franka::JointPositions getControlSignal(const ruckig::InputParameter<7> &input_parameter) const override;
+  [[nodiscard]] franka::JointPositions getControlSignal(
+      const ruckig::InputParameter<7> &input_parameter) const override;
 };
 
 }  // namespace franky

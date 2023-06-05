@@ -9,7 +9,12 @@
 
 namespace franky {
 
+template<typename TargetType>
 struct Waypoint {
+  TargetType target;
+
+  ReferenceType reference_type{ReferenceType::Absolute};
+
   //! Dynamic Waypoint: Relative velocity factor
   double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
 
@@ -24,7 +29,7 @@ struct Waypoint {
 * A motion following multiple waypoints (with intermediate zero velocity) in a time-optimal way.
 * Works with arbitrary initial conditions.
 */
-template<typename ControlSignalType, typename WaypointType>
+template<typename ControlSignalType, typename TargetType>
 class WaypointMotion : public Motion<ControlSignalType> {
  public:
   struct Params {
@@ -33,7 +38,7 @@ class WaypointMotion : public Motion<ControlSignalType> {
     bool return_when_finished{true};
   };
 
-  explicit WaypointMotion(std::vector<WaypointType> waypoints, Params params)
+  explicit WaypointMotion(std::vector<Waypoint<TargetType>> waypoints, Params params)
       : waypoints_(std::move(waypoints)), params_(std::move(params)), prev_result_() {}
 
  protected:
@@ -90,7 +95,7 @@ class WaypointMotion : public Motion<ControlSignalType> {
                                   ruckig::InputParameter<7> &input_parameter) = 0;
 
   virtual void setNewWaypoint(const franka::RobotState &robot_state,
-                              const WaypointType &new_waypoint,
+                              const Waypoint<TargetType> &new_waypoint,
                               ruckig::InputParameter<7> &input_parameter) = 0;
 
   [[nodiscard]] virtual std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const = 0;
@@ -98,7 +103,7 @@ class WaypointMotion : public Motion<ControlSignalType> {
   [[nodiscard]] virtual ControlSignalType getControlSignal(const ruckig::InputParameter<7> &input_parameter) const = 0;
 
  private:
-  std::vector<WaypointType> waypoints_;
+  std::vector<Waypoint<TargetType>> waypoints_;
   Params params_;
 
   ruckig::Ruckig<7> trajectory_generator_{Robot::control_rate};
@@ -106,12 +111,12 @@ class WaypointMotion : public Motion<ControlSignalType> {
   ruckig::InputParameter<7> input_para_;
   ruckig::OutputParameter<7> output_para_;
 
-  typename std::vector<WaypointType>::iterator waypoint_iterator_;
+  typename std::vector<Waypoint<TargetType>>::iterator waypoint_iterator_;
 
   constexpr static size_t cooldown_iterations_{5};
   size_t current_cooldown_iteration_{0};
 
-  void setInputLimits(const WaypointType &waypoint) {
+  void setInputLimits(const Waypoint<TargetType> &waypoint) {
     auto robot = this->robot();
 
     auto [vel_lim, acc_lim, jerk_lim] = getAbsoluteInputLimits();

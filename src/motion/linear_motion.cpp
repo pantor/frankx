@@ -15,20 +15,18 @@ LinearMotion::LinearMotion(
     bool return_when_finished)
     : CartesianWaypointMotion(
     {
-        CartesianWaypoint{
-            {
-                .velocity_rel = velocity_rel,
-                .acceleration_rel = acceleration_rel,
-                .jerk_rel = jerk_rel
-            },
-            target,
-            reference_type
+        {
+            .target = target,
+            .reference_type = reference_type,
+            .velocity_rel = velocity_rel,
+            .acceleration_rel = acceleration_rel,
+            .jerk_rel = jerk_rel
         }
     }, {
-      {
-        .return_when_finished = return_when_finished,
-      },
-      frame
+        {
+            .return_when_finished = return_when_finished,
+        },
+        frame
     }) {}
 
 }  // namespace franky

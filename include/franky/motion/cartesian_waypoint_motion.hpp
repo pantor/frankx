@@ -14,32 +14,28 @@
 
 namespace franky {
 
-struct CartesianWaypoint : public Waypoint {
-  RobotPose robot_pose;
-  ReferenceType reference_type{ReferenceType::Absolute};
-};
-
-class CartesianWaypointMotion : public WaypointMotion<franka::CartesianPose, CartesianWaypoint> {
+class CartesianWaypointMotion : public WaypointMotion<franka::CartesianPose, RobotPose> {
  public:
-  struct Params : WaypointMotion<franka::CartesianPose, CartesianWaypoint>::Params {
+  struct Params : WaypointMotion<franka::CartesianPose, RobotPose>::Params {
     Affine frame{Affine::Identity()};
+    WaypointMotion<franka::CartesianPose, RobotPose>::Params base_params{};
   };
 
-  explicit CartesianWaypointMotion(const std::vector<CartesianWaypoint> &waypoints);
+  explicit CartesianWaypointMotion(const std::vector<Waypoint<RobotPose>> &waypoints);
 
-  explicit CartesianWaypointMotion(const std::vector<CartesianWaypoint> &waypoints, Params params);
+  explicit CartesianWaypointMotion(const std::vector<Waypoint<RobotPose>> &waypoints, Params params);
 
  protected:
 
   void initWaypointMotion(const franka::RobotState &robot_state, ruckig::InputParameter<7> &input_parameter) override;
 
   void setNewWaypoint(const franka::RobotState &robot_state,
-                      const CartesianWaypoint &new_waypoint,
+                      const Waypoint<RobotPose> &new_waypoint,
                       ruckig::InputParameter<7> &input_parameter) override;
 
-  std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
+  [[nodiscard]] std::tuple<Vector7d, Vector7d, Vector7d> getAbsoluteInputLimits() const override;
 
-  franka::CartesianPose getControlSignal(const ruckig::InputParameter<7> &input_parameter) const override;
+  [[nodiscard]] franka::CartesianPose getControlSignal(const ruckig::InputParameter<7> &input_parameter) const override;
 
  private:
   Params params_;
