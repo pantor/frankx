@@ -142,6 +142,7 @@ PYBIND11_MODULE(_franky, m) {
       .def("__repr__", &Measure::repr);
 
   py::class_<Condition>(m, "Condition")
+      .def(py::init<bool>(), "constant_value"_a)
       .def("__repr__", &Condition::repr);
   py::implicitly_convertible<bool, Condition>();
 
