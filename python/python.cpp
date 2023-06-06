@@ -323,12 +323,12 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<StopMotion<franka::CartesianPose>,
              Motion<franka::CartesianPose>,
-             std::shared_ptr<StopMotion<franka::CartesianPose>>>(m, "CartesianStopMotion")
+             std::shared_ptr<StopMotion<franka::CartesianPose>>>(m, "CartesianPoseStopMotion")
       .def(py::init<>());
 
   py::class_<StopMotion<franka::JointPositions>,
              Motion<franka::JointPositions>,
-             std::shared_ptr<StopMotion<franka::JointPositions>>>(m, "JointStopMotion")
+             std::shared_ptr<StopMotion<franka::JointPositions>>>(m, "JointPositionStopMotion")
       .def(py::init<>());
 
   mkReactionClass<franka::Torques>(m, "Torque");
