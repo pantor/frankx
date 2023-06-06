@@ -14,6 +14,8 @@ class Condition {
 
   explicit Condition(CheckFunc check_func, std::string repr = "NULL");
 
+  Condition(bool constant_value);
+
   //! Check if the condition is fulfilled
   inline bool operator()(const franka::RobotState &robot_state, double rel_time, double abs_time) const {
     return check_func_(robot_state, rel_time, abs_time);
@@ -21,20 +23,6 @@ class Condition {
 
   [[nodiscard]] inline std::string repr() const {
     return repr_;
-  }
-
-  static Condition TRUE() {
-    return Condition(
-        [](const franka::RobotState &robot_state, double rel_time, double abs_time) {
-          return true;
-        }, "true");
-  }
-
-  static Condition FALSE() {
-    return Condition(
-        [](const franka::RobotState &robot_state, double rel_time, double abs_time) {
-          return false;
-        }, "false");
   }
 
  private:
