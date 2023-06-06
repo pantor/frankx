@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class RobotWebSession:
-    def __init__(self, robot: Robot, username: str, password: str):
+    def __init__(self, robot: "Robot", username: str, password: str):
         self.__robot = robot
         self.__username = username
         self.__password = password
