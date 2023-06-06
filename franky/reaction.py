@@ -12,7 +12,7 @@ from .motion import Motion
 class Reaction:
     _control_signal_type = None
 
-    def __new__(cls, condition: Condition, motion: "Motion"):
+    def __new__(cls, condition: Condition, motion: Motion):
         for reaction_type in _REACTION_TYPES:
             if isinstance(motion, reaction_type._motion_type):
                 return reaction_type.__new__(reaction_type, condition, motion)
