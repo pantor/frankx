@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <mutex>
+#include <optional>
 #include <condition_variable>
 
 template<typename T>
@@ -19,6 +20,18 @@ class ConcurrentQueue {
     T item = queue_.front();
     queue_.pop();
     return item;
+  }
+
+  template<class Rep, class Period>
+  std::optional<T> pop(const std::chrono::duration<Rep, Period>& timeout) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    bool not_empty = condition_.wait_for(lock, timeout, [this]() { return !queue_.empty(); });
+    if (not_empty) {
+      T item = queue_.front();
+      queue_.pop();
+      return item;
+    }
+    return std::nullopt;
   }
 
  private:
