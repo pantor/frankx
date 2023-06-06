@@ -165,8 +165,7 @@ PYBIND11_MODULE(_franky, m) {
 
   py::enum_<ReferenceType>(m, "ReferenceType")
       .value("RELATIVE", ReferenceType::Relative)
-      .value("ABSOLUTE", ReferenceType::Absolute)
-      .export_values();
+      .value("ABSOLUTE", ReferenceType::Absolute);
 
   py::class_<ExponentialImpedanceMotion, ImpedanceMotion, std::shared_ptr<ExponentialImpedanceMotion>>(
       m, "ExponentialImpedanceMotion")
@@ -374,21 +373,18 @@ PYBIND11_MODULE(_franky, m) {
 
   py::enum_<franka::ControllerMode>(m, "ControllerMode")
       .value("JointImpedance", franka::ControllerMode::kJointImpedance)
-      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance)
-      .export_values();
+      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance);
 
   py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
       .value("Enforce", franka::RealtimeConfig::kEnforce)
-      .value("Ignore", franka::RealtimeConfig::kIgnore)
-      .export_values();
+      .value("Ignore", franka::RealtimeConfig::kIgnore);
 
   py::enum_<ControlSignalType>(m, "ControlSignalType")
       .value("Torques", ControlSignalType::Torques)
       .value("JointVelocities", ControlSignalType::JointVelocities)
       .value("JointPositions", ControlSignalType::JointPositions)
       .value("CartesianVelocities", ControlSignalType::CartesianVelocities)
-      .value("CartesianPose", ControlSignalType::CartesianPose)
-      .export_values();
+      .value("CartesianPose", ControlSignalType::CartesianPose);
 
   py::class_<Robot>(m, "Robot")
       .def(py::init<>([](
@@ -700,8 +696,7 @@ PYBIND11_MODULE(_franky, m) {
       .value("Guiding", franka::RobotMode::kGuiding)
       .value("Reflex", franka::RobotMode::kReflex)
       .value("UserStopped", franka::RobotMode::kUserStopped)
-      .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery)
-      .export_values();
+      .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery);
 
   py::class_<franka::RobotState>(m, "RobotState")
       .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
