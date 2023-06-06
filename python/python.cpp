@@ -104,6 +104,34 @@ void robotMove(Robot &robot, std::shared_ptr<Motion<ControlSignalType>> motion, 
 PYBIND11_MODULE(_franky, m) {
   m.doc() = "High-Level Motion Library for the Franka Panda Robot";
 
+  py::enum_<ReferenceType>(m, "ReferenceType")
+      .value("Relative", ReferenceType::Relative)
+      .value("Absolute", ReferenceType::Absolute);
+
+  py::enum_<franka::ControllerMode>(m, "ControllerMode")
+      .value("JointImpedance", franka::ControllerMode::kJointImpedance)
+      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance);
+
+  py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
+      .value("Enforce", franka::RealtimeConfig::kEnforce)
+      .value("Ignore", franka::RealtimeConfig::kIgnore);
+
+  py::enum_<ControlSignalType>(m, "ControlSignalType")
+      .value("Torques", ControlSignalType::Torques)
+      .value("JointVelocities", ControlSignalType::JointVelocities)
+      .value("JointPositions", ControlSignalType::JointPositions)
+      .value("CartesianVelocities", ControlSignalType::CartesianVelocities)
+      .value("CartesianPose", ControlSignalType::CartesianPose);
+
+  py::enum_<franka::RobotMode>(m, "RobotMode")
+      .value("Other", franka::RobotMode::kOther)
+      .value("Idle", franka::RobotMode::kIdle)
+      .value("Move", franka::RobotMode::kMove)
+      .value("Guiding", franka::RobotMode::kGuiding)
+      .value("Reflex", franka::RobotMode::kReflex)
+      .value("UserStopped", franka::RobotMode::kUserStopped)
+      .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery);
+
   py::class_<Measure>(m, "Measure")
       .def_property_readonly_static("FORCE_X", [](py::object) { return Measure::ForceX(); })
       .def_property_readonly_static("FORCE_Y", [](py::object) { return Measure::ForceY(); })
@@ -153,10 +181,6 @@ PYBIND11_MODULE(_franky, m) {
   mkMotionClass<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>(m, "ImpedanceMotion");
-
-  py::enum_<ReferenceType>(m, "ReferenceType")
-      .value("Relative", ReferenceType::Relative)
-      .value("Absolute", ReferenceType::Absolute);
 
   py::class_<ExponentialImpedanceMotion, ImpedanceMotion, std::shared_ptr<ExponentialImpedanceMotion>>(
       m, "ExponentialImpedanceMotion")
@@ -361,21 +385,6 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("forward_euler", &Kinematics::forwardEuler, "q"_a)
       .def_static("jacobian", &Kinematics::jacobian, "q"_a)
       .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a = std::nullopt);
-
-  py::enum_<franka::ControllerMode>(m, "ControllerMode")
-      .value("JointImpedance", franka::ControllerMode::kJointImpedance)
-      .value("CartesianImpedance", franka::ControllerMode::kCartesianImpedance);
-
-  py::enum_<franka::RealtimeConfig>(m, "RealtimeConfig")
-      .value("Enforce", franka::RealtimeConfig::kEnforce)
-      .value("Ignore", franka::RealtimeConfig::kIgnore);
-
-  py::enum_<ControlSignalType>(m, "ControlSignalType")
-      .value("Torques", ControlSignalType::Torques)
-      .value("JointVelocities", ControlSignalType::JointVelocities)
-      .value("JointPositions", ControlSignalType::JointPositions)
-      .value("CartesianVelocities", ControlSignalType::CartesianVelocities)
-      .value("CartesianPose", ControlSignalType::CartesianPose);
 
   py::class_<Robot>(m, "Robot")
       .def(py::init<>([](
@@ -679,15 +688,6 @@ PYBIND11_MODULE(_franky, m) {
                              [](const franka::Errors &e) { return e.instability_detected; })
       .def_property_readonly("joint_move_in_wrong_direction",
                              [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
-
-  py::enum_<franka::RobotMode>(m, "RobotMode")
-      .value("Other", franka::RobotMode::kOther)
-      .value("Idle", franka::RobotMode::kIdle)
-      .value("Move", franka::RobotMode::kMove)
-      .value("Guiding", franka::RobotMode::kGuiding)
-      .value("Reflex", franka::RobotMode::kReflex)
-      .value("UserStopped", franka::RobotMode::kUserStopped)
-      .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery);
 
   py::class_<franka::RobotState>(m, "RobotState")
       .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
