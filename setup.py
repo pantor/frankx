@@ -2,20 +2,14 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
-
-with open("README.md", "r") as readme_file:
+with Path("README.md").open() as readme_file:
     long_description = readme_file.read()
-
-
-class CMakeExtension(Extension):
-    def __init__(self, name, sourcedir=""):
-        Extension.__init__(self, name, sources=[])
-        self.sourcedir = os.path.abspath(sourcedir)
 
 
 class CMakeBuild(build_ext):
@@ -62,7 +56,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp)
+        subprocess.check_call(["cmake", str(Path(".").resolve())] + cmake_args, cwd=self.build_temp)
         subprocess.check_call(["cmake", "--build", ".", "--target", ext.name] + build_args, cwd=self.build_temp)
 
 
@@ -77,7 +71,7 @@ setup(
     url="https://github.com/TimSchneider42/franky",
     packages=find_packages(),
     license="LGPL",
-    ext_modules=[CMakeExtension("franky")],
+    ext_modules=[Extension("_franky", [])],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=["robot", "robotics", "trajectory-generation", "motion-control"],
     classifiers=[
