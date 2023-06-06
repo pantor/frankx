@@ -155,8 +155,8 @@ PYBIND11_MODULE(_franky, m) {
   py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>(m, "ImpedanceMotion");
 
   py::enum_<ReferenceType>(m, "ReferenceType")
-      .value("RELATIVE", ReferenceType::Relative)
-      .value("ABSOLUTE", ReferenceType::Absolute);
+      .value("Relative", ReferenceType::Relative)
+      .value("Absolute", ReferenceType::Absolute);
 
   py::class_<ExponentialImpedanceMotion, ImpedanceMotion, std::shared_ptr<ExponentialImpedanceMotion>>(
       m, "ExponentialImpedanceMotion")
