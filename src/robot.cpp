@@ -20,6 +20,7 @@ void Robot::setDynamicRel(double dynamic_rel) {
 }
 
 void Robot::setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel) {
+  std::unique_lock<std::mutex> lock(control_mutex_);
   params_.velocity_rel = velocity_rel;
   params_.acceleration_rel = acceleration_rel;
   params_.jerk_rel = jerk_rel;
@@ -162,6 +163,30 @@ std::optional<ControlSignalType> Robot::current_control_signal_type() {
     return ControlSignalType::CartesianVelocities;
   else
     return ControlSignalType::CartesianPose;
+}
+double Robot::velocity_rel() {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  return params_.velocity_rel;
+}
+void Robot::setVelocityRel(double value) {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  params_.velocity_rel = value;
+}
+double Robot::acceleration_rel() {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  return params_.acceleration_rel;
+}
+void Robot::setAccelerationRel(double value) {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  params_.acceleration_rel = value;
+}
+double Robot::jerk_rel() {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  return params_.jerk_rel;
+}
+void Robot::setJerkRel(double value) {
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  params_.jerk_rel = value;
 }
 
 }  // namespace franky

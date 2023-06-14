@@ -121,17 +121,17 @@ class Robot : public franka::Robot {
 
   [[nodiscard]] franka::RobotState state();
 
-  [[nodiscard]] inline double velocity_rel() const {
-    return params_.velocity_rel;
-  }
+  [[nodiscard]] double velocity_rel();
 
-  [[nodiscard]] inline double acceleration_rel() const {
-    return params_.acceleration_rel;
-  }
+  void setVelocityRel(double value);
 
-  [[nodiscard]] inline double jerk_rel() const {
-    return params_.jerk_rel;
-  }
+  [[nodiscard]] double acceleration_rel();
+
+  void setAccelerationRel(double value);
+
+  [[nodiscard]] double jerk_rel();
+
+  void setJerkRel(double value);
 
   [[nodiscard]] bool is_in_control();
 
