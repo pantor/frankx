@@ -3,10 +3,9 @@
 #include <ruckig/ruckig.hpp>
 
 #include "franky/util.hpp"
+#include "franky/types.hpp"
 
 namespace franky {
-
-using Affine = Eigen::Affine3d;
 
 //! Connects to a robot at the given FCI IP address.
 Robot::Robot(const std::string &fci_hostname) : Robot(fci_hostname, Params()) {}
