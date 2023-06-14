@@ -7,7 +7,7 @@ namespace franky {
 
 template<size_t dims>
 inline std::array<double, dims> toStd(const Eigen::Matrix<double, dims, 1> &vector) {
-  std::array<double, 7> result;
+  std::array<double, dims> result;
   Eigen::Matrix<double, dims, 1>::Map(result.data()) = vector;
   return result;
 }
