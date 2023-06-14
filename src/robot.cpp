@@ -91,7 +91,7 @@ void Robot::setCollisionBehavior(
     const ScalarOrArray<7> &upper_torque_threshold,
     const ScalarOrArray<6> &lower_force_threshold,
     const ScalarOrArray<6> &upper_force_threshold) {
-  setCollisionBehavior(
+  franka::Robot::setCollisionBehavior(
       expand<7>(lower_torque_threshold),
       expand<7>(upper_torque_threshold),
       expand<6>(lower_force_threshold),
@@ -107,7 +107,7 @@ void Robot::setCollisionBehavior(
     const ScalarOrArray<6> &upper_force_threshold_acceleration,
     const ScalarOrArray<6> &lower_force_threshold_nominal,
     const ScalarOrArray<6> &upper_force_threshold_nominal) {
-  setCollisionBehavior(
+  franka::Robot::setCollisionBehavior(
       expand<7>(lower_torque_threshold_acceleration),
       expand<7>(upper_torque_threshold_acceleration),
       expand<7>(lower_torque_threshold_nominal),
