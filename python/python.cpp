@@ -424,36 +424,34 @@ PYBIND11_MODULE(_franky, m) {
       .def("move", &robotMove<franka::Torques>, "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
       .def("join_motion", &Robot::joinMotion, py::call_guard<py::gil_scoped_release>())
-      .def("set_collision_behavior", py::overload_cast<double, double>(&Robot::setCollisionBehavior),
-           "torque_threshold"_a, "force_threshold"_a)
       .def("set_collision_behavior",
            py::overload_cast<
-               const std::array<double, 7> &,
-               const std::array<double, 6> &>(&Robot::setCollisionBehavior),
-           "torque_thresholds"_a, "force_thresholds"_a)
-      .def("set_collision_behavior", py::overload_cast<double, double, double, double>(&Robot::setCollisionBehavior),
-           "lower_torque_threshold"_a, "upper_torque_threshold"_a, "lower_force_threshold"_a, "upper_force_threshold"_a)
-      .def("set_collision_behavior",
-           py::overload_cast<
-               const std::array<double, 7> &,
-               const std::array<double, 7> &,
-               const std::array<double, 6> &,
-               const std::array<double, 6> &
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<6> &
            >(&Robot::setCollisionBehavior),
-           "lower_torque_thresholds"_a,
-           "upper_torque_thresholds"_a,
-           "lower_force_thresholds"_a,
-           "upper_force_thresholds"_a)
+           "torque_thresholds"_a, "force_thresholds"_a)
       .def("set_collision_behavior",
            py::overload_cast<
-               double,
-               double,
-               double,
-               double,
-               double,
-               double,
-               double,
-               double>(&Robot::setCollisionBehavior),
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<6> &,
+               const Robot::ScalarOrArray<6> &
+           >(&Robot::setCollisionBehavior),
+           "lower_torque_threshold"_a,
+           "upper_torque_threshold"_a,
+           "lower_force_threshold"_a,
+           "upper_force_threshold"_a)
+      .def("set_collision_behavior",
+           py::overload_cast<
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<7> &,
+               const Robot::ScalarOrArray<6> &,
+               const Robot::ScalarOrArray<6> &,
+               const Robot::ScalarOrArray<6> &,
+               const Robot::ScalarOrArray<6> &
+           >(&Robot::setCollisionBehavior),
            "lower_torque_threshold_acceleration"_a,
            "upper_torque_threshold_acceleration"_a,
            "lower_torque_threshold_nominal"_a,
@@ -462,25 +460,6 @@ PYBIND11_MODULE(_franky, m) {
            "upper_force_threshold_acceleration"_a,
            "lower_force_threshold_nominal"_a,
            "upper_force_threshold_nominal"_a)
-      .def("set_collision_behavior",
-           py::overload_cast<
-               const std::array<double, 7> &,
-               const std::array<double, 7> &,
-               const std::array<double, 7> &,
-               const std::array<double, 7> &,
-               const std::array<double, 6> &,
-               const std::array<double, 6> &,
-               const std::array<double, 6> &,
-               const std::array<double, 6> &
-           >(&Robot::setCollisionBehavior),
-           "lower_torque_thresholds_acceleration"_a,
-           "upper_torque_thresholds_acceleration"_a,
-           "lower_torque_thresholds_nominal"_a,
-           "upper_torque_thresholds_nominal"_a,
-           "lower_force_thresholds_acceleration"_a,
-           "upper_force_thresholds_acceleration"_a,
-           "lower_force_thresholds_nominal"_a,
-           "upper_force_thresholds_nominal"_a)
       .def("set_joint_impedance", &Robot::setJointImpedance, "K_theta"_a)
       .def("set_cartesian_impedance", &Robot::setCartesianImpedance, "K_x"_a)
       .def("set_guiding_mode", &Robot::setGuidingMode, "guiding_mode"_a, "elbow"_a)

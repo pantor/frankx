@@ -18,6 +18,7 @@
 #include "franky/motion/motion.hpp"
 #include "franky/scope_guard.hpp"
 #include "franky/control_signal_type.hpp"
+#include "franky/util.hpp"
 
 namespace franky {
 
@@ -27,6 +28,9 @@ struct InvalidMotionTypeException : public std::runtime_error {
 
 class Robot : public franka::Robot {
  public:
+  template<size_t dims>
+  using ScalarOrArray = std::variant<double, std::array<double, dims>, Vector<dims>>;
+
   struct Params {
     double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
 
@@ -87,26 +91,25 @@ class Robot : public franka::Robot {
 
   using franka::Robot::setCollisionBehavior;
 
-  void setCollisionBehavior(double torque_threshold, double force_threshold);
-
-  void setCollisionBehavior(const std::array<double, 7> &torque_thresholds,
-                            const std::array<double, 6> &force_thresholds);
+  void setCollisionBehavior(
+      const ScalarOrArray<7> &torque_threshold,
+      const ScalarOrArray<6> &force_threshold);
 
   void setCollisionBehavior(
-      double lower_torque_threshold,
-      double upper_torque_threshold,
-      double lower_force_threshold,
-      double upper_force_threshold);
+      const ScalarOrArray<7>& lower_torque_threshold,
+      const ScalarOrArray<7>& upper_torque_threshold,
+      const ScalarOrArray<6>& lower_force_threshold,
+      const ScalarOrArray<6>& upper_force_threshold);
 
   void setCollisionBehavior(
-      double lower_torque_threshold_acceleration,
-      double upper_torque_threshold_acceleration,
-      double lower_torque_threshold_nominal,
-      double upper_torque_threshold_nominal,
-      double lower_force_threshold_acceleration,
-      double upper_force_threshold_acceleration,
-      double lower_force_threshold_nominal,
-      double upper_force_threshold_nominal);
+      const ScalarOrArray<7>& lower_torque_threshold_acceleration,
+      const ScalarOrArray<7>& upper_torque_threshold_acceleration,
+      const ScalarOrArray<7>& lower_torque_threshold_nominal,
+      const ScalarOrArray<7>& upper_torque_threshold_nominal,
+      const ScalarOrArray<6>& lower_force_threshold_acceleration,
+      const ScalarOrArray<6>& upper_force_threshold_acceleration,
+      const ScalarOrArray<6>& lower_force_threshold_nominal,
+      const ScalarOrArray<6>& upper_force_threshold_nominal);
 
   bool recoverFromErrors();
 
@@ -264,6 +267,19 @@ class Robot : public franka::Robot {
     }
     if (!async)
       joinMotion();
+  }
+
+  template<size_t dims>
+  std::array<double, dims> expand(const ScalarOrArray<dims>& input) {
+    if (std::holds_alternative<std::array<double, dims>>(input)) {
+      return std::get<std::array<double, dims>>(input);
+    } else if (std::holds_alternative<Vector<dims>>(input)) {
+      return toStd<dims>(std::get<Vector<dims>>(input));
+    } else {
+      std::array<double, dims> output;
+      std::fill(output.begin(), output.end(), std::get<double>(input));
+      return output;
+    }
   }
 };
 
