@@ -203,7 +203,7 @@ PYBIND11_MODULE(_franky, m) {
                      force_constraints_active, exponential_decay});
            }),
            "target"_a,
-           "target_type"_a = ReferenceType::Absolute,
+           py::arg_v("target_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "translational_stiffness"_a = 2000,
            "rotational_stiffness"_a = 200,
            "force_constraints"_a = std::nullopt,
@@ -235,7 +235,7 @@ PYBIND11_MODULE(_franky, m) {
            }),
            "target"_a,
            "duration"_a,
-           "target_type"_a = ReferenceType::Absolute,
+           py::arg_v("target_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "translational_stiffness"_a = 2000,
            "rotational_stiffness"_a = 200,
            "force_constraints"_a = std::nullopt,
@@ -257,7 +257,7 @@ PYBIND11_MODULE(_franky, m) {
                }
            ),
            "target"_a,
-           "reference_type"_a = ReferenceType::Absolute,
+           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
            "jerk_rel"_a = 1.0,
@@ -330,7 +330,7 @@ PYBIND11_MODULE(_franky, m) {
                  return_when_finished);
            }),
            "target"_a,
-           "reference_type"_a = ReferenceType::Absolute,
+           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "frame"_a = std::nullopt,
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
@@ -407,8 +407,10 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "default_torque_threshold"_a = 20.0,
            "default_force_threshold"_a = 30.0,
-           "controller_mode"_a = franka::ControllerMode::kJointImpedance,
-           "realtime_config"_a = franka::RealtimeConfig::kEnforce)
+           py::arg_v("controller_mode",
+                     franka::ControllerMode::kJointImpedance,
+                     "_franky.ControllerMode.JointImpedance"),
+           py::arg_v("realtime_config", franka::RealtimeConfig::kEnforce, "_franky.RealtimeConfig.Enforce"))
       .def("set_dynamic_rel", py::overload_cast<double>(&Robot::setDynamicRel), "dynamic_rel"_a)
       .def("set_dynamic_rel", py::overload_cast<double, double, double>(&Robot::setDynamicRel),
            "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
@@ -537,7 +539,7 @@ PYBIND11_MODULE(_franky, m) {
                }
            ),
            "robot_pose"_a,
-           "reference_type"_a = ReferenceType::Absolute,
+           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "velocity_rel"_a = 1.0,
            "acceleration_rel"_a = 1.0,
            "jerk_rel"_a = 1.0,
