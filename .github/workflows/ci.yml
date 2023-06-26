@@ -21,7 +21,7 @@ jobs:
       run: |
         git clone https://github.com/eigenteam/eigen-git-mirror.git
         cd eigen-git-mirror
-        git checkout 3.3.7
+        git checkout 3.4.0
         mkdir build && cd build
         cmake ..
         sudo make install
