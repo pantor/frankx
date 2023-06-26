@@ -34,7 +34,7 @@ Franky is a high-level motion library (both C++ and Python) for the Franka Emika
 
 To start using franky with Python and libfranka *0.9.0*, just install it via
 ```bash
-pip install franky
+pip install franky-panda
 ```
 
 Franky is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Franky uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install franky via
