@@ -12,7 +12,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-
     with Robot(args.host, args.user, args.password) as api:
         # api.lock_brakes()
         api.unlock_brakes()

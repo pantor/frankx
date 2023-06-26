@@ -1,16 +1,21 @@
 from argparse import ArgumentParser
 
-from franky import Affine, JointMotion, LinearRelativeMotion, Measure, MotionData, Reaction, Robot, StopMotion
+from franky import Affine, JointMotion, Measure, Reaction, Robot, CartesianPoseStopMotion, LinearMotion, RobotPose, \
+    RobotState, ReferenceType
 
 
-if __name__ == '__main__':
+def reaction_callback(robot_state: RobotState, rel_time: float, abs_time: float):
+    print(f"Robot stopped at time {rel_time}.")
+
+
+if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument('--host', default='172.16.0.2', help='FCI IP of the robot')
+    parser.add_argument("--host", default="172.16.0.2", help="FCI IP of the robot")
     args = parser.parse_args()
 
     # Connect to the robot
-    robot = Robot(args.host, repeat_on_error=False)
-    robot.set_default_behavior()
+    robot = Robot(args.host)
+    robot.set_dynamic_rel(0.05)
     robot.recover_from_errors()
 
     # Reduce the acceleration and velocity dynamic
@@ -20,11 +25,10 @@ if __name__ == '__main__':
     robot.move(joint_motion)
 
     # Define and move forwards
-    motion_down = LinearRelativeMotion(Affine(0.0, 0.0, -0.12), -0.2)
-    motion_down_data = MotionData().with_reaction(Reaction(Measure.ForceZ < -5.0, StopMotion(Affine(0.0, 0.0, 0.002), 0.0)))
+    reaction = Reaction(Measure.ForceZ < -5.0, CartesianPoseStopMotion())
+    reaction.register_callback(reaction_callback)
+    motion_down = LinearMotion(RobotPose(Affine([0.0, 0.0, -0.12]), -0.2), ReferenceType.Relative)
+    motion_down.add_reaction(reaction)
 
     # You can try to block the robot now.
-    robot.move(motion_down, motion_down_data)
-
-    if motion_down_data.did_break:
-        print('Robot stopped at: ', robot.current_pose())
+    robot.move(motion_down)
