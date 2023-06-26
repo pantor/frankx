@@ -50,7 +50,8 @@ Affine Kinematics::forward(const Eigen::Matrix<double, 7, 1> &q) {
               (-s0 * t15 + c0 * t4) * sq2,
               (c0 * t15 + s0 * t4) * sq2,
               (t14 + c4 * (s1 * s2 * c_m_s6 + c1 * c5 * s3 * c_p_s6) - c2 * s1 * t3) * sq2,
-              0},
+              0
+          },
           {
               c5 * (c0 * t24 + s3 * s0 * s2) + c4 * s5 * (c3 * s0 * s2 - c0 * t17) +
                   (c2 * s0 + c0 * c1 * s2) * s4 * s5,
