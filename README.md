@@ -413,7 +413,7 @@ print(f"New joints: {q_new}")
 
 ## Documentation
 
-An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/).
+An auto-generated documentation can be found at [https://timschneider42.github.io/franky/](https://timschneider42.github.io/franky/).
 Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/TimSchneider42/franky/tree/master/examples) directory. 
 We will add a more detailed documentation once franky reaches v1.0.
 
