@@ -31,7 +31,7 @@ jobs:
     - name: Install Eigen3
       run: |
         echo $PATH
-        git clone https://github.com/eigenteam/eigen-git-mirror.git
+        git clone https://gitlab.com/libeigen/eigen.git
         cd eigen-git-mirror
         git checkout 3.4.0
         mkdir build && cd build
