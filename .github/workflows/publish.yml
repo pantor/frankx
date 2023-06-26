@@ -61,8 +61,8 @@ jobs:
 
     - name: Install Catch2
       run: |
-        sudo apt-get update
-        sudo apt-get -y install catch2
+        apt-get update
+        apt-get -y install catch2
 
     - name: Python package
       run: |
