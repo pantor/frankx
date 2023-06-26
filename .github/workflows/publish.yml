@@ -94,5 +94,4 @@ jobs:
     - name: Publish python package
       uses: pypa/gh-action-pypi-publish@master
       with:
-        user: keNB2
-        password: ${{ secrets.pypi_password }}
+        password: ${{ secrets.PYPI_TOKEN }}
