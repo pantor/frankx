@@ -15,7 +15,7 @@ jobs:
     - name: Install apt dependencies
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libpoco-dev
+        sudo apt-get -y install build-essential cmake git libpoco-dev catch2
 
     - name: Install Eigen3
       run: |
@@ -45,15 +45,6 @@ jobs:
         mkdir build && cd build
         cmake -DPYBIND11_TEST=OFF ..
         make -j2
-        sudo make install
-
-    - name: Install Catch2
-      run: |
-        git clone https://github.com/catchorg/Catch2.git
-        cd Catch2
-        git checkout v2.13.0
-        mkdir build && cd build
-        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
         sudo make install
 
     - name: Configure & make
