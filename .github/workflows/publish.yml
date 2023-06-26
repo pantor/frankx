@@ -61,8 +61,12 @@ jobs:
 
     - name: Install Catch2
       run: |
-        apt-get update
-        apt-get -y install catch2
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        git checkout v2.13.8
+        mkdir build && cd build
+        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        make install
 
     - name: Python package
       run: |
