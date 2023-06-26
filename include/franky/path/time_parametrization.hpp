@@ -25,7 +25,7 @@ class TimeParametrization {
       const std::array<double, state_dimensions> &max_velocity,
       const std::array<double, state_dimensions> &max_acceleration,
       const std::array<double, state_dimensions> &max_jerk) {
-    Trajectory trajectory{path};
+    Trajectory<AggregatedPath<state_dimensions>> trajectory{path};
 
     // For linear segments: accelerate as fast as possible
     // For blend segments: Constant path velocity ds
@@ -78,7 +78,7 @@ class TimeParametrization {
     double s_new{0.0}, ds_new{0.0}, dds_new{0.0};
     size_t index_current = path.get_index(s_new);
 
-    trajectory.states.emplace_back({time, s_new, ds_new, dds_new, 0.0});
+    trajectory.states.push_back(TrajectoryState{time, s_new, ds_new, dds_new, 0.0});
 
     input.current_position[0] = s_new;
     input.current_velocity[0] = ds_new;
@@ -102,7 +102,7 @@ class TimeParametrization {
         index_current = index_new;
       }
 
-      trajectory.states.emplace_back({time, s_new, ds_new, dds_new, 0.0});
+      trajectory.states.push_back(TrajectoryState{time, s_new, ds_new, dds_new, 0.0});
       output.pass_to_input(input);
     }
 
