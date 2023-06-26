@@ -49,7 +49,7 @@ endif ()
 
 
 if (BUILD_EXAMPLES)
-    foreach (example IN ITEMS linear grasping linear_non_rt)
+    foreach (example IN ITEMS linear)
         add_executable(${example} "examples/${example}.cpp")
         target_link_libraries(${example} PRIVATE franky)
     endforeach ()
