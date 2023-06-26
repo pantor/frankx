@@ -5,6 +5,14 @@
   </h3>
 </div>
 <p align="center">
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/CI/badge.svg" alt="CI">
+  </a>
+
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/Publish/badge.svg" alt="Publish">
+  </a>
+
   <a href="https://github.com/timschneider42/franky/issues">
     <img src="https://img.shields.io/github/issues/timschneider42/franky.svg" alt="Issues">
   </a>
