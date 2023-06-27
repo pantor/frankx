@@ -32,7 +32,6 @@ from _franky import (
     LinearMotion,
     CartesianPoseStopMotion,
     JointPositionStopMotion,
-    Gripper,
     Kinematics,
     RobotPose,
     CartesianWaypoint,
