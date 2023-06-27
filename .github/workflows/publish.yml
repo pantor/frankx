@@ -1,8 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*"
 
 jobs:
   publish:
@@ -12,6 +13,12 @@ jobs:
       image: quay.io/pypa/manylinux2014_x86_64
 
     steps:
+    - name: Create release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+
     - name: Checkout repository and submodules
       uses: actions/checkout@v2
       with:
