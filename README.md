@@ -34,7 +34,7 @@ As franky focuses on making real-time trajectory generation easy, it allows the 
 
 ## Differences to frankx
 Franky is a fork of [frankx](https://github.com/pantor/frankx), though both codebase and functionality differ substantially from frankx by now.
-In particular, franky provides the following new feature/improvements:
+In particular, franky provides the following new features/improvements:
 * [Motions can be updated asynchronously.](#real-time-motion)
 * [Reactions allow for the registration of callbacks instead of just printing to stdout when fired.](#real-time-reactions)
 * [The robot state is also available during control.](#robot-state)
