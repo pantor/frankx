@@ -44,6 +44,7 @@ In particular, franky provides the following new features/improvements:
 * [The signature of `Affine` changed.](#geometry) `Affine` does not handle elbow positions anymore. Instead, a new class `RobotPose` stores both the end-effector pose and optionally the elbow position.
 * The `MotionData` class does not exist anymore. Instead, reactions and other settings moved to `Motion`.
 * [The `Measure` class allows for arithmetic operations.](#real-time-reactions)
+* Exceptions caused by libfranka are raised properly instead of being printed to stdout. 
 
 ## Installation
 
