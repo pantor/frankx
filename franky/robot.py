@@ -1,4 +1,4 @@
-from _franky import Robot as _Robot
+from _franky import _Robot
 
 from .robot_web_session import RobotWebSession
 

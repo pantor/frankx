@@ -353,7 +353,7 @@ PYBIND11_MODULE(_franky, m) {
   mkReactionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
   mkReactionClass<franka::CartesianPose>(m, "CartesianPose");
 
-  py::class_<Gripper>(m, "Gripper")
+  py::class_<Gripper>(m, "_Gripper")
       .def(py::init<const std::string &, double, double>(), "fci_hostname"_a, "speed"_a = 0.02, "force"_a = 20.0)
       .def_readwrite("gripper_force", &Gripper::gripper_force)
       .def_readwrite("gripper_speed", &Gripper::gripper_speed)
@@ -386,7 +386,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("jacobian", &Kinematics::jacobian, "q"_a)
       .def_static("inverse", &Kinematics::inverse, "target"_a, "q0"_a, "null_space"_a = std::nullopt);
 
-  py::class_<Robot>(m, "Robot")
+  py::class_<Robot>(m, "_Robot")
       .def(py::init<>([](
                const std::string &fci_hostname,
                double velocity_rel,
