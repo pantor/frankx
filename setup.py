@@ -62,7 +62,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="franky-panda",
-    version="0.1.2",
+    version="0.1.3",
     description="High-Level Motion Library for the Franka Panda Robot (fork of frankx)",
     long_description=long_description,
     long_description_content_type="text/markdown",
