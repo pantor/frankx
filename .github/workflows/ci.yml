@@ -15,7 +15,7 @@ jobs:
     - name: Install apt dependencies
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libpoco-dev catch2
+        sudo apt-get -y install build-essential cmake git libpoco-dev catch2 python3-dev
 
     - name: Install Eigen3
       run: |
