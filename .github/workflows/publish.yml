@@ -73,9 +73,11 @@ jobs:
         mkdir -p wheels
         mkdir -p dist
 
+        PYBIN_SUPPORTED_VERSIONS="cp3(6|7|8|9|10)m"
+
         # Compile wheels
         for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]] || [[ "${PYBIN}" == *"cp39"* ]]; then
+          if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
             "${PYBIN}/pip" wheel . -w wheels/
           fi
         done
@@ -87,7 +89,7 @@ jobs:
 
         # Install packages and test
         for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" == *"cp36m"* ]] || [[ "${PYBIN}" == *"cp37m"* ]] || [[ "${PYBIN}" == *"cp38"* ]] || [[ "${PYBIN}" == *"cp39"* ]]; then
+          if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
             "${PYBIN}/pip" install franky-panda --no-index -f dist
             # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
           fi
