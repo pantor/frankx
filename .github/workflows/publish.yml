@@ -5,6 +5,9 @@ on:
     tags:
       - "v*"
 
+env:
+  PYBIN_SUPPORTED_VERSIONS: "cp3(6m|7m|8|9|10)"
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -13,98 +16,97 @@ jobs:
       image: quay.io/pypa/manylinux2014_x86_64
 
     steps:
-    - name: Create release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: false
+      - name: Create release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
 
-    - name: Checkout repository and submodules
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-    - name: Install build essentials
-      run: |
-        yum -y install poco-devel*
+      - name: Install build essentials
+        run: |
+          yum -y install poco-devel*
+          
+          for PYBIN in /opt/python/*/bin; do
+            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
+              "${PYBIN}/pip" install cmake setuptools wheel --user
+            fi
+          done
+          
+          ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
 
-        /opt/python/cp36-cp36m/bin/pip install cmake setuptools wheel --user
-        /opt/python/cp37-cp37m/bin/pip install cmake setuptools wheel --user
-        /opt/python/cp38-cp38/bin/pip install cmake setuptools wheel --user
-        /opt/python/cp39-cp39/bin/pip install cmake setuptools wheel --user
+      - name: Install Eigen3
+        run: |
+          echo $PATH
+          git clone https://gitlab.com/libeigen/eigen.git
+          cd eigen
+          git checkout 3.4.0
+          mkdir build && cd build
+          cmake ..
+          make install -j2
 
-        ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
+      - name: Install libfranka
+        run: |
+          git clone --recursive https://github.com/frankaemika/libfranka.git
+          cd libfranka
+          git checkout 0.9.0
+          git submodule update
+          mkdir build && cd build
+          cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+          make -j2
+          make install
 
-    - name: Install Eigen3
-      run: |
-        echo $PATH
-        git clone https://gitlab.com/libeigen/eigen.git
-        cd eigen
-        git checkout 3.4.0
-        mkdir build && cd build
-        cmake ..
-        make install -j2
+      - name: Install pybind11
+        run: |
+          git clone https://github.com/pybind/pybind11.git
+          cd pybind11
+          git checkout v2.9.1
+          mkdir build && cd build
+          cmake -DPYBIND11_TEST=OFF ..
+          make -j2
+          make install
 
-    - name: Install libfranka
-      run: |
-        git clone --recursive https://github.com/frankaemika/libfranka.git
-        cd libfranka
-        git checkout 0.9.0
-        git submodule update
-        mkdir build && cd build
-        cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
-        make -j2
-        make install
+      - name: Install Catch2
+        run: |
+          git clone https://github.com/catchorg/Catch2.git
+          cd Catch2
+          git checkout v2.13.8
+          mkdir build && cd build
+          cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+          make install
 
-    - name: Install pybind11
-      run: |
-        git clone https://github.com/pybind/pybind11.git
-        cd pybind11
-        git checkout v2.9.1
-        mkdir build && cd build
-        cmake -DPYBIND11_TEST=OFF ..
-        make -j2
-        make install
+      - name: Python package
+        run: |
+          mkdir -p wheels
+          mkdir -p dist
+          
+          # Compile wheels
+          for PYBIN in /opt/python/*/bin; do
+            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
+              "${PYBIN}/pip" wheel . -w wheels/
+            fi
+          done
+          
+          # Bundle external shared libraries into the wheels
+          for whl in wheels/*.whl; do
+            auditwheel repair "$whl" -w dist/
+          done
+          
+          # Install packages and test
+          for PYBIN in /opt/python/*/bin/; do
+            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
+              "${PYBIN}/pip" install franky-panda --no-index -f dist
+              # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
+            fi
+          done
+          
+          ls dist
 
-    - name: Install Catch2
-      run: |
-        git clone https://github.com/catchorg/Catch2.git
-        cd Catch2
-        git checkout v2.13.8
-        mkdir build && cd build
-        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
-        make install
-
-    - name: Python package
-      run: |
-        mkdir -p wheels
-        mkdir -p dist
-
-        PYBIN_SUPPORTED_VERSIONS="cp3(6|7|8|9|10)m"
-
-        # Compile wheels
-        for PYBIN in /opt/python/*/bin; do
-          if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-            "${PYBIN}/pip" wheel . -w wheels/
-          fi
-        done
-
-        # Bundle external shared libraries into the wheels
-        for whl in wheels/*.whl; do
-          auditwheel repair "$whl" -w dist/
-        done
-
-        # Install packages and test
-        for PYBIN in /opt/python/*/bin/; do
-          if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-            "${PYBIN}/pip" install franky-panda --no-index -f dist
-            # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
-          fi
-        done
-
-        ls dist
-
-    - name: Publish python package
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        password: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish python package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
