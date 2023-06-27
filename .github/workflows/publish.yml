@@ -27,6 +27,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Log Python versions
+        run: |
+          echo "Found the following Python versions:"
+          for PYBIN in /opt/python/*/bin; do
+            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
+              echo "${PYBIN}" | cut -d / -f 4
+            fi
+          done
+
       - name: Install build essentials
         run: |
           yum -y install poco-devel*
