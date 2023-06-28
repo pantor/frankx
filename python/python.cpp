@@ -132,6 +132,97 @@ PYBIND11_MODULE(_franky, m) {
       .value("UserStopped", franka::RobotMode::kUserStopped)
       .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery);
 
+  py::class_<franka::Duration>(m, "Duration")
+      .def(py::init<>())
+      .def(py::init<uint64_t>())
+      .def("to_sec", &franka::Duration::toSec)
+      .def("to_msec", &franka::Duration::toMSec)
+      .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(py::self - py::self)
+      .def(py::self -= py::self)
+      .def(py::self * uint64_t())
+      .def(py::self *= uint64_t())
+      .def(py::self / uint64_t())
+      .def(py::self /= uint64_t());
+
+  py::class_<franka::Errors>(m, "Errors")
+      .def(py::init<>())
+      .def_property_readonly("joint_position_limits_violation",
+                             [](const franka::Errors &e) { return e.joint_position_limits_violation; })
+      .def_property_readonly("cartesian_position_limits_violation",
+                             [](const franka::Errors &e) { return e.cartesian_position_limits_violation; })
+      .def_property_readonly("self_collision_avoidance_violation",
+                             [](const franka::Errors &e) { return e.self_collision_avoidance_violation; })
+      .def_property_readonly("joint_velocity_violation",
+                             [](const franka::Errors &e) { return e.joint_velocity_violation; })
+      .def_property_readonly("cartesian_velocity_violation",
+                             [](const franka::Errors &e) { return e.cartesian_velocity_violation; })
+      .def_property_readonly("force_control_safety_violation",
+                             [](const franka::Errors &e) { return e.force_control_safety_violation; })
+      .def_property_readonly("joint_reflex",
+                             [](const franka::Errors &e) { return e.joint_reflex; })
+      .def_property_readonly("cartesian_reflex",
+                             [](const franka::Errors &e) { return e.cartesian_reflex; })
+      .def_property_readonly("max_goal_pose_deviation_violation",
+                             [](const franka::Errors &e) { return e.max_goal_pose_deviation_violation; })
+      .def_property_readonly("max_path_pose_deviation_violation",
+                             [](const franka::Errors &e) { return e.max_path_pose_deviation_violation; })
+      .def_property_readonly("cartesian_velocity_profile_safety_violation",
+                             [](const franka::Errors &e) { return e.cartesian_velocity_profile_safety_violation; })
+      .def_property_readonly("joint_position_motion_generator_start_pose_invalid",
+                             [](const franka::Errors &e) { return e.joint_position_motion_generator_start_pose_invalid; })
+      .def_property_readonly("joint_motion_generator_position_limits_violation",
+                             [](const franka::Errors &e) { return e.joint_motion_generator_position_limits_violation; })
+      .def_property_readonly("joint_motion_generator_velocity_limits_violation",
+                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_limits_violation; })
+      .def_property_readonly("joint_motion_generator_velocity_discontinuity",
+                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_discontinuity; })
+      .def_property_readonly("joint_motion_generator_acceleration_discontinuity",
+                             [](const franka::Errors &e) { return e.joint_motion_generator_acceleration_discontinuity; })
+      .def_property_readonly("cartesian_position_motion_generator_start_pose_invalid",
+                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_start_pose_invalid; })
+      .def_property_readonly("cartesian_motion_generator_elbow_limit_violation",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_limit_violation; })
+      .def_property_readonly("cartesian_motion_generator_velocity_limits_violation",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_limits_violation; })
+      .def_property_readonly("cartesian_motion_generator_velocity_discontinuity",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_discontinuity; })
+      .def_property_readonly("cartesian_motion_generator_acceleration_discontinuity",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_acceleration_discontinuity; })
+      .def_property_readonly("cartesian_motion_generator_elbow_sign_inconsistent",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_sign_inconsistent; })
+      .def_property_readonly("cartesian_motion_generator_start_elbow_invalid",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_start_elbow_invalid; })
+      .def_property_readonly("cartesian_motion_generator_joint_position_limits_violation",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_position_limits_violation; })
+      .def_property_readonly("cartesian_motion_generator_joint_velocity_limits_violation",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_limits_violation; })
+      .def_property_readonly("cartesian_motion_generator_joint_velocity_discontinuity",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_discontinuity; })
+      .def_property_readonly("cartesian_motion_generator_joint_acceleration_discontinuity",
+                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_acceleration_discontinuity; })
+      .def_property_readonly("cartesian_position_motion_generator_invalid_frame",
+                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_invalid_frame; })
+      .def_property_readonly("force_controller_desired_force_tolerance_violation",
+                             [](const franka::Errors &e) { return e.force_controller_desired_force_tolerance_violation; })
+      .def_property_readonly("controller_torque_discontinuity",
+                             [](const franka::Errors &e) { return e.controller_torque_discontinuity; })
+      .def_property_readonly("start_elbow_sign_inconsistent",
+                             [](const franka::Errors &e) { return e.start_elbow_sign_inconsistent; })
+      .def_property_readonly("communication_constraints_violation",
+                             [](const franka::Errors &e) { return e.communication_constraints_violation; })
+      .def_property_readonly("power_limit_violation",
+                             [](const franka::Errors &e) { return e.power_limit_violation; })
+      .def_property_readonly("joint_p2p_insufficient_torque_for_planning",
+                             [](const franka::Errors &e) { return e.joint_p2p_insufficient_torque_for_planning; })
+      .def_property_readonly("tau_j_range_violation",
+                             [](const franka::Errors &e) { return e.tau_j_range_violation; })
+      .def_property_readonly("instability_detected",
+                             [](const franka::Errors &e) { return e.instability_detected; })
+      .def_property_readonly("joint_move_in_wrong_direction",
+                             [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
+
   py::class_<Condition>(m, "Condition")
       .def(py::init<bool>(), "constant_value"_a)
       .def("__repr__", &Condition::repr);
@@ -273,20 +364,6 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
       .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
       .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
-
-  py::class_<franka::Duration>(m, "Duration")
-      .def(py::init<>())
-      .def(py::init<uint64_t>())
-      .def("to_sec", &franka::Duration::toSec)
-      .def("to_msec", &franka::Duration::toMSec)
-      .def(py::self + py::self)
-      .def(py::self += py::self)
-      .def(py::self - py::self)
-      .def(py::self -= py::self)
-      .def(py::self * uint64_t())
-      .def(py::self *= uint64_t())
-      .def(py::self / uint64_t())
-      .def(py::self /= uint64_t());
 
   py::class_<franka::Torques>(m, "Torques")
       .def_readonly("tau_J", &franka::Torques::tau_J);
@@ -653,83 +730,6 @@ PYBIND11_MODULE(_franky, m) {
       }, "[rad/s^3]")
       .def_static("forward_kinematics", &Robot::forwardKinematics, "q"_a)
       .def_static("inverseKinematics", &Robot::inverseKinematics, "target"_a, "q0"_a);
-
-  py::class_<franka::Errors>(m, "Errors")
-      .def(py::init<>())
-      .def_property_readonly("joint_position_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_position_limits_violation; })
-      .def_property_readonly("cartesian_position_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_position_limits_violation; })
-      .def_property_readonly("self_collision_avoidance_violation",
-                             [](const franka::Errors &e) { return e.self_collision_avoidance_violation; })
-      .def_property_readonly("joint_velocity_violation",
-                             [](const franka::Errors &e) { return e.joint_velocity_violation; })
-      .def_property_readonly("cartesian_velocity_violation",
-                             [](const franka::Errors &e) { return e.cartesian_velocity_violation; })
-      .def_property_readonly("force_control_safety_violation",
-                             [](const franka::Errors &e) { return e.force_control_safety_violation; })
-      .def_property_readonly("joint_reflex",
-                             [](const franka::Errors &e) { return e.joint_reflex; })
-      .def_property_readonly("cartesian_reflex",
-                             [](const franka::Errors &e) { return e.cartesian_reflex; })
-      .def_property_readonly("max_goal_pose_deviation_violation",
-                             [](const franka::Errors &e) { return e.max_goal_pose_deviation_violation; })
-      .def_property_readonly("max_path_pose_deviation_violation",
-                             [](const franka::Errors &e) { return e.max_path_pose_deviation_violation; })
-      .def_property_readonly("cartesian_velocity_profile_safety_violation",
-                             [](const franka::Errors &e) { return e.cartesian_velocity_profile_safety_violation; })
-      .def_property_readonly("joint_position_motion_generator_start_pose_invalid",
-                             [](const franka::Errors &e) { return e.joint_position_motion_generator_start_pose_invalid; })
-      .def_property_readonly("joint_motion_generator_position_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_position_limits_violation; })
-      .def_property_readonly("joint_motion_generator_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_limits_violation; })
-      .def_property_readonly("joint_motion_generator_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_discontinuity; })
-      .def_property_readonly("joint_motion_generator_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_position_motion_generator_start_pose_invalid",
-                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_start_pose_invalid; })
-      .def_property_readonly("cartesian_motion_generator_elbow_limit_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_limit_violation; })
-      .def_property_readonly("cartesian_motion_generator_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_elbow_sign_inconsistent",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_sign_inconsistent; })
-      .def_property_readonly("cartesian_motion_generator_start_elbow_invalid",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_start_elbow_invalid; })
-      .def_property_readonly("cartesian_motion_generator_joint_position_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_position_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_joint_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_joint_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_joint_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_position_motion_generator_invalid_frame",
-                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_invalid_frame; })
-      .def_property_readonly("force_controller_desired_force_tolerance_violation",
-                             [](const franka::Errors &e) { return e.force_controller_desired_force_tolerance_violation; })
-      .def_property_readonly("controller_torque_discontinuity",
-                             [](const franka::Errors &e) { return e.controller_torque_discontinuity; })
-      .def_property_readonly("start_elbow_sign_inconsistent",
-                             [](const franka::Errors &e) { return e.start_elbow_sign_inconsistent; })
-      .def_property_readonly("communication_constraints_violation",
-                             [](const franka::Errors &e) { return e.communication_constraints_violation; })
-      .def_property_readonly("power_limit_violation",
-                             [](const franka::Errors &e) { return e.power_limit_violation; })
-      .def_property_readonly("joint_p2p_insufficient_torque_for_planning",
-                             [](const franka::Errors &e) { return e.joint_p2p_insufficient_torque_for_planning; })
-      .def_property_readonly("tau_j_range_violation",
-                             [](const franka::Errors &e) { return e.tau_j_range_violation; })
-      .def_property_readonly("instability_detected",
-                             [](const franka::Errors &e) { return e.instability_detected; })
-      .def_property_readonly("joint_move_in_wrong_direction",
-                             [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
 
   py::register_exception<franka::CommandException>(m, "CommandException");
   py::register_exception<franka::ControlException>(m, "ControlException");
