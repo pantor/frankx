@@ -44,6 +44,7 @@ class CMakeBuild(build_ext):
             "-DBUILD_PYTHON_STUBS=ON",
             "-DBUILD_TESTS=OFF",
             "-DBUILD_SHARED_LIBS=OFF",
+            "-DSTUBSGEN_PYTHON_EXECUTABLE={}".format(sys.executable),
             "-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE",
             "-DCMAKE_INSTALL_RPATH=$ORIGIN",
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
