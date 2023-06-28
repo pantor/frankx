@@ -490,13 +490,13 @@ PYBIND11_MODULE(_franky, m) {
       .def_readonly_static("max_elbow_jerk", &Robot::max_elbow_jerk, "[rad/s³]")
       .def_readonly_static("degrees_of_freedom", &Robot::degrees_of_freedoms)
       .def_readonly_static("control_rate", &Robot::control_rate, "[s]")
-      .def_property_readonly_static("max_joint_velocity", []() {
+      .def_property_readonly_static("max_joint_velocity", [](py::object) {
         return Vector7d::Map(Robot::max_joint_velocity.data());
       }, "[rad/s]")
-      .def_property_readonly_static("max_joint_acceleration", []() {
+      .def_property_readonly_static("max_joint_acceleration", [](py::object) {
         return Vector7d::Map(Robot::max_joint_acceleration.data());
       }, "[rad/s²]")
-      .def_property_readonly_static("max_joint_jerk", []() {
+      .def_property_readonly_static("max_joint_jerk", [](py::object) {
         return Vector7d::Map(Robot::max_joint_jerk.data());
       }, "[rad/s^3]")
       .def_static("forward_kinematics", &Robot::forwardKinematics, "q"_a)
