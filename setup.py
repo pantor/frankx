@@ -75,6 +75,7 @@ setup(
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Programming Language :: C++",
     ],
+    install_requires=["numpy"],
     python_requires=">=3.6",
     zip_safe=False,
 )
