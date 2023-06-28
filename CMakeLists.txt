@@ -10,6 +10,7 @@ include(GNUInstallDirs)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
+option(BUILD_PYTHON_STUBS "Build stubs" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 
@@ -37,8 +38,27 @@ if (BUILD_PYTHON_MODULE)
     endif ()
 
     file(GLOB_RECURSE PYTHON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/python/*.cpp")
-    pybind11_add_module(_franky ${PYTHON_SRC})
-    target_link_libraries(_franky PUBLIC franky)
+    pybind11_add_module(_franky-lib ${PYTHON_SRC})
+    target_link_libraries(_franky-lib PUBLIC franky)
+    set_target_properties(_franky-lib PROPERTIES OUTPUT_NAME "_franky")
+
+    if (BUILD_PYTHON_STUBS)
+        # Build stubs
+        add_custom_target(
+                franky-stubs
+                ${CMAKE_SOURCE_DIR}/generate_stubs.bash "${Python_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}" "$<TARGET_FILE:_franky-lib>"
+                COMMENT "Generating Python stubs..."
+                DEPENDS _franky-lib
+        )
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/stubs/_franky-stubs/__init__.pyi DESTINATION lib)
+
+        add_custom_target(_franky
+                DEPENDS _franky-lib
+                DEPENDS franky-stubs)
+    else ()
+        add_custom_target(_franky
+                DEPENDS _franky-lib)
+    endif ()
 endif ()
 
 

@@ -41,6 +41,7 @@ class CMakeBuild(build_ext):
             "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(build_type),
             "-DBUILD_EXAMPLES=OFF",
+            "-DBUILD_PYTHON_STUBS=ON",
             "-DBUILD_TESTS=OFF",
             "-DBUILD_SHARED_LIBS=OFF",
             "-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE",
