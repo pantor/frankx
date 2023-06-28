@@ -38,9 +38,13 @@ std::string affineToStr(const Affine &affine) {
 }
 
 template<typename ControlSignalType>
-void mkMotionClass(py::module_ m, const std::string &control_signal_name) {
-  py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>>(
-      m, (control_signal_name + "Motion").c_str())
+void mkMotionAndReactionClasses(py::module_ m, const std::string &control_signal_name) {
+  py::class_<Motion<ControlSignalType>, std::shared_ptr<Motion<ControlSignalType>>> motion_class(
+      m, (control_signal_name + "Motion").c_str());
+  py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>> reaction_class(
+      m, (control_signal_name + "Reaction").c_str());
+
+  motion_class
       .def_property_readonly("reactions", &Motion<ControlSignalType>::reactions)
       .def("add_reaction", &Motion<ControlSignalType>::addReaction)
       .def("register_callback", [](
@@ -58,12 +62,8 @@ void mkMotionClass(py::module_ m, const std::string &control_signal_name) {
           });
         });
       }, "callback"_a);
-}
 
-template<typename ControlSignalType>
-void mkReactionClass(py::module_ m, const std::string &control_signal_name) {
-  py::class_<Reaction<ControlSignalType>, std::shared_ptr<Reaction<ControlSignalType>>>(
-      m, (control_signal_name + "Reaction").c_str())
+  reaction_class
       .def(py::init<const Condition &, std::shared_ptr<Motion<ControlSignalType>>>(),
            "condition"_a, "motion"_a = nullptr)
       .def("register_callback", [](
@@ -132,6 +132,11 @@ PYBIND11_MODULE(_franky, m) {
       .value("UserStopped", franka::RobotMode::kUserStopped)
       .value("AutomaticErrorRecovery", franka::RobotMode::kAutomaticErrorRecovery);
 
+  py::class_<Condition>(m, "Condition")
+      .def(py::init<bool>(), "constant_value"_a)
+      .def("__repr__", &Condition::repr);
+  py::implicitly_convertible<bool, Condition>();
+
   py::class_<Measure>(m, "Measure")
       .def_property_readonly_static("FORCE_X", [](py::object) { return Measure::ForceX(); })
       .def_property_readonly_static("FORCE_Y", [](py::object) { return Measure::ForceY(); })
@@ -169,16 +174,140 @@ PYBIND11_MODULE(_franky, m) {
            py::is_operator())
       .def("__repr__", &Measure::repr);
 
-  py::class_<Condition>(m, "Condition")
-      .def(py::init<bool>(), "constant_value"_a)
-      .def("__repr__", &Condition::repr);
-  py::implicitly_convertible<bool, Condition>();
+  py::class_<franka::RobotState>(m, "RobotState")
+      .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
+      .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
+      .def_readonly("F_T_EE", &franka::RobotState::F_T_EE)
+      .def_readonly("EE_T_K", &franka::RobotState::EE_T_K)
+      .def_readonly("m_ee", &franka::RobotState::m_ee)
+      .def_readonly("I_ee", &franka::RobotState::I_ee)
+      .def_readonly("F_x_Cee", &franka::RobotState::F_x_Cee)
+      .def_readonly("m_load", &franka::RobotState::m_load)
+      .def_readonly("I_load", &franka::RobotState::I_load)
+      .def_readonly("F_x_Cload", &franka::RobotState::F_x_Cload)
+      .def_readonly("m_total", &franka::RobotState::m_total)
+      .def_readonly("I_total", &franka::RobotState::I_total)
+      .def_readonly("F_x_Ctotal", &franka::RobotState::F_x_Ctotal)
+      .def_readonly("elbow", &franka::RobotState::elbow)
+      .def_readonly("elbow_d", &franka::RobotState::elbow_d)
+      .def_readonly("elbow_c", &franka::RobotState::elbow_c)
+      .def_readonly("delbow_c", &franka::RobotState::delbow_c)
+      .def_readonly("ddelbow_c", &franka::RobotState::ddelbow_c)
+      .def_readonly("tau_J", &franka::RobotState::tau_J)
+      .def_readonly("tau_J_d", &franka::RobotState::tau_J_d)
+      .def_readonly("dtau_J", &franka::RobotState::dtau_J)
+      .def_readonly("q", &franka::RobotState::q)
+      .def_readonly("q_d", &franka::RobotState::q_d)
+      .def_readonly("dq", &franka::RobotState::dq)
+      .def_readonly("dq_d", &franka::RobotState::dq_d)
+      .def_readonly("ddq_d", &franka::RobotState::ddq_d)
+      .def_readonly("joint_contact", &franka::RobotState::m_total)
+      .def_readonly("cartesian_contact", &franka::RobotState::cartesian_contact)
+      .def_readonly("joint_collision", &franka::RobotState::joint_collision)
+      .def_readonly("cartesian_collision", &franka::RobotState::cartesian_collision)
+      .def_readonly("tau_ext_hat_filtered", &franka::RobotState::tau_ext_hat_filtered)
+      .def_readonly("O_F_ext_hat_K", &franka::RobotState::O_F_ext_hat_K)
+      .def_readonly("K_F_ext_hat_K", &franka::RobotState::K_F_ext_hat_K)
+      .def_readonly("O_T_EE_c", &franka::RobotState::O_T_EE_c)
+      .def_readonly("O_dP_EE_c", &franka::RobotState::O_dP_EE_c)
+      .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
+      .def_readonly("theta", &franka::RobotState::theta)
+      .def_readonly("dtheta", &franka::RobotState::dtheta)
+      .def_readonly("current_errors", &franka::RobotState::current_errors)
+      .def_readonly("last_motion_errors", &franka::RobotState::last_motion_errors)
+      .def_readonly("control_command_success_rate", &franka::RobotState::control_command_success_rate)
+      .def_readonly("robot_mode", &franka::RobotState::robot_mode)
+      .def_readonly("time", &franka::RobotState::time);
 
-  mkMotionClass<franka::Torques>(m, "Torque");
-  mkMotionClass<franka::JointVelocities>(m, "JointVelocity");
-  mkMotionClass<franka::JointPositions>(m, "JointPosition");
-  mkMotionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
-  mkMotionClass<franka::CartesianPose>(m, "CartesianPose");
+  py::class_<franka::GripperState>(m, "GripperState")
+      .def_readonly("width", &franka::GripperState::width)
+      .def_readonly("max_width", &franka::GripperState::max_width)
+      .def_readonly("is_grasped", &franka::GripperState::is_grasped)
+      .def_readonly("temperature", &franka::GripperState::temperature)
+      .def_readonly("time", &franka::GripperState::time);
+
+  py::class_<Affine>(m, "Affine")
+      .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
+           "transformation_matrix"_a = Eigen::Matrix<double, 4, 4>::Identity())
+      .def(py::init<>([](const Vector<3> &translation, const Vector<4> &quaternion) {
+        return Affine().fromPositionOrientationScale(
+            translation, Eigen::Quaterniond(quaternion), Vector<3>::Ones());
+      }), "translation"_a = Vector<3>{0, 0, 0}, "quaternion"_a = Vector<4>{0, 0, 0, 1})
+      .def(py::init<const Affine &>()) // Copy constructor
+      .def(py::self * py::self)
+      .def_property_readonly("inverse", &Affine::inverse)
+      .def_property_readonly("translation", [](const Affine &affine) {
+        return affine.translation();
+      })
+      .def_property_readonly("quaternion", [](const Affine &affine) {
+        return Eigen::Quaterniond(affine.rotation()).coeffs();
+      })
+      .def_property_readonly("matrix", [](const Affine &affine) {
+        return affine.matrix();
+      })
+      .def("__repr__", &affineToStr);
+
+  py::class_<RobotPose>(m, "RobotPose")
+      .def(py::init<Affine, std::optional<double>>(),
+           "end_effector_pose"_a,
+           "elbow_position"_a = std::nullopt)
+      .def(py::init<const RobotPose &>()) // Copy constructor
+      .def("with_elbow_position", &RobotPose::with_elbow_position, "elbow_position"_a)
+      .def_property_readonly("end_effector_pose", &RobotPose::end_effector_pose)
+      .def_property_readonly("elbow_position", &RobotPose::elbow_position)
+      .def("__mul__", py::overload_cast<const RobotPose &, const Affine &>(&operator*), py::is_operator())
+      .def("__rmul__",
+           [](const RobotPose &robot_pose, const Affine &affine) { return affine * robot_pose; },
+           py::is_operator())
+      .def("__repr__", [](const RobotPose &robot_pose) {
+        std::stringstream ss;
+        ss << "(ee_pose=" << affineToStr(robot_pose.end_effector_pose());
+        if (robot_pose.elbow_position().has_value())
+          ss << ", elbow=" << robot_pose.elbow_position().value();
+        ss << ")";
+        return ss.str();
+      });
+  py::implicitly_convertible<Affine, RobotPose>();
+
+  py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
+      .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
+      .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
+      .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
+
+  py::class_<franka::Duration>(m, "Duration")
+      .def(py::init<>())
+      .def(py::init<uint64_t>())
+      .def("to_sec", &franka::Duration::toSec)
+      .def("to_msec", &franka::Duration::toMSec)
+      .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(py::self - py::self)
+      .def(py::self -= py::self)
+      .def(py::self * uint64_t())
+      .def(py::self *= uint64_t())
+      .def(py::self / uint64_t())
+      .def(py::self /= uint64_t());
+
+  py::class_<franka::Torques>(m, "Torques")
+      .def_readonly("tau_J", &franka::Torques::tau_J);
+
+  py::class_<franka::JointVelocities>(m, "JointVelocities")
+      .def_readonly("dq", &franka::JointVelocities::dq);
+
+  py::class_<franka::JointPositions>(m, "JointPositions")
+      .def_readonly("q", &franka::JointPositions::q);
+
+  py::class_<franka::CartesianVelocities>(m, "CartesianVelocities")
+      .def_readonly("O_dP_EE", &franka::CartesianVelocities::O_dP_EE);
+
+  py::class_<franka::CartesianPose>(m, "CartesianPose")
+      .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE);
+
+  mkMotionAndReactionClasses<franka::Torques>(m, "Torque");
+  mkMotionAndReactionClasses<franka::JointVelocities>(m, "JointVelocity");
+  mkMotionAndReactionClasses<franka::JointPositions>(m, "JointPosition");
+  mkMotionAndReactionClasses<franka::CartesianVelocities>(m, "CartesianVelocity");
+  mkMotionAndReactionClasses<franka::CartesianPose>(m, "CartesianPose");
 
   py::class_<ImpedanceMotion, Motion<franka::Torques>, std::shared_ptr<ImpedanceMotion>>(m, "ImpedanceMotion");
 
@@ -287,6 +416,35 @@ PYBIND11_MODULE(_franky, m) {
            "jerk_rel"_a = 1.0,
            "return_when_finished"_a = true);
 
+  py::class_<Waypoint<RobotPose>>(m, "CartesianWaypoint")
+      .def(py::init<>(
+               [](
+                   const RobotPose &robot_pose,
+                   ReferenceType reference_type,
+                   double velocity_rel,
+                   double acceleration_rel,
+                   double jerk_rel,
+                   bool max_dynamics,
+                   std::optional<double> minimum_time) {
+                 return Waypoint<RobotPose>{
+                     robot_pose, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
+               }
+           ),
+           "robot_pose"_a,
+           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
+           "velocity_rel"_a = 1.0,
+           "acceleration_rel"_a = 1.0,
+           "jerk_rel"_a = 1.0,
+           "max_dynamics"_a = false,
+           "minimum_time"_a = std::nullopt)
+      .def_readonly("target", &Waypoint<RobotPose>::target)
+      .def_readonly("reference_type", &Waypoint<RobotPose>::reference_type)
+      .def_readonly("velocity_rel", &Waypoint<RobotPose>::velocity_rel)
+      .def_readonly("acceleration_rel", &Waypoint<RobotPose>::acceleration_rel)
+      .def_readonly("jerk_rel", &Waypoint<RobotPose>::jerk_rel)
+      .def_readonly("max_dynamics", &Waypoint<RobotPose>::max_dynamics)
+      .def_readonly("minimum_time", &Waypoint<RobotPose>::minimum_time);
+
   py::class_<CartesianWaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<CartesianWaypointMotion>>(
       m, "CartesianWaypointMotion")
       .def(py::init<>([](
@@ -347,18 +505,13 @@ PYBIND11_MODULE(_franky, m) {
              std::shared_ptr<StopMotion<franka::JointPositions>>>(m, "JointPositionStopMotion")
       .def(py::init<>());
 
-  mkReactionClass<franka::Torques>(m, "Torque");
-  mkReactionClass<franka::JointVelocities>(m, "JointVelocity");
-  mkReactionClass<franka::JointPositions>(m, "JointPosition");
-  mkReactionClass<franka::CartesianVelocities>(m, "CartesianVelocity");
-  mkReactionClass<franka::CartesianPose>(m, "CartesianPose");
-
   py::class_<Gripper>(m, "_Gripper")
       .def(py::init<const std::string &, double, double>(), "fci_hostname"_a, "speed"_a = 0.02, "force"_a = 20.0)
       .def_readwrite("gripper_force", &Gripper::gripper_force)
       .def_readwrite("gripper_speed", &Gripper::gripper_speed)
       .def_readonly("max_width", &Gripper::max_width)
       .def_readonly("has_error", &Gripper::has_error)
+      .def_property_readonly("server_version", &Gripper::serverVersion)
       .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
       .def("grasp",
            (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp,
@@ -366,7 +519,6 @@ PYBIND11_MODULE(_franky, m) {
       .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
       .def("stop", &Gripper::stop)
       .def("read_once", &Gripper::readOnce)
-      .def("server_version", &Gripper::serverVersion)
       .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
       .def("move_unsafe", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
       .def("width", &Gripper::width)
@@ -502,97 +654,6 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("forward_kinematics", &Robot::forwardKinematics, "q"_a)
       .def_static("inverseKinematics", &Robot::inverseKinematics, "target"_a, "q0"_a);
 
-  py::class_<RobotPose>(m, "RobotPose")
-      .def(py::init<Affine, std::optional<double>>(),
-           "end_effector_pose"_a,
-           "elbow_position"_a = std::nullopt)
-      .def(py::init<const RobotPose &>()) // Copy constructor
-      .def("with_elbow_position", &RobotPose::with_elbow_position, "elbow_position"_a)
-      .def_property_readonly("end_effector_pose", &RobotPose::end_effector_pose)
-      .def_property_readonly("elbow_position", &RobotPose::elbow_position)
-      .def("__mul__", py::overload_cast<const RobotPose &, const Affine &>(&operator*), py::is_operator())
-      .def("__rmul__",
-           [](const RobotPose &robot_pose, const Affine &affine) { return affine * robot_pose; },
-           py::is_operator())
-      .def("__repr__", [](const RobotPose &robot_pose) {
-        std::stringstream ss;
-        ss << "(ee_pose=" << affineToStr(robot_pose.end_effector_pose());
-        if (robot_pose.elbow_position().has_value())
-          ss << ", elbow=" << robot_pose.elbow_position().value();
-        ss << ")";
-        return ss.str();
-      });
-  py::implicitly_convertible<Affine, RobotPose>();
-
-  py::class_<Waypoint<RobotPose>>(m, "CartesianWaypoint")
-      .def(py::init<>(
-               [](
-                   const RobotPose &robot_pose,
-                   ReferenceType reference_type,
-                   double velocity_rel,
-                   double acceleration_rel,
-                   double jerk_rel,
-                   bool max_dynamics,
-                   std::optional<double> minimum_time) {
-                 return Waypoint<RobotPose>{
-                     robot_pose, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
-               }
-           ),
-           "robot_pose"_a,
-           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
-           "max_dynamics"_a = false,
-           "minimum_time"_a = std::nullopt)
-      .def_readonly("target", &Waypoint<RobotPose>::target)
-      .def_readonly("reference_type", &Waypoint<RobotPose>::reference_type)
-      .def_readonly("velocity_rel", &Waypoint<RobotPose>::velocity_rel)
-      .def_readonly("acceleration_rel", &Waypoint<RobotPose>::acceleration_rel)
-      .def_readonly("jerk_rel", &Waypoint<RobotPose>::jerk_rel)
-      .def_readonly("max_dynamics", &Waypoint<RobotPose>::max_dynamics)
-      .def_readonly("minimum_time", &Waypoint<RobotPose>::minimum_time);
-
-  py::class_<Affine>(m, "Affine")
-      .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
-           "transformation_matrix"_a = Eigen::Matrix<double, 4, 4>::Identity())
-      .def(py::init<>([](const Vector<3> &translation, const Vector<4> &quaternion) {
-        return Affine().fromPositionOrientationScale(
-            translation, Eigen::Quaterniond(quaternion), Vector<3>::Ones());
-      }), "translation"_a = Vector<3>{0, 0, 0}, "quaternion"_a = Vector<4>{0, 0, 0, 1})
-      .def(py::init<const Affine &>()) // Copy constructor
-      .def(py::self * py::self)
-      .def_property_readonly("inverse", &Affine::inverse)
-      .def_property_readonly("translation", [](const Affine &affine) {
-        return affine.translation();
-      })
-      .def_property_readonly("quaternion", [](const Affine &affine) {
-        return Eigen::Quaterniond(affine.rotation()).coeffs();
-      })
-      .def_property_readonly("matrix", [](const Affine &affine) {
-        return affine.matrix();
-      })
-      .def("__repr__", &affineToStr);
-
-  py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
-      .def(py::init<size_t, double>(), "joint_index"_a, "value"_a)
-      .def_readwrite("joint_index", &Kinematics::NullSpaceHandling::joint_index)
-      .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
-
-  py::class_<franka::Duration>(m, "Duration")
-      .def(py::init<>())
-      .def(py::init<uint64_t>())
-      .def("to_sec", &franka::Duration::toSec)
-      .def("to_msec", &franka::Duration::toMSec)
-      .def(py::self + py::self)
-      .def(py::self += py::self)
-      .def(py::self - py::self)
-      .def(py::self -= py::self)
-      .def(py::self * uint64_t())
-      .def(py::self *= uint64_t())
-      .def(py::self / uint64_t())
-      .def(py::self /= uint64_t());
-
   py::class_<franka::Errors>(m, "Errors")
       .def(py::init<>())
       .def_property_readonly("joint_position_limits_violation",
@@ -669,73 +730,6 @@ PYBIND11_MODULE(_franky, m) {
                              [](const franka::Errors &e) { return e.instability_detected; })
       .def_property_readonly("joint_move_in_wrong_direction",
                              [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
-
-  py::class_<franka::RobotState>(m, "RobotState")
-      .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
-      .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
-      .def_readonly("F_T_EE", &franka::RobotState::F_T_EE)
-      .def_readonly("EE_T_K", &franka::RobotState::EE_T_K)
-      .def_readonly("m_ee", &franka::RobotState::m_ee)
-      .def_readonly("I_ee", &franka::RobotState::I_ee)
-      .def_readonly("F_x_Cee", &franka::RobotState::F_x_Cee)
-      .def_readonly("m_load", &franka::RobotState::m_load)
-      .def_readonly("I_load", &franka::RobotState::I_load)
-      .def_readonly("F_x_Cload", &franka::RobotState::F_x_Cload)
-      .def_readonly("m_total", &franka::RobotState::m_total)
-      .def_readonly("I_total", &franka::RobotState::I_total)
-      .def_readonly("F_x_Ctotal", &franka::RobotState::F_x_Ctotal)
-      .def_readonly("elbow", &franka::RobotState::elbow)
-      .def_readonly("elbow_d", &franka::RobotState::elbow_d)
-      .def_readonly("elbow_c", &franka::RobotState::elbow_c)
-      .def_readonly("delbow_c", &franka::RobotState::delbow_c)
-      .def_readonly("ddelbow_c", &franka::RobotState::ddelbow_c)
-      .def_readonly("tau_J", &franka::RobotState::tau_J)
-      .def_readonly("tau_J_d", &franka::RobotState::tau_J_d)
-      .def_readonly("dtau_J", &franka::RobotState::dtau_J)
-      .def_readonly("q", &franka::RobotState::q)
-      .def_readonly("q_d", &franka::RobotState::q_d)
-      .def_readonly("dq", &franka::RobotState::dq)
-      .def_readonly("dq_d", &franka::RobotState::dq_d)
-      .def_readonly("ddq_d", &franka::RobotState::ddq_d)
-      .def_readonly("joint_contact", &franka::RobotState::m_total)
-      .def_readonly("cartesian_contact", &franka::RobotState::cartesian_contact)
-      .def_readonly("joint_collision", &franka::RobotState::joint_collision)
-      .def_readonly("cartesian_collision", &franka::RobotState::cartesian_collision)
-      .def_readonly("tau_ext_hat_filtered", &franka::RobotState::tau_ext_hat_filtered)
-      .def_readonly("O_F_ext_hat_K", &franka::RobotState::O_F_ext_hat_K)
-      .def_readonly("K_F_ext_hat_K", &franka::RobotState::K_F_ext_hat_K)
-      .def_readonly("O_T_EE_c", &franka::RobotState::O_T_EE_c)
-      .def_readonly("O_dP_EE_c", &franka::RobotState::O_dP_EE_c)
-      .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
-      .def_readonly("theta", &franka::RobotState::theta)
-      .def_readonly("dtheta", &franka::RobotState::dtheta)
-      .def_readonly("current_errors", &franka::RobotState::current_errors)
-      .def_readonly("last_motion_errors", &franka::RobotState::last_motion_errors)
-      .def_readonly("control_command_success_rate", &franka::RobotState::control_command_success_rate)
-      .def_readonly("robot_mode", &franka::RobotState::robot_mode)
-      .def_readonly("time", &franka::RobotState::time);
-
-  py::class_<franka::GripperState>(m, "GripperState")
-      .def_readonly("width", &franka::GripperState::width)
-      .def_readonly("max_width", &franka::GripperState::max_width)
-      .def_readonly("is_grasped", &franka::GripperState::is_grasped)
-      .def_readonly("temperature", &franka::GripperState::temperature)
-      .def_readonly("time", &franka::GripperState::time);
-
-  py::class_<franka::Torques>(m, "Torques")
-      .def_readonly("tau_J", &franka::Torques::tau_J);
-
-  py::class_<franka::JointVelocities>(m, "JointVelocities")
-      .def_readonly("dq", &franka::JointVelocities::dq);
-
-  py::class_<franka::JointPositions>(m, "JointPositions")
-      .def_readonly("q", &franka::JointPositions::q);
-
-  py::class_<franka::CartesianVelocities>(m, "CartesianVelocities")
-      .def_readonly("O_dP_EE", &franka::CartesianVelocities::O_dP_EE);
-
-  py::class_<franka::CartesianPose>(m, "CartesianPose")
-      .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE);
 
   py::register_exception<franka::CommandException>(m, "CommandException");
   py::register_exception<franka::ControlException>(m, "ControlException");
