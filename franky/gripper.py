@@ -1,9 +1,9 @@
 from threading import Thread
 
-from _franky import _Gripper
+from _franky import GripperInternal
 
 
-class Gripper(_Gripper):
+class Gripper(GripperInternal):
     def move_async(self, width) -> Thread:
         p = Thread(target=self.move, args=(width, ), daemon=True)
         p.start()

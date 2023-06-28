@@ -1,8 +1,8 @@
-from _franky import _Robot
+from _franky import RobotInternal
 
 from .robot_web_session import RobotWebSession
 
 
-class Robot(_Robot):
+class Robot(RobotInternal):
     def create_web_session(self, username: str, password: str):
         return RobotWebSession(self, username, password)
