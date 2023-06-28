@@ -1,4 +1,4 @@
-from _franky import RobotInternal
+from ._franky import RobotInternal
 
 from .robot_web_session import RobotWebSession
 

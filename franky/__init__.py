@@ -10,7 +10,7 @@ from .reaction import (
     CartesianPoseReaction
 )
 from .motion import Motion
-from _franky import (
+from ._franky import (
     ReferenceType,
     ControllerMode,
     RealtimeConfig,

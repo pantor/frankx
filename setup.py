@@ -57,7 +57,7 @@ class CMakeBuild(build_ext):
             os.makedirs(self.build_temp)
 
         subprocess.check_call(["cmake", str(Path(".").resolve())] + cmake_args, cwd=self.build_temp)
-        subprocess.check_call(["cmake", "--build", ".", "--target", ext.name] + build_args, cwd=self.build_temp)
+        subprocess.check_call(["cmake", "--build", ".", "--target", "_franky"] + build_args, cwd=self.build_temp)
 
 
 setup(
@@ -71,7 +71,7 @@ setup(
     url="https://github.com/TimSchneider42/franky",
     packages=find_packages(),
     license="LGPL",
-    ext_modules=[Extension("_franky", [])],
+    ext_modules=[Extension("franky/_franky", [])],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=["robot", "robotics", "trajectory-generation", "motion-control"],
     classifiers=[

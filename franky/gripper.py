@@ -1,6 +1,6 @@
 from threading import Thread
 
-from _franky import GripperInternal
+from ._franky import GripperInternal
 
 
 class Gripper(GripperInternal):

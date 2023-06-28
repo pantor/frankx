@@ -1,5 +1,5 @@
-from _franky import Condition, CartesianPoseMotion, CartesianVelocityMotion, JointPositionMotion, JointVelocityMotion, \
-    TorqueMotion, \
+from ._franky import Condition, CartesianPoseMotion, CartesianVelocityMotion, JointPositionMotion, \
+    JointVelocityMotion, TorqueMotion, \
     CartesianPoseReaction as _CartesianPoseReaction, \
     CartesianVelocityReaction as _CartesianVelocityReaction, \
     JointPositionReaction as _JointPositionReaction, \
