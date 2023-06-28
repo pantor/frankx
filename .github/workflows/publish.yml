@@ -102,7 +102,11 @@ jobs:
           
           # Bundle external shared libraries into the wheels
           for whl in wheels/*.whl; do
-            auditwheel repair "$whl" -w dist/
+            if [[ "$whl" == "wheels/franky_panda-*.whl" ]]; then
+              auditwheel repair "$whl" -w dist/
+            else
+              cp "$whl" dist/
+            fi
           done
           
           # Install packages and test
