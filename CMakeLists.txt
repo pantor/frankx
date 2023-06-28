@@ -11,7 +11,6 @@ include(GNUInstallDirs)
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
-option(USE_PYTHON_EXTENSION "Use python in franky library" ON)
 
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
@@ -35,11 +34,6 @@ if (BUILD_PYTHON_MODULE)
     else ()
         find_package(Python COMPONENTS Interpreter Development)
         find_package(pybind11 2.6 REQUIRED)
-    endif ()
-
-    if (USE_PYTHON_EXTENSION)
-        target_compile_definitions(franky PUBLIC WITH_PYTHON)
-        target_link_libraries(franky PUBLIC pybind11::embed)
     endif ()
 
     file(GLOB_RECURSE PYTHON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/python/*.cpp")
