@@ -33,7 +33,7 @@ if (BUILD_PYTHON_MODULE)
     if (EXISTS pybind11)
         add_subdirectory(pybind11)
     else ()
-        find_package(Python COMPONENTS Interpreter Development)
+        find_package(Python3 COMPONENTS Interpreter Development)
         find_package(pybind11 2.6 REQUIRED)
     endif ()
 
@@ -46,7 +46,7 @@ if (BUILD_PYTHON_MODULE)
         # Build stubs
         add_custom_target(
                 franky-stubs
-                ${CMAKE_SOURCE_DIR}/generate_stubs.bash "${Python_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}" "$<TARGET_FILE:_franky-lib>"
+                ${CMAKE_SOURCE_DIR}/generate_stubs.bash "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}" "$<TARGET_FILE:_franky-lib>"
                 COMMENT "Generating Python stubs..."
                 DEPENDS _franky-lib
         )
