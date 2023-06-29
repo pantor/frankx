@@ -225,6 +225,17 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<Condition>(m, "Condition")
       .def(py::init<bool>(), "constant_value"_a)
+      .def("__eq__", py::overload_cast<const Condition &, const Condition &>(&operator==), py::is_operator())
+      .def("__eq__", [](const Condition &condition, bool constant) { return condition == constant; }, py::is_operator())
+      .def("__ne__", py::overload_cast<const Condition &, const Condition &>(&operator!=), py::is_operator())
+      .def("__ne__", [](const Condition &condition, bool constant) { return condition != constant; }, py::is_operator())
+      .def("__invert__", py::overload_cast<const Condition &>(&operator!), py::is_operator())
+      .def("__and__", py::overload_cast<const Condition &, const Condition &>(&operator&&), py::is_operator())
+      .def("__and__", [](const Condition &condition, bool constant) { return condition && constant; }, py::is_operator())
+      .def("__rand__", [](bool constant, const Condition &condition) { return constant && condition; }, py::is_operator())
+      .def("__or__", py::overload_cast<const Condition &, const Condition &>(&operator||), py::is_operator())
+      .def("__or__", [](const Condition &condition, bool constant) { return condition || constant; }, py::is_operator())
+      .def("__ror__", [](bool constant, const Condition &condition) { return constant || condition; }, py::is_operator())
       .def("__repr__", &Condition::repr);
   py::implicitly_convertible<bool, Condition>();
 
