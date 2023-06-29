@@ -92,6 +92,7 @@ jobs:
         run: |
           mkdir -p wheels
           mkdir -p dist
+          mkdir -p dist_full
           
           # Compile wheels
           for PYBIN in /opt/python/*/bin; do
@@ -102,20 +103,22 @@ jobs:
           
           # Bundle external shared libraries into the wheels
           for whl in wheels/*.whl; do
-            if [[ "$whl" == "wheels/franky_panda-*.whl" ]]; then
-              auditwheel repair "$whl" -w dist/
+            if [[ "$whl" =~ wheels/franky_panda-.*\.whl ]]; then
+              auditwheel repair "$whl" -w dist_full/
             else
-              cp "$whl" dist/
+              cp "$whl" dist_full/
             fi
           done
           
           # Install packages and test
           for PYBIN in /opt/python/*/bin/; do
             if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-              "${PYBIN}/pip" install franky-panda --no-index -f dist
+              "${PYBIN}/pip" install franky-panda --no-index -f dist_full
               # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
             fi
           done
+          
+          cp dist_full/franky_panda-*.whl dist/
           
           ls dist
 
