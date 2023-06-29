@@ -292,8 +292,8 @@ time_up = Measure.ABS_TIME > 10.0
 
 Conditions support negation, conjunction (and), and disjunction (or):
 ```python
-abort = not normal_force_within_bounds or time_up
-fast_abort = not normal_force_within_bounds and time_up
+abort = ~normal_force_within_bounds | time_up
+fast_abort = ~normal_force_within_bounds | time_up
 ```
 
 To check whether a reaction has fired, a callback can be attached:
