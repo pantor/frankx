@@ -71,6 +71,8 @@ MEASURE_OP_DECL(-)
 MEASURE_OP_DECL(*)
 MEASURE_OP_DECL(/)
 
+Measure operator-(const Measure &m);
+
 Measure measure_pow(const Measure &base, const Measure &exponent);
 inline Measure measure_pow(double base, const Measure &exponent) {
   return measure_pow(Measure(base), exponent);

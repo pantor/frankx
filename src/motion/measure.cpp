@@ -82,4 +82,12 @@ Measure measure_pow(const Measure &base, const Measure &exponent) {
   }, ss.str());
 }
 
+Measure operator-(const Measure &m) {
+  std::stringstream ss;
+  ss << "-(" << m.repr() << ") ";
+  return Measure([m](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+    return -m(robot_state, rel_time, abs_time);
+  }, ss.str());
+}
+
 }  // namespace franky
