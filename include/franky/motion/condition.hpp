@@ -34,6 +34,10 @@ Condition operator&&(const Condition &c1, const Condition &c2);
 
 Condition operator||(const Condition &c1, const Condition &c2);
 
+Condition operator==(const Condition &c1, const Condition &c2);
+
+Condition operator!=(const Condition &c1, const Condition &c2);
+
 Condition operator!(const Condition &c);
 
 }  // namespace franky

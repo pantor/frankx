@@ -24,7 +24,19 @@ Condition operator&&(const Condition &c1, const Condition &c2) {
 Condition operator||(const Condition &c1, const Condition &c2) {
   return Condition([c1, c2](const franka::RobotState &robot_state, double rel_time, double abs_time) {
     return c1(robot_state, rel_time, abs_time) || c2(robot_state, rel_time, abs_time);
-  }, c1.repr() + " || " + c2.repr());
+  }, "(" + c1.repr() + ") || (" + c2.repr() + ")");
+}
+
+Condition operator==(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+    return c1(robot_state, rel_time, abs_time) == c2(robot_state, rel_time, abs_time);
+  }, c1.repr() + " == " + c2.repr());
+}
+
+Condition operator!=(const Condition &c1, const Condition &c2) {
+  return Condition([c1, c2](const franka::RobotState &robot_state, double rel_time, double abs_time) {
+    return c1(robot_state, rel_time, abs_time) != c2(robot_state, rel_time, abs_time);
+  }, c1.repr() + " != " + c2.repr());
 }
 
 Condition operator!(const Condition &c) {
