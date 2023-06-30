@@ -5,7 +5,7 @@ import re
 
 
 def add_union(alternative_type: str):
-    def inner(match: re.Match, _alternative_type=alternative_type):
+    def inner(match, _alternative_type=alternative_type):
         return "typing.Union[{}, {}]".format(match.group(0), _alternative_type)
 
     return inner
