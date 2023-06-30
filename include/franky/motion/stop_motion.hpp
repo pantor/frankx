@@ -13,14 +13,22 @@ template<>
 class StopMotion<franka::JointPositions> : public JointWaypointMotion {
  public:
   explicit StopMotion() : JointWaypointMotion(
-      {{.target=Vector7d::Zero(), .reference_type= ReferenceType::Relative, .max_dynamics = true}}) {}
+      {{
+           .target=Vector7d::Zero(),
+           .reference_type= ReferenceType::Relative,
+           .relative_dynamics_factor = RelativeDynamicsFactor::MAX_DYNAMICS()
+       }}) {}
 };
 
 template<>
 class StopMotion<franka::CartesianPose> : public CartesianWaypointMotion {
  public:
   explicit StopMotion() : CartesianWaypointMotion(
-      {{.target = RobotPose(Affine::Identity()), .reference_type = ReferenceType::Relative, .max_dynamics = true}}) {}
+      {{
+           .target = RobotPose(Affine::Identity()),
+           .reference_type = ReferenceType::Relative,
+           .relative_dynamics_factor = RelativeDynamicsFactor::MAX_DYNAMICS()
+       }}) {}
 };
 
 }  // namespace franky

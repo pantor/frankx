@@ -146,6 +146,18 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::self / uint64_t())
       .def(py::self /= uint64_t());
 
+  py::class_<RelativeDynamicsFactor>(m, "RelativeDynamicsFactor")
+      .def(py::init<>())
+      .def(py::init<double>())
+      .def(py::init<double, double, double>())
+      .def_property_readonly("velocity", &RelativeDynamicsFactor::velocity)
+      .def_property_readonly("acceleration", &RelativeDynamicsFactor::acceleration)
+      .def_property_readonly("jerk", &RelativeDynamicsFactor::jerk)
+      .def_property_readonly("max_dynamics", &RelativeDynamicsFactor::max_dynamics)
+      .def_property_readonly_static("MAX_DYNAMICS", [](py::object) { return RelativeDynamicsFactor::MAX_DYNAMICS(); })
+      .def(py::self * py::self);
+  py::implicitly_convertible<double, RelativeDynamicsFactor>();
+
   py::class_<franka::Errors>(m, "Errors")
       .def(py::init<>())
       .def_property_readonly("joint_position_limits_violation",
@@ -231,11 +243,17 @@ PYBIND11_MODULE(_franky, m) {
       .def("__ne__", [](const Condition &condition, bool constant) { return condition != constant; }, py::is_operator())
       .def("__invert__", py::overload_cast<const Condition &>(&operator!), py::is_operator())
       .def("__and__", py::overload_cast<const Condition &, const Condition &>(&operator&&), py::is_operator())
-      .def("__and__", [](const Condition &condition, bool constant) { return condition && constant; }, py::is_operator())
-      .def("__rand__", [](bool constant, const Condition &condition) { return constant && condition; }, py::is_operator())
+      .def("__and__",
+           [](const Condition &condition, bool constant) { return condition && constant; },
+           py::is_operator())
+      .def("__rand__",
+           [](bool constant, const Condition &condition) { return constant && condition; },
+           py::is_operator())
       .def("__or__", py::overload_cast<const Condition &, const Condition &>(&operator||), py::is_operator())
       .def("__or__", [](const Condition &condition, bool constant) { return condition || constant; }, py::is_operator())
-      .def("__ror__", [](bool constant, const Condition &condition) { return constant || condition; }, py::is_operator())
+      .def("__ror__",
+           [](bool constant, const Condition &condition) { return constant || condition; },
+           py::is_operator())
       .def("__repr__", &Condition::repr);
   py::implicitly_convertible<bool, Condition>();
 
@@ -467,44 +485,33 @@ PYBIND11_MODULE(_franky, m) {
                [](
                    const Vector7d &target,
                    ReferenceType reference_type,
-                   double velocity_rel,
-                   double acceleration_rel,
-                   double jerk_rel,
-                   bool max_dynamics,
+                   RelativeDynamicsFactor relative_dynamics_factor,
                    std::optional<double> minimum_time) {
                  return Waypoint<Vector7d>{
-                     target, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
+                     target, reference_type, relative_dynamics_factor, minimum_time};
                }
            ),
            "target"_a,
            py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
-           "max_dynamics"_a = false,
+           "relative_dynamics_factor"_a = 1.0,
            "minimum_time"_a = std::nullopt)
       .def_readonly("target", &Waypoint<Vector7d>::target)
       .def_readonly("reference_type", &Waypoint<Vector7d>::reference_type)
-      .def_readonly("velocity_rel", &Waypoint<Vector7d>::velocity_rel)
-      .def_readonly("acceleration_rel", &Waypoint<Vector7d>::acceleration_rel)
-      .def_readonly("jerk_rel", &Waypoint<Vector7d>::jerk_rel)
-      .def_readonly("max_dynamics", &Waypoint<Vector7d>::max_dynamics)
+      .def_readonly("relative_dynamics_factor", &Waypoint<Vector7d>::relative_dynamics_factor)
       .def_readonly("minimum_time", &Waypoint<Vector7d>::minimum_time);
 
   py::class_<JointWaypointMotion, Motion<franka::JointPositions>, std::shared_ptr<JointWaypointMotion>>(
       m, "JointWaypointMotion")
       .def(py::init<>([](
-               const std::vector<Waypoint<Vector7d>> &waypoints, double velocity_rel, double acceleration_rel,
-               double jerk_rel, bool return_when_finished) {
+               const std::vector<Waypoint<Vector7d>> &waypoints,
+               RelativeDynamicsFactor relative_dynamics_factor,
+               bool return_when_finished) {
              return std::make_shared<JointWaypointMotion>(
                  waypoints,
-                 JointWaypointMotion::Params{
-                     velocity_rel, acceleration_rel, jerk_rel, return_when_finished});
+                 JointWaypointMotion::Params{relative_dynamics_factor, return_when_finished});
            }),
            "waypoints"_a,
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
+           "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
 
   py::class_<Waypoint<RobotPose>>(m, "CartesianWaypoint")
@@ -512,28 +519,19 @@ PYBIND11_MODULE(_franky, m) {
                [](
                    const RobotPose &robot_pose,
                    ReferenceType reference_type,
-                   double velocity_rel,
-                   double acceleration_rel,
-                   double jerk_rel,
-                   bool max_dynamics,
+                   RelativeDynamicsFactor relative_dynamics_factor,
                    std::optional<double> minimum_time) {
                  return Waypoint<RobotPose>{
-                     robot_pose, reference_type, velocity_rel, acceleration_rel, jerk_rel, max_dynamics, minimum_time};
+                     robot_pose, reference_type, relative_dynamics_factor, minimum_time};
                }
            ),
            "robot_pose"_a,
            py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
-           "max_dynamics"_a = false,
+           "relative_dynamics_factor"_a = 1.0,
            "minimum_time"_a = std::nullopt)
       .def_readonly("target", &Waypoint<RobotPose>::target)
       .def_readonly("reference_type", &Waypoint<RobotPose>::reference_type)
-      .def_readonly("velocity_rel", &Waypoint<RobotPose>::velocity_rel)
-      .def_readonly("acceleration_rel", &Waypoint<RobotPose>::acceleration_rel)
-      .def_readonly("jerk_rel", &Waypoint<RobotPose>::jerk_rel)
-      .def_readonly("max_dynamics", &Waypoint<RobotPose>::max_dynamics)
+      .def_readonly("relative_dynamics_factor", &Waypoint<RobotPose>::relative_dynamics_factor)
       .def_readonly("minimum_time", &Waypoint<RobotPose>::minimum_time);
 
   py::class_<CartesianWaypointMotion, Motion<franka::CartesianPose>, std::shared_ptr<CartesianWaypointMotion>>(
@@ -541,23 +539,17 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::init<>([](
                const std::vector<Waypoint<RobotPose>> &waypoints,
                const std::optional<Affine> &frame = std::nullopt,
-               double velocity_rel = 1.0,
-               double acceleration_rel = 1.0,
-               double jerk_rel = 1.0,
-               bool max_dynamics = false,
+               RelativeDynamicsFactor relative_dynamics_factor = 1.0,
                bool return_when_finished = true) {
              return std::make_shared<CartesianWaypointMotion>(
                  waypoints,
                  CartesianWaypointMotion::Params{
-                     {velocity_rel, acceleration_rel, jerk_rel, max_dynamics, return_when_finished},
+                     {relative_dynamics_factor, return_when_finished},
                      frame.value_or(Affine::Identity())});
            }),
            "waypoints"_a,
            "frame"_a = std::nullopt,
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
-           "max_dynamics"_a = false,
+           "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
 
   py::class_<LinearMotion, CartesianWaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
@@ -565,25 +557,19 @@ PYBIND11_MODULE(_franky, m) {
                const RobotPose &target,
                ReferenceType reference_type,
                const std::optional<Affine> &frame,
-               double velocity_rel,
-               double acceleration_rel,
-               double jerk_rel,
+               RelativeDynamicsFactor relative_dynamics_factor,
                bool return_when_finished) {
              return std::make_shared<LinearMotion>(
                  target,
                  reference_type,
                  frame.value_or(Affine::Identity()),
-                 velocity_rel,
-                 acceleration_rel,
-                 jerk_rel,
+                 relative_dynamics_factor,
                  return_when_finished);
            }),
            "target"_a,
            py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
            "frame"_a = std::nullopt,
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
+           "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
 
   py::class_<StopMotion<franka::CartesianPose>,
@@ -632,31 +618,24 @@ PYBIND11_MODULE(_franky, m) {
   py::class_<Robot>(m, "RobotInternal")
       .def(py::init<>([](
                const std::string &fci_hostname,
-               double velocity_rel,
-               double acceleration_rel,
-               double jerk_rel,
+               RelativeDynamicsFactor relative_dynamics_factor,
                double default_torque_threshold,
                double default_force_threshold,
                franka::ControllerMode controller_mode,
                franka::RealtimeConfig realtime_config) {
              return std::make_unique<Robot>(
                  fci_hostname, Robot::Params{
-                     velocity_rel, acceleration_rel, jerk_rel, default_torque_threshold, default_force_threshold,
+                     relative_dynamics_factor, default_torque_threshold, default_force_threshold,
                      controller_mode, realtime_config});
            }),
            "fci_hostname"_a,
-           "velocity_rel"_a = 1.0,
-           "acceleration_rel"_a = 1.0,
-           "jerk_rel"_a = 1.0,
+           "relative_dynamics_factor"_a = 1.0,
            "default_torque_threshold"_a = 20.0,
            "default_force_threshold"_a = 30.0,
            py::arg_v("controller_mode",
                      franka::ControllerMode::kJointImpedance,
                      "_franky.ControllerMode.JointImpedance"),
            py::arg_v("realtime_config", franka::RealtimeConfig::kEnforce, "_franky.RealtimeConfig.Enforce"))
-      .def("set_dynamic_rel", py::overload_cast<double>(&Robot::setDynamicRel), "dynamic_rel"_a)
-      .def("set_dynamic_rel", py::overload_cast<double, double, double>(&Robot::setDynamicRel),
-           "velocity_rel"_a, "acceleration_rel"_a, "jerk_rel"_a)
       .def("recover_from_errors", &Robot::recoverFromErrors)
       .def("move", &robotMove<franka::CartesianPose>, "motion"_a, "asynchronous"_a = false,
            py::call_guard<py::gil_scoped_release>())
@@ -712,9 +691,7 @@ PYBIND11_MODULE(_franky, m) {
       .def("set_ee", &Robot::setEE, "NE_T_EE"_a)
       .def("set_load", &Robot::setLoad, "load_mass"_a, "F_x_Cload"_a, "load_inertia"_a)
       .def("stop", &Robot::stop)
-      .def_property("velocity_rel", &Robot::velocity_rel, &Robot::setVelocityRel)
-      .def_property("acceleration_rel", &Robot::acceleration_rel, &Robot::setAccelerationRel)
-      .def_property("jerk_rel", &Robot::jerk_rel, &Robot::setJerkRel)
+      .def_property("relative_dynamics_factor", &Robot::relative_dynamics_factor, &Robot::setRelativeDynamicsFactor)
       .def_property_readonly("has_errors", &Robot::hasErrors)
       .def_property_readonly("current_pose", &Robot::currentPose)
       .def_property_readonly("current_joint_positions", &Robot::currentJointPositions)

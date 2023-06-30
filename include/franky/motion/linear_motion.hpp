@@ -16,9 +16,7 @@ class LinearMotion : public CartesianWaypointMotion {
       const RobotPose &target,
       ReferenceType reference_type = ReferenceType::Absolute,
       const Affine &frame = Affine::Identity(),
-      double velocity_rel = 1.0,
-      double acceleration_rel = 1.0,
-      double jerk_rel = 1.0,
+      RelativeDynamicsFactor relative_dynamics_factor = 1.0,
       bool return_when_finished = true);
 };
 

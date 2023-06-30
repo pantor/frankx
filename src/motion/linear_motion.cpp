@@ -9,18 +9,14 @@ LinearMotion::LinearMotion(
     const RobotPose &target,
     ReferenceType reference_type,
     const Affine& frame,
-    double velocity_rel,
-    double acceleration_rel,
-    double jerk_rel,
+    RelativeDynamicsFactor relative_dynamics_factor,
     bool return_when_finished)
     : CartesianWaypointMotion(
     {
         {
             .target = target,
             .reference_type = reference_type,
-            .velocity_rel = velocity_rel,
-            .acceleration_rel = acceleration_rel,
-            .jerk_rel = jerk_rel
+            .relative_dynamics_factor = relative_dynamics_factor
         }
     }, {
         {

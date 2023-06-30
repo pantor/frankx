@@ -19,6 +19,7 @@
 #include "franky/scope_guard.hpp"
 #include "franky/control_signal_type.hpp"
 #include "franky/util.hpp"
+#include "relative_dynamics_factor.hpp"
 
 namespace franky {
 
@@ -32,7 +33,7 @@ class Robot : public franka::Robot {
   using ScalarOrArray = std::variant<double, std::array<double, dims>, Vector<dims>>;
 
   struct Params {
-    double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
+    RelativeDynamicsFactor relative_dynamics_factor{1.0};
 
     double default_torque_threshold{20.0}, default_force_threshold{30.0};
 
@@ -85,10 +86,6 @@ class Robot : public franka::Robot {
 
   explicit Robot(const std::string &fci_hostname, const Params &params);
 
-  void setDynamicRel(double dynamic_rel);
-
-  void setDynamicRel(double velocity_rel, double acceleration_rel, double jerk_rel);
-
   using franka::Robot::setCollisionBehavior;
 
   void setCollisionBehavior(
@@ -96,20 +93,20 @@ class Robot : public franka::Robot {
       const ScalarOrArray<6> &force_threshold);
 
   void setCollisionBehavior(
-      const ScalarOrArray<7>& lower_torque_threshold,
-      const ScalarOrArray<7>& upper_torque_threshold,
-      const ScalarOrArray<6>& lower_force_threshold,
-      const ScalarOrArray<6>& upper_force_threshold);
+      const ScalarOrArray<7> &lower_torque_threshold,
+      const ScalarOrArray<7> &upper_torque_threshold,
+      const ScalarOrArray<6> &lower_force_threshold,
+      const ScalarOrArray<6> &upper_force_threshold);
 
   void setCollisionBehavior(
-      const ScalarOrArray<7>& lower_torque_threshold_acceleration,
-      const ScalarOrArray<7>& upper_torque_threshold_acceleration,
-      const ScalarOrArray<7>& lower_torque_threshold_nominal,
-      const ScalarOrArray<7>& upper_torque_threshold_nominal,
-      const ScalarOrArray<6>& lower_force_threshold_acceleration,
-      const ScalarOrArray<6>& upper_force_threshold_acceleration,
-      const ScalarOrArray<6>& lower_force_threshold_nominal,
-      const ScalarOrArray<6>& upper_force_threshold_nominal);
+      const ScalarOrArray<7> &lower_torque_threshold_acceleration,
+      const ScalarOrArray<7> &upper_torque_threshold_acceleration,
+      const ScalarOrArray<7> &lower_torque_threshold_nominal,
+      const ScalarOrArray<7> &upper_torque_threshold_nominal,
+      const ScalarOrArray<6> &lower_force_threshold_acceleration,
+      const ScalarOrArray<6> &upper_force_threshold_acceleration,
+      const ScalarOrArray<6> &lower_force_threshold_nominal,
+      const ScalarOrArray<6> &upper_force_threshold_nominal);
 
   bool recoverFromErrors();
 
@@ -121,17 +118,9 @@ class Robot : public franka::Robot {
 
   [[nodiscard]] franka::RobotState state();
 
-  [[nodiscard]] double velocity_rel();
+  [[nodiscard]] RelativeDynamicsFactor relative_dynamics_factor();
 
-  void setVelocityRel(double value);
-
-  [[nodiscard]] double acceleration_rel();
-
-  void setAccelerationRel(double value);
-
-  [[nodiscard]] double jerk_rel();
-
-  void setJerkRel(double value);
+  void setRelativeDynamicsFactor(const RelativeDynamicsFactor &relative_dynamics_factor);
 
   [[nodiscard]] bool is_in_control();
 
@@ -270,7 +259,7 @@ class Robot : public franka::Robot {
   }
 
   template<size_t dims>
-  std::array<double, dims> expand(const ScalarOrArray<dims>& input) {
+  std::array<double, dims> expand(const ScalarOrArray<dims> &input) {
     if (std::holds_alternative<std::array<double, dims>>(input)) {
       return std::get<std::array<double, dims>>(input);
     } else if (std::holds_alternative<Vector<dims>>(input)) {

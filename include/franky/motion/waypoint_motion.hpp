@@ -6,6 +6,7 @@
 
 #include "franky/util.hpp"
 #include "franky/motion/motion.hpp"
+#include "franky/relative_dynamics_factor.hpp"
 
 namespace franky {
 
@@ -15,11 +16,8 @@ struct Waypoint {
 
   ReferenceType reference_type{ReferenceType::Absolute};
 
-  //! Dynamic Waypoint: Relative velocity factor
-  double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
-
-  //! Dynamic Waypoint: Use maximal dynamics of the robot independent on other parameters
-  bool max_dynamics{false};
+  //! Dynamic Waypoint: Relative dynamics factor
+  RelativeDynamicsFactor relative_dynamics_factor{1.0};
 
   //! Dynamic Waypoint: Minimum time to get to next waypoint
   std::optional<double> minimum_time{std::nullopt};
@@ -33,8 +31,7 @@ template<typename ControlSignalType, typename TargetType>
 class WaypointMotion : public Motion<ControlSignalType> {
  public:
   struct Params {
-    double velocity_rel{1.0}, acceleration_rel{1.0}, jerk_rel{1.0};
-    bool max_dynamics{false};
+    RelativeDynamicsFactor relative_dynamics_factor{1.0};
     bool return_when_finished{true};
   };
 
@@ -131,24 +128,19 @@ class WaypointMotion : public Motion<ControlSignalType> {
 
     auto [vel_lim, acc_lim, jerk_lim] = getAbsoluteInputLimits();
 
-    if (!waypoint.max_dynamics && !params_.max_dynamics) {
-      vel_lim *= waypoint.velocity_rel * params_.velocity_rel * robot->velocity_rel();
-      acc_lim *= waypoint.acceleration_rel * params_.acceleration_rel * robot->acceleration_rel();
-      jerk_lim *= waypoint.jerk_rel * params_.jerk_rel * robot->jerk_rel();
-    }
+    auto relative_dynamics_factor =
+        waypoint.relative_dynamics_factor * params_.relative_dynamics_factor * robot->relative_dynamics_factor();
 
-    input_para_.max_velocity = toStd<7>(vel_lim);
-    input_para_.max_acceleration = toStd<7>(acc_lim);
-    input_para_.max_jerk = toStd<7>(jerk_lim);
+    input_para_.max_velocity = toStd<7>(relative_dynamics_factor.velocity() * vel_lim);
+    input_para_.max_acceleration = toStd<7>(relative_dynamics_factor.acceleration() * acc_lim);
+    input_para_.max_jerk = toStd<7>(relative_dynamics_factor.jerk() * jerk_lim);
 
-    if (!(waypoint.max_dynamics || params_.max_dynamics) && waypoint.minimum_time.has_value()) {
-      input_para_.minimum_duration = waypoint.minimum_time.value();
-    }
-
-    if (waypoint.max_dynamics) {
+    if (relative_dynamics_factor.max_dynamics()) {
       input_para_.synchronization = ruckig::Synchronization::TimeIfNecessary;
     } else {
       input_para_.synchronization = ruckig::Synchronization::Time;
+      if (waypoint.minimum_time.has_value())
+        input_para_.minimum_duration = waypoint.minimum_time.value();
     }
   }
 };
