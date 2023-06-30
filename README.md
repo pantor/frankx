@@ -122,7 +122,7 @@ The corresponding program in Python is
 from franky import Affine, LinearMotion, Robot, ReferenceType
 
 robot = Robot("172.16.0.2")
-robot.set_dynamic_rel(0.05)
+robot.relative_dynamics_factor = 0.05
 
 motion = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion)
@@ -165,7 +165,7 @@ robot = Robot("172.16.0.2")
 robot.recover_from_errors()
 
 # Set velocity, acceleration and jerk to 5% of the maximum
-robot.set_dynamic_rel(0.05)
+robot.relative_dynamics_factor = 0.05
 
 # Alternatively, you can define each constraint individually
 robot.velocity_rel = 0.2
@@ -351,7 +351,7 @@ import time
 from franky import Affine, LinearMotion, Robot, ReferenceType
 
 robot = Robot("172.16.0.2")
-robot.set_dynamic_rel(0.05)
+robot.relative_dynamics_factor = 0.05
 
 motion1 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion1, asynchronous=True)

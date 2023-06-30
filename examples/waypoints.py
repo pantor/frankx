@@ -10,11 +10,11 @@ if __name__ == "__main__":
 
     # Connect to the robot
     robot = Robot(args.host)
-    robot.set_dynamic_rel(0.05)
+    robot.relative_dynamics_factor = 0.05
     robot.recover_from_errors()
 
     # Reduce the acceleration and velocity dynamic
-    robot.set_dynamic_rel(0.2)
+    robot.relative_dynamics_factor = 0.2
 
     joint_motion = JointWaypointMotion([
         JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4]),

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   robot.automaticErrorRecovery();
 
   // Reduce the acceleration and velocity dynamic
-  robot.setDynamicRel(0.15);
+  robot.setRelativeDynamicsFactor(0.15);
 
   // Define and move forwards
   auto way = mk_affine(0.0, 0.05, 0.0);

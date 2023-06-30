@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     # Connect to the robot
     robot = Robot(args.host)
-    robot.set_dynamic_rel(0.05)
+    robot.relative_dynamics_factor = 0.05
 
     motion1 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
     robot.move(motion1, asynchronous=True)
