@@ -20,6 +20,6 @@ source "${STUBS_GEN_DIR}/venv/bin/activate"
 pip install -r "${STUBS_GEN_DIR}/franky_panda.egg-info/requires.txt" > /dev/null
 pip install pybind11-stubgen > /dev/null
 
-PYTHONPATH="${LIB_DIR}" pybind11-stubgen --no-setup-py -o "${STUBS_GEN_DIR}" _franky
+PYTHONPATH="${LIB_DIR}" "${SCRIPT_DIR}/custom_stubgen.py" --no-setup-py -o "${STUBS_GEN_DIR}" _franky
 sed "s/import _franky/import franky._franky as _franky/" "${STUBS_GEN_DIR}/_franky-stubs/__init__.pyi" > "${LIB_DIR}/_franky.pyi"
 
