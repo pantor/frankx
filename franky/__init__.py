@@ -56,5 +56,6 @@ from ._franky import (
     RealtimeException,
     InvalidMotionTypeException,
     ReactionRecursionException,
-    GripperException
+    GripperException,
+    RelativeDynamicsFactor
 )
