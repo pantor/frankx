@@ -475,10 +475,10 @@ PYBIND11_MODULE(_franky, m) {
       .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE)
       .def(py::pickle(
           [](const franka::CartesianPose &pose) {  // __getstate__
-            return py::make_tuple(pose.O_T_EE);
+            return py::make_tuple(pose.O_T_EE, pose.elbow);
           },
           [](const py::tuple &t) {  // __setstate__
-            if (t.size() != 1)
+            if (t.size() != 2)
               throw std::runtime_error("Invalid state!");
             return franka::CartesianPose(t[0].cast<std::array<double, 16>>(), t[1].cast<std::array<double, 2>>());
           }
