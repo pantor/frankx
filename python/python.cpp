@@ -836,6 +836,7 @@ PYBIND11_MODULE(_franky, m) {
       .def_static("forward_kinematics", &Robot::forwardKinematics, "q"_a)
       .def_static("inverseKinematics", &Robot::inverseKinematics, "target"_a, "q0"_a);
 
+  py::register_exception<franka::Exception>(m, "Exception");
   py::register_exception<franka::CommandException>(m, "CommandException");
   py::register_exception<franka::ControlException>(m, "ControlException");
   py::register_exception<franka::IncompatibleVersionException>(m, "IncompatibleVersionException");
