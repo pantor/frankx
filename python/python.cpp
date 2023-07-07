@@ -144,7 +144,14 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::self * uint64_t())
       .def(py::self *= uint64_t())
       .def(py::self / uint64_t())
-      .def(py::self /= uint64_t());
+      .def(py::self /= uint64_t())
+      .def("__repr__",
+           [](const franka::Duration &duration) {
+             std::stringstream ss;
+             ss << "Duration(" << duration.toMSec() << ")";
+             return ss.str();
+           }
+      );
 
   py::class_<RelativeDynamicsFactor>(m, "RelativeDynamicsFactor")
       .def(py::init<>())
