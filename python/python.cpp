@@ -10,6 +10,21 @@
 #include "franky.hpp"
 
 #include "sequential_executor.hpp"
+#include "macros.hpp"
+
+#define ADD_FIELD_RO(obj_type, unused, name) .def_readonly(#name, &obj_type::name)
+#define ADD_FIELDS_RO(obj, obj_type, ...) obj MAP_C1(ADD_FIELD_RO, obj_type, __VA_ARGS__);
+
+#define COUNT_INNER(i, unused) i + 1
+#define COUNT(...) FOLD(COUNT_INNER, 0, __VA_ARGS__)
+
+#define PACK_TUPLE_INNER(obj, unused, name) , obj.name
+#define PACK_TUPLE_1(obj, name0, ...) py::make_tuple(obj.name0 MAP_C1(PACK_TUPLE_INNER, obj, __VA_ARGS__))
+#define PACK_TUPLE(obj, ...) PACK_TUPLE_1(obj, __VA_ARGS__)
+
+#define UNPACK_TUPLE_INNER(obj_type, tuple, itr, name) , .name = tuple[itr + 1].cast<decltype(obj_type::name)>()
+#define UNPACK_TUPLE_1(obj_type, tuple, name0, ...) obj_type{.name0 = tuple[0].cast<decltype(obj_type::name0)>() MAP_C2(UNPACK_TUPLE_INNER, obj_type, tuple, __VA_ARGS__)}
+#define UNPACK_TUPLE(obj_type, tuple, ...) UNPACK_TUPLE_1(obj_type, tuple, __VA_ARGS__)
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the '_a' literal
@@ -151,7 +166,17 @@ PYBIND11_MODULE(_franky, m) {
              ss << "Duration(" << duration.toMSec() << ")";
              return ss.str();
            }
-      );
+      )
+      .def(py::pickle(
+          [](const franka::Duration &duration) {  // __getstate__
+            return py::make_tuple(duration.toMSec());
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 1)
+              throw std::runtime_error("Invalid state!");
+            return franka::Duration(t[0].cast<uint64_t>());
+          }
+      ));
 
   py::class_<RelativeDynamicsFactor>(m, "RelativeDynamicsFactor")
       .def(py::init<>())
@@ -165,82 +190,68 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::self * py::self);
   py::implicitly_convertible<double, RelativeDynamicsFactor>();
 
-  py::class_<franka::Errors>(m, "Errors")
-      .def(py::init<>())
-      .def_property_readonly("joint_position_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_position_limits_violation; })
-      .def_property_readonly("cartesian_position_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_position_limits_violation; })
-      .def_property_readonly("self_collision_avoidance_violation",
-                             [](const franka::Errors &e) { return e.self_collision_avoidance_violation; })
-      .def_property_readonly("joint_velocity_violation",
-                             [](const franka::Errors &e) { return e.joint_velocity_violation; })
-      .def_property_readonly("cartesian_velocity_violation",
-                             [](const franka::Errors &e) { return e.cartesian_velocity_violation; })
-      .def_property_readonly("force_control_safety_violation",
-                             [](const franka::Errors &e) { return e.force_control_safety_violation; })
-      .def_property_readonly("joint_reflex",
-                             [](const franka::Errors &e) { return e.joint_reflex; })
-      .def_property_readonly("cartesian_reflex",
-                             [](const franka::Errors &e) { return e.cartesian_reflex; })
-      .def_property_readonly("max_goal_pose_deviation_violation",
-                             [](const franka::Errors &e) { return e.max_goal_pose_deviation_violation; })
-      .def_property_readonly("max_path_pose_deviation_violation",
-                             [](const franka::Errors &e) { return e.max_path_pose_deviation_violation; })
-      .def_property_readonly("cartesian_velocity_profile_safety_violation",
-                             [](const franka::Errors &e) { return e.cartesian_velocity_profile_safety_violation; })
-      .def_property_readonly("joint_position_motion_generator_start_pose_invalid",
-                             [](const franka::Errors &e) { return e.joint_position_motion_generator_start_pose_invalid; })
-      .def_property_readonly("joint_motion_generator_position_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_position_limits_violation; })
-      .def_property_readonly("joint_motion_generator_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_limits_violation; })
-      .def_property_readonly("joint_motion_generator_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_velocity_discontinuity; })
-      .def_property_readonly("joint_motion_generator_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.joint_motion_generator_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_position_motion_generator_start_pose_invalid",
-                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_start_pose_invalid; })
-      .def_property_readonly("cartesian_motion_generator_elbow_limit_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_limit_violation; })
-      .def_property_readonly("cartesian_motion_generator_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_velocity_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_elbow_sign_inconsistent",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_elbow_sign_inconsistent; })
-      .def_property_readonly("cartesian_motion_generator_start_elbow_invalid",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_start_elbow_invalid; })
-      .def_property_readonly("cartesian_motion_generator_joint_position_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_position_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_joint_velocity_limits_violation",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_limits_violation; })
-      .def_property_readonly("cartesian_motion_generator_joint_velocity_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_velocity_discontinuity; })
-      .def_property_readonly("cartesian_motion_generator_joint_acceleration_discontinuity",
-                             [](const franka::Errors &e) { return e.cartesian_motion_generator_joint_acceleration_discontinuity; })
-      .def_property_readonly("cartesian_position_motion_generator_invalid_frame",
-                             [](const franka::Errors &e) { return e.cartesian_position_motion_generator_invalid_frame; })
-      .def_property_readonly("force_controller_desired_force_tolerance_violation",
-                             [](const franka::Errors &e) { return e.force_controller_desired_force_tolerance_violation; })
-      .def_property_readonly("controller_torque_discontinuity",
-                             [](const franka::Errors &e) { return e.controller_torque_discontinuity; })
-      .def_property_readonly("start_elbow_sign_inconsistent",
-                             [](const franka::Errors &e) { return e.start_elbow_sign_inconsistent; })
-      .def_property_readonly("communication_constraints_violation",
-                             [](const franka::Errors &e) { return e.communication_constraints_violation; })
-      .def_property_readonly("power_limit_violation",
-                             [](const franka::Errors &e) { return e.power_limit_violation; })
-      .def_property_readonly("joint_p2p_insufficient_torque_for_planning",
-                             [](const franka::Errors &e) { return e.joint_p2p_insufficient_torque_for_planning; })
-      .def_property_readonly("tau_j_range_violation",
-                             [](const franka::Errors &e) { return e.tau_j_range_violation; })
-      .def_property_readonly("instability_detected",
-                             [](const franka::Errors &e) { return e.instability_detected; })
-      .def_property_readonly("joint_move_in_wrong_direction",
-                             [](const franka::Errors &e) { return e.joint_move_in_wrong_direction; });
+#define ERRORS \
+  joint_position_limits_violation, \
+  cartesian_position_limits_violation, \
+  self_collision_avoidance_violation, \
+  joint_velocity_violation, \
+  cartesian_velocity_violation, \
+  force_control_safety_violation, \
+  joint_reflex, \
+  cartesian_reflex, \
+  max_goal_pose_deviation_violation, \
+  max_path_pose_deviation_violation, \
+  cartesian_velocity_profile_safety_violation, \
+  joint_position_motion_generator_start_pose_invalid, \
+  joint_motion_generator_position_limits_violation, \
+  joint_motion_generator_velocity_limits_violation, \
+  joint_motion_generator_velocity_discontinuity, \
+  joint_motion_generator_acceleration_discontinuity, \
+  cartesian_position_motion_generator_start_pose_invalid, \
+  cartesian_motion_generator_elbow_limit_violation, \
+  cartesian_motion_generator_velocity_limits_violation, \
+  cartesian_motion_generator_velocity_discontinuity, \
+  cartesian_motion_generator_acceleration_discontinuity, \
+  cartesian_motion_generator_elbow_sign_inconsistent, \
+  cartesian_motion_generator_start_elbow_invalid, \
+  cartesian_motion_generator_joint_position_limits_violation, \
+  cartesian_motion_generator_joint_velocity_limits_violation, \
+  cartesian_motion_generator_joint_velocity_discontinuity, \
+  cartesian_motion_generator_joint_acceleration_discontinuity, \
+  cartesian_position_motion_generator_invalid_frame, \
+  force_controller_desired_force_tolerance_violation, \
+  controller_torque_discontinuity, \
+  start_elbow_sign_inconsistent, \
+  communication_constraints_violation, \
+  power_limit_violation, \
+  joint_p2p_insufficient_torque_for_planning, \
+  tau_j_range_violation, \
+  instability_detected, \
+  joint_move_in_wrong_direction, \
+  cartesian_spline_motion_generator_violation, \
+  joint_via_motion_generator_planning_joint_limit_violation, \
+  base_acceleration_initialization_timeout, \
+  base_acceleration_invalid_reading
+
+#define ADD_ERROR(unused, name) errors.def_property_readonly(#name, [](const franka::Errors &e) { return e.name; });
+#define UNPACK_ERRORS_INNER(tuple, itr, name) , tuple[itr + 1].cast<bool>()
+#define UNPACK_ERRORS_1(tuple, name0, ...) franka::Errors{std::array<bool, 41>{tuple[0].cast<bool>() MAP_C1(UNPACK_ERRORS_INNER, tuple, __VA_ARGS__)}}
+#define UNPACK_ERRORS(tuple, ...) UNPACK_ERRORS_1(tuple, __VA_ARGS__)
+
+  py::class_<franka::Errors> errors(m, "Errors");
+  errors.def(py::init<>());
+  MAP(ADD_ERROR, ERRORS)
+  errors.def("__repr__", [](const franka::Errors &errors) { return std::string(errors); });
+  errors.def(py::pickle(
+      [](const franka::Errors &errors) {  // __getstate__
+        return PACK_TUPLE(errors, ERRORS);
+      },
+      [](const py::tuple &t) {  // __setstate__
+        if (t.size() != COUNT(ERRORS))
+          throw std::runtime_error("Invalid state!");
+        return UNPACK_ERRORS(t, ERRORS);
+      }
+  ));
 
   py::class_<Condition>(m, "Condition")
       .def(py::init<bool>(), "constant_value"_a)
@@ -304,57 +315,40 @@ PYBIND11_MODULE(_franky, m) {
            py::is_operator())
       .def("__repr__", &Measure::repr);
 
-  py::class_<franka::RobotState>(m, "RobotState")
-      .def_readonly("O_T_EE", &franka::RobotState::O_T_EE)
-      .def_readonly("O_T_EE_d", &franka::RobotState::O_T_EE_d)
-      .def_readonly("F_T_EE", &franka::RobotState::F_T_EE)
-      .def_readonly("EE_T_K", &franka::RobotState::EE_T_K)
-      .def_readonly("m_ee", &franka::RobotState::m_ee)
-      .def_readonly("I_ee", &franka::RobotState::I_ee)
-      .def_readonly("F_x_Cee", &franka::RobotState::F_x_Cee)
-      .def_readonly("m_load", &franka::RobotState::m_load)
-      .def_readonly("I_load", &franka::RobotState::I_load)
-      .def_readonly("F_x_Cload", &franka::RobotState::F_x_Cload)
-      .def_readonly("m_total", &franka::RobotState::m_total)
-      .def_readonly("I_total", &franka::RobotState::I_total)
-      .def_readonly("F_x_Ctotal", &franka::RobotState::F_x_Ctotal)
-      .def_readonly("elbow", &franka::RobotState::elbow)
-      .def_readonly("elbow_d", &franka::RobotState::elbow_d)
-      .def_readonly("elbow_c", &franka::RobotState::elbow_c)
-      .def_readonly("delbow_c", &franka::RobotState::delbow_c)
-      .def_readonly("ddelbow_c", &franka::RobotState::ddelbow_c)
-      .def_readonly("tau_J", &franka::RobotState::tau_J)
-      .def_readonly("tau_J_d", &franka::RobotState::tau_J_d)
-      .def_readonly("dtau_J", &franka::RobotState::dtau_J)
-      .def_readonly("q", &franka::RobotState::q)
-      .def_readonly("q_d", &franka::RobotState::q_d)
-      .def_readonly("dq", &franka::RobotState::dq)
-      .def_readonly("dq_d", &franka::RobotState::dq_d)
-      .def_readonly("ddq_d", &franka::RobotState::ddq_d)
-      .def_readonly("joint_contact", &franka::RobotState::m_total)
-      .def_readonly("cartesian_contact", &franka::RobotState::cartesian_contact)
-      .def_readonly("joint_collision", &franka::RobotState::joint_collision)
-      .def_readonly("cartesian_collision", &franka::RobotState::cartesian_collision)
-      .def_readonly("tau_ext_hat_filtered", &franka::RobotState::tau_ext_hat_filtered)
-      .def_readonly("O_F_ext_hat_K", &franka::RobotState::O_F_ext_hat_K)
-      .def_readonly("K_F_ext_hat_K", &franka::RobotState::K_F_ext_hat_K)
-      .def_readonly("O_T_EE_c", &franka::RobotState::O_T_EE_c)
-      .def_readonly("O_dP_EE_c", &franka::RobotState::O_dP_EE_c)
-      .def_readonly("O_ddP_EE_c", &franka::RobotState::O_ddP_EE_c)
-      .def_readonly("theta", &franka::RobotState::theta)
-      .def_readonly("dtheta", &franka::RobotState::dtheta)
-      .def_readonly("current_errors", &franka::RobotState::current_errors)
-      .def_readonly("last_motion_errors", &franka::RobotState::last_motion_errors)
-      .def_readonly("control_command_success_rate", &franka::RobotState::control_command_success_rate)
-      .def_readonly("robot_mode", &franka::RobotState::robot_mode)
-      .def_readonly("time", &franka::RobotState::time);
+#define ROBOT_STATE_FIELDS \
+    O_T_EE, O_T_EE_d, F_T_EE, EE_T_K, m_ee, I_ee, F_x_Cee, m_load, I_load, F_x_Cload, m_total, I_total, \
+    F_x_Ctotal, elbow, elbow_d, elbow_c, delbow_c, ddelbow_c, tau_J, tau_J_d, dtau_J, q, q_d, dq, dq_d, ddq_d, \
+    cartesian_contact, joint_collision, cartesian_collision, tau_ext_hat_filtered, O_F_ext_hat_K, \
+    K_F_ext_hat_K, O_T_EE_c, O_dP_EE_c, O_ddP_EE_c, theta, dtheta, current_errors, last_motion_errors, \
+    control_command_success_rate, robot_mode, time
 
-  py::class_<franka::GripperState>(m, "GripperState")
-      .def_readonly("width", &franka::GripperState::width)
-      .def_readonly("max_width", &franka::GripperState::max_width)
-      .def_readonly("is_grasped", &franka::GripperState::is_grasped)
-      .def_readonly("temperature", &franka::GripperState::temperature)
-      .def_readonly("time", &franka::GripperState::time);
+  py::class_<franka::RobotState> robot_state(m, "RobotState");
+  ADD_FIELDS_RO(robot_state, franka::RobotState, ROBOT_STATE_FIELDS)
+  robot_state.def(py::pickle(
+      [](const franka::RobotState &state) {  // __getstate__
+        return PACK_TUPLE(state, ROBOT_STATE_FIELDS);
+      },
+      [](const py::tuple &t) {  // __setstate__
+        if (t.size() != COUNT(ROBOT_STATE_FIELDS))
+          throw std::runtime_error("Invalid state!");
+        return UNPACK_TUPLE(franka::RobotState, t, ROBOT_STATE_FIELDS);
+      }
+  ));
+
+#define GRIPPER_STATE_FIELDS width, max_width, is_grasped, temperature, time
+
+  py::class_<franka::GripperState> gripper_state(m, "GripperState");
+  ADD_FIELDS_RO(gripper_state, franka::GripperState, GRIPPER_STATE_FIELDS)
+  gripper_state.def(py::pickle(
+      [](const franka::GripperState &state) {  // __getstate__
+        return PACK_TUPLE(state, GRIPPER_STATE_FIELDS);
+      },
+      [](const py::tuple &t) {  // __setstate__
+        if (t.size() != COUNT(GRIPPER_STATE_FIELDS))
+          throw std::runtime_error("Invalid state!");
+        return UNPACK_TUPLE(franka::GripperState, t, GRIPPER_STATE_FIELDS);
+      }
+  ));
 
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
@@ -375,7 +369,18 @@ PYBIND11_MODULE(_franky, m) {
       .def_property_readonly("matrix", [](const Affine &affine) {
         return affine.matrix();
       })
-      .def("__repr__", &affineToStr);
+      .def("__repr__", &affineToStr)
+      .def(py::pickle(
+          [](const Affine &affine) {  // __getstate__
+            return py::make_tuple(affine.translation(), Eigen::Quaterniond(affine.rotation()).coeffs());
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 2)
+              throw std::runtime_error("Invalid state!");
+            return Affine().fromPositionOrientationScale(
+                t[0].cast<Vector<3>>(), Eigen::Quaterniond(t[1].cast<Vector<4>>()), Vector<3>::Ones());
+          }
+      ));
 
   py::class_<RobotPose>(m, "RobotPose")
       .def(py::init<Affine, std::optional<double>>(),
@@ -396,7 +401,17 @@ PYBIND11_MODULE(_franky, m) {
           ss << ", elbow=" << robot_pose.elbow_position().value();
         ss << ")";
         return ss.str();
-      });
+      })
+      .def(py::pickle(
+          [](const RobotPose &robot_pose) {  // __getstate__
+            return py::make_tuple(robot_pose.end_effector_pose(), robot_pose.elbow_position());
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 2)
+              throw std::runtime_error("Invalid state!");
+            return RobotPose(t[0].cast<Affine>(), t[1].cast<std::optional<double>>());
+          }
+      ));
   py::implicitly_convertible<Affine, RobotPose>();
 
   py::class_<Kinematics::NullSpaceHandling>(m, "NullSpaceHandling")
@@ -405,19 +420,69 @@ PYBIND11_MODULE(_franky, m) {
       .def_readwrite("value", &Kinematics::NullSpaceHandling::value);
 
   py::class_<franka::Torques>(m, "Torques")
-      .def_readonly("tau_J", &franka::Torques::tau_J);
+      .def_readonly("tau_J", &franka::Torques::tau_J)
+      .def(py::pickle(
+          [](const franka::Torques &torques) {  // __getstate__
+            return py::make_tuple(torques.tau_J);
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 1)
+              throw std::runtime_error("Invalid state!");
+            return franka::Torques(t[0].cast<std::array<double, 7>>());
+          }
+      ));
 
   py::class_<franka::JointVelocities>(m, "JointVelocities")
-      .def_readonly("dq", &franka::JointVelocities::dq);
+      .def_readonly("dq", &franka::JointVelocities::dq)
+      .def(py::pickle(
+          [](const franka::JointVelocities &velocities) {  // __getstate__
+            return py::make_tuple(velocities.dq);
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 1)
+              throw std::runtime_error("Invalid state!");
+            return franka::JointVelocities(t[0].cast<std::array<double, 7>>());
+          }
+      ));
 
   py::class_<franka::JointPositions>(m, "JointPositions")
-      .def_readonly("q", &franka::JointPositions::q);
+      .def_readonly("q", &franka::JointPositions::q)
+      .def(py::pickle(
+          [](const franka::JointPositions &positions) {  // __getstate__
+            return py::make_tuple(positions.q);
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 1)
+              throw std::runtime_error("Invalid state!");
+            return franka::JointPositions(t[0].cast<std::array<double, 7>>());
+          }
+      ));
 
   py::class_<franka::CartesianVelocities>(m, "CartesianVelocities")
-      .def_readonly("O_dP_EE", &franka::CartesianVelocities::O_dP_EE);
+      .def_readonly("O_dP_EE", &franka::CartesianVelocities::O_dP_EE)
+      .def(py::pickle(
+          [](const franka::CartesianVelocities &velocities) {  // __getstate__
+            return py::make_tuple(velocities.O_dP_EE, velocities.elbow);
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 2)
+              throw std::runtime_error("Invalid state!");
+            return franka::CartesianVelocities(t[0].cast<std::array<double, 6>>(), t[1].cast<std::array<double, 2>>());
+          }
+      ));
 
   py::class_<franka::CartesianPose>(m, "CartesianPose")
-      .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE);
+      .def_readonly("O_T_EE", &franka::CartesianPose::O_T_EE)
+      .def(py::pickle(
+          [](const franka::CartesianPose &pose) {  // __getstate__
+            return py::make_tuple(pose.O_T_EE);
+          },
+          [](const py::tuple &t) {  // __setstate__
+            if (t.size() != 1)
+              throw std::runtime_error("Invalid state!");
+            return franka::CartesianPose(t[0].cast<std::array<double, 16>>(), t[1].cast<std::array<double, 2>>());
+          }
+      ));
 
   mkMotionAndReactionClasses<franka::Torques>(m, "Torque");
   mkMotionAndReactionClasses<franka::JointVelocities>(m, "JointVelocity");
