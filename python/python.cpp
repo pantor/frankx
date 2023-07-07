@@ -316,11 +316,53 @@ PYBIND11_MODULE(_franky, m) {
       .def("__repr__", &Measure::repr);
 
 #define ROBOT_STATE_FIELDS \
-    O_T_EE, O_T_EE_d, F_T_EE, EE_T_K, m_ee, I_ee, F_x_Cee, m_load, I_load, F_x_Cload, m_total, I_total, \
-    F_x_Ctotal, elbow, elbow_d, elbow_c, delbow_c, ddelbow_c, tau_J, tau_J_d, dtau_J, q, q_d, dq, dq_d, ddq_d, \
-    cartesian_contact, joint_collision, cartesian_collision, tau_ext_hat_filtered, O_F_ext_hat_K, \
-    K_F_ext_hat_K, O_T_EE_c, O_dP_EE_c, O_ddP_EE_c, theta, dtheta, current_errors, last_motion_errors, \
-    control_command_success_rate, robot_mode, time
+    O_T_EE, \
+    O_T_EE_d, \
+    F_T_EE, \
+    F_T_NE, \
+    NE_T_EE, \
+    EE_T_K, \
+    m_ee, \
+    I_ee, \
+    F_x_Cee, \
+    m_load, \
+    I_load, \
+    F_x_Cload, \
+    m_total, \
+    I_total, \
+    F_x_Ctotal, \
+    elbow, \
+    elbow_d, \
+    elbow_c, \
+    delbow_c, \
+    ddelbow_c, \
+    tau_J, \
+    tau_J_d, \
+    dtau_J, \
+    q, \
+    q_d, \
+    dq, \
+    dq_d, \
+    ddq_d, \
+    joint_contact, \
+    cartesian_contact, \
+    joint_collision, \
+    cartesian_collision, \
+    tau_ext_hat_filtered, \
+    O_F_ext_hat_K, \
+    K_F_ext_hat_K, \
+    O_dP_EE_d, \
+    O_ddP_O, \
+    O_T_EE_c, \
+    O_dP_EE_c, \
+    O_ddP_EE_c, \
+    theta, \
+    dtheta, \
+    current_errors, \
+    last_motion_errors, \
+    control_command_success_rate, \
+    robot_mode, \
+    time
 
   py::class_<franka::RobotState> robot_state(m, "RobotState");
   ADD_FIELDS_RO(robot_state, franka::RobotState, ROBOT_STATE_FIELDS)
