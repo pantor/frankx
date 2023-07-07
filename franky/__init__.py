@@ -18,6 +18,7 @@ from ._franky import (
     RobotMode,
     Measure,
     Condition,
+    RelativeDynamicsFactor,
     TorqueMotion,
     JointVelocityMotion,
     JointPositionMotion,
@@ -57,5 +58,5 @@ from ._franky import (
     InvalidMotionTypeException,
     ReactionRecursionException,
     GripperException,
-    RelativeDynamicsFactor
+    Exception
 )
