@@ -180,8 +180,8 @@ PYBIND11_MODULE(_franky, m) {
 
   py::class_<RelativeDynamicsFactor>(m, "RelativeDynamicsFactor")
       .def(py::init<>())
-      .def(py::init<double>())
-      .def(py::init<double, double, double>())
+      .def(py::init<double>(), "value"_a)
+      .def(py::init<double, double, double>(), "velocity"_a, "acceleration"_a, "jerk"_a)
       .def_property_readonly("velocity", &RelativeDynamicsFactor::velocity)
       .def_property_readonly("acceleration", &RelativeDynamicsFactor::acceleration)
       .def_property_readonly("jerk", &RelativeDynamicsFactor::jerk)
