@@ -128,7 +128,7 @@ void Robot::joinMotion() {
 }
 
 void Robot::joinMotionUnsafe(std::unique_lock<std::mutex> &lock) {
-  if (motion_generator_running_)
+  while (motion_generator_running_)
     control_finished_condition_.wait(lock);
   if (control_thread_.joinable())
     control_thread_.join();
