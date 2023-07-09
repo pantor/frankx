@@ -141,7 +141,7 @@ void Robot::joinMotionUnsafe(std::unique_lock<std::mutex> &lock) {
 
 std::optional<ControlSignalType> Robot::current_control_signal_type() {
   std::unique_lock<std::mutex> lock(control_mutex_);
-  if (!is_in_control())
+  if (!is_in_control_unsafe())
     return std::nullopt;
   if (std::holds_alternative<MotionGenerator<franka::Torques>>(motion_generator_))
     return ControlSignalType::Torques;
