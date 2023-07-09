@@ -183,11 +183,15 @@ class Robot : public franka::Robot {
   franka::RobotState current_state_;
   std::mutex state_mutex_;
   std::mutex control_mutex_;
-  std::optional<std::shared_future<std::exception_ptr>> control_future_;
+  std::condition_variable control_finished_condition_;
+  std::exception_ptr control_exception_;
+  std::thread control_thread_;
   MotionGeneratorVariant motion_generator_{std::nullopt};
   bool motion_generator_running_{false};
 
   [[nodiscard]] bool is_in_control_unsafe() const;
+
+  void joinMotionUnsafe(std::unique_lock<std::mutex> &lock);
 
   template<typename ControlSignalType>
   void moveInternal(
@@ -204,13 +208,7 @@ class Robot : public franka::Robot {
           std::get<MotionGenerator<ControlSignalType>>(motion_generator_).updateMotion(motion);
         }
       } else {
-        if (control_future_.has_value()) {
-          control_future_->wait();
-          auto control_exception = control_future_->get();
-          if (control_exception != nullptr)
-            std::rethrow_exception(control_exception);
-          control_future_ = std::nullopt;
-        }
+        joinMotionUnsafe(lock);
 
         motion_generator_.emplace<MotionGenerator<ControlSignalType>>(this, motion);
         auto motion_generator = &std::get<MotionGenerator<ControlSignalType>>(motion_generator_);
@@ -220,8 +218,7 @@ class Robot : public franka::Robot {
               current_state_ = robot_state;
             });
         motion_generator_running_ = true;
-        control_future_ = std::async(
-            std::launch::async,
+        control_thread_ = std::thread(
             [this, control_func_executor, motion_generator]() {
               try {
                 bool done = false;
@@ -240,16 +237,15 @@ class Robot : public franka::Robot {
                   } else {
                     done = true;
                     motion_generator_running_ = false;
+                    control_finished_condition_.notify_all();
                   }
                 }
               } catch (...) {
-                {
-                  std::unique_lock<std::mutex> lock(control_mutex_);
-                  motion_generator_running_ = false;
-                }
-                return std::current_exception();
+                std::unique_lock<std::mutex> lock(control_mutex_);
+                control_exception_ = std::current_exception();
+                motion_generator_running_ = false;
+                control_finished_condition_.notify_all();
               }
-              return std::exception_ptr{nullptr};
             }
         );
       }

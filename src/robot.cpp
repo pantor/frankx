@@ -110,8 +110,7 @@ void Robot::setCollisionBehavior(
 }
 
 bool Robot::is_in_control_unsafe() const {
-  return control_future_.has_value()
-      && control_future_->wait_for(std::chrono::seconds(0)) != std::future_status::ready;
+  return motion_generator_running_;
 }
 
 bool Robot::is_in_control() {
@@ -124,18 +123,20 @@ std::string Robot::fci_hostname() const {
 }
 
 void Robot::joinMotion() {
-  // This is to ensure the control thread safety of this operation. Otherwise, it is possible that the control_thread
-  // pointer gets overwritten at the exact moment we try to join the control_thread.
-  std::optional<std::shared_future<std::exception_ptr>> control_future;
-  {
-    std::unique_lock<std::mutex> lock(control_mutex_);
-    control_future = control_future_;
-  }
-  if (control_future.has_value())
-    control_future->wait();
-  auto control_exception = control_future->get();
-  if (control_exception != nullptr)
+  std::unique_lock<std::mutex> lock(control_mutex_);
+  joinMotionUnsafe(lock);
+}
+
+void Robot::joinMotionUnsafe(std::unique_lock<std::mutex> &lock) {
+  if (motion_generator_running_)
+    control_finished_condition_.wait(lock);
+  if (control_thread_.joinable())
+    control_thread_.join();
+  if (control_exception_ != nullptr) {
+    auto control_exception = control_exception_;
+    control_exception_ = nullptr;
     std::rethrow_exception(control_exception);
+  }
 }
 
 std::optional<ControlSignalType> Robot::current_control_signal_type() {
