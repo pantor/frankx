@@ -100,16 +100,17 @@ void robotMove(Robot &robot, std::shared_ptr<Motion<ControlSignalType>> motion, 
   if (!async) {
     auto future = std::async(std::launch::async, &Robot::joinMotion, &robot);
     // Check if python wants to terminate every 100 ms
+    bool python_terminating = false;
     while (future.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout) {
-      bool terminate;
       {
-        auto gstate = PyGILState_Ensure();
-        terminate = Py_IsInitialized() && PyErr_CheckSignals() == -1;
-        PyGILState_Release(gstate);
+        py::gil_scoped_acquire gil_acquire;
+        python_terminating = Py_IsInitialized() && PyErr_CheckSignals() == -1;
       }
-      if (terminate) {
+      if (python_terminating) {
         robot.stop();
         future.wait();
+        py::gil_scoped_acquire gil_acquire;
+        throw py::error_already_set();
       }
     }
     future.get();
