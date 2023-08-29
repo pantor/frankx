@@ -204,12 +204,12 @@ In python, you can use them as follows:
 ```python
 import math
 from scipy.spatial.transform import Rotation
-from franky import JointPositionMotion, JointWaypointMotion, JointWaypoint, JointPositionStopMotion, LinearMotion, CartesianWaypointMotion, CartesianWaypoint, Affine, RobotPose, ReferenceType, CartesianPoseStopMotion
+from franky import JointWaypointMotion, JointWaypoint, JointPositionStopMotion, LinearMotion, CartesianWaypointMotion, CartesianWaypoint, Affine, RobotPose, ReferenceType, CartesianPoseStopMotion
 
 # A point-to-point motion in the joint space
-m1 = JointPositionMotion([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4])
+m1 = JointWaypointMotion([JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4])])
 
-# Generalization of JointPositionMotion that allows for multiple waypoints
+# A motion in joint space with multiple waypoints
 m2 = JointWaypointMotion([
     JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4]),
     JointWaypoint([-1.7, 1.2, 1.8, -2.0, -1.0, 1.7, -0.3]),
