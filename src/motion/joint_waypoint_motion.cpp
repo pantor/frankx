@@ -18,7 +18,10 @@ void JointWaypointMotion::initWaypointMotion(
     const franka::RobotState &robot_state,
     const std::optional<franka::JointPositions> &previous_command,
     ruckig::InputParameter<7> &input_parameter) {
-  input_parameter.current_position = previous_command->q;
+  if (previous_command.has_value())
+    input_parameter.current_position = previous_command->q;
+  else
+    input_parameter.current_position = robot_state.q;
   input_parameter.current_velocity = robot_state.dq_d;
   input_parameter.current_acceleration = robot_state.ddq_d;
 }
