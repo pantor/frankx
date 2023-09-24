@@ -88,6 +88,10 @@ class RobotWebSession:
             self.__control_token = None
             self.__control_token_id = None
 
+    def enable_fci(self):
+        self.send_control_api_request(
+            "/desk/api/system/fci", headers={"content-type": "application/x-www-form-urlencoded"})
+
     def has_control(self):
         if self.__control_token_id is not None:
             status = self.get_system_status()
