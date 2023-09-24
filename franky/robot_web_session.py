@@ -79,6 +79,7 @@ class RobotWebSession:
             start = time.time()
             while time.time() - start < wait_timeout and not self.has_control():
                 time.sleep(1.0)
+        return self.has_control()
 
     def release_control(self):
         if self.__control_token is not None:
@@ -96,6 +97,7 @@ class RobotWebSession:
         if self.__control_token_id is not None:
             status = self.get_system_status()
             return status["controlToken"]["activeToken"]["id"] == self.__control_token_id
+        return False
 
     def start_task(self, task: str):
         self.send_api_request(
