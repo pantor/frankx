@@ -44,8 +44,7 @@ class RobotWebSession:
     def send_control_api_request(self, target: str, headers: Optional[Dict[str, str]] = None,
                                  body: Optional[Any] = None,
                                  method: Literal["GET", "POST", "DELETE"] = "POST"):
-        if self.__control_token is None:
-            raise ValueError("Client does not have control. Call take_control() first.")
+        self.__check_control_token()
         _headers = {
             "X-Control-Token": self.__control_token
         }
@@ -67,6 +66,10 @@ class RobotWebSession:
             self.release_control()
         self.__token = None
         self.__client.close()
+
+    def __check_control_token(self):
+        if self.__control_token is None:
+            raise ValueError("Client does not have control. Call take_control() first.")
 
     def take_control(self, wait_timeout: float = 10.0):
         if self.__control_token is None:
@@ -91,9 +94,10 @@ class RobotWebSession:
             self.__control_token_id = None
 
     def enable_fci(self):
+        self.__check_control_token()
         self.send_control_api_request(
             "/desk/api/system/fci", headers={"content-type": "application/x-www-form-urlencoded"},
-            body=f"token={urllib.parse.quote(self.__control_token)}")
+            body=f"token={urllib.parse.quote(base64.b64encode(self.__control_token.encode('ascii')))}")
 
     def has_control(self):
         if self.__control_token_id is not None:
