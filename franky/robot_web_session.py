@@ -3,6 +3,7 @@ import hashlib
 import json
 import ssl
 import time
+import urllib.parse
 from http.client import HTTPSConnection, HTTPResponse
 from typing import TYPE_CHECKING, Dict, Optional, Any, Literal
 from urllib.error import HTTPError
@@ -91,12 +92,14 @@ class RobotWebSession:
 
     def enable_fci(self):
         self.send_control_api_request(
-            "/desk/api/system/fci", headers={"content-type": "application/x-www-form-urlencoded"})
+            "/desk/api/system/fci", headers={"content-type": "application/x-www-form-urlencoded"},
+            body=f"token={urllib.parse.quote(self.__control_token)}")
 
     def has_control(self):
         if self.__control_token_id is not None:
             status = self.get_system_status()
-            return status["controlToken"]["activeToken"]["id"] == self.__control_token_id
+            active_token = status["controlToken"]["activeToken"]
+            return active_token is not None and active_token["id"] == self.__control_token_id
         return False
 
     def start_task(self, task: str):
