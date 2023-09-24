@@ -2,6 +2,7 @@ import base64
 import hashlib
 import json
 import ssl
+import time
 from http.client import HTTPSConnection, HTTPResponse
 from typing import TYPE_CHECKING, Dict, Optional, Any, Literal
 from urllib.error import HTTPError
@@ -19,6 +20,7 @@ class RobotWebSession:
         self.__client = None
         self.__token = None
         self.__control_token = None
+        self.__control_token_id = None
 
     @staticmethod
     def __encode_password(user: str, password: str) -> str:
@@ -65,12 +67,18 @@ class RobotWebSession:
         self.__token = None
         self.__client.close()
 
-    def take_control(self):
+    def take_control(self, wait_timeout: float = 10.0):
         if self.__control_token is None:
             res = self.send_api_request(
                 "/admin/api/control-token/request", headers={"content-type": "application/json"},
                 body=json.dumps({"requestedBy": self.__username}))
-            self.__control_token = json.loads(res)["token"]
+            response_dict = json.loads(res)
+            self.__control_token = response_dict["token"]
+            self.__control_token_id = response_dict["id"]
+            # One should probably use websockets here but that would introduce another dependency
+            start = time.time()
+            while time.time() - start < wait_timeout and not self.has_control():
+                time.sleep(1.0)
 
     def release_control(self):
         if self.__control_token is not None:
@@ -78,6 +86,12 @@ class RobotWebSession:
                 "/admin/api/control-token", headers={"content-type": "application/json"}, method="DELETE",
                 body=json.dumps({"token": self.__control_token}))
             self.__control_token = None
+            self.__control_token_id = None
+
+    def has_control(self):
+        if self.__control_token_id is not None:
+            status = self.get_system_status()
+            return status["controlToken"]["activeToken"]["id"] == self.__control_token_id
 
     def start_task(self, task: str):
         self.send_api_request(
