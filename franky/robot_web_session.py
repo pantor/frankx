@@ -102,7 +102,6 @@ class RobotWebSession:
             self.__control_token_id = None
 
     def enable_fci(self):
-        self.__check_control_token()
         self.send_control_api_request(
             "/desk/api/system/fci", headers={"content-type": "application/x-www-form-urlencoded"},
             body=f"token={urllib.parse.quote(base64.b64encode(self.__control_token.encode('ascii')))}")
