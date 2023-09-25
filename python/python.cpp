@@ -703,25 +703,26 @@ PYBIND11_MODULE(_franky, m) {
       .def_readwrite("gripper_speed", &Gripper::gripper_speed)
       .def_readonly("max_width", &Gripper::max_width)
       .def_readonly("has_error", &Gripper::has_error)
-      .def_property_readonly("server_version", &Gripper::serverVersion)
       .def("homing", &Gripper::homing, py::call_guard<py::gil_scoped_release>())
-      .def("grasp",
-           (bool (Gripper::*)(double, double, double, double, double)) &Gripper::grasp,
+      .def("grasp", &Gripper::grasp,
+           "width"_a, "speed"_a, "force"_a, "epsilon_inner"_a = 0.005, "epsilon_outer"_a = 0.005,
            py::call_guard<py::gil_scoped_release>())
-      .def("move", (bool (Gripper::*)(double, double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
+      .def("move", &franka::Gripper::move, "width"_a, "speed"_a, py::call_guard<py::gil_scoped_release>())
       .def("stop", &Gripper::stop)
-      .def("read_once", &Gripper::readOnce)
-      .def("move", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
-      .def("move_unsafe", (bool (Gripper::*)(double)) &Gripper::move, py::call_guard<py::gil_scoped_release>())
-      .def("width", &Gripper::width)
-      .def("is_grasping", &Gripper::isGrasping)
+      .def("move", &Gripper::move, "width"_a, py::call_guard<py::gil_scoped_release>())
+      .def("move_unsafe", &Gripper::move, "width"_a, py::call_guard<py::gil_scoped_release>())
       .def("open", &Gripper::open, py::call_guard<py::gil_scoped_release>())
-      .def("clamp", (bool (Gripper::*)()) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
-      .def("clamp", (bool (Gripper::*)(double)) &Gripper::clamp, py::call_guard<py::gil_scoped_release>())
-      .def("release", (bool (Gripper::*)()) &Gripper::release, py::call_guard<py::gil_scoped_release>())
-      .def("release", (bool (Gripper::*)(double)) &Gripper::release, py::call_guard<py::gil_scoped_release>())
-      .def("releaseRelative", &Gripper::releaseRelative, py::call_guard<py::gil_scoped_release>())
-      .def("get_state", &Gripper::get_state);
+      .def("clamp", py::overload_cast<>(&Gripper::clamp), py::call_guard<py::gil_scoped_release>())
+      .def("clamp", py::overload_cast<double>(&Gripper::clamp),
+           "min_clamping_width"_a, py::call_guard<py::gil_scoped_release>())
+      .def("release", py::overload_cast<>(&Gripper::release), py::call_guard<py::gil_scoped_release>())
+      .def("release", py::overload_cast<double>(&Gripper::release),
+           "width"_a, py::call_guard<py::gil_scoped_release>())
+      .def("release_relative", &Gripper::releaseRelative, "width_relative"_a, py::call_guard<py::gil_scoped_release>())
+      .def_property_readonly("state", &Gripper::get_state)
+      .def_property_readonly("server_version", (uint16_t (Gripper::*)()) &Gripper::serverVersion)
+      .def_property_readonly("width", &Gripper::width)
+      .def_property_readonly("is_grasping", &Gripper::isGrasping);
 
   py::class_<Kinematics>(m, "Kinematics")
       .def_static("forward", &Kinematics::forward, "q"_a)
