@@ -1,20 +1,18 @@
 import base64
 import hashlib
+import http.client
 import json
 import ssl
 import time
 import urllib.parse
 from http.client import HTTPSConnection, HTTPResponse
-from typing import TYPE_CHECKING, Dict, Optional, Any, Literal
+from typing import Dict, Optional, Any, Literal
 from urllib.error import HTTPError
-
-if TYPE_CHECKING:
-    from .robot import Robot
 
 
 class RobotWebSession:
-    def __init__(self, robot: "Robot", username: str, password: str):
-        self.__robot = robot
+    def __init__(self, fci_hostname: str, username: str, password: str):
+        self.__fci_hostname = fci_hostname
         self.__username = username
         self.__password = password
 
@@ -52,7 +50,7 @@ class RobotWebSession:
         return self.send_api_request(target, headers=_headers, method=method, body=body)
 
     def __enter__(self):
-        self.__client = HTTPSConnection(self.__robot.fci_hostname, timeout=12, context=ssl._create_unverified_context())
+        self.__client = HTTPSConnection(self.__fci_hostname, timeout=12, context=ssl._create_unverified_context())
         self.__client.connect()
         payload = json.dumps(
             {"login": self.__username, "password": self.__encode_password(self.__username, self.__password)})
@@ -116,7 +114,6 @@ class RobotWebSession:
             "/desk/api/joints/unlock", headers={"content-type": "application/x-www-form-urlencoded"})
 
     def lock_brakes(self):
-        self.__robot.stop()
         self.send_control_api_request(
             "/desk/api/joints/lock", headers={"content-type": "application/x-www-form-urlencoded"})
 
