@@ -402,7 +402,7 @@ PYBIND11_MODULE(_franky, m) {
       }), "translation"_a = Vector<3>{0, 0, 0}, "quaternion"_a = Vector<4>{0, 0, 0, 1})
       .def(py::init<const Affine &>()) // Copy constructor
       .def(py::self * py::self)
-      .def_property_readonly("inverse", &Affine::inverse)
+      .def_property_readonly("inverse", [](const Affine &affine) { return affine.inverse(); })
       .def_property_readonly("translation", [](const Affine &affine) {
         return affine.translation();
       })
