@@ -26,8 +26,8 @@ class RobotWebSession:
         bs = ",".join([str(b) for b in hashlib.sha256((password + "#" + user + "@franka").encode("utf-8")).digest()])
         return base64.encodebytes(bs.encode("utf-8")).decode("utf-8")
 
-    def send_api_request(self, target: str, headers: Optional[Dict[str, str]] = None, body: Optional[Any] = None,
-                         method: Literal["GET", "POST", "DELETE"] = "POST"):
+    def _send_api_request(self, target: str, headers: Optional[Dict[str, str]] = None, body: Optional[Any] = None,
+                          method: Literal["GET", "POST", "DELETE"] = "POST"):
         _headers = {
             "Cookie": f"authorization={self.__token}"
         }
@@ -38,6 +38,16 @@ class RobotWebSession:
         if res.getcode() != 200:
             raise HTTPError(target, res.getcode(), res.reason, res.headers, res.fp)
         return res.read()
+
+    def send_api_request(self, target: str, headers: Optional[Dict[str, str]] = None, body: Optional[Any] = None,
+                         method: Literal["GET", "POST", "DELETE"] = "POST"):
+        last_error = None
+        for i in range(3):
+            try:
+                return self._send_api_request(target, headers, body, method)
+            except http.client.RemoteDisconnected as ex:
+                last_error = ex
+        raise last_error
 
     def send_control_api_request(self, target: str, headers: Optional[Dict[str, str]] = None,
                                  body: Optional[Any] = None,
