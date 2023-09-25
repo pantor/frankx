@@ -18,8 +18,9 @@ ${PYTHON} -m venv "${STUBS_GEN_DIR}/venv"
 source "${STUBS_GEN_DIR}/venv/bin/activate"
 (cd ${SCRIPT_DIR} && python "setup.py" egg_info -e "${STUBS_GEN_DIR}" > /dev/null)
 pip install -r "${STUBS_GEN_DIR}/franky_panda.egg-info/requires.txt" > /dev/null
-pip install pybind11-stubgen > /dev/null
+pip install pybind11-stubgen==0.16.0 > /dev/null
 
 PYTHONPATH="${LIB_DIR}" "${SCRIPT_DIR}/custom_stubgen.py" --no-setup-py -o "${STUBS_GEN_DIR}" _franky
+# TODO: remove this workaround once pybind11-stubgen is updated
 sed "s/import _franky/import franky._franky as _franky/" "${STUBS_GEN_DIR}/_franky-stubs/__init__.pyi" > "${LIB_DIR}/_franky.pyi"
 
