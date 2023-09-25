@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import pybind11_stubgen
 import re
 
@@ -17,10 +16,6 @@ if __name__ == '__main__':
         "float": "RelativeDynamicsFactor",
         "Affine": "RobotPose",
     }
-
-    pybind11_stubgen.StubsGenerator.GLOBAL_CLASSNAME_REPLACEMENTS[
-        re.compile("(Condition)")
-    ] = add_union("bool")
 
     pybind11_stubgen.StubsGenerator.GLOBAL_CLASSNAME_REPLACEMENTS.update({
         re.compile("({})".format(orig_type)): add_union(alt_type)
