@@ -10,6 +10,16 @@ from typing import Dict, Optional, Any, Literal
 from urllib.error import HTTPError
 
 
+class FrankaAPIError(Exception):
+    def __init__(self, target: str, http_code: int, http_reason: str, headers: Dict[str, str], message: str):
+        super().__init__(
+            f"Franka API returned error {http_code} ({http_reason}) when accessing end-point {target}: {message}")
+        self.target = target
+        self.http_code = http_code
+        self.headers = headers
+        self.message = message
+
+
 class RobotWebSession:
     def __init__(self, fci_hostname: str, username: str, password: str):
         self.__fci_hostname = fci_hostname
@@ -36,7 +46,7 @@ class RobotWebSession:
         self.__client.request(method, target, headers=_headers, body=body)
         res: HTTPResponse = self.__client.getresponse()
         if res.getcode() != 200:
-            raise HTTPError(target, res.getcode(), res.reason, res.headers, res.fp)
+            raise FrankaAPIError(target, res.getcode(), res.reason, dict(res.headers), res.read().decode("utf-8"))
         return res.read()
 
     def send_api_request(self, target: str, headers: Optional[Dict[str, str]] = None, body: Optional[Any] = None,
