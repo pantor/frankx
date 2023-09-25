@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 
-project(franky VERSION 0.2.0 LANGUAGES CXX)
+project(franky VERSION 0.6.2 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 
@@ -13,9 +13,8 @@ option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_PYTHON_STUBS "Build stubs" ON)
 option(BUILD_TESTS "Build tests" ON)
 
-
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
-find_package(Franka 0.8 REQUIRED)
+find_package(Franka 0.10 REQUIRED)
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
@@ -34,7 +33,7 @@ if (BUILD_PYTHON_MODULE)
 
     if (NOT DEFINED STUBSGEN_PYTHON_EXECUTABLE)
         set(STUBSGEN_PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-    endif()
+    endif ()
 
     if (EXISTS pybind11)
         add_subdirectory(pybind11)
@@ -93,4 +92,4 @@ install(TARGETS franky
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include
-        )
+)
