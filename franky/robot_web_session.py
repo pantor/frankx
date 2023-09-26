@@ -69,7 +69,9 @@ class RobotWebSession:
         _headers.update(headers)
         return self.send_api_request(target, headers=_headers, method=method, body=body)
 
-    def __enter__(self):
+    def open(self):
+        if self.is_open:
+            raise ValueError("Session is already open.")
         self.__client = HTTPSConnection(self.__fci_hostname, timeout=12, context=ssl._create_unverified_context())
         self.__client.connect()
         payload = json.dumps(
@@ -79,11 +81,19 @@ class RobotWebSession:
             body=payload).decode("utf-8")
         return self
 
-    def __exit__(self, type, value, traceback):
+    def close(self):
+        if not self.is_open:
+            raise ValueError("Session is not open.")
         if self.__control_token is not None:
             self.release_control()
         self.__token = None
         self.__client.close()
+
+    def __enter__(self):
+        self.open()
+
+    def __exit__(self, type, value, traceback):
+        self.close()
 
     def __check_control_token(self):
         if self.__control_token is None:
@@ -148,9 +158,14 @@ class RobotWebSession:
         return json.loads(self.send_api_request("/admin/api/system-status", method="GET").decode("utf-8"))
 
     @property
-    def client(self):
+    def client(self) -> HTTPSConnection:
         return self.__client
 
     @property
     def token(self) -> str:
         return self.__token
+
+    @property
+    def is_open(self) -> bool:
+        return self.__token is not None
+
