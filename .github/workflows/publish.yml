@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
 
 env:
   PYBIN_SUPPORTED_VERSIONS: "cp3(6m|7m|8|9|10|11)"
