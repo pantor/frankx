@@ -157,6 +157,14 @@ class RobotWebSession:
     def get_system_status(self):
         return json.loads(self.send_api_request("/admin/api/system-status", method="GET").decode("utf-8"))
 
+    def execute_self_test(self):
+        response = json.loads(self.send_control_api_request(
+            "/admin/api/safety/td2-tests/execute", headers={"content-type": "application/json"}).decode("utf-8"))
+        assert response["code"] == "SuccessResponse"
+        time.sleep(0.5)
+        while self.get_system_status()["safety"]["safetyControllerStatus"] == "SelfTest":
+            time.sleep(0.5)
+
     @property
     def client(self) -> HTTPSConnection:
         return self.__client
