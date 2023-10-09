@@ -160,6 +160,9 @@ class RobotWebSession:
         return json.loads(self.send_api_request("/admin/api/system-status", method="GET").decode("utf-8"))
 
     def execute_self_test(self):
+        if self.get_system_status()["safety"]["recoverableErrors"]["td2Timeout"]:
+            self.send_control_api_request(
+                "/admin/api/safety/recoverable-safety-errors/acknowledge?error_id=TD2Timeout", method="GET")
         response = json.loads(self.send_control_api_request(
             "/admin/api/safety/td2-tests/execute", headers={"content-type": "application/json"}).decode("utf-8"))
         assert response["code"] == "SuccessResponse"
@@ -178,4 +181,3 @@ class RobotWebSession:
     @property
     def is_open(self) -> bool:
         return self.__token is not None
-
