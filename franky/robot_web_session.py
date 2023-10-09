@@ -62,6 +62,8 @@ class RobotWebSession:
     def send_control_api_request(self, target: str, headers: Optional[Dict[str, str]] = None,
                                  body: Optional[Any] = None,
                                  method: Literal["GET", "POST", "DELETE"] = "POST"):
+        if headers is None:
+            headers = {}
         self.__check_control_token()
         _headers = {
             "X-Control-Token": self.__control_token
