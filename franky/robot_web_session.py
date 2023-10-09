@@ -73,7 +73,7 @@ class RobotWebSession:
 
     def open(self):
         if self.is_open:
-            raise ValueError("Session is already open.")
+            raise RuntimeError("Session is already open.")
         self.__client = HTTPSConnection(self.__fci_hostname, timeout=12, context=ssl._create_unverified_context())
         self.__client.connect()
         payload = json.dumps(
@@ -85,7 +85,7 @@ class RobotWebSession:
 
     def close(self):
         if not self.is_open:
-            raise ValueError("Session is not open.")
+            raise RuntimeError("Session is not open.")
         if self.__control_token is not None:
             self.release_control()
         self.__token = None
@@ -99,7 +99,7 @@ class RobotWebSession:
 
     def __check_control_token(self):
         if self.__control_token is None:
-            raise ValueError("Client does not have control. Call take_control() first.")
+            raise RuntimeError("Client does not have control. Call take_control() first.")
 
     def take_control(self, wait_timeout: float = 10.0):
         if self.__control_token is None:
