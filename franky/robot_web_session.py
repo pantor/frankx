@@ -162,7 +162,7 @@ class RobotWebSession:
     def execute_self_test(self):
         if self.get_system_status()["safety"]["recoverableErrors"]["td2Timeout"]:
             self.send_control_api_request(
-                "/admin/api/safety/recoverable-safety-errors/acknowledge?error_id=TD2Timeout", method="GET")
+                "/admin/api/safety/recoverable-safety-errors/acknowledge?error_id=TD2Timeout")
         response = json.loads(self.send_control_api_request(
             "/admin/api/safety/td2-tests/execute", headers={"content-type": "application/json"}).decode("utf-8"))
         assert response["code"] == "SuccessResponse"
