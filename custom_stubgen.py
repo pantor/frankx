@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-from typing import Dict
+import logging
+from pathlib import Path
+from typing import Dict, Optional
 
-from pybind11_stubgen import *
-from pybind11_stubgen.structs import *
+from pybind11_stubgen import Writer, QualifiedName, Printer, arg_parser, stub_parser_from_args, to_output_and_subdir, \
+    run
+from pybind11_stubgen.structs import Function, ResolvedType, Module
 
 
 class CustomWriter(Writer):
