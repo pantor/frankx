@@ -73,7 +73,7 @@ jobs:
         run: |
           git clone https://github.com/pybind/pybind11.git
           cd pybind11
-          git checkout v2.9.1
+          git checkout v2.11.1
           mkdir build && cd build
           cmake -DPYBIND11_TEST=OFF ..
           make -j2
