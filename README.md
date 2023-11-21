@@ -48,7 +48,7 @@ In particular, franky provides the following new features/improvements:
 
 ## Installation
 
-To start using franky with Python and libfranka *0.9.0*, just install it via
+To start using franky with Python and libfranka *0.10.0*, just install it via
 ```bash
 pip install franky-panda
 ```
