@@ -14,7 +14,7 @@ option(BUILD_PYTHON_STUBS "Build stubs" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
-find_package(Franka 0.10 REQUIRED)
+find_package(Franka 0.9.0 REQUIRED)
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")

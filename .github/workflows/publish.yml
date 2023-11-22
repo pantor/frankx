@@ -5,124 +5,50 @@ on:
     tags:
       - "v*"
 
-env:
-  PYBIN_SUPPORTED_VERSIONS: "cp3(7m|8|9|10|11)"
-
 jobs:
+  build:
+    strategy:
+      matrix:
+        libfranka-version: [0.9.2, 0.10.0]
+    uses: ./.github/workflows/build_wheels.yml
+    with:
+      libfranka-version: ${{ matrix.libfranka-version }}
+
   publish:
+    needs: build
     runs-on: ubuntu-latest
 
-    container:
-      image: quay.io/pypa/manylinux2014_x86_64
-
     steps:
-      - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Log Python versions
-        run: |
-          echo "Found the following Python versions:"
-          for PYBIN in /opt/python/*/bin; do
-            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-              echo "${PYBIN}" | cut -d / -f 4
-            fi
-          done
-
-      - name: Install build essentials
-        run: |
-          yum -y install poco-devel*
-          
-          for PYBIN in /opt/python/*/bin; do
-            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-              "${PYBIN}/pip" install cmake setuptools wheel --user
-            fi
-          done
-          
-          ln -f -s $HOME/.local/bin/cmake /usr/bin/cmake
-
-      - name: Install Eigen3
-        run: |
-          echo $PATH
-          git clone https://gitlab.com/libeigen/eigen.git
-          cd eigen
-          git checkout 3.4.0
-          mkdir build && cd build
-          cmake ..
-          make install -j2
-
-      - name: Install libfranka
-        run: |
-          git clone --recursive https://github.com/frankaemika/libfranka.git
-          cd libfranka
-          git checkout 0.10.0
-          git submodule update
-          mkdir build && cd build
-          cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
-          make -j2
-          make install
-
-      - name: Install pybind11
-        run: |
-          git clone https://github.com/pybind/pybind11.git
-          cd pybind11
-          git checkout v2.11.1
-          mkdir build && cd build
-          cmake -DPYBIND11_TEST=OFF ..
-          make -j2
-          make install
-
-      - name: Install Catch2
-        run: |
-          git clone https://github.com/catchorg/Catch2.git
-          cd Catch2
-          git checkout v2.13.8
-          mkdir build && cd build
-          cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
-          make install
-
-      - name: Python package
+      - name: Prepare
         run: |
           mkdir -p wheels
-          mkdir -p dist
-          mkdir -p dist_full
-          
-          # Compile wheels
-          for PYBIN in /opt/python/*/bin; do
-            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-              "${PYBIN}/pip" wheel . -w wheels/
-            fi
-          done
-          
-          # Bundle external shared libraries into the wheels
-          for whl in wheels/*.whl; do
-            if [[ "$whl" =~ wheels/franky_panda-.*\.whl ]]; then
-              auditwheel repair "$whl" -w dist_full/
-            else
-              cp "$whl" dist_full/
-            fi
-          done
-          
-          # Install packages and test
-          for PYBIN in /opt/python/*/bin/; do
-            if [[ "${PYBIN}" =~ ${PYBIN_SUPPORTED_VERSIONS} ]]; then
-              "${PYBIN}/pip" install franky-panda --no-index -f dist_full
-              # (cd "$HOME"; "${PYBIN}/nosetests" -w /io/tests)
-            fi
-          done
-          
-          cp dist_full/franky_panda-*.whl dist/
-          
-          ls dist
+
+      - name: Get wheels
+        uses: actions/download-artifact@master
+        with:
+          name: wheels
+          path: wheels/
+
+      - name: Unpack wheels
+        run: |
+          unzip wheels/libfranka_0-10-0_wheels.zip
 
       - name: Publish python package
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Create release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          draft: true
+          files: |
+            LICENSE
+            wheels/*.zip
