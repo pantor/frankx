@@ -36,7 +36,7 @@ jobs:
 
       - name: Unpack wheels
         run: |
-          unzip wheels/libfranka_0-10-0_wheels.zip
+          unzip wheels/libfranka_0-12-1_wheels.zip
 
       - name: Publish python package
         uses: pypa/gh-action-pypi-publish@master
