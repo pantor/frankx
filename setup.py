@@ -55,10 +55,12 @@ class CMakeBuild(build_ext):
         subprocess.check_call(["cmake", str(Path(".").resolve())] + cmake_args, cwd=self.build_temp)
         subprocess.check_call(["cmake", "--build", ".", "--target", "_franky"] + build_args, cwd=self.build_temp)
 
+with (Path(__file__).resolve().parent / "VERSION").open() as f:
+    version = f.read()
 
 setup(
     name="franky-panda",
-    version="0.7.1",
+    version=version,
     description="High-Level Motion Library for the Franka Panda Robot (fork of frankx)",
     long_description=long_description,
     long_description_content_type="text/markdown",
