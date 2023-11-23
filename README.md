@@ -52,6 +52,12 @@ To start using franky with Python and libfranka *0.12.1*, just install it via
 ```bash
 pip install franky-panda
 ```
+We also provide wheels for libfranka *0.9.2*, which is the latest version that supports the old Franka Emika robot:
+```bash
+wget https://github.com/TimSchneider42/franky/releases/latest/download/libfranka_0-9-2_wheels.zip
+unzip libfranka_0-9-2_wheels.zip
+pip install --no-index --find-links=./dist franky-panda
+```
 
 Franky is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings.
 Franky uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG).
