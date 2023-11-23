@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        libfranka-version: [0.9.2, 0.10.0]
+        libfranka-version: [0.9.2, 0.12.1]
     uses: ./.github/workflows/build_wheels.yml
     with:
       libfranka-version: ${{ matrix.libfranka-version }}

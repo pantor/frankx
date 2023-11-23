@@ -48,7 +48,7 @@ In particular, franky provides the following new features/improvements:
 
 ## Installation
 
-To start using franky with Python and libfranka *0.10.0*, just install it via
+To start using franky with Python and libfranka *0.12.1*, just install it via
 ```bash
 pip install franky-panda
 ```
@@ -442,7 +442,7 @@ We will add a more detailed documentation once franky reaches v1.0.
 Franky is written in C++17 and Python3.7. It is currently tested against following versions
 
 - Eigen v3.3.7
-- Libfranka v0.10.0
+- Libfranka v0.12.1
 - Pybind11 v2.9.1
 - Catch2 v2.13 (only for testing)
 
