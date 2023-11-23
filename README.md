@@ -440,7 +440,6 @@ print(f"New joints: {q_new}")
 
 An auto-generated documentation can be found at [https://timschneider42.github.io/franky/](https://timschneider42.github.io/franky/).
 Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/TimSchneider42/franky/tree/master/examples) directory. 
-We will add a more detailed documentation once franky reaches v1.0.
 
 
 ## Development
