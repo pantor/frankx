@@ -70,7 +70,7 @@ git clone --recurse-submodules git@github.com:timschneider42/franky.git
 cd franky
 mkdir -p build
 cd build
-cmake -DBUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 make install
 ```
