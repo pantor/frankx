@@ -1,4 +1,4 @@
-#include "franky/motion/linear_impedance_motion.hpp"
+#include "franky/motion/cartesian_impedance_motion.hpp"
 
 #include <map>
 
@@ -9,14 +9,14 @@
 
 namespace franky {
 
-LinearImpedanceMotion::LinearImpedanceMotion(const Affine &target, double duration)
-    : LinearImpedanceMotion(target, duration, Params()) {}
+CartesianImpedanceMotion::CartesianImpedanceMotion(const Affine &target, double duration)
+    : CartesianImpedanceMotion(target, duration, Params()) {}
 
-LinearImpedanceMotion::LinearImpedanceMotion(
-    const Affine &target, double duration, const LinearImpedanceMotion::Params &params)
+CartesianImpedanceMotion::CartesianImpedanceMotion(
+    const Affine &target, double duration, const CartesianImpedanceMotion::Params &params)
     : duration_(duration), params_(params), ImpedanceMotion(target, params) {}
 
-void LinearImpedanceMotion::initImpl(
+void CartesianImpedanceMotion::initImpl(
     const franka::RobotState &robot_state,
     const std::optional<franka::Torques> &previous_command) {
   ImpedanceMotion::initImpl(robot_state, previous_command);
@@ -24,7 +24,7 @@ void LinearImpedanceMotion::initImpl(
 }
 
 std::tuple<Affine, bool>
-LinearImpedanceMotion::update(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
+CartesianImpedanceMotion::update(const franka::RobotState &robot_state, franka::Duration time_step, double time) {
   double transition_parameter = time / duration_;
   Affine intermediate_goal;
   bool done;

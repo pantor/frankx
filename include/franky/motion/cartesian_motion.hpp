@@ -10,14 +10,17 @@
 
 namespace franky {
 
-class LinearMotion : public CartesianWaypointMotion {
+class CartesianMotion : public CartesianWaypointMotion {
  public:
-  explicit LinearMotion(
+  explicit CartesianMotion(
       const RobotPose &target,
       ReferenceType reference_type = ReferenceType::Absolute,
       const Affine &frame = Affine::Identity(),
       RelativeDynamicsFactor relative_dynamics_factor = 1.0,
       bool return_when_finished = true);
 };
+
+// Backwards compatibility
+using LinearMotion = CartesianMotion;
 
 }  // namespace franky

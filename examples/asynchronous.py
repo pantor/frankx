@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import time
 
-from franky import Affine, LinearMotion, Robot, ReferenceType
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
 
 if __name__ == "__main__":
@@ -13,11 +13,11 @@ if __name__ == "__main__":
     robot = Robot(args.host)
     robot.relative_dynamics_factor = 0.05
 
-    motion1 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+    motion1 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
     robot.move(motion1, asynchronous=True)
 
     time.sleep(0.5)
-    motion2 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+    motion2 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
     robot.move(motion2, asynchronous=True)
 
     # Wait for the robot to finish its motion

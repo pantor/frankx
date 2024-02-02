@@ -120,7 +120,7 @@ Robot robot("172.16.0.2");
 robot.setDynamicRel(0.05);
 
 // Move the end-effector 20cm in positive x-direction
-auto motion = LinearMotion(RobotPose(Affine({0.2, 0.0, 0.0}), 0.0), ReferenceType::Relative);
+auto motion = CartesianMotion(RobotPose(Affine({0.2, 0.0, 0.0}), 0.0), ReferenceType::Relative);
 
 // Finally move the robot
 robot.move(motion);
@@ -128,12 +128,12 @@ robot.move(motion);
 
 The corresponding program in Python is
 ```python
-from franky import Affine, LinearMotion, Robot, ReferenceType
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
 robot = Robot("172.16.0.2")
 robot.relative_dynamics_factor = 0.05
 
-motion = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+motion = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion)
 ```
 
@@ -213,7 +213,7 @@ In python, you can use them as follows:
 ```python
 import math
 from scipy.spatial.transform import Rotation
-from franky import JointWaypointMotion, JointWaypoint, JointPositionStopMotion, LinearMotion, CartesianWaypointMotion, CartesianWaypoint, Affine, RobotPose, ReferenceType, CartesianPoseStopMotion
+from franky import JointWaypointMotion, JointWaypoint, JointPositionStopMotion, CartesianMotion, CartesianWaypointMotion, CartesianWaypoint, Affine, RobotPose, ReferenceType, CartesianPoseStopMotion
 
 # A point-to-point motion in the joint space
 m1 = JointWaypointMotion([JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4])])
@@ -230,15 +230,15 @@ m3 = JointPositionStopMotion()
 
 # A linear motion in cartesian space
 quat = Rotation.from_euler("xyz", [0, 0, math.pi / 2]).as_quat()
-m4 = LinearMotion(Affine([0.2, -0.4, 0.3], quat))
-m5 = LinearMotion(RobotPose(Affine([0.2, -0.4, 0.3], quat), elbow_position=1.7)) # With target elbow angle
+m4 = CartesianMotion(Affine([0.2, -0.4, 0.3], quat))
+m5 = CartesianMotion(RobotPose(Affine([0.2, -0.4, 0.3], quat), elbow_position=1.7)) # With target elbow angle
 
 # A linear motion in cartesian space relative to the initial position
 # (Note that this motion is relative both in position and orientation. Hence, when the robot's end-effector is oriented
 # differently, it will move in a different direction)
-m6 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+m6 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 
-# Generalization of LinearMotion that allows for multiple waypoints
+# Generalization of CartesianMotion that allows for multiple waypoints
 m7 = CartesianWaypointMotion([
   CartesianWaypoint(RobotPose(Affine([0.2, -0.4, 0.3], quat), elbow_position=1.7)),
   # The following waypoint is relative to the prior one and 50% slower
@@ -266,11 +266,11 @@ By adding reactions to the motion data, the robot can react to unforeseen events
 In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. 
 If the threshold is exceeded, the reaction fires. 
 ```python
-from franky import LinearMotion, Affine, ReferenceType, Measure, Reaction
+from franky import CartesianMotion, Affine, ReferenceType, Measure, Reaction
 
-motion = LinearMotion(Affine([0.0, 0.0, 0.1]), ReferenceType.Relative)  # Move down 10cm
+motion = CartesianMotion(Affine([0.0, 0.0, 0.1]), ReferenceType.Relative)  # Move down 10cm
 
-reaction_motion = LinearMotion(Affine([0.0, 0.0, 0.01]), ReferenceType.Relative)  # Move up for 1cm
+reaction_motion = CartesianMotion(Affine([0.0, 0.0, 0.01]), ReferenceType.Relative)  # Move up for 1cm
 
 # Trigger reaction if the Z force is greater than 30N
 reaction = Reaction(Measure.FORCE_Z > 30.0, reaction_motion)
@@ -322,7 +322,7 @@ Hence, callbacks might be executed significantly after their respective reaction
 
 In C++ you can additionally use lambdas to define more complex behaviours:
 ```c++
-auto motion = LinearMotion(RobotPose(Affine({0.0, 0.0, 0.2}), 0.0), ReferenceType::Relative);
+auto motion = CartesianMotion(RobotPose(Affine({0.0, 0.0, 0.2}), 0.0), ReferenceType::Relative);
 
 // Stop motion if force is over 10N
 auto stop_motion = StopMotion<franka::CartesianPose>()
@@ -357,16 +357,16 @@ By setting the `asynchronous` parameter of `Robot.move` to `True`, the function 
 Instead, it returns immediately and, thus, allows the main thread to set new motions asynchronously. 
 ```python
 import time
-from franky import Affine, LinearMotion, Robot, ReferenceType
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
 robot = Robot("172.16.0.2")
 robot.relative_dynamics_factor = 0.05
 
-motion1 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+motion1 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion1, asynchronous=True)
 
 time.sleep(0.5)
-motion2 = LinearMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+motion2 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion2, asynchronous=True)
 ```
 

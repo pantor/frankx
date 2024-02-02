@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from franky import Affine, LinearMotion, Robot, ReferenceType
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
 
 if __name__ == "__main__":
@@ -18,9 +18,9 @@ if __name__ == "__main__":
 
     # Define and move forwards
     target = Affine([0.0, 0.2, 0.0])
-    motion_forward = LinearMotion(target, ReferenceType.Relative)
+    motion_forward = CartesianMotion(target, ReferenceType.Relative)
     robot.move(motion_forward)
 
     # And move backwards using the inverse motion
-    motion_backward = LinearMotion(target.inverse)
+    motion_backward = CartesianMotion(target.inverse)
     robot.move(motion_backward)

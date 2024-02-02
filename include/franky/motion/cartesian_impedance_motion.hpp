@@ -10,16 +10,16 @@
 
 namespace franky {
 
-class LinearImpedanceMotion : public ImpedanceMotion {
+class CartesianImpedanceMotion : public ImpedanceMotion {
  public:
   struct Params : public ImpedanceMotion::Params {
     bool return_when_finished{true};
     double finish_wait_factor{1.2}; // Wait a bit longer to stop
   };
 
-  explicit LinearImpedanceMotion(const Affine &target, double duration);
+  explicit CartesianImpedanceMotion(const Affine &target, double duration);
 
-  explicit LinearImpedanceMotion(const Affine &target, double duration, const Params &params);
+  explicit CartesianImpedanceMotion(const Affine &target, double duration, const Params &params);
 
  protected:
   void initImpl(const franka::RobotState &robot_state, const std::optional<franka::Torques> &previous_command) override;

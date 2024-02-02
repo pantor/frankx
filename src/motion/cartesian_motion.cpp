@@ -1,11 +1,11 @@
-#include "franky/motion/linear_motion.hpp"
+#include "franky/motion/cartesian_motion.hpp"
 
 #include "franky/robot_pose.hpp"
 #include "franky/motion/cartesian_waypoint_motion.hpp"
 
 namespace franky {
 
-LinearMotion::LinearMotion(
+CartesianMotion::CartesianMotion(
     const RobotPose &target,
     ReferenceType reference_type,
     const Affine& frame,

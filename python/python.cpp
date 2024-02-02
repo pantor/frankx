@@ -586,7 +586,7 @@ PYBIND11_MODULE(_franky, m) {
            "force_constraints"_a = std::nullopt,
            "exponential_decay"_a = 0.005);
 
-  py::class_<LinearImpedanceMotion, ImpedanceMotion, std::shared_ptr<LinearImpedanceMotion>>(m, "LinearImpedanceMotion")
+  py::class_<CartesianImpedanceMotion, ImpedanceMotion, std::shared_ptr<CartesianImpedanceMotion>>(m, "CartesianImpedanceMotion")
       .def(py::init<>([](
                const Affine &target,
                double duration,
@@ -604,9 +604,9 @@ PYBIND11_MODULE(_franky, m) {
                  force_constraints_active[i] = force_constraints.value()[i].has_value();
                }
              }
-             return std::make_shared<LinearImpedanceMotion>(
+             return std::make_shared<CartesianImpedanceMotion>(
                  target, duration,
-                 LinearImpedanceMotion::Params{
+                 CartesianImpedanceMotion::Params{
                      target_type, translational_stiffness, rotational_stiffness, force_constraints_value,
                      force_constraints_active, return_when_finished, finish_wait_factor});
            }),
@@ -698,14 +698,14 @@ PYBIND11_MODULE(_franky, m) {
            "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
 
-  py::class_<LinearMotion, CartesianWaypointMotion, std::shared_ptr<LinearMotion>>(m, "LinearMotion")
+  py::class_<CartesianMotion, CartesianWaypointMotion, std::shared_ptr<CartesianMotion>>(m, "CartesianMotion")
       .def(py::init<>([](
                const RobotPose &target,
                ReferenceType reference_type,
                const std::optional<Affine> &frame,
                RelativeDynamicsFactor relative_dynamics_factor,
                bool return_when_finished) {
-             return std::make_shared<LinearMotion>(
+             return std::make_shared<CartesianMotion>(
                  target,
                  reference_type,
                  frame.value_or(Affine::Identity()),
@@ -717,6 +717,9 @@ PYBIND11_MODULE(_franky, m) {
            "frame"_a = std::nullopt,
            "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
+
+  // Backwards compatibility
+  m.attr("LinearMotion") = m.attr("CartesianMotion");
 
   py::class_<StopMotion<franka::CartesianPose>,
              Motion<franka::CartesianPose>,

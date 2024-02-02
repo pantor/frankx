@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from franky import Affine, JointMotion, Measure, Reaction, Robot, CartesianPoseStopMotion, LinearMotion, RobotPose, \
+from franky import Affine, JointMotion, Measure, Reaction, Robot, CartesianPoseStopMotion, CartesianMotion, RobotPose, \
     RobotState, ReferenceType
 
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # Define and move forwards
     reaction = Reaction(Measure.ForceZ < -5.0, CartesianPoseStopMotion())
     reaction.register_callback(reaction_callback)
-    motion_down = LinearMotion(RobotPose(Affine([0.0, 0.0, -0.12]), -0.2), ReferenceType.Relative)
+    motion_down = CartesianMotion(RobotPose(Affine([0.0, 0.0, -0.12]), -0.2), ReferenceType.Relative)
     motion_down.add_reaction(reaction)
 
     # You can try to block the robot now.
