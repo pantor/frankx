@@ -3,7 +3,7 @@ from pathlib import Path as Pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-from _movex import Affine, Path
+from _franky import Affine, Path
 
 
 def walk_through_path(path, s_diff=0.001):

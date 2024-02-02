@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from time import sleep
 
-from frankx import Affine, Robot
+from franky import Affine, Robot
 
 
 if __name__ == '__main__':
@@ -10,10 +10,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     robot = Robot(args.host)
-    robot.set_default_behavior()
 
     while True:
-        state = robot.read_once()
+        state = robot.state()
         print('\nPose: ', robot.current_pose())
         print('O_TT_E: ', state.O_T_EE)
         print('Joints: ', state.q)

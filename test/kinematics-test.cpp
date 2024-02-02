@@ -3,10 +3,10 @@
 
 #include <Eigen/Core>
 
-#include <frankx/frankx.hpp>
+#include "franky.hpp"
 
 
-using namespace frankx;
+using namespace franky;
 
 
 int main(int argc, char *argv[]) {

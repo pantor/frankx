@@ -1,55 +1,83 @@
 <div align="center">
-  <img width="340" src="https://raw.githubusercontent.com/pantor/frankx/master/doc/logo.svg?sanitize=true">
+  <img width="340" src="https://raw.githubusercontent.com/timschneider42/franky/master/doc/logo.svg?sanitize=true">
   <h3 align="center">
     High-Level Motion Library for the Franka Emika Robot
   </h3>
 </div>
 <p align="center">
-  <a href="https://github.com/pantor/frankx/actions">
-    <img src="https://github.com/pantor/frankx/workflows/CI/badge.svg" alt="CI">
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/CI/badge.svg" alt="CI">
   </a>
 
-  <a href="https://github.com/pantor/frankx/actions">
-    <img src="https://github.com/pantor/frankx/workflows/Publish/badge.svg" alt="Publish">
+  <a href="https://github.com/timschneider42/franky/actions">
+    <img src="https://github.com/timschneider42/franky/workflows/Publish/badge.svg" alt="Publish">
   </a>
 
-  <a href="https://github.com/pantor/frankx/issues">
-    <img src="https://img.shields.io/github/issues/pantor/frankx.svg" alt="Issues">
+  <a href="https://github.com/timschneider42/franky/issues">
+    <img src="https://img.shields.io/github/issues/timschneider42/franky.svg" alt="Issues">
   </a>
 
-  <a href="https://github.com/pantor/frankx/releases">
-    <img src="https://img.shields.io/github/v/release/pantor/frankx.svg?include_prereleases&sort=semver" alt="Releases">
+  <a href="https://github.com/timschneider42/franky/releases">
+    <img src="https://img.shields.io/github/v/release/timschneider42/franky.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
 
-  <a href="https://github.com/pantor/frankx/blob/master/LICENSE">
+  <a href="https://github.com/timschneider42/franky/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-LGPL-green.svg" alt="LGPL">
   </a>
 </p>
 
 
-Frankx is a high-level motion library (both C++ and Python) for the Franka Emika robot. It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands. As frankx focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
+Franky is a high-level motion library (both C++ and Python) for the Franka Emika robot.
+It adds a Python wrapper around [libfranka](https://frankaemika.github.io/docs/libfranka.html), while replacing necessary real-time programming with higher-level motion commands.
+As franky focuses on making real-time trajectory generation easy, it allows the robot to react to unforeseen events.
 
+
+## Differences to frankx
+Franky is a fork of [frankx](https://github.com/pantor/frankx), though both codebase and functionality differ substantially from frankx by now.
+In particular, franky provides the following new features/improvements:
+* [Motions can be updated asynchronously.](#real-time-motion)
+* [Reactions allow for the registration of callbacks instead of just printing to stdout when fired.](#real-time-reactions)
+* [The robot state is also available during control.](#robot-state)
+* A larger part of the libfranka API is exposed to python (e.g.,`setCollisionBehavior`, `setJoinImpedance`, and `setCartesianImpedance`).
+* Cartesian motion generation handles boundaries in Euler angles properly.
+* [There is a new joint motion type that supports waypoints.](#motion-types)
+* [The signature of `Affine` changed.](#geometry) `Affine` does not handle elbow positions anymore. Instead, a new class `RobotPose` stores both the end-effector pose and optionally the elbow position.
+* The `MotionData` class does not exist anymore. Instead, reactions and other settings moved to `Motion`.
+* [The `Measure` class allows for arithmetic operations.](#real-time-reactions)
+* Exceptions caused by libfranka are raised properly instead of being printed to stdout.
+* [We provide wheels for both Franka Research 3 and the older Franka Panda](#installation)
 
 ## Installation
 
-To start using frankx with Python and libfranka *0.9.0*, just install it via
+To start using franky with Python and libfranka *0.12.1*, just install it via
 ```bash
-pip install frankx
+pip install franky-panda
+```
+We also provide wheels for libfranka versions *0.7.1*, *0.8.0*, *0.9.2*, *0.10.0*, *0.11.0*, *0.12.1*, *0.13.3*. 
+They can be installed via
+```bash
+VERSION=0-9-2
+wget https://github.com/TimSchneider42/franky/releases/latest/download/libfranka_${VERSION}_wheels.zip
+unzip libfranka_${VERSION}_wheels.zip
+pip install --no-index --find-links=./dist franky-panda
 ```
 
-Frankx is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings. Frankx uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG). As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions. After installing the dependencies (the exact versions can be found below), you can build and install frankx via
+Franky is based on [libfranka](https://github.com/frankaemika/libfranka), [Eigen](https://eigen.tuxfamily.org) for transformation calculations and [pybind11](https://github.com/pybind/pybind11) for the Python bindings.
+Franky uses the [Ruckig](https://ruckig.com) Community Version for Online Trajectory Generation (OTG).
+As the Franka is quite sensitive to acceleration discontinuities, it requires constrained jerk for all motions.
+After installing the dependencies (the exact versions can be found below), you can build and install franky via
 
 ```bash
-git clone --recurse-submodules git@github.com:pantor/frankx.git
-cd frankx
+git clone --recurse-submodules git@github.com:timschneider42/franky.git
+cd franky
 mkdir -p build
 cd build
-cmake -DBUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 make install
 ```
 
-To use frankx, you can also include it as a subproject in your parent CMake via `add_subdirectory(frankx)` and then `target_link_libraries(<target> libfrankx)`. If you need only the Python module, you can install frankx via
+To use franky, you can also include it as a subproject in your parent CMake via `add_subdirectory(franky)` and then `target_link_libraries(<target> libfranky)`. If you need only the Python module, you can install franky via
 
 ```bash
 pip install .
@@ -60,18 +88,18 @@ Make sure that the built library can be found from Python by adapting your Pytho
 
 #### Using Docker
 
-To use frankx within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
+To use franky within Docker we have supplied a [Dockerfile](docker/Dockerfile) which you currently need to build yourself:
 
 ```bash
-git clone https://github.com/pantor/frankx.git
-cd frankx/
-docker build -t pantor/frankx --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
+git clone https://github.com/timschneider42/franky.git
+cd franky/
+docker build -t franky --build-arg libfranka_version=0.7.0 -f docker/Dockerfile .
 ```
 
 To use another version of libfranka than the default (v.0.7.0) simply change the build argument. Then, to run the container simply:
 
 ```bash
-docker run -it --rm --network=host --privileged pantor/frankx
+docker run -it --rm --network=host --privileged franky
 ```
 
 The container requires access to the host machines network *and* elevated user rights to allow the docker user to set RT capabilities of the processes run from within it.
@@ -79,11 +107,11 @@ The container requires access to the host machines network *and* elevated user r
 
 ## Tutorial
 
-Frankx comes with both a C++ and Python API that differ only regarding real-time capability. We will introduce both languages next to each other. In your C++ project, just include `include <frankx/frankx.hpp>` and link the library. For Python, just `import frankx`. As a first example, only four lines of code are needed for simple robotic motions.
+Franky comes with both a C++ and Python API that differ only regarding real-time capability. We will introduce both languages next to each other. In your C++ project, just include `include <franky/franky.hpp>` and link the library. For Python, just `import franky`. As a first example, only four lines of code are needed for simple robotic motions.
 
-```.cpp
-#include <frankx/frankx.hpp>
-using namespace frankx;
+```c++
+#include <franky/franky.hpp>
+using namespace franky;
 
 // Connect to the robot with the FCI IP address
 Robot robot("172.16.0.2");
@@ -92,20 +120,20 @@ Robot robot("172.16.0.2");
 robot.setDynamicRel(0.05);
 
 // Move the end-effector 20cm in positive x-direction
-auto motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0));
+auto motion = CartesianMotion(RobotPose(Affine({0.2, 0.0, 0.0}), 0.0), ReferenceType::Relative);
 
 // Finally move the robot
 robot.move(motion);
 ```
 
 The corresponding program in Python is
-```.py
-from frankx import Affine, LinearRelativeMotion, Robot
+```python
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
 robot = Robot("172.16.0.2")
-robot.set_dynamic_rel(0.05)
+robot.relative_dynamics_factor = 0.05
 
-motion = LinearRelativeMotion(Affine(0.2, 0.0, 0.0))
+motion = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
 robot.move(motion)
 ```
 
@@ -114,49 +142,39 @@ Furthermore, we will introduce methods for geometric calculations, for moving th
 
 ### Geometry
 
-`frankx::Affine` is a thin wrapper around [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). It is used for Cartesian poses, frames and transformation. Frankx simplifies the usage of Euler angles (default ZYX-convention).
-```.cpp
-// Initiliaze a transformation with an (x, y, z, a=0.0, b=0.0, c=0.0) translation
-Affine z_translation = Affine(0.0, 0.0, 0.5);
+`franky.Affine` is a python wrapper for [Eigen::Affine3d](https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html). 
+It is used for Cartesian poses, frames and transformation. 
+franky adds its own constructor, which takes a position and a quaternion as inputs:
+```python
+import math
+from scipy.spatial.transform import Rotation
+from franky import Affine
 
-// Define a rotation transformation using the (x, y, z, a, b, c) parameter list
-Affine z_rotation = Affine(0.0, 0.0, 0.0, M_PI / 3, 0.0, 0.0);
+z_translation = Affine([0.0, 0.0, 0.5])
 
-// Make use of the wonderful Eigen library
-auto combined_transformation = z_translation * z_rotation;
+quat = Rotation.from_euler("xyz", [0, 0, math.pi / 2]).as_quat()
+z_rotation = Affine([0.0, 0.0, 0.0], quat)
 
-// Get the Euler angles (a, b, c) in a vector representation
-Eigen::Vector3d euler_angles = combined_transformation.angles();
-
-// Get the vector representation (x, y, z, a, b, c) of an affine transformation
-frankx::Vector6d pose = combined_transformation.vector();
-```
-
-In all cases, distances are in [m] and rotations in [rad]. Additionally, there are several helper functions for conversion between Eigen and libfranka's std::array objects. In python, this translates into
-```.py
-z_translation = Affine(0.0, 0.0, 0.5)
-z_rotation = Affine(0.0, 0.0, 0.0, math.pi / 3, 0.0, 0.0)
 combined_transformation = z_translation * z_rotation
-
-# These two are now numpy arrays
-euler_angles = combined_transformation.angles()
-pose = combined_transformation.vector()
 ```
 
-As the trajectory generation works in the Euler space, please make sure to have continuous Euler angles around your working point. You can adapt this by setting the flange to end-effector transformation via `setEE(...)`.
-
+In all cases, distances are in [m] and rotations in [rad].
 
 ### Robot
 
-We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. Moreover, we added methods to adapt the dynamics of the robot for all motions. The `rel` name denotes that this a factor of the maximum constraints of the robot.
-```.py
+We wrapped most of the libfanka API (including the RobotState or ErrorMessage) for Python. 
+Moreover, we added methods to adapt the dynamics of the robot for all motions. 
+The `rel` name denotes that this a factor of the maximum constraints of the robot.
+```python
+from franky import Robot
+
 robot = Robot("172.16.0.2")
 
 # Recover from errors
 robot.recover_from_errors()
 
 # Set velocity, acceleration and jerk to 5% of the maximum
-robot.set_dynamic_rel(0.05)
+robot.relative_dynamics_factor = 0.05
 
 # Alternatively, you can define each constraint individually
 robot.velocity_rel = 0.2
@@ -164,116 +182,211 @@ robot.acceleration_rel = 0.1
 robot.jerk_rel = 0.01
 
 # Get the current pose
-current_pose = robot.current_pose()
+current_pose = robot.current_pose
+```
+
+
+### Robot State
+
+The robot state can be retrieved by calling the following methods:
+
+* `state`: Return an object of the `franky.RobotState` class which contains most of the same attributes, under the same name, as the libfranka [franka::RobotState](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html) definition.
+
+* `current_pose`: Return a 3D Affine transformation object of the measured end effector pose in base frame (alias for [franka::RobotState::O_T_EE](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html#a193781d47722b32925e0ea7ac415f442)).
+
+* `current_joint_positions`: Return a sequence of the manipulator arm's 7-joint positions (alias for [franka::RobotState::q](https://frankaemika.github.io/libfranka/structfranka_1_1RobotState.html#ade3335d1ac2f6c44741a916d565f7091)).
+
+```.py
+robot = Robot("172.16.0.2")
+
+# Get the current state
+state = robot.state
+pose = robot.current_pose
+joint_positions = robot.current_joint_positions
 ```
 
 
 ### Motion Types
 
-Frankx defines five different motion types. In python, you can use them as follows:
-```.py
+Franky defines a number of different motion types. 
+In python, you can use them as follows:
+```python
+import math
+from scipy.spatial.transform import Rotation
+from franky import JointWaypointMotion, JointWaypoint, JointPositionStopMotion, CartesianMotion, CartesianWaypointMotion, CartesianWaypoint, Affine, RobotPose, ReferenceType, CartesianPoseStopMotion
+
 # A point-to-point motion in the joint space
-m1 = JointMotion([-1.81194, 1.17910, 1.75710, -2.1416, -1.14336, 1.63304, -0.43217])
+m1 = JointWaypointMotion([JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4])])
 
-# A linear motion in cartesian space
-m2 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0))
-m3 = LinearMotion(Affine(0.2, -0.4, 0.3, math.pi / 2, 0.0, 0.0), elbow=1.7)  # With target elbow angle
-
-# A linear motion in cartesian space relative to the initial position
-m4 = LinearRelativeMotion(Affine(0.0, 0.1, 0.0))
-
-# A more complex motion by defining multiple waypoints
-m5 = WaypointMotion([
-  Waypoint(Affine(0.2, -0.4, 0.2, 0.3, 0.2, 0.1)),
-  # The following waypoint is relative to the prior one
-  Waypoint(Affine(0.0, 0.1, 0.0), Waypoint.ReferenceType.Relative)
+# A motion in joint space with multiple waypoints
+m2 = JointWaypointMotion([
+    JointWaypoint([-1.8, 1.1, 1.7, -2.1, -1.1, 1.6, -0.4]),
+    JointWaypoint([-1.7, 1.2, 1.8, -2.0, -1.0, 1.7, -0.3]),
+    JointWaypoint([-1.9, 1.0, 1.6, -2.2, -1.2, 1.5, -0.5])
 ])
 
-# Hold the position for [s]
-m6 = PositionHold(5.0)
+# Stop the robot
+m3 = JointPositionStopMotion()
+
+# A linear motion in cartesian space
+quat = Rotation.from_euler("xyz", [0, 0, math.pi / 2]).as_quat()
+m4 = CartesianMotion(Affine([0.2, -0.4, 0.3], quat))
+m5 = CartesianMotion(RobotPose(Affine([0.2, -0.4, 0.3], quat), elbow_position=1.7)) # With target elbow angle
+
+# A linear motion in cartesian space relative to the initial position
+# (Note that this motion is relative both in position and orientation. Hence, when the robot's end-effector is oriented
+# differently, it will move in a different direction)
+m6 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+
+# Generalization of CartesianMotion that allows for multiple waypoints
+m7 = CartesianWaypointMotion([
+  CartesianWaypoint(RobotPose(Affine([0.2, -0.4, 0.3], quat), elbow_position=1.7)),
+  # The following waypoint is relative to the prior one and 50% slower
+  CartesianWaypoint(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative, velocity_rel=0.5)
+])
+
+# Stop the robot. The difference of JointPositionStopMotion to CartesianPoseStopMotion is that JointPositionStopMotion
+# stops the robot in joint position control mode while CartesianPoseStopMotion stops it in cartesian pose control mode.
+# The difference becomes relevant when asynchronous move commands are being sent (see below).
+m8 = CartesianPoseStopMotion()
 ```
+
+Every motion and waypoint type allows to adapt the dynamics (velocity, acceleration and jerk) by setting the respective `velocity_rel`, `acceleration_rel`, and `jerk_rel` parameters.
 
 The real robot can be moved by applying a motion to the robot using `move`:
-```.py
+```python
 robot.move(m1)
 robot.move(m2)
-
-# To use a given frame relative to the end effector
-camera_frame = Affine(0.1, 0.0, 0.1)
-robot.move(camera_frame, m3)
-
-# To change the dynamics of the motion, use MotionData
-data = MotionData(0.2)  # Using a dynamic_rel of 0.2 (eventually multiplied with robot.dynamic_rel)
-robot.move(m4, data)
-```
-
-Using MotionData, you can adapt the dynamics (velocity, acceleration and jerk) of a specific motion.
-```.py
-data.velocity_rel = 1.0
-data.jerk_rel = 0.2
 ```
 
 
 ### Real-Time Reactions
 
-By adding reactions to the motion data, the robot can react to unforeseen events. In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. If the threshold is exceeded, the reaction fires. Following comparisons are currently implemented
-```.py
-reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.01))  # Move up for 1cm
+By adding reactions to the motion data, the robot can react to unforeseen events. 
+In the Python API, you can define conditions by using a comparison between a robot's value and a given threshold. 
+If the threshold is exceeded, the reaction fires. 
+```python
+from franky import CartesianMotion, Affine, ReferenceType, Measure, Reaction
 
-# Stop motion if the overall force is greater than 30N
-d1 = MotionData().with_reaction(Reaction(Measure.ForceXYZNorm() > 30.0))
+motion = CartesianMotion(Affine([0.0, 0.0, 0.1]), ReferenceType.Relative)  # Move down 10cm
 
-# Apply reaction motion if the force in negative z-direction is greater than 10N
-d2 = MotionData().with_reaction(Reaction(Measure.ForceZ() < -10.0), reaction_motion)
+reaction_motion = CartesianMotion(Affine([0.0, 0.0, 0.01]), ReferenceType.Relative)  # Move up for 1cm
 
-# Stop motion if its duration is above 30s
-d3 = MotionData().with_reaction(Reaction(Measure.Time() >= 30.0))
+# Trigger reaction if the Z force is greater than 30N
+reaction = Reaction(Measure.FORCE_Z > 30.0, reaction_motion)
+motion.add_reaction(reaction)
 
-robot.move(m2, d2)
-
-# Check if the reaction was triggered
-if d2.has_fired:
-  robot.recover_from_errors()
-  print('Force exceeded 10N!')
+robot.move(motion)
 ```
 
-Once a reaction has fired, it will be neglected furthermore. In C++ you can additionally use lambdas to define more complex behaviours:
-```.cpp
+Possible values to measure are
+* `Measure.FORCE_X,` `Measure.FORCE_Y,` `Measure.FORCE_Z`: Force in X, Y and Z direction
+* `Measure.REL_TIME`: Time in seconds since the current motion started
+* `Measure.ABS_TIME`: Time in seconds since the initial motion started
+
+The difference between `Measure.REL_TIME` and `Measure.ABS_TIME` is that `Measure.REL_TIME` is reset to zero whenever a new motion starts (either by calling `Robot.move` or as a result of a triggered `Reaction`).
+`Measure.ABS_TIME`, on the other hand, is only reset to zero when a motion terminates regularly without being interrupted and the robot stops moving.
+Hence, `Measure.ABS_TIME` measures the total time in which the robot has moved without interruption.
+
+`Measure` values support all classical arithmetic operations, like addition, subtraction, multiplication, division, and exponentiation (both as base and exponent).
+```python
+normal_force = (Measure.FORCE_X ** 2 + Measure.FORCE_Y ** 2 + Measure.FORCE_Z ** 2) ** 0.5
+```
+
+With arithmetic comparisons, conditions can be generated.
+```python
+normal_force_within_bounds = normal_force < 30.0
+time_up = Measure.ABS_TIME > 10.0
+```
+
+Conditions support negation, conjunction (and), and disjunction (or):
+```python
+abort = ~normal_force_within_bounds | time_up
+fast_abort = ~normal_force_within_bounds | time_up
+```
+
+To check whether a reaction has fired, a callback can be attached:
+```python
+from franky import RobotState
+
+def reaction_callback(robot_state: RobotState, rel_time: float, abs_time: float):
+    print(f"Reaction fired at {abs_time}.")
+
+reaction.register_callback(reaction_callback)
+```
+
+Note that these callbacks are not executed in the control thread since they would otherwise block it.
+Instead, they are put in a queue and executed by another thread.
+While this scheme ensures that the control thread can always run, it cannot prevent that the queue grows indefinitely when the callbacks take more time to execute than it takes for new callbacks to be queued.
+Hence, callbacks might be executed significantly after their respective reaction has fired if they are triggered in rapid succession or take a long time to execute.
+
+In C++ you can additionally use lambdas to define more complex behaviours:
+```c++
+auto motion = CartesianMotion(RobotPose(Affine({0.0, 0.0, 0.2}), 0.0), ReferenceType::Relative);
+
 // Stop motion if force is over 10N
-auto data = MotionData()
-  .withReaction({
-    Measure::ForceXYZNorm() > 10.0  // [N]
-  })
-  .withReaction({
-    [](const franka::RobotState& state, double time) {
-      return (state.current_errors.self_collision_avoidance_violation);
-    }
-  });
+auto stop_motion = StopMotion<franka::CartesianPose>()
 
-// Hold position for 5s
-robot.move(PositionHold(5.0), data); // [s]
-// e.g. combined with a PositionHold, the robot continues its program after pushing the end effector.
+motion
+  .addReaction(
+    Reaction(
+      Measure::ForceZ() > 10.0,  // [N],
+      stop_motion))
+  .addReaction(
+    Reaction(
+      Condition(
+        [](const franka::RobotState& state, double rel_time, double abs_time) {
+          // Lambda condition
+          return state.current_errors.self_collision_avoidance_violation;
+        }),
+      [](const franka::RobotState& state, double rel_time, double abs_time) {
+        // Lambda reaction motion generator
+        // (we are just returning a stop motion, but there could be arbitrary 
+        // logic here for generating reaction motions)
+        return StopMotion<franka::CartesianPose>();
+      })
+    ));
+
+robot.move(motion)
 ```
 
 
-### Real-Time Waypoint Motion
+### Real-Time Motion
 
-While the robot moves in a background thread, you can change the waypoints in real-time.
-```.cpp
-robot.moveAsync(motion_hold);
+By setting the `asynchronous` parameter of `Robot.move` to `True`, the function does not block until the motion finishes.
+Instead, it returns immediately and, thus, allows the main thread to set new motions asynchronously. 
+```python
+import time
+from franky import Affine, CartesianMotion, Robot, ReferenceType
 
-// Wait for key input from user
-std::cin.get();
+robot = Robot("172.16.0.2")
+robot.relative_dynamics_factor = 0.05
 
-motion_hold.setNextWaypoint(Waypoint(Affine(0.0, 0.0, 0.1), Waypoint::ReferenceType::Relative);
+motion1 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+robot.move(motion1, asynchronous=True)
+
+time.sleep(0.5)
+motion2 = CartesianMotion(Affine([0.2, 0.0, 0.0]), ReferenceType.Relative)
+robot.move(motion2, asynchronous=True)
 ```
+
+By calling `Robot.join_motion` the main thread can be synchronized with the motion thread, as it will block until the robot finishes its motion.
+```python
+robot.join_motion()
+```
+
+Note that when exceptions occur during the asynchronous execution of a motion, they will not be thrown immediately.
+Instead, the control thread stores the exception and terminates.
+The next time `Robot.join_motion` or `Robot.move` are called, they will throw the stored exception in the main thread.
+Hence, after an asynchronous motion has finished, make sure to call `Robot.join_motion` to ensure being notified of any exceptions that occurred during the motion.
 
 
 ### Gripper
 
-In the `frankx::Gripper` class, the default gripper force and gripper speed can be set. Then, additionally to the libfranka commands, the following helper methods can be used:
+In the `franky::Gripper` class, the default gripper force and gripper speed can be set. 
+Then, additionally to the libfranka commands, the following helper methods can be used:
 
-```.cpp
+```c++
 auto gripper = Gripper("172.16.0.2");
 
 // These are the default values
@@ -295,50 +408,26 @@ if (is_grasping) {
 }
 ```
 
-The Python API should be very straight-forward for the Gripper class.
-
-
-### Kinematics
-
-Frankx includes a rudimentary, non-realtime-capable forward and inverse kinematics.
-
-```.py
-# Some initial joint configuration
-q = [-1.45549, 1.15401, 1.50061, -2.30909, -1.3141, 1.9391, 0.02815]
-
-# Calculate the forward kinematics
-x = Affine(Kinematics.forward(q))
-print('Current end effector position: ', x)
-
-# Define new target position
-x_new = Affine(x=0.1, y=0.0, z=0.0) * x
-
-# Franka has 7 DoFs, so what to do with the remaining Null space?
-null_space = NullSpaceHandling(2, 1.4) # Set elbow joint to 1.4
-
-# Inverse kinematic with target, initial joint angles, and Null space configuration
-q_new = Kinematics.inverse(x_new.vector(), q, null_space)
-
-print('New position: ', x_new)
-print('New joints: ', q_new)
-```
+The Python API is straight-forward for the Gripper class.
 
 
 ## Documentation
 
-An auto-generated documentation can be found at [https://pantor.github.io/frankx/](https://pantor.github.io/frankx/). Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/pantor/frankx/tree/master/examples) directory. We will add a more detailed documentation once frankx reaches v1.0.
+An auto-generated documentation can be found at [https://timschneider42.github.io/franky/](https://timschneider42.github.io/franky/).
+Moreover, there are multiple examples for both C++ and Python in the [examples](https://github.com/TimSchneider42/franky/tree/master/examples) directory. 
 
 
 ## Development
 
-Frankx is written in C++17 and Python3.7. It is currently tested against following versions
+Franky is written in C++17 and Python3.7. It is currently tested against following versions
 
-- Eigen v3.3.7
-- Libfranka v0.9.0
+- Eigen v3.4.0
+- Libfranka v0.12.1
 - Pybind11 v2.9.1
 - Catch2 v2.13 (only for testing)
 
 
 ## License
 
-For non-commercial applications, this software is licensed under the LGPL v3.0. If you want to use frankx within commercial applications or under a different license, please contact us for individual agreements.
+For non-commercial applications, this software is licensed under the LGPL v3.0. 
+If you want to use franky within commercial applications or under a different license, please contact us for individual agreements.

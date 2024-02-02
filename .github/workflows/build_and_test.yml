@@ -1,0 +1,68 @@
+name: Build and test
+
+on:
+  workflow_call:
+    inputs:
+      libfranka-version:
+        required: true
+        type: string
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install apt dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential cmake git libpoco-dev catch2 python3-dev
+
+      - name: Install Eigen3
+        run: |
+          git clone https://gitlab.com/libeigen/eigen.git
+          cd eigen
+          git checkout 3.4.0
+          mkdir build && cd build
+          cmake ..
+          sudo make install
+
+      - name: Install libfranka
+        run: |
+          git clone --recursive https://github.com/frankaemika/libfranka.git
+          cd libfranka
+          git checkout ${{ inputs.libfranka-version }}
+          
+          # Cherry-pick missing imports commit
+          git config user.email "john.doe@example.com"
+          git config user.name "John Doe"
+          if ! git merge-base --is-ancestor f1f46fb HEAD; then git cherry-pick -m 1 f1f46fb; fi
+          
+          git submodule update
+          mkdir build && cd build
+          cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+          make -j2
+          sudo make install
+
+      - name: Install pybind11
+        run: |
+          git clone https://github.com/pybind/pybind11.git
+          cd pybind11
+          git checkout v2.9.1
+          mkdir build && cd build
+          cmake -DPYBIND11_TEST=OFF ..
+          make -j2
+          sudo make install
+
+      - name: Configure & make
+        run: |
+          mkdir build && cd build
+          cmake ..
+          make -j2
+
+      - name: Test
+        run: make test

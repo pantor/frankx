@@ -9,3 +9,5 @@ geckodriver.log
 doc/html
 tmp
 *.pyc
+/cmake-build-*
+/.idea/

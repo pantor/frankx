@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from time import sleep
 
-from frankx import Robot
+from franky import Robot
 
 
 if __name__ == '__main__':
@@ -11,7 +11,6 @@ if __name__ == '__main__':
     parser.add_argument('--password', help='password')
 
     args = parser.parse_args()
-
 
     with Robot(args.host, args.user, args.password) as api:
         # api.lock_brakes()

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import patches
 import numpy as np
 
-from frankx import Affine, Kinematics, NullSpaceHandling
+from franky import Affine, Kinematics, NullSpaceHandling
 
 def Sqrt(x):
     return np.sqrt(x)
