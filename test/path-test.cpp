@@ -44,8 +44,8 @@ TEST_CASE("Path from affines and blending") {
 
     std::vector<PathWaypoint> waypoints(n);
     for (size_t j = 0; j < n; j += 1) {
-      auto translation = Vector<3>::Random();
-      auto quaternion = Vector<4>::Random().normalized();
+      auto translation = Eigen::Vector3d::Random();
+      auto quaternion = Eigen::Vector4d::Random().normalized();
       auto transformation = Affine().fromPositionOrientationScale(
           translation, Eigen::Quaterniond(quaternion), Eigen::Vector3d::Ones());
       waypoints[j] = PathWaypoint{{transformation}};
