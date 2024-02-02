@@ -38,7 +38,6 @@ class CMakeBuild(build_ext):
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}/".format(ext_dir),
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
-            "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(build_type),
             "-DBUILD_EXAMPLES=OFF",
             "-DBUILD_PYTHON_STUBS=ON",
