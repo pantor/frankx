@@ -20,7 +20,7 @@ LinearMotion::LinearMotion(
         }
     }, {
         {
-            .return_when_finished = return_when_finished,
+            .return_when_finished = return_when_finished
         },
         frame
     }) {}
