@@ -49,6 +49,6 @@ jobs:
           unzip wheels/libfranka_0-12-1_wheels.zip
 
       - name: Publish python package
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_TOKEN }}
