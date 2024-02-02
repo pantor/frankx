@@ -22,5 +22,5 @@ if __name__ == "__main__":
     robot.move(motion_forward)
 
     # And move backwards using the inverse motion
-    motion_backward = LinearMotion(target.inverse())
+    motion_backward = LinearMotion(target.inverse)
     robot.move(motion_backward)
