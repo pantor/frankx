@@ -331,8 +331,8 @@ PYBIND11_MODULE(_franky, m) {
 #define EXTRA_FIELDS2 \
     O_ddP_O,
 #else
-    #define EXTRA_FIELDS1
-    #define EXTRA_FIELDS2
+#define EXTRA_FIELDS1
+#define EXTRA_FIELDS2
 #endif
 
 #define ROBOT_STATE_FIELDS \
