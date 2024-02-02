@@ -236,14 +236,16 @@ PYBIND11_MODULE(_franky, m) {
   joint_via_motion_generator_planning_joint_limit_violation, \
   base_acceleration_initialization_timeout, \
   base_acceleration_invalid_reading
+#define NUM_ERRORS 41
 #else
 #define ERRORS ERRORS7
+#define NUM_ERRORS 37
 #endif
 
 
 #define ADD_ERROR(unused, name) errors.def_property_readonly(#name, [](const franka::Errors &e) { return e.name; });
 #define UNPACK_ERRORS_INNER(tuple, itr, name) , tuple[itr + 1].cast<bool>()
-#define UNPACK_ERRORS_1(tuple, name0, ...) franka::Errors{std::array<bool, 41>{tuple[0].cast<bool>() MAP_C1(UNPACK_ERRORS_INNER, tuple, __VA_ARGS__)}}
+#define UNPACK_ERRORS_1(tuple, name0, ...) franka::Errors{std::array<bool, NUM_ERRORS>{tuple[0].cast<bool>() MAP_C1(UNPACK_ERRORS_INNER, tuple, __VA_ARGS__)}}
 #define UNPACK_ERRORS(tuple, ...) UNPACK_ERRORS_1(tuple, __VA_ARGS__)
 
   py::class_<franka::Errors> errors(m, "Errors");
