@@ -421,7 +421,7 @@ Moreover, there are multiple examples for both C++ and Python in the [examples](
 
 Franky is written in C++17 and Python3.7. It is currently tested against following versions
 
-- Eigen v3.3.7
+- Eigen v3.4.0
 - Libfranka v0.12.1
 - Pybind11 v2.9.1
 - Catch2 v2.13 (only for testing)

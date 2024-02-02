@@ -13,7 +13,7 @@ option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_PYTHON_STUBS "Build stubs" ON)
 option(BUILD_TESTS "Build tests" ON)
 
-find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
+find_package(Eigen3 3.4.0 REQUIRED NO_MODULE)
 find_package(Franka REQUIRED)
 
 if (${Franka_VERSION} VERSION_GREATER_EQUAL "0.8.0")
