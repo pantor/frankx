@@ -191,7 +191,7 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::self * py::self);
   py::implicitly_convertible<double, RelativeDynamicsFactor>();
 
-#define ERRORS7 \
+#define ERRORS_0_8 \
   joint_position_limits_violation, \
   cartesian_position_limits_violation, \
   self_collision_avoidance_violation, \
@@ -230,15 +230,15 @@ PYBIND11_MODULE(_franky, m) {
   instability_detected, \
   joint_move_in_wrong_direction
 
-#ifdef FRANKA8
-#define ERRORS ERRORS7, \
+#ifdef FRANKA_0_9
+#define ERRORS ERRORS_0_8, \
   cartesian_spline_motion_generator_violation, \
   joint_via_motion_generator_planning_joint_limit_violation, \
   base_acceleration_initialization_timeout, \
   base_acceleration_invalid_reading
 #define NUM_ERRORS 41
 #else
-#define ERRORS ERRORS7
+#define ERRORS ERRORS_0_8
 #define NUM_ERRORS 37
 #endif
 
@@ -325,15 +325,18 @@ PYBIND11_MODULE(_franky, m) {
            py::is_operator())
       .def("__repr__", &Measure::repr);
 
-#ifdef FRANKA8
+#ifdef FRANKA_0_8
 #define EXTRA_FIELDS1 \
     F_T_NE, \
     NE_T_EE,
+#else
+#define EXTRA_FIELDS1
+#endif
 
+#ifdef FRANKA_0_9
 #define EXTRA_FIELDS2 \
     O_ddP_O,
 #else
-#define EXTRA_FIELDS1
 #define EXTRA_FIELDS2
 #endif
 

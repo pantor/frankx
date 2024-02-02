@@ -17,7 +17,11 @@ find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka REQUIRED)
 
 if (${Franka_VERSION} VERSION_GREATER_EQUAL "0.8.0")
-    add_compile_definitions(FRANKA8)
+    add_compile_definitions(FRANKA_0_8)
+endif ()
+
+if (${Franka_VERSION} VERSION_GREATER_EQUAL "0.9.0")
+    add_compile_definitions(FRANKA_0_9)
 endif ()
 
 message("Found Eigen Version: ${Eigen3_VERSION}")
