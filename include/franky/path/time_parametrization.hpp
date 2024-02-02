@@ -31,12 +31,12 @@ class TimeParametrization {
     // For blend segments: Constant path velocity ds
     // Check continuous, and go back to zero velocity otherwise
 
-    Vector<state_dimensions> max_velocity_v = Eigen::Map<const Vector<state_dimensions>>(
-        max_velocity.data(), max_velocity.size());
-    Vector<state_dimensions> max_accleration_v = Eigen::Map<const Vector<state_dimensions>>(
-        max_acceleration.data(), max_acceleration.size());
-    Vector<state_dimensions> max_jerk_v = Eigen::Map<const Vector<state_dimensions>>(
-        max_jerk.data(), max_jerk.size());
+    Eigen::Vector<double, state_dimensions> max_velocity_v = \
+        Eigen::Map<const Eigen::Vector<double, state_dimensions>>(max_velocity.data(), max_velocity.size());
+    Eigen::Vector<double, state_dimensions> max_accleration_v = \
+        Eigen::Map<const Eigen::Vector<double, state_dimensions>>(max_acceleration.data(), max_acceleration.size());
+    Eigen::Vector<double, state_dimensions> max_jerk_v = \
+        Eigen::Map<const Eigen::Vector<double, state_dimensions>>(max_jerk.data(), max_jerk.size());
 
     std::vector<std::tuple<double, double, double>> max_path_dynamics;
     for (auto segment : path.segments()) {

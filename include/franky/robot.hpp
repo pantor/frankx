@@ -30,7 +30,7 @@ struct InvalidMotionTypeException : public std::runtime_error {
 class Robot : public franka::Robot {
  public:
   template<size_t dims>
-  using ScalarOrArray = std::variant<double, std::array<double, dims>, Vector<dims>>;
+  using ScalarOrArray = std::variant<double, std::array<double, dims>, Eigen::Vector<double, dims>>;
 
   struct Params {
     RelativeDynamicsFactor relative_dynamics_factor{1.0};
@@ -258,8 +258,8 @@ class Robot : public franka::Robot {
   std::array<double, dims> expand(const ScalarOrArray<dims> &input) {
     if (std::holds_alternative<std::array<double, dims>>(input)) {
       return std::get<std::array<double, dims>>(input);
-    } else if (std::holds_alternative<Vector<dims>>(input)) {
-      return toStd<dims>(std::get<Vector<dims>>(input));
+    } else if (std::holds_alternative<Eigen::Vector<double, dims>>(input)) {
+      return toStd<dims>(std::get<Eigen::Vector<double, dims>>(input));
     } else {
       std::array<double, dims> output;
       std::fill(output.begin(), output.end(), std::get<double>(input));

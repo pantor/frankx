@@ -5,11 +5,8 @@
 
 namespace franky {
 
-template<size_t dims>
-using Vector = Eigen::Matrix<double, dims, 1>;
-
-using Vector6d = Vector<6>;
-using Vector7d = Vector<7>;
+using Vector6d = Eigen::Vector<double, 6>;
+using Vector7d = Eigen::Vector<double, 7>;
 
 using Euler = Eigen::EulerAngles<double, Eigen::EulerSystemXYZ>;
 

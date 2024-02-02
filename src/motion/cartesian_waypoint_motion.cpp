@@ -22,10 +22,10 @@ void CartesianWaypointMotion::initWaypointMotion(
   RobotPose robot_pose(previous_command.value_or(franka::CartesianPose{robot_state.O_T_EE_c, robot_state.elbow_c}));
   ref_frame_ = Affine::Identity();
 
-  auto initial_velocity = Vector<6>::Map(robot_state.O_dP_EE_c.data());
+  auto initial_velocity = Vector6d::Map(robot_state.O_dP_EE_c.data());
   Vector7d initial_velocity_with_elbow = (Vector7d() << initial_velocity, robot_state.delbow_c[0]).finished();
 
-  auto initial_acceleration = Vector<6>::Map(robot_state.O_ddP_EE_c.data());
+  auto initial_acceleration = Vector6d::Map(robot_state.O_ddP_EE_c.data());
   Vector7d initial_acceleration_with_elbow = (Vector7d() << initial_acceleration, robot_state.ddelbow_c[0]).finished();
 
   target_robot_pose_ = robot_pose;
@@ -54,11 +54,11 @@ void CartesianWaypointMotion::setNewWaypoint(
   ref_frame_ = ref_frame_ * new_ref_to_old_ref;
   auto rot = new_ref_to_old_ref.inverse().rotation();
 
-  Vector<7> current_velocity = toEigen<7>(input_parameter.current_velocity);
+  Vector7d current_velocity = toEigen<7>(input_parameter.current_velocity);
   auto linear_vel_ref_frame = rot * current_velocity.head<3>();
   auto angular_vel_ref_frame = rot * current_velocity.segment<3>(3);
 
-  Vector<7> current_acc = toEigen<7>(input_parameter.current_acceleration);
+  Vector7d current_acc = toEigen<7>(input_parameter.current_acceleration);
   auto linear_acc_ref_frame = rot * current_acc.head<3>();
   auto angular_acc_ref_frame = rot * current_acc.segment<3>(3);
 

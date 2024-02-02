@@ -33,7 +33,7 @@ using namespace franky;
 SequentialExecutor callback_executor;
 
 template<int dims>
-std::string vecToStr(const Vector<dims> &vec) {
+std::string vecToStr(const Eigen::Vector<double, dims> &vec) {
   std::stringstream ss;
   ss << "[";
   for (size_t i = 0; i < dims; i++) {
@@ -419,10 +419,10 @@ PYBIND11_MODULE(_franky, m) {
   py::class_<Affine>(m, "Affine")
       .def(py::init<const Eigen::Matrix<double, 4, 4> &>(),
            "transformation_matrix"_a = Eigen::Matrix<double, 4, 4>::Identity())
-      .def(py::init<>([](const Vector<3> &translation, const Vector<4> &quaternion) {
+      .def(py::init<>([](const Eigen::Vector3d &translation, const Eigen::Vector4d &quaternion) {
         return Affine().fromPositionOrientationScale(
-            translation, Eigen::Quaterniond(quaternion), Vector<3>::Ones());
-      }), "translation"_a = Vector<3>{0, 0, 0}, "quaternion"_a = Vector<4>{0, 0, 0, 1})
+            translation, Eigen::Quaterniond(quaternion), Eigen::Vector3d::Ones());
+      }), "translation"_a = Eigen::Vector3d{0, 0, 0}, "quaternion"_a = Eigen::Vector4d{0, 0, 0, 1})
       .def(py::init<const Affine &>()) // Copy constructor
       .def(py::self * py::self)
       .def_property_readonly("inverse", [](const Affine &affine) { return affine.inverse(); })
@@ -444,7 +444,8 @@ PYBIND11_MODULE(_franky, m) {
             if (t.size() != 2)
               throw std::runtime_error("Invalid state!");
             return Affine().fromPositionOrientationScale(
-                t[0].cast<Vector<3>>(), Eigen::Quaterniond(t[1].cast<Vector<4>>()), Vector<3>::Ones());
+                t[0].cast<Eigen::Vector3d>(),
+                    Eigen::Quaterniond(t[1].cast<Eigen::Vector4d>()), Eigen::Vector3d::Ones());
           }
       ));
 
