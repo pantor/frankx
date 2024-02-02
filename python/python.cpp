@@ -653,6 +653,13 @@ PYBIND11_MODULE(_franky, m) {
            "relative_dynamics_factor"_a = 1.0,
            "return_when_finished"_a = true);
 
+  py::class_<JointMotion, JointWaypointMotion, std::shared_ptr<JointMotion>>(m, "JointMotion")
+      .def(py::init<const Vector7d &, ReferenceType, double, bool>(),
+           "target"_a,
+           py::arg_v("reference_type", ReferenceType::Absolute, "_franky.ReferenceType.Absolute"),
+           "relative_dynamics_factor"_a = 1.0,
+           "return_when_finished"_a = true);
+
   py::class_<Waypoint<RobotPose>>(m, "CartesianWaypoint")
       .def(py::init<>(
                [](

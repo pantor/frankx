@@ -29,6 +29,7 @@ from ._franky import (
     LinearImpedanceMotion,
     JointWaypoint,
     JointWaypointMotion,
+    JointMotion,
     CartesianWaypointMotion,
     LinearMotion,
     CartesianPoseStopMotion,
