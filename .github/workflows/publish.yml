@@ -29,7 +29,7 @@ jobs:
           mkdir -p wheels
 
       - name: Get wheels
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v3
         with:
           name: wheels
           path: wheels/
