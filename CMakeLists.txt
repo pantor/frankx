@@ -16,6 +16,10 @@ option(BUILD_TESTS "Build tests" ON)
 find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
 find_package(Franka REQUIRED)
 
+if (${Franka_VERSION} VERSION_GREATER_EQUAL "0.8.0")
+    add_compile_definitions(FRANKA8)
+endif ()
+
 message("Found Eigen Version: ${Eigen3_VERSION}")
 message("Found Franka Version: ${Franka_VERSION}")
 

@@ -191,7 +191,7 @@ PYBIND11_MODULE(_franky, m) {
       .def(py::self * py::self);
   py::implicitly_convertible<double, RelativeDynamicsFactor>();
 
-#define ERRORS \
+#define ERRORS7 \
   joint_position_limits_violation, \
   cartesian_position_limits_violation, \
   self_collision_avoidance_violation, \
@@ -228,11 +228,18 @@ PYBIND11_MODULE(_franky, m) {
   joint_p2p_insufficient_torque_for_planning, \
   tau_j_range_violation, \
   instability_detected, \
-  joint_move_in_wrong_direction, \
+  joint_move_in_wrong_direction
+
+#ifdef FRANKA8
+#define ERRORS ERRORS7, \
   cartesian_spline_motion_generator_violation, \
   joint_via_motion_generator_planning_joint_limit_violation, \
   base_acceleration_initialization_timeout, \
   base_acceleration_invalid_reading
+#else
+#define ERRORS ERRORS7
+#endif
+
 
 #define ADD_ERROR(unused, name) errors.def_property_readonly(#name, [](const franka::Errors &e) { return e.name; });
 #define UNPACK_ERRORS_INNER(tuple, itr, name) , tuple[itr + 1].cast<bool>()
@@ -316,12 +323,23 @@ PYBIND11_MODULE(_franky, m) {
            py::is_operator())
       .def("__repr__", &Measure::repr);
 
+#ifdef FRANKA8
+#define EXTRA_FIELDS1 \
+    F_T_NE, \
+    NE_T_EE,
+
+#define EXTRA_FIELDS2 \
+    O_ddP_O,
+#else
+    #define EXTRA_FIELDS1
+    #define EXTRA_FIELDS2
+#endif
+
 #define ROBOT_STATE_FIELDS \
     O_T_EE, \
     O_T_EE_d, \
     F_T_EE, \
-    F_T_NE, \
-    NE_T_EE, \
+    EXTRA_FIELDS1 \
     EE_T_K, \
     m_ee, \
     I_ee, \
@@ -353,7 +371,7 @@ PYBIND11_MODULE(_franky, m) {
     O_F_ext_hat_K, \
     K_F_ext_hat_K, \
     O_dP_EE_d, \
-    O_ddP_O, \
+    EXTRA_FIELDS2 \
     O_T_EE_c, \
     O_dP_EE_c, \
     O_ddP_EE_c, \
