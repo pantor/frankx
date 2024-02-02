@@ -34,10 +34,6 @@ jobs:
           name: wheels
           path: wheels/
 
-      - name: Unpack wheels
-        run: |
-          unzip wheels/libfranka_0-12-1_wheels.zip
-
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -47,6 +43,10 @@ jobs:
           files: |
             LICENSE
             wheels/*.zip
+
+      - name: Unpack wheels
+        run: |
+          unzip wheels/libfranka_0-12-1_wheels.zip
 
       - name: Publish python package
         uses: pypa/gh-action-pypi-publish@master
