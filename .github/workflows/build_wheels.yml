@@ -130,7 +130,7 @@ jobs:
           zip -r "output/libfranka_${libfranka_version//./-}_wheels.zip" dist/
 
       - name: Upload wheels
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: output
