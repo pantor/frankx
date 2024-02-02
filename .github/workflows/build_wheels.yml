@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout repository and submodules
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -130,7 +130,7 @@ jobs:
           zip -r "output/libfranka_${libfranka_version//./-}_wheels.zip" dist/
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: output
